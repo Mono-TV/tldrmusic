@@ -1,6 +1,7 @@
 // TLDR Music - Frontend Application
 
-const DATA_PATH = './current.json';
+const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
+const DATA_PATH = './current.json'; // Fallback for local development
 
 // State
 let chartData = null;
@@ -85,19 +86,34 @@ async function init() {
     setupEventListeners();
 }
 
-// Load chart data
+// Load chart data from API (with fallback to local JSON)
 async function loadChartData() {
     try {
-        const response = await fetch(DATA_PATH);
-        if (!response.ok) throw new Error('Failed to load chart data');
+        // Try API first
+        const response = await fetch(`${API_BASE}/chart/current`);
+        if (!response.ok) throw new Error('API request failed');
         chartData = await response.json();
+        console.log('Loaded chart data from API');
         renderHero();
         renderChart();
         renderRegionalCharts();
         updateMetadata();
-    } catch (error) {
-        console.error('Error loading chart:', error);
-        showError();
+    } catch (apiError) {
+        console.warn('API unavailable, trying local fallback:', apiError.message);
+        try {
+            // Fallback to local JSON file
+            const response = await fetch(DATA_PATH);
+            if (!response.ok) throw new Error('Failed to load local chart data');
+            chartData = await response.json();
+            console.log('Loaded chart data from local JSON');
+            renderHero();
+            renderChart();
+            renderRegionalCharts();
+            updateMetadata();
+        } catch (localError) {
+            console.error('Error loading chart:', localError);
+            showError();
+        }
     }
 }
 
