@@ -572,30 +572,38 @@ function switchChartMode(mode) {
     }
     document.title = mode === 'india' ? "TLDR Music - India's Top 25" : "TLDR Music - Global Top 25";
 
-    // Update hero label
-    const heroLabel = document.querySelector('.hero-label');
-    if (heroLabel && currentSongIndex < 0) {
-        heroLabel.textContent = mode === 'india' ? "This Week's #1" : "Global #1";
-    }
-
     // Update chart section header
     const chartHeader = document.querySelector('.chart-section .chart-header h3');
     if (chartHeader) {
         chartHeader.textContent = mode === 'india' ? 'Quick Picks' : 'Global Charts';
     }
 
-    // Re-render chart with appropriate data
+    // Re-render chart list with appropriate data
     if (mode === 'india') {
-        renderHero();
         renderChart();
         // Show regional section for India mode
         if (regionalSection) regionalSection.style.display = 'block';
     } else {
-        renderGlobalHero();
         renderGlobalMainChart();
         // Hide regional section for Global mode
         if (regionalSection) regionalSection.style.display = 'none';
     }
+
+    // Only update hero if nothing is playing, otherwise keep showing current song
+    if (!isPlaying && !player) {
+        const heroLabel = document.querySelector('.hero-label');
+        if (heroLabel) {
+            heroLabel.textContent = mode === 'india' ? "This Week's #1" : "Global #1";
+        }
+        if (mode === 'india') {
+            renderHero();
+        } else {
+            renderGlobalHero();
+        }
+    }
+
+    // Update card playing states for the new view
+    updateCardPlayingState(isPlaying);
 }
 
 // Render hero for global chart
