@@ -50,6 +50,8 @@ const timeCurrent = document.getElementById('timeCurrent');
 const timeDuration = document.getElementById('timeDuration');
 const regionalSection = document.getElementById('regionalSection');
 const regionalGrid = document.getElementById('regionalGrid');
+const globalSection = document.getElementById('globalSection');
+const globalGrid = document.getElementById('globalGrid');
 const heroSection = document.getElementById('heroSection');
 const heroTheater = document.getElementById('heroTheater');
 const theaterVideo = document.getElementById('theaterVideo');
@@ -96,6 +98,7 @@ async function loadChartData() {
         console.log('Loaded chart data from API');
         renderHero();
         renderChart();
+        renderGlobalCharts();
         renderRegionalCharts();
         updateMetadata();
     } catch (apiError) {
@@ -108,6 +111,7 @@ async function loadChartData() {
             console.log('Loaded chart data from local JSON');
             renderHero();
             renderChart();
+            renderGlobalCharts();
             renderRegionalCharts();
             updateMetadata();
         } catch (localError) {
@@ -272,6 +276,91 @@ function renderRegionalCharts() {
         });
 
         regionalGrid.appendChild(card);
+    });
+}
+
+// Render global charts
+function renderGlobalCharts() {
+    if (!chartData || !chartData.global || !globalGrid) {
+        // Hide section if no global data
+        if (globalSection) globalSection.style.display = 'none';
+        return;
+    }
+
+    // Show section
+    if (globalSection) globalSection.style.display = 'block';
+
+    globalGrid.innerHTML = '';
+
+    // Order: All global platforms
+    const platformOrder = ['spotify_global', 'billboard_hot100', 'apple_global'];
+
+    platformOrder.forEach(platformKey => {
+        const platform = chartData.global[platformKey];
+        if (!platform || !platform.songs || platform.songs.length === 0) return;
+
+        const card = document.createElement('div');
+        card.className = 'regional-card global-card';
+
+        const songsHtml = platform.songs.slice(0, 5).map((song, i) => {
+            const artworkUrl = song.artwork_url || '';
+            const videoId = song.youtube_video_id || '';
+
+            const placeholderSvg = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                </svg>
+            `;
+
+            const playSvg = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+            `;
+
+            return `
+                <div class="regional-song" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-video-id="${videoId}" data-artwork="${artworkUrl}">
+                    <div class="regional-song-artwork">
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                            : `<div class="regional-song-artwork-placeholder">${placeholderSvg}</div>`}
+                        <div class="regional-song-play">${playSvg}</div>
+                    </div>
+                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${song.rank}</span>
+                    <div class="regional-song-info">
+                        <div class="regional-song-title">${escapeHtml(song.title)}</div>
+                        <div class="regional-song-artist">${escapeHtml(song.artist)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="regional-card-header">
+                <span class="regional-icon">${platform.icon}</span>
+                <div>
+                    <div class="regional-card-title">${platform.name}</div>
+                    <div class="regional-card-label">Top 5</div>
+                </div>
+            </div>
+            <div class="regional-list">
+                ${songsHtml}
+            </div>
+        `;
+
+        // Add click handlers for global songs
+        card.querySelectorAll('.regional-song').forEach(songEl => {
+            songEl.addEventListener('click', () => {
+                const title = songEl.dataset.title;
+                const artist = songEl.dataset.artist;
+                const videoId = songEl.dataset.videoId;
+                const artwork = songEl.dataset.artwork;
+                playRegionalSong(title, artist, videoId, artwork);
+            });
+        });
+
+        globalGrid.appendChild(card);
     });
 }
 
