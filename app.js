@@ -416,7 +416,6 @@ function createSongElement(song, index) {
                 ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}" loading="lazy">`
                 : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
             <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
-            ${rankMovement}
             <div class="song-card-play">
                 <div class="song-card-play-btn">
                     <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -439,6 +438,7 @@ function createSongElement(song, index) {
             <div class="song-card-artist">${escapeHtml(song.artist)}</div>
             <div class="song-card-meta">
                 <span class="score">${song.score.toFixed(1)}</span>
+                ${rankMovement}
                 ${viewsText ? `<span>${viewsText} views</span>` : ''}
             </div>
         </div>

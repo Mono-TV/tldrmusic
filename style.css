@@ -928,13 +928,9 @@ body {
     white-space: nowrap;
 }
 
-/* Position on song card artwork */
-.song-card-artwork .rank-movement {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+/* Position in song card meta (beside score) */
+.song-card-meta .rank-movement {
+    margin-left: 0.25rem;
 }
 
 .rank-up {
