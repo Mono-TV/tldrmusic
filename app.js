@@ -1071,11 +1071,21 @@ function setupEventListeners() {
 
     const playHeroBtn = document.getElementById('playHeroBtn');
     playHeroBtn?.addEventListener('click', () => {
-        // If the hero song is the current song and it's playing, toggle pause
-        if (heroSongIndex === currentSongIndex && player) {
+        // If already playing, toggle pause
+        if (player && isPlaying) {
             togglePlayPause();
+            return;
+        }
+
+        // Play based on current chart mode
+        if (currentChartMode === 'global') {
+            // Play from global chart
+            const song = chartData?.global_chart?.[0];
+            if (song && song.youtube_video_id) {
+                playRegionalSongDirect(song.title, song.artist, song.youtube_video_id, song.artwork_url);
+            }
         } else {
-            // Play the song shown in hero (starts at 0 initially, then tracks current)
+            // Play from India chart
             playSong(heroSongIndex);
         }
     });
