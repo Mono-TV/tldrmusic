@@ -18,6 +18,7 @@ let progressInterval = null;
 let isHeroVisible = true;
 let heroObserver = null;
 let currentChartMode = 'india';  // 'india' or 'global'
+let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
 
 // DOM Elements
 const chartList = document.getElementById('chartList');
@@ -331,6 +332,8 @@ function playRegionalSong(title, artist, videoId, artworkUrl) {
 function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null) {
     // Mark that we're playing a regional song
     isRegionalSongPlaying = true;
+    currentPlayingVideoId = videoId;  // Track the video ID
+    currentSongIndex = -1; // Reset main chart index
 
     // Update player bar UI
     if (playerBarTitle) playerBarTitle.textContent = title;
@@ -348,9 +351,8 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
     // Update hero/spotlight section
     updateHeroForDirectPlay(title, artist, artworkUrl, score);
 
-    // Clear active state from main chart cards
-    document.querySelectorAll('.song-card').forEach(el => el.classList.remove('active', 'playing'));
-    currentSongIndex = -1; // Reset main chart index
+    // Update card playing state (will use currentPlayingVideoId)
+    updateCardPlayingState(true);
 
     // Update player bar visibility - must come after setting isRegionalSongPlaying
     updatePlayerBarVisibility();
@@ -799,8 +801,9 @@ function playSong(index) {
         return;
     }
 
-    // Reset regional song flag when playing main chart song
+    // Reset regional song flag and video ID when playing main chart song
     isRegionalSongPlaying = false;
+    currentPlayingVideoId = null;
 
     // Close theater mode if active (stops theater player, skip resume since new song will play)
     if (isTheaterMode) {
@@ -923,10 +926,19 @@ function updateHeroButtonState(playing) {
 // Update playing state on song cards
 function updateCardPlayingState(playing) {
     document.querySelectorAll('.song-card').forEach(el => el.classList.remove('playing'));
-    if (playing && currentSongIndex >= 0) {
-        const activeEl = document.querySelector(`.song-card[data-index="${currentSongIndex}"]`);
-        if (activeEl) {
-            activeEl.classList.add('playing');
+    if (playing) {
+        if (currentSongIndex >= 0) {
+            // India chart - use index
+            const activeEl = document.querySelector(`.song-card[data-index="${currentSongIndex}"]:not([data-chart-mode="global"])`);
+            if (activeEl) {
+                activeEl.classList.add('playing');
+            }
+        } else if (currentPlayingVideoId) {
+            // Global/Regional - use video ID
+            const activeEl = document.querySelector(`.song-card[data-video-id="${currentPlayingVideoId}"]`);
+            if (activeEl) {
+                activeEl.classList.add('playing');
+            }
         }
     }
 }
