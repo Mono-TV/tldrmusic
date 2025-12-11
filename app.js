@@ -865,23 +865,50 @@ function showPlayerPlaceholder() {
 }
 
 function showPlayerError() {
+    // Array of witty messages for when video is unavailable
+    const wittyMessages = [
+        { emoji: '🎭', title: "YouTube's playing hide and seek", subtitle: "Our API quota ran away. It'll be back tomorrow!" },
+        { emoji: '🔋', title: "We've run out of YouTube juice", subtitle: "Quota exceeded. Recharging at midnight PT..." },
+        { emoji: '🎬', title: "The show must go on... tomorrow", subtitle: "YouTube API said 'see you later!' Try again after midnight PT." },
+        { emoji: '☕', title: "YouTube needs a coffee break", subtitle: "API quota exhausted. Check back after 1:30 PM IST!" },
+        { emoji: '🎪', title: "Intermission time!", subtitle: "We've used up today's YouTube passes. New ones at midnight PT." },
+        { emoji: '🌙', title: "Waiting for the midnight reset", subtitle: "Our YouTube quota resets at midnight Pacific Time. Hang tight!" },
+    ];
+
+    const msg = wittyMessages[Math.floor(Math.random() * wittyMessages.length)];
+
     videoWrapper.innerHTML = `
-        <div class="player-placeholder">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-            </svg>
-            <p>Video not available</p>
+        <div class="player-placeholder error-state">
+            <span class="error-emoji">${msg.emoji}</span>
+            <p class="error-title">${msg.title}</p>
+            <p class="error-subtitle">${msg.subtitle}</p>
         </div>
     `;
+
+    showToast(`${msg.emoji} ${msg.title}`);
 }
 
 function showError() {
+    const errorMessages = [
+        { emoji: '🎵', title: "The music got lost in the cloud", subtitle: "Our API is having a moment. Try refreshing!" },
+        { emoji: '🔌', title: "Someone unplugged the jukebox", subtitle: "Can't reach our servers right now. Check back soon!" },
+        { emoji: '🎸', title: "The band took an unscheduled break", subtitle: "Chart data unavailable. Refresh to try again." },
+        { emoji: '📡', title: "Lost signal to the mothership", subtitle: "Our API server is unreachable. Give it another shot!" },
+    ];
+
+    const msg = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+
     chartList.innerHTML = `
-        <div class="loading-state">
-            <p>Unable to load chart data.</p>
-            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Make sure to run the scraper first.</p>
+        <div class="chart-error">
+            <span class="error-emoji">${msg.emoji}</span>
+            <p class="error-title">${msg.title}</p>
+            <p class="error-subtitle">${msg.subtitle}</p>
+            <button class="retry-btn" onclick="location.reload()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/>
+                </svg>
+                Try Again
+            </button>
         </div>
     `;
 }
@@ -1310,12 +1337,20 @@ function updateLyrics(index) {
     const lyrics = song.lyrics_plain || song.lyrics_synced;
 
     if (!lyrics) {
+        const lyricsMessages = [
+            { emoji: '🤐', text: "This song's keeping its lyrics a secret" },
+            { emoji: '🎤', text: "The lyrics are on a karaoke break" },
+            { emoji: '📝', text: "Oops, someone forgot to write down the words" },
+            { emoji: '🔇', text: "Lyrics went silent. Time to freestyle!" },
+            { emoji: '🎧', text: "Just vibe to the music - lyrics unavailable" },
+        ];
+        const msg = lyricsMessages[Math.floor(Math.random() * lyricsMessages.length)];
+
         lyricsContent.innerHTML = `
             <div class="lyrics-unavailable">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                    <path d="M4 6h16M4 12h16M4 18h10"></path>
-                </svg>
-                <p>Lyrics not available for this song</p>
+                <span class="error-emoji">${msg.emoji}</span>
+                <p class="error-title">${msg.text}</p>
+                <p class="error-subtitle">Try a different song or check back later</p>
             </div>
         `;
         return;
