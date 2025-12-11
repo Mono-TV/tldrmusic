@@ -226,6 +226,9 @@ function renderRegionalCharts() {
                 </svg>
             `;
 
+            // Get rank movement for regional song
+            const rankMovement = getRankMovementHtml(song);
+
             return `
                 <div class="regional-song" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-video-id="${videoId}" data-artwork="${artworkUrl}">
                     <div class="regional-song-artwork">
@@ -235,6 +238,7 @@ function renderRegionalCharts() {
                         <div class="regional-song-play">${playSvg}</div>
                     </div>
                     <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${song.rank}</span>
+                    ${rankMovement}
                     <div class="regional-song-info">
                         <div class="regional-song-title">${escapeHtml(song.title)}</div>
                         <div class="regional-song-artist">${escapeHtml(song.artist)}</div>
@@ -395,6 +399,9 @@ function createSongElement(song, index) {
     // Format views
     const viewsText = song.youtube_views ? formatViews(song.youtube_views) : '';
 
+    // Rank movement indicator
+    const rankMovement = getRankMovementHtml(song);
+
     // Artwork placeholder SVG
     const placeholderSvg = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
@@ -409,6 +416,7 @@ function createSongElement(song, index) {
                 ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}" loading="lazy">`
                 : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
             <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
+            ${rankMovement}
             <div class="song-card-play">
                 <div class="song-card-play-btn">
                     <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -445,6 +453,31 @@ function createSongElement(song, index) {
         }
     });
     return el;
+}
+
+// Get rank movement indicator HTML
+function getRankMovementHtml(song) {
+    // Check if this is a new entry
+    if (song.is_new) {
+        return '<span class="rank-movement rank-new">NEW</span>';
+    }
+
+    // Check rank change
+    const change = song.rank_change;
+    if (change === undefined || change === null) {
+        return ''; // No data available
+    }
+
+    if (change > 0) {
+        // Moved up (positive change means better rank)
+        return `<span class="rank-movement rank-up">▲${change}</span>`;
+    } else if (change < 0) {
+        // Moved down (negative change means worse rank)
+        return `<span class="rank-movement rank-down">▼${Math.abs(change)}</span>`;
+    } else {
+        // No change
+        return '<span class="rank-movement rank-same">●</span>';
+    }
 }
 
 // Update metadata
