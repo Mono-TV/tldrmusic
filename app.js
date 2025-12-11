@@ -393,11 +393,16 @@ function createPlayerWithVideo(videoId) {
 }
 
 // Create song card element (Quick Picks style)
-function createSongElement(song, index) {
+function createSongElement(song, index, chartMode = 'india') {
     const rank = index + 1;
     const el = document.createElement('div');
     el.className = 'song-card';
     el.dataset.index = index;
+    el.dataset.chartMode = chartMode;
+    el.dataset.videoId = song.youtube_video_id || '';
+    el.dataset.title = song.title;
+    el.dataset.artist = song.artist;
+    el.dataset.artwork = song.artwork_url || '';
 
     // Format views
     const viewsText = song.youtube_views ? formatViews(song.youtube_views) : '';
@@ -448,11 +453,21 @@ function createSongElement(song, index) {
     `;
 
     el.addEventListener('click', () => {
-        // If clicking on currently playing song, toggle play/pause
-        if (index === currentSongIndex && player) {
-            togglePlayPause();
+        const mode = el.dataset.chartMode;
+
+        if (mode === 'global') {
+            // For global chart, use direct play with video ID
+            const videoId = el.dataset.videoId;
+            if (videoId) {
+                playRegionalSongDirect(el.dataset.title, el.dataset.artist, videoId, el.dataset.artwork);
+            }
         } else {
-            playSong(index);
+            // For India chart, use index-based play
+            if (index === currentSongIndex && player) {
+                togglePlayPause();
+            } else {
+                playSong(index);
+            }
         }
     });
     return el;
@@ -585,7 +600,7 @@ function renderGlobalMainChart() {
     chartList.innerHTML = '';
 
     chartData.global_chart.forEach((song, index) => {
-        const songEl = createSongElement(song, index);
+        const songEl = createSongElement(song, index, 'global');
         chartList.appendChild(songEl);
     });
 }
