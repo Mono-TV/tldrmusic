@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - TLDR Music</title>
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -328,6 +328,94 @@
             text-decoration: underline;
         }
 
+        .creator-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .creator-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .creator-info p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .creator-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .creator-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .creator-link:hover {
+            background: rgba(139, 92, 246, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tech-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tech-icon {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .footer-copyright {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
         @media (max-width: 640px) {
             .about-title {
                 font-size: 1.8rem;
@@ -340,6 +428,14 @@
             .step-item {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .creator-links {
+                flex-direction: column;
+            }
+
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -623,13 +719,21 @@
                     <li class="step-item">
                         <span class="step-number">1</span>
                         <div class="step-content">
-                            <h4>Cloud-Powered API</h4>
-                            <p>Chart data is now served via a dedicated REST API hosted on Google Cloud Run, connected to MongoDB for fast, reliable data delivery.</p>
+                            <h4>Rank Movement Tracking</h4>
+                            <p>See how songs are moving on the charts! Green arrows show songs climbing up, red arrows show drops, and "NEW" badges highlight fresh entries to the chart.</p>
                         </div>
                     </li>
 
                     <li class="step-item">
                         <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h4>Cloud-Powered API</h4>
+                            <p>Chart data is served via a dedicated REST API hosted on Google Cloud Run, connected to MongoDB for fast, reliable data delivery with intelligent caching.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">3</span>
                         <div class="step-content">
                             <h4>Lyrics Support</h4>
                             <p>View synced and plain lyrics for most songs. Click the lyrics button while playing to see the words as you listen.</p>
@@ -637,7 +741,7 @@
                     </li>
 
                     <li class="step-item">
-                        <span class="step-number">3</span>
+                        <span class="step-number">4</span>
                         <div class="step-content">
                             <h4>Enhanced Regional Charts</h4>
                             <p>Regional songs now include album artwork, YouTube videos, and metadata. Play any regional song directly from the spotlights section.</p>
@@ -645,10 +749,18 @@
                     </li>
 
                     <li class="step-item">
-                        <span class="step-number">4</span>
+                        <span class="step-number">5</span>
                         <div class="step-content">
                             <h4>Theater Mode</h4>
                             <p>Watch music videos in an immersive full-width view. Click the video button on the hero section or player bar to enter theater mode.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">6</span>
+                        <div class="step-content">
+                            <h4>Automated Daily Updates</h4>
+                            <p>Charts are automatically refreshed daily at 10 PM IST via Google Cloud Scheduler. No manual intervention needed - always fresh data!</p>
                         </div>
                     </li>
                 </ul>
@@ -686,12 +798,81 @@
                 </ul>
             </section>
 
+            <!-- About the Creator -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">~</span>
+                    About the Creator
+                </h2>
+                <div class="creator-card">
+                    <div class="creator-info">
+                        <h3>Built by Mono</h3>
+                        <p>
+                            TLDR Music started as a personal project to solve a simple problem: figuring out what music
+                            is actually trending in India without checking multiple apps. What began as a weekend experiment
+                            has grown into a fully automated system that scrapes, ranks, and presents music data daily.
+                        </p>
+                        <p>
+                            The entire project is built with Python for the backend scraping and ranking engine,
+                            a lightweight vanilla JavaScript frontend, and Google Cloud for hosting and automation.
+                        </p>
+                        <div class="creator-links">
+                            <a href="https://github.com/Mono-TV" target="_blank" class="creator-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                GitHub
+                            </a>
+                            <a href="https://twitter.com/AskMono" target="_blank" class="creator-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                Twitter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tech Stack -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">&lt;</span>
+                    Tech Stack
+                </h2>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <span class="tech-icon">Python</span>
+                        <span class="tech-label">Scraping & Ranking</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">FastAPI</span>
+                        <span class="tech-label">REST API</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">MongoDB</span>
+                        <span class="tech-label">Database</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">GCP</span>
+                        <span class="tech-label">Cloud Run & Scheduler</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">Playwright</span>
+                        <span class="tech-label">Web Scraping</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">GitHub</span>
+                        <span class="tech-label">Pages Hosting</span>
+                    </div>
+                </div>
+            </section>
+
             <!-- Footer Note -->
             <div class="footer-note">
                 <p>
-                    TLDR Music is updated weekly. Built with data from 8+ platforms.<br>
-                    Powered by Google Cloud Run + MongoDB.<br>
-                    <a href="index.html">Back to Charts</a> · <a href="https://tldrmusic-api-401132033262.asia-south1.run.app/docs" target="_blank">API Docs</a>
+                    TLDR Music is updated daily at 10 PM IST. Built with data from 8+ platforms.<br>
+                    Powered by Google Cloud Run + MongoDB + GitHub Pages.<br>
+                    <a href="index.html">Back to Charts</a> · <a href="https://tldrmusic-api-401132033262.asia-south1.run.app/docs" target="_blank">API Docs</a> · <a href="https://github.com/Mono-TV/tldrmusic" target="_blank">Source Code</a>
+                </p>
+                <p class="footer-copyright">
+                    Made with data from Spotify, Apple Music, YouTube Music, JioSaavn, Shazam, Billboard India, and more.
                 </p>
             </div>
         </main>
