@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TLDR Music - India's Top 25</title>
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=19">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -18,8 +18,18 @@
             <div class="header-inner">
                 <div class="brand">
                     <h1 class="logo">TLDR<span>Music</span></h1>
+                    <div class="chart-toggle" id="chartToggle">
+                        <button class="toggle-btn active" data-chart="india">
+                            <span class="toggle-icon">🇮🇳</span>
+                            <span class="toggle-label">India</span>
+                        </button>
+                        <button class="toggle-btn" data-chart="global">
+                            <span class="toggle-icon">🌍</span>
+                            <span class="toggle-label">Global</span>
+                        </button>
+                    </div>
                     <div class="chart-badge">
-                        <span class="badge-label">India Top 25</span>
+                        <span class="badge-label" id="badgeLabel">India Top 25</span>
                         <span class="badge-week" id="weekLabel">Weekly Chart</span>
                     </div>
                 </div>
@@ -133,17 +143,6 @@
                         <div class="spinner"></div>
                         <p>Loading chart...</p>
                     </div>
-                </div>
-            </section>
-
-            <!-- Global Hits -->
-            <section class="regional-section global-section" id="globalSection">
-                <div class="regional-header">
-                    <h3>Global Hits</h3>
-                    <p class="regional-subtitle">What the world is listening to right now</p>
-                </div>
-                <div class="regional-grid" id="globalGrid">
-                    <!-- Global charts will be rendered here by JS -->
                 </div>
             </section>
 
@@ -279,6 +278,6 @@
         <span id="toastMessage"></span>
     </div>
 
-    <script src="app.js?v=21"></script>
+    <script src="app.js?v=23"></script>
 </body>
 </html>

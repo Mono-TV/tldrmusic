@@ -17,11 +17,14 @@ let isTheaterMode = false;
 let progressInterval = null;
 let isHeroVisible = true;
 let heroObserver = null;
+let currentChartMode = 'india';  // 'india' or 'global'
 
 // DOM Elements
 const chartList = document.getElementById('chartList');
 const chartDate = document.getElementById('chartDate');
 const weekLabel = document.getElementById('weekLabel');
+const badgeLabel = document.getElementById('badgeLabel');
+const chartToggle = document.getElementById('chartToggle');
 const videoWrapper = document.getElementById('videoWrapper');
 const shareBtn = document.getElementById('shareBtn');
 const toast = document.getElementById('toast');
@@ -50,8 +53,6 @@ const timeCurrent = document.getElementById('timeCurrent');
 const timeDuration = document.getElementById('timeDuration');
 const regionalSection = document.getElementById('regionalSection');
 const regionalGrid = document.getElementById('regionalGrid');
-const globalSection = document.getElementById('globalSection');
-const globalGrid = document.getElementById('globalGrid');
 const heroSection = document.getElementById('heroSection');
 const heroTheater = document.getElementById('heroTheater');
 const theaterVideo = document.getElementById('theaterVideo');
@@ -98,7 +99,6 @@ async function loadChartData() {
         console.log('Loaded chart data from API');
         renderHero();
         renderChart();
-        renderGlobalCharts();
         renderRegionalCharts();
         updateMetadata();
     } catch (apiError) {
@@ -111,7 +111,6 @@ async function loadChartData() {
             console.log('Loaded chart data from local JSON');
             renderHero();
             renderChart();
-            renderGlobalCharts();
             renderRegionalCharts();
             updateMetadata();
         } catch (localError) {
@@ -276,91 +275,6 @@ function renderRegionalCharts() {
         });
 
         regionalGrid.appendChild(card);
-    });
-}
-
-// Render global charts
-function renderGlobalCharts() {
-    if (!chartData || !chartData.global || !globalGrid) {
-        // Hide section if no global data
-        if (globalSection) globalSection.style.display = 'none';
-        return;
-    }
-
-    // Show section
-    if (globalSection) globalSection.style.display = 'block';
-
-    globalGrid.innerHTML = '';
-
-    // Order: All global platforms
-    const platformOrder = ['spotify_global', 'billboard_hot100', 'apple_global'];
-
-    platformOrder.forEach(platformKey => {
-        const platform = chartData.global[platformKey];
-        if (!platform || !platform.songs || platform.songs.length === 0) return;
-
-        const card = document.createElement('div');
-        card.className = 'regional-card global-card';
-
-        const songsHtml = platform.songs.slice(0, 5).map((song, i) => {
-            const artworkUrl = song.artwork_url || '';
-            const videoId = song.youtube_video_id || '';
-
-            const placeholderSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
-                </svg>
-            `;
-
-            const playSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                </svg>
-            `;
-
-            return `
-                <div class="regional-song" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-video-id="${videoId}" data-artwork="${artworkUrl}">
-                    <div class="regional-song-artwork">
-                        ${artworkUrl
-                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
-                            : `<div class="regional-song-artwork-placeholder">${placeholderSvg}</div>`}
-                        <div class="regional-song-play">${playSvg}</div>
-                    </div>
-                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${song.rank}</span>
-                    <div class="regional-song-info">
-                        <div class="regional-song-title">${escapeHtml(song.title)}</div>
-                        <div class="regional-song-artist">${escapeHtml(song.artist)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        card.innerHTML = `
-            <div class="regional-card-header">
-                <span class="regional-icon">${platform.icon}</span>
-                <div>
-                    <div class="regional-card-title">${platform.name}</div>
-                    <div class="regional-card-label">Top 5</div>
-                </div>
-            </div>
-            <div class="regional-list">
-                ${songsHtml}
-            </div>
-        `;
-
-        // Add click handlers for global songs
-        card.querySelectorAll('.regional-song').forEach(songEl => {
-            songEl.addEventListener('click', () => {
-                const title = songEl.dataset.title;
-                const artist = songEl.dataset.artist;
-                const videoId = songEl.dataset.videoId;
-                const artwork = songEl.dataset.artwork;
-                playRegionalSong(title, artist, videoId, artwork);
-            });
-        });
-
-        globalGrid.appendChild(card);
     });
 }
 
@@ -579,6 +493,217 @@ function updateMetadata() {
     if (chartData.week) {
         weekLabel.textContent = `Week ${chartData.week}`;
     }
+}
+
+// Switch between India and Global chart modes
+function switchChartMode(mode) {
+    currentChartMode = mode;
+
+    // Update toggle button states
+    chartToggle?.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.chart === mode);
+    });
+
+    // Update badge label and page title
+    if (badgeLabel) {
+        badgeLabel.textContent = mode === 'india' ? 'India Top 25' : 'Global Top 25';
+    }
+    document.title = mode === 'india' ? "TLDR Music - India's Top 25" : "TLDR Music - Global Top 25";
+
+    // Update hero label
+    const heroLabel = document.querySelector('.hero-label');
+    if (heroLabel && currentSongIndex < 0) {
+        heroLabel.textContent = mode === 'india' ? "This Week's #1" : "Global #1";
+    }
+
+    // Update chart section header
+    const chartHeader = document.querySelector('.chart-section .chart-header h3');
+    if (chartHeader) {
+        chartHeader.textContent = mode === 'india' ? 'Quick Picks' : 'Global Charts';
+    }
+
+    // Re-render chart with appropriate data
+    if (mode === 'india') {
+        renderHero();
+        renderChart();
+        // Show regional section for India mode
+        if (regionalSection) regionalSection.style.display = 'block';
+    } else {
+        renderGlobalHero();
+        renderGlobalMainChart();
+        // Hide regional section for Global mode
+        if (regionalSection) regionalSection.style.display = 'none';
+    }
+}
+
+// Render hero for global chart (use combined global data)
+function renderGlobalHero() {
+    if (!chartData || !chartData.global) {
+        // Fallback to first global platform
+        const heroLabel = document.querySelector('.hero-label');
+        if (heroLabel) heroLabel.textContent = 'Global #1';
+        return;
+    }
+
+    // Get first song from spotify_global or first available platform
+    const platforms = ['spotify_global', 'billboard_hot100', 'apple_global'];
+    let topSong = null;
+
+    for (const platform of platforms) {
+        if (chartData.global[platform]?.songs?.[0]) {
+            topSong = chartData.global[platform].songs[0];
+            break;
+        }
+    }
+
+    if (!topSong) return;
+
+    document.getElementById('heroTitle').textContent = topSong.title;
+    document.getElementById('heroArtist').textContent = topSong.artist;
+    document.getElementById('heroScore').textContent = '-';
+
+    const heroArtwork = document.getElementById('heroArtwork');
+    if (heroArtwork && topSong.artwork_url) {
+        heroArtwork.src = topSong.artwork_url;
+        heroArtwork.alt = `${topSong.title} album art`;
+        heroArtwork.style.display = 'block';
+    }
+
+    const heroBg = document.getElementById('heroBg');
+    if (heroBg && topSong.artwork_url) {
+        heroBg.style.backgroundImage = `url(${topSong.artwork_url})`;
+    }
+
+    const viewsStat = document.getElementById('heroViewsStat');
+    const viewsEl = document.getElementById('heroViews');
+    if (topSong.youtube_views && topSong.youtube_views > 0) {
+        viewsEl.textContent = formatViews(topSong.youtube_views);
+        viewsStat.style.display = 'flex';
+    } else {
+        viewsStat.style.display = 'none';
+    }
+
+    const heroLabel = document.querySelector('.hero-label');
+    if (heroLabel) heroLabel.textContent = 'Global #1';
+}
+
+// Render main chart with global combined data
+function renderGlobalMainChart() {
+    if (!chartData || !chartData.global) {
+        chartList.innerHTML = '<div class="loading-state"><p>No global chart data available</p></div>';
+        return;
+    }
+
+    // Combine songs from all global platforms and show top 25 unique songs
+    const seenSongs = new Set();
+    const globalSongs = [];
+    const platforms = ['spotify_global', 'apple_global', 'billboard_hot100'];
+
+    // Collect songs from each platform in order
+    for (let i = 0; i < 10; i++) {
+        for (const platform of platforms) {
+            const songs = chartData.global[platform]?.songs || [];
+            if (songs[i]) {
+                const key = `${songs[i].title.toLowerCase()}|${songs[i].artist.toLowerCase()}`;
+                if (!seenSongs.has(key)) {
+                    seenSongs.add(key);
+                    globalSongs.push({
+                        ...songs[i],
+                        platform: platform,
+                        score: null  // Global songs don't have a score
+                    });
+                }
+            }
+        }
+    }
+
+    chartList.innerHTML = '';
+
+    globalSongs.slice(0, 25).forEach((song, index) => {
+        const songEl = createGlobalSongElement(song, index);
+        chartList.appendChild(songEl);
+    });
+}
+
+// Create song element for global chart (matches main chart style)
+function createGlobalSongElement(song, index) {
+    const rank = index + 1;
+    const el = document.createElement('div');
+    el.className = 'song-card';
+    el.dataset.index = index;
+    el.dataset.videoId = song.youtube_video_id || '';
+    el.dataset.title = song.title;
+    el.dataset.artist = song.artist;
+    el.dataset.artwork = song.artwork_url || '';
+
+    // Format views
+    const viewsText = song.youtube_views ? formatViews(song.youtube_views) : '';
+
+    const placeholderSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+        </svg>
+    `;
+
+    // Platform icon and name
+    const platformInfo = {
+        'spotify_global': { icon: '🎧', name: 'Spotify' },
+        'apple_global': { icon: '🍎', name: 'Apple' },
+        'billboard_hot100': { icon: '📊', name: 'Billboard' }
+    };
+    const platform = platformInfo[song.platform] || { icon: '🌍', name: 'Global' };
+
+    el.innerHTML = `
+        <div class="song-card-artwork">
+            ${song.artwork_url
+                ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
+            <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
+            <div class="song-card-play">
+                <div class="song-card-play-btn">
+                    <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                    </svg>
+                    <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </div>
+            </div>
+            <div class="song-card-equalizer">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="song-card-info">
+            <div class="song-card-title">${escapeHtml(song.title)}</div>
+            <div class="song-card-artist">${escapeHtml(song.artist)}</div>
+            <div class="song-card-meta">
+                <span class="platform-source">${platform.icon} ${platform.name}</span>
+                ${viewsText ? `<span>${viewsText} views</span>` : ''}
+            </div>
+        </div>
+    `;
+
+    el.addEventListener('click', () => {
+        const videoId = el.dataset.videoId;
+        const title = el.dataset.title;
+        const artist = el.dataset.artist;
+        const artwork = el.dataset.artwork;
+
+        if (videoId) {
+            playRegionalSongDirect(title, artist, videoId, artwork);
+        } else {
+            // Search YouTube
+            const searchQuery = encodeURIComponent(`${title} ${artist} official audio`);
+            window.open(`https://www.youtube.com/results?search_query=${searchQuery}`, '_blank');
+            showToast(`Searching YouTube for "${title}"...`);
+        }
+    });
+
+    return el;
 }
 
 // Update now playing UI
@@ -1046,6 +1171,16 @@ function updatePlayerBarVisibility() {
 // Event listeners
 function setupEventListeners() {
     shareBtn?.addEventListener('click', shareChart);
+
+    // Chart toggle
+    chartToggle?.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.dataset.chart;
+            if (mode !== currentChartMode) {
+                switchChartMode(mode);
+            }
+        });
+    });
 
     // Setup hero visibility observer
     setupHeroObserver();

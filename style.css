@@ -115,6 +115,54 @@ body {
     color: var(--accent);
 }
 
+/* Chart Toggle */
+.chart-toggle {
+    display: flex;
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.toggle-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.toggle-btn.active {
+    background: var(--accent);
+    color: #000;
+}
+
+.toggle-btn.active:hover {
+    background: var(--gold);
+}
+
+.toggle-icon {
+    font-size: 1rem;
+}
+
+.toggle-label {
+    white-space: nowrap;
+}
+
 .chart-badge {
     display: flex;
     flex-direction: column;
@@ -913,6 +961,14 @@ body {
 .song-card-meta .score {
     color: var(--accent);
     font-weight: 600;
+}
+
+.song-card-meta .platform-source {
+    color: var(--text-secondary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 /* ===== RANK MOVEMENT INDICATORS ===== */
@@ -1730,6 +1786,20 @@ body {
 
     .logo {
         font-size: 1.25rem;
+    }
+
+    .chart-toggle {
+        padding: 3px;
+        gap: 2px;
+    }
+
+    .toggle-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+
+    .toggle-icon {
+        font-size: 0.9rem;
     }
 
     .chart-badge {
