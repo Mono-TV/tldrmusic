@@ -328,7 +328,7 @@ function playRegionalSong(title, artist, videoId, artworkUrl) {
 }
 
 // Play a regional song directly with video ID
-function playRegionalSongDirect(title, artist, videoId, artworkUrl) {
+function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null) {
     // Mark that we're playing a regional song
     isRegionalSongPlaying = true;
 
@@ -345,6 +345,9 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl) {
         mainGradient.classList.add('active');
     }
 
+    // Update hero/spotlight section
+    updateHeroForDirectPlay(title, artist, artworkUrl, score);
+
     // Clear active state from main chart cards
     document.querySelectorAll('.song-card').forEach(el => el.classList.remove('active', 'playing'));
     currentSongIndex = -1; // Reset main chart index
@@ -358,7 +361,49 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl) {
     } else if (playerReady) {
         createPlayerWithVideo(videoId);
     } else {
-        setTimeout(() => playRegionalSongDirect(title, artist, videoId, artworkUrl), 100);
+        setTimeout(() => playRegionalSongDirect(title, artist, videoId, artworkUrl, score), 100);
+    }
+}
+
+// Update hero section for direct play (regional/global songs)
+function updateHeroForDirectPlay(title, artist, artworkUrl, score) {
+    const heroTitle = document.getElementById('heroTitle');
+    const heroArtist = document.getElementById('heroArtist');
+    const heroScore = document.getElementById('heroScore');
+    const heroArtwork = document.getElementById('heroArtwork');
+    const heroBg = document.getElementById('heroBg');
+    const heroLabel = document.querySelector('.hero-label');
+    const playHeroBtn = document.getElementById('playHeroBtn');
+
+    // Update song info
+    if (heroTitle) heroTitle.textContent = title;
+    if (heroArtist) heroArtist.textContent = artist;
+    if (heroScore) heroScore.textContent = score ? score.toFixed(2) : '-';
+
+    // Update artwork
+    if (heroArtwork && artworkUrl) {
+        heroArtwork.src = artworkUrl;
+        heroArtwork.alt = `${title} album art`;
+    }
+
+    // Update background
+    if (heroBg && artworkUrl) {
+        heroBg.style.backgroundImage = `url(${artworkUrl})`;
+    }
+
+    // Update label
+    if (heroLabel) heroLabel.textContent = 'Now Playing';
+
+    // Update play button
+    if (playHeroBtn) {
+        playHeroBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+            Now Playing
+        `;
+        playHeroBtn.classList.add('now-playing');
     }
 }
 
@@ -459,7 +504,7 @@ function createSongElement(song, index, chartMode = 'india') {
             // For global chart, use direct play with video ID
             const videoId = el.dataset.videoId;
             if (videoId) {
-                playRegionalSongDirect(el.dataset.title, el.dataset.artist, videoId, el.dataset.artwork);
+                playRegionalSongDirect(el.dataset.title, el.dataset.artist, videoId, el.dataset.artwork, song.score);
             }
         } else {
             // For India chart, use index-based play
@@ -1097,7 +1142,7 @@ function setupEventListeners() {
             // Play from global chart
             const song = chartData?.global_chart?.[0];
             if (song && song.youtube_video_id) {
-                playRegionalSongDirect(song.title, song.artist, song.youtube_video_id, song.artwork_url);
+                playRegionalSongDirect(song.title, song.artist, song.youtube_video_id, song.artwork_url, song.score);
             }
         } else {
             // Play from India chart
