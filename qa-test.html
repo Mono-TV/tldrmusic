@@ -298,7 +298,21 @@
                     <span class="theater-artist" id="theaterArtist"></span>
                 </div>
             </div>
-            <div class="hero-inner" id="heroInner">
+            <!-- Hero Skeleton Loading -->
+            <div class="hero-skeleton skeleton-container" id="heroSkeleton">
+                <div class="skeleton skeleton-hero-artwork"></div>
+                <div class="skeleton-hero-info">
+                    <div class="skeleton skeleton-label"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-artist"></div>
+                    <div class="skeleton-stats">
+                        <div class="skeleton skeleton-stat"></div>
+                        <div class="skeleton skeleton-stat"></div>
+                    </div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            </div>
+            <div class="hero-inner" id="heroInner" style="display: none;">
                 <div class="hero-artwork-wrapper">
                     <img class="hero-artwork" id="heroArtwork" src="" alt="" style="display: none;">
                     <div class="hero-rank">
@@ -626,7 +640,12 @@
             'Accessibility': { icon: '&#9855;', name: 'A11y' },
             'ErrorHandling': { icon: '&#9888;&#65039;', name: 'Errors' },
             'Boundary': { icon: '&#128290;', name: 'Boundary' },
-            'Performance': { icon: '&#9889;', name: 'Perf' }
+            'Performance': { icon: '&#9889;', name: 'Perf' },
+            'SkeletonUI': { icon: '&#128128;', name: 'Skeleton' },
+            'HumanUsage': { icon: '&#128100;', name: 'Human Usage' },
+            'Playback': { icon: '&#127925;', name: 'Playback' },
+            'Flows': { icon: '&#128260;', name: 'Flows' },
+            'ButtonStates': { icon: '&#127918;', name: 'Button States' }
         };
 
         // Console capture
