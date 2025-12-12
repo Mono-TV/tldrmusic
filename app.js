@@ -104,9 +104,67 @@ document.addEventListener('DOMContentLoaded', init);
 async function init() {
     loadYouTubeAPI();
     loadUserData();
+    renderSkeletons(); // Show skeletons immediately
     await loadChartData();
     setupEventListeners();
     initializePlaybackUI();
+}
+
+// Render skeleton loading placeholders
+function renderSkeletons() {
+    // Chart skeleton - 25 cards
+    const chartSkeleton = document.getElementById('chartSkeleton');
+    if (chartSkeleton) {
+        let skeletonHTML = '';
+        for (let i = 0; i < 25; i++) {
+            skeletonHTML += `
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-artwork"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-artist"></div>
+                        <div class="skeleton-meta">
+                            <div class="skeleton skeleton-score"></div>
+                            <div class="skeleton skeleton-rank"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        chartSkeleton.innerHTML = skeletonHTML;
+    }
+
+    // Regional skeleton - 4 language groups with 5 songs each
+    const regionalGrid = document.getElementById('regionalGrid');
+    if (regionalGrid) {
+        let regionalHTML = '';
+        for (let r = 0; r < 4; r++) {
+            let songsHTML = '';
+            for (let s = 0; s < 5; s++) {
+                songsHTML += `
+                    <div class="skeleton-regional-song">
+                        <div class="skeleton skeleton-thumb"></div>
+                        <div class="skeleton-song-info">
+                            <div class="skeleton skeleton-song-title"></div>
+                            <div class="skeleton skeleton-song-artist"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            regionalHTML += `
+                <div class="skeleton-regional skeleton-container" id="regionalSkeleton${r + 1}">
+                    <div class="skeleton-regional-header">
+                        <div class="skeleton skeleton-icon"></div>
+                        <div class="skeleton skeleton-name"></div>
+                    </div>
+                    <div class="skeleton-regional-songs">
+                        ${songsHTML}
+                    </div>
+                </div>
+            `;
+        }
+        regionalGrid.innerHTML = regionalHTML;
+    }
 }
 
 // Load chart data from API (with fallback to local JSON)
