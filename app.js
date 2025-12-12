@@ -112,13 +112,13 @@ async function init() {
 
 // Render skeleton loading placeholders
 function renderSkeletons() {
-    // Chart skeleton - 25 cards
-    const chartSkeleton = document.getElementById('chartSkeleton');
-    if (chartSkeleton) {
+    // Chart skeleton - 25 cards directly in chartList
+    const chartList = document.getElementById('chartList');
+    if (chartList) {
         let skeletonHTML = '';
         for (let i = 0; i < 25; i++) {
             skeletonHTML += `
-                <div class="skeleton-card">
+                <div class="skeleton-card" data-skeleton="true">
                     <div class="skeleton skeleton-artwork"></div>
                     <div class="skeleton-info">
                         <div class="skeleton skeleton-title"></div>
@@ -131,7 +131,7 @@ function renderSkeletons() {
                 </div>
             `;
         }
-        chartSkeleton.innerHTML = skeletonHTML;
+        chartList.innerHTML = skeletonHTML;
     }
 
     // Regional skeleton - 4 language groups with 5 songs each
@@ -152,7 +152,7 @@ function renderSkeletons() {
                 `;
             }
             regionalHTML += `
-                <div class="skeleton-regional skeleton-container" id="regionalSkeleton${r + 1}">
+                <div class="skeleton-regional" data-skeleton="true">
                     <div class="skeleton-regional-header">
                         <div class="skeleton skeleton-icon"></div>
                         <div class="skeleton skeleton-name"></div>
@@ -206,15 +206,7 @@ function hideSkeletons() {
     if (heroSkeleton) heroSkeleton.style.display = 'none';
     if (heroInner) heroInner.style.display = 'flex';
 
-    // Chart skeletons are replaced by renderChart()
-    const chartSkeleton = document.getElementById('chartSkeleton');
-    if (chartSkeleton) chartSkeleton.style.display = 'none';
-
-    // Regional skeletons are replaced by renderRegionalCharts()
-    for (let i = 1; i <= 4; i++) {
-        const skeleton = document.getElementById(`regionalSkeleton${i}`);
-        if (skeleton) skeleton.style.display = 'none';
-    }
+    // Chart and regional skeletons are replaced by innerHTML in render functions
 }
 
 // Render hero section with #1 song
