@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TLDR Music - India's Top 25</title>
-    <link rel="stylesheet" href="style.css?v=20">
+    <link rel="stylesheet" href="style.css?v=21">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -71,7 +71,21 @@
                     <span class="theater-artist" id="theaterArtist"></span>
                 </div>
             </div>
-            <div class="hero-inner" id="heroInner">
+            <!-- Hero Skeleton Loading -->
+            <div class="hero-skeleton skeleton-container" id="heroSkeleton">
+                <div class="skeleton skeleton-artwork"></div>
+                <div class="skeleton-content">
+                    <div class="skeleton skeleton-label"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-artist"></div>
+                    <div class="skeleton-stats">
+                        <div class="skeleton skeleton-stat"></div>
+                        <div class="skeleton skeleton-stat"></div>
+                    </div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            </div>
+            <div class="hero-inner" id="heroInner" style="display: none;">
                 <div class="hero-artwork-wrapper">
                     <img class="hero-artwork" id="heroArtwork" src="" alt="" style="display: none;">
                     <div class="hero-rank">
@@ -148,9 +162,96 @@
                     <h3>Quick Picks</h3>
                 </div>
                 <div class="chart-list" id="chartList">
-                    <div class="loading-state">
-                        <div class="spinner"></div>
-                        <p>Loading chart...</p>
+                    <!-- Skeleton Loading Grid -->
+                    <div class="skeleton-grid skeleton-container" id="chartSkeleton">
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-artwork"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-artist"></div>
+                                <div class="skeleton-meta">
+                                    <div class="skeleton skeleton-score"></div>
+                                    <div class="skeleton skeleton-rank"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -162,7 +263,123 @@
                     <p class="regional-subtitle">Trending across India's diverse music scenes</p>
                 </div>
                 <div class="regional-grid" id="regionalGrid">
-                    <!-- Regional charts will be rendered here by JS -->
+                    <!-- Regional Skeleton Loading -->
+                    <div class="skeleton-regional skeleton-container" id="regionalSkeleton1">
+                        <div class="skeleton-regional-header">
+                            <div class="skeleton skeleton-icon"></div>
+                            <div class="skeleton skeleton-name"></div>
+                        </div>
+                        <div class="skeleton-regional-songs">
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skeleton-regional skeleton-container" id="regionalSkeleton2">
+                        <div class="skeleton-regional-header">
+                            <div class="skeleton skeleton-icon"></div>
+                            <div class="skeleton skeleton-name"></div>
+                        </div>
+                        <div class="skeleton-regional-songs">
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skeleton-regional skeleton-container" id="regionalSkeleton3">
+                        <div class="skeleton-regional-header">
+                            <div class="skeleton skeleton-icon"></div>
+                            <div class="skeleton skeleton-name"></div>
+                        </div>
+                        <div class="skeleton-regional-songs">
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skeleton-regional skeleton-container" id="regionalSkeleton4">
+                        <div class="skeleton-regional-header">
+                            <div class="skeleton skeleton-icon"></div>
+                            <div class="skeleton skeleton-name"></div>
+                        </div>
+                        <div class="skeleton-regional-songs">
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-regional-song">
+                                <div class="skeleton skeleton-thumb"></div>
+                                <div class="skeleton-song-info">
+                                    <div class="skeleton skeleton-song-title"></div>
+                                    <div class="skeleton skeleton-song-artist"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>

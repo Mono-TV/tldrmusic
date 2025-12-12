@@ -140,9 +140,31 @@ async function loadChartData() {
     }
 }
 
+// Hide skeleton loading and show actual content
+function hideSkeletons() {
+    // Hide hero skeleton, show hero content
+    const heroSkeleton = document.getElementById('heroSkeleton');
+    const heroInner = document.getElementById('heroInner');
+    if (heroSkeleton) heroSkeleton.style.display = 'none';
+    if (heroInner) heroInner.style.display = 'flex';
+
+    // Chart skeletons are replaced by renderChart()
+    const chartSkeleton = document.getElementById('chartSkeleton');
+    if (chartSkeleton) chartSkeleton.style.display = 'none';
+
+    // Regional skeletons are replaced by renderRegionalCharts()
+    for (let i = 1; i <= 4; i++) {
+        const skeleton = document.getElementById(`regionalSkeleton${i}`);
+        if (skeleton) skeleton.style.display = 'none';
+    }
+}
+
 // Render hero section with #1 song
 function renderHero() {
     if (!chartData || !chartData.chart || !chartData.chart[0]) return;
+
+    // Hide skeletons when rendering actual content
+    hideSkeletons();
 
     const song = chartData.chart[0];
 

@@ -1722,6 +1722,261 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* ===== SKELETON LOADING ===== */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: 8px;
+}
+
+.skeleton-text {
+    height: 1em;
+    border-radius: 4px;
+}
+
+.skeleton-text.title {
+    height: 1.5em;
+    width: 70%;
+}
+
+.skeleton-text.subtitle {
+    height: 1em;
+    width: 50%;
+}
+
+.skeleton-text.small {
+    height: 0.8em;
+    width: 40%;
+}
+
+/* Hero Skeleton */
+.hero-skeleton {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.hero-skeleton .skeleton-artwork {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    flex-shrink: 0;
+}
+
+.hero-skeleton .skeleton-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.hero-skeleton .skeleton-label {
+    width: 100px;
+    height: 0.75em;
+}
+
+.hero-skeleton .skeleton-title {
+    width: 60%;
+    height: 2em;
+}
+
+.hero-skeleton .skeleton-artist {
+    width: 40%;
+    height: 1.2em;
+}
+
+.hero-skeleton .skeleton-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.5rem;
+}
+
+.hero-skeleton .skeleton-stat {
+    width: 60px;
+    height: 2.5em;
+}
+
+.hero-skeleton .skeleton-button {
+    width: 140px;
+    height: 44px;
+    border-radius: 22px;
+    margin-top: 0.5rem;
+}
+
+/* Song Card Skeleton */
+.skeleton-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.skeleton-card .skeleton-artwork {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+}
+
+.skeleton-card .skeleton-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skeleton-card .skeleton-title {
+    width: 80%;
+    height: 1em;
+}
+
+.skeleton-card .skeleton-artist {
+    width: 60%;
+    height: 0.85em;
+}
+
+.skeleton-card .skeleton-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+}
+
+.skeleton-card .skeleton-score {
+    width: 40px;
+    height: 0.75em;
+}
+
+.skeleton-card .skeleton-rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+/* Skeleton Grid */
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.25rem;
+}
+
+/* Regional Skeleton */
+.skeleton-regional {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.skeleton-regional-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.skeleton-regional-header .skeleton-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+}
+
+.skeleton-regional-header .skeleton-name {
+    width: 100px;
+    height: 1.2em;
+}
+
+.skeleton-regional-songs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skeleton-regional-song {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.skeleton-regional-song .skeleton-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.skeleton-regional-song .skeleton-song-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.skeleton-regional-song .skeleton-song-title {
+    width: 70%;
+    height: 0.9em;
+}
+
+.skeleton-regional-song .skeleton-song-artist {
+    width: 50%;
+    height: 0.75em;
+}
+
+/* Hide skeleton when content loads */
+.skeleton-container {
+    transition: opacity 0.3s ease;
+}
+
+.skeleton-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+@media (max-width: 768px) {
+    .hero-skeleton {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .hero-skeleton .skeleton-artwork {
+        width: 150px;
+        height: 150px;
+    }
+
+    .hero-skeleton .skeleton-content {
+        align-items: center;
+    }
+
+    .hero-skeleton .skeleton-title {
+        width: 80%;
+    }
+
+    .hero-skeleton .skeleton-artist {
+        width: 60%;
+    }
+
+    .skeleton-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+
 .toast {
     position: fixed;
     bottom: 2rem;
