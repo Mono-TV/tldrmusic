@@ -3,6 +3,15 @@
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
+// localStorage keys
+const STORAGE_KEYS = {
+    FAVORITES: 'tldr-favorites',
+    HISTORY: 'tldr-history',
+    SHUFFLE: 'tldr-shuffle',
+    REPEAT: 'tldr-repeat',
+    QUEUE: 'tldr-queue'
+};
+
 // State
 let chartData = null;
 let currentSongIndex = -1;
@@ -14,11 +23,19 @@ let isPlaying = false;
 let isVideoVisible = false;
 let isLyricsVisible = false;
 let isTheaterMode = false;
+let isQueueVisible = false;
 let progressInterval = null;
 let isHeroVisible = true;
 let heroObserver = null;
 let currentChartMode = 'india';  // 'india' or 'global'
 let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
+
+// User data (persisted in localStorage)
+let favorites = [];           // Array of {title, artist, videoId, artwork, addedAt}
+let playHistory = [];         // Array of recently played songs
+let queue = [];               // Custom queue
+let isShuffleOn = false;
+let repeatMode = 'off';       // 'off', 'all', 'one'
 
 // DOM Elements
 const chartList = document.getElementById('chartList');
@@ -86,8 +103,10 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     loadYouTubeAPI();
+    loadUserData();
     await loadChartData();
     setupEventListeners();
+    initializePlaybackUI();
 }
 
 // Load chart data from API (with fallback to local JSON)
@@ -334,6 +353,12 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
     isRegionalSongPlaying = true;
     currentPlayingVideoId = videoId;  // Track the video ID
     currentSongIndex = -1; // Reset main chart index
+
+    // Track in history
+    addToHistory({ title, artist, youtube_video_id: videoId, artwork_url: artworkUrl });
+
+    // Update favorite button state
+    updateFavoriteButtons();
 
     // Update player bar UI
     if (playerBarTitle) playerBarTitle.textContent = title;
@@ -813,6 +838,12 @@ function playSong(index) {
     isRegionalSongPlaying = false;
     currentPlayingVideoId = null;
 
+    // Track in history
+    addToHistory(song);
+
+    // Update favorite button state
+    updateFavoriteButtons();
+
     // Close theater mode if active (stops theater player, skip resume since new song will play)
     if (isTheaterMode) {
         closeTheaterMode(true);
@@ -900,7 +931,14 @@ function onPlayerStateChange(event) {
         updateCardPlayingState(false);
         updateHeroButtonState(false);
         stopProgressTracking();
-        // Auto play next
+
+        // Handle repeat one - replay current song
+        if (repeatMode === 'one' && currentSongIndex >= 0) {
+            playSong(currentSongIndex);
+            return;
+        }
+
+        // Auto play next (respects queue/shuffle/repeat-all)
         playNext();
     }
 }
@@ -1204,6 +1242,14 @@ function setupEventListeners() {
     heroLyricsBtn?.addEventListener('click', toggleLyrics);
     heroVideoBtn?.addEventListener('click', toggleVideo);
 
+    // New feature buttons
+    document.getElementById('favoriteBtn')?.addEventListener('click', () => toggleFavorite());
+    document.getElementById('shuffleBtn')?.addEventListener('click', toggleShuffle);
+    document.getElementById('repeatBtn')?.addEventListener('click', cycleRepeat);
+    document.getElementById('queueToggleBtn')?.addEventListener('click', toggleQueue);
+    document.getElementById('queueClose')?.addEventListener('click', toggleQueue);
+    document.getElementById('queueClear')?.addEventListener('click', clearQueue);
+
     document.addEventListener('keydown', handleKeyboard);
 }
 
@@ -1247,8 +1293,28 @@ function playPrevious() {
 
 // Play next song
 function playNext() {
+    // Check queue first
+    const queuedSong = playFromQueue();
+    if (queuedSong) {
+        playRegionalSongDirect(queuedSong.title, queuedSong.artist, queuedSong.videoId, queuedSong.artwork);
+        return;
+    }
+
+    // Handle repeat one (handled in onPlayerStateChange for auto-next)
+    // For manual next, skip to next song
+
+    // Handle shuffle
+    if (isShuffleOn && chartData?.chart) {
+        const randomIndex = Math.floor(Math.random() * chartData.chart.length);
+        playSong(randomIndex);
+        return;
+    }
+
+    // Normal next
     if (chartData && currentSongIndex < chartData.chart.length - 1) {
         playSong(currentSongIndex + 1);
+    } else if (repeatMode === 'all' && chartData?.chart?.length > 0) {
+        playSong(0); // Loop back to start
     }
 }
 
@@ -1599,6 +1665,9 @@ async function shareChart() {
 
 // Keyboard navigation
 function handleKeyboard(e) {
+    // Skip if typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
     if (!chartData) return;
 
     const maxIndex = chartData.chart.length - 1;
@@ -1620,7 +1689,11 @@ function handleKeyboard(e) {
             break;
         case 'Enter':
         case ' ':
-            if (currentSongIndex === -1 && chartData.chart.length > 0) {
+            if (e.target.tagName === 'BUTTON') return; // Let button handle it
+            if (player) {
+                e.preventDefault();
+                togglePlayPause();
+            } else if (currentSongIndex === -1 && chartData.chart.length > 0) {
                 e.preventDefault();
                 playSong(0);
             }
@@ -1630,8 +1703,31 @@ function handleKeyboard(e) {
             e.preventDefault();
             toggleLyrics();
             break;
+        case 'h':
+        case 'H':
+            e.preventDefault();
+            toggleFavorite();
+            break;
+        case 's':
+        case 'S':
+            e.preventDefault();
+            toggleShuffle();
+            break;
+        case 'r':
+        case 'R':
+            e.preventDefault();
+            cycleRepeat();
+            break;
+        case 'q':
+        case 'Q':
+            e.preventDefault();
+            toggleQueue();
+            break;
         case 'Escape':
-            if (isTheaterMode) {
+            if (isQueueVisible) {
+                e.preventDefault();
+                toggleQueue();
+            } else if (isTheaterMode) {
                 e.preventDefault();
                 closeTheaterMode();
             } else if (isLyricsVisible) {
@@ -1669,4 +1765,391 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ============================================================
+// localStorage Functions
+// ============================================================
+
+function loadUserData() {
+    try {
+        favorites = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
+        playHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
+        queue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [];
+        isShuffleOn = localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true';
+        repeatMode = localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off';
+        console.log(`Loaded user data: ${favorites.length} favorites, ${playHistory.length} history items`);
+    } catch (e) {
+        console.warn('Error loading user data:', e);
+    }
+}
+
+function saveFavorites() {
+    localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
+}
+
+function saveHistory() {
+    localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(playHistory.slice(0, 50)));
+}
+
+function saveQueue() {
+    localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(queue));
+}
+
+function savePlaybackSettings() {
+    localStorage.setItem(STORAGE_KEYS.SHUFFLE, isShuffleOn);
+    localStorage.setItem(STORAGE_KEYS.REPEAT, repeatMode);
+}
+
+// ============================================================
+// Favorites Functions
+// ============================================================
+
+function toggleFavorite(song = null) {
+    // Get current song if not provided
+    if (!song) {
+        if (currentSongIndex >= 0 && chartData?.chart[currentSongIndex]) {
+            song = chartData.chart[currentSongIndex];
+        } else if (isRegionalSongPlaying) {
+            // Get from player bar info
+            song = {
+                title: playerBarTitle?.textContent,
+                artist: playerBarArtist?.textContent,
+                youtube_video_id: currentPlayingVideoId,
+                artwork_url: playerBarArtwork?.src
+            };
+        }
+    }
+    if (!song || !song.title) return;
+
+    const songId = `${song.title}-${song.artist}`.toLowerCase();
+    const index = favorites.findIndex(f => `${f.title}-${f.artist}`.toLowerCase() === songId);
+
+    if (index >= 0) {
+        favorites.splice(index, 1);
+        showToast('Removed from favorites');
+    } else {
+        favorites.push({
+            title: song.title,
+            artist: song.artist,
+            videoId: song.youtube_video_id || song.videoId,
+            artwork: song.artwork_url || song.artwork,
+            addedAt: Date.now()
+        });
+        showToast('Added to favorites');
+    }
+
+    saveFavorites();
+    updateFavoriteButtons();
+    renderFavoritesSection();
+}
+
+function isSongFavorite(song) {
+    if (!song) return false;
+    const songId = `${song.title}-${song.artist}`.toLowerCase();
+    return favorites.some(f => `${f.title}-${f.artist}`.toLowerCase() === songId);
+}
+
+function updateFavoriteButtons() {
+    const btn = document.getElementById('favoriteBtn');
+    let currentSong = null;
+
+    if (currentSongIndex >= 0 && chartData?.chart[currentSongIndex]) {
+        currentSong = chartData.chart[currentSongIndex];
+    } else if (isRegionalSongPlaying && playerBarTitle?.textContent) {
+        currentSong = {
+            title: playerBarTitle.textContent,
+            artist: playerBarArtist?.textContent
+        };
+    }
+
+    const isFav = currentSong ? isSongFavorite(currentSong) : false;
+    btn?.classList.toggle('active', isFav);
+}
+
+function renderFavoritesSection() {
+    const section = document.getElementById('favoritesSection');
+    const list = document.getElementById('favoritesList');
+    const count = document.getElementById('favoritesCount');
+
+    if (!section || !list) return;
+
+    if (favorites.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = 'block';
+    if (count) count.textContent = `${favorites.length} song${favorites.length !== 1 ? 's' : ''}`;
+
+    list.innerHTML = favorites.map(fav => `
+        <div class="favorite-card" data-video-id="${fav.videoId || ''}" data-title="${escapeHtml(fav.title)}" data-artist="${escapeHtml(fav.artist)}" data-artwork="${fav.artwork || ''}">
+            <div class="favorite-card-artwork">
+                ${fav.artwork
+                    ? `<img src="${fav.artwork}" alt="${escapeHtml(fav.title)}" loading="lazy">`
+                    : `<div class="favorite-card-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                        </svg>
+                    </div>`}
+                <button class="favorite-remove" title="Remove from favorites">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="favorite-card-info">
+                <div class="favorite-card-title">${escapeHtml(fav.title)}</div>
+                <div class="favorite-card-artist">${escapeHtml(fav.artist)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Add click handlers
+    list.querySelectorAll('.favorite-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.favorite-remove')) {
+                // Remove from favorites
+                const title = card.dataset.title;
+                const artist = card.dataset.artist;
+                toggleFavorite({ title, artist });
+                return;
+            }
+            // Play the song
+            const videoId = card.dataset.videoId;
+            if (videoId) {
+                playRegionalSongDirect(card.dataset.title, card.dataset.artist, videoId, card.dataset.artwork);
+            }
+        });
+    });
+}
+
+// ============================================================
+// History Functions
+// ============================================================
+
+function addToHistory(song) {
+    if (!song || !song.title) return;
+
+    const historyItem = {
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id || song.videoId,
+        artwork: song.artwork_url || song.artwork,
+        playedAt: Date.now()
+    };
+
+    // Remove duplicate if exists
+    const songId = `${song.title}-${song.artist}`.toLowerCase();
+    playHistory = playHistory.filter(h =>
+        `${h.title}-${h.artist}`.toLowerCase() !== songId
+    );
+
+    // Add to front
+    playHistory.unshift(historyItem);
+
+    // Keep only last 50
+    playHistory = playHistory.slice(0, 50);
+
+    saveHistory();
+}
+
+// ============================================================
+// Queue Functions
+// ============================================================
+
+function addToQueue(song, playNext = false) {
+    if (!song || !song.title) return;
+
+    const queueItem = {
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id || song.videoId,
+        artwork: song.artwork_url || song.artwork,
+        id: Date.now()
+    };
+
+    if (playNext) {
+        queue.unshift(queueItem);
+        showToast(`"${song.title}" will play next`);
+    } else {
+        queue.push(queueItem);
+        showToast(`Added "${song.title}" to queue`);
+    }
+
+    saveQueue();
+    renderQueuePanel();
+    updateQueueBadge();
+}
+
+function playFromQueue() {
+    if (queue.length === 0) return null;
+
+    const next = queue.shift();
+    saveQueue();
+    renderQueuePanel();
+    updateQueueBadge();
+
+    return next;
+}
+
+function clearQueue() {
+    queue = [];
+    saveQueue();
+    renderQueuePanel();
+    updateQueueBadge();
+    showToast('Queue cleared');
+}
+
+function removeFromQueue(id) {
+    queue = queue.filter(q => q.id !== id);
+    saveQueue();
+    renderQueuePanel();
+    updateQueueBadge();
+}
+
+function updateQueueBadge() {
+    const badge = document.getElementById('queueBadge');
+    if (!badge) return;
+
+    if (queue.length > 0) {
+        badge.textContent = queue.length;
+        badge.classList.add('visible');
+    } else {
+        badge.classList.remove('visible');
+    }
+}
+
+function toggleQueue() {
+    isQueueVisible = !isQueueVisible;
+    const panel = document.getElementById('queuePanel');
+    const btn = document.getElementById('queueToggleBtn');
+
+    if (isQueueVisible) {
+        panel?.classList.add('visible');
+        btn?.classList.add('active');
+        renderQueuePanel();
+    } else {
+        panel?.classList.remove('visible');
+        btn?.classList.remove('active');
+    }
+}
+
+function renderQueuePanel() {
+    const content = document.getElementById('queueContent');
+    const countEl = document.getElementById('queuePanelCount');
+    if (!content) return;
+
+    if (countEl) countEl.textContent = `${queue.length} song${queue.length !== 1 ? 's' : ''}`;
+
+    if (queue.length === 0) {
+        content.innerHTML = `
+            <div class="queue-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <p>Your queue is empty</p>
+                <p class="queue-hint">Click the + on song cards to add them</p>
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="queue-list">
+            ${queue.map((item, index) => `
+                <div class="queue-item" data-id="${item.id}" data-video-id="${item.videoId || ''}" data-title="${escapeHtml(item.title)}" data-artist="${escapeHtml(item.artist)}" data-artwork="${item.artwork || ''}">
+                    <span class="queue-item-number">${index + 1}</span>
+                    <div class="queue-item-artwork">
+                        ${item.artwork
+                            ? `<img src="${item.artwork}" alt="" loading="lazy">`
+                            : `<div class="queue-item-placeholder"></div>`}
+                    </div>
+                    <div class="queue-item-info">
+                        <div class="queue-item-title">${escapeHtml(item.title)}</div>
+                        <div class="queue-item-artist">${escapeHtml(item.artist)}</div>
+                    </div>
+                    <button class="queue-item-remove" title="Remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    // Add click handlers
+    content.querySelectorAll('.queue-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            if (e.target.closest('.queue-item-remove')) {
+                removeFromQueue(parseInt(item.dataset.id));
+                return;
+            }
+            // Play and remove from queue
+            const videoId = item.dataset.videoId;
+            if (videoId) {
+                removeFromQueue(parseInt(item.dataset.id));
+                playRegionalSongDirect(item.dataset.title, item.dataset.artist, videoId, item.dataset.artwork);
+            }
+        });
+    });
+}
+
+// ============================================================
+// Shuffle & Repeat Functions
+// ============================================================
+
+function toggleShuffle() {
+    isShuffleOn = !isShuffleOn;
+    savePlaybackSettings();
+
+    document.getElementById('shuffleBtn')?.classList.toggle('active', isShuffleOn);
+    showToast(isShuffleOn ? 'Shuffle on' : 'Shuffle off');
+}
+
+function cycleRepeat() {
+    const modes = ['off', 'all', 'one'];
+    const currentIndex = modes.indexOf(repeatMode);
+    repeatMode = modes[(currentIndex + 1) % modes.length];
+    savePlaybackSettings();
+
+    updateRepeatButton();
+
+    const messages = {
+        'off': 'Repeat off',
+        'all': 'Repeat all',
+        'one': 'Repeat one'
+    };
+    showToast(messages[repeatMode]);
+}
+
+function updateRepeatButton() {
+    const btn = document.getElementById('repeatBtn');
+    if (!btn) return;
+
+    btn.classList.remove('repeat-one', 'repeat-all');
+    if (repeatMode === 'one') {
+        btn.classList.add('active', 'repeat-one');
+    } else if (repeatMode === 'all') {
+        btn.classList.add('active', 'repeat-all');
+    } else {
+        btn.classList.remove('active');
+    }
+}
+
+// Initialize UI state from loaded settings
+function initializePlaybackUI() {
+    document.getElementById('shuffleBtn')?.classList.toggle('active', isShuffleOn);
+    updateRepeatButton();
+    updateQueueBadge();
+    renderFavoritesSection();
 }

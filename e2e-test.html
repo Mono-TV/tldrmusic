@@ -3,13 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TLDR Music - India's Top 25</title>
+    <title>TLDR Music - E2E Tests</title>
     <link rel="stylesheet" href="style.css?v=20">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Test overlay styles */
+        .test-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            max-height: 100vh;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 12px;
+        }
+
+        .test-header {
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-header h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            color: #6366f1;
+        }
+
+        .test-header p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+
+        .test-controls {
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .test-btn:hover {
+            opacity: 0.9;
+        }
+
+        .test-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .test-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .test-summary {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-stat {
+            text-align: center;
+        }
+
+        .test-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .test-stat-value.passed { color: #22c55e; }
+        .test-stat-value.failed { color: #ef4444; }
+        .test-stat-value.total { color: #6366f1; }
+
+        .test-stat-label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .test-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .test-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .test-group-header {
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            margin-bottom: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .test-item {
+            padding: 0.4rem 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .test-item.pass { color: #22c55e; }
+        .test-item.fail { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+        .test-console {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #000;
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            line-height: 1.4;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-console-line {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .test-console-line.info { color: rgba(255, 255, 255, 0.5); }
+        .test-console-line.pass { color: #22c55e; }
+        .test-console-line.fail { color: #ef4444; }
+        .test-console-line.header { color: #6366f1; font-weight: 600; }
+
+        .test-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10001;
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+
+        .test-overlay.hidden {
+            transform: translateX(100%);
+        }
+
+        .test-overlay.hidden + .test-toggle {
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    <!-- Full App DOM (copied from index.html) -->
     <div class="app">
         <!-- Header -->
         <header class="header">
@@ -54,10 +227,9 @@
             </div>
         </header>
 
-        <!-- Hero Section - #1 Song -->
+        <!-- Hero Section -->
         <section class="hero" id="heroSection">
             <div class="hero-bg" id="heroBg"></div>
-            <!-- Theater mode video container -->
             <div class="hero-theater" id="heroTheater">
                 <div class="theater-video" id="theaterVideo"></div>
                 <button class="theater-close" id="theaterClose">
@@ -114,7 +286,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Hero progress bar -->
                     <div class="hero-progress" id="heroProgress">
                         <div class="hero-progress-bar" id="heroProgressBar">
                             <div class="hero-progress-fill" id="heroProgressFill"></div>
@@ -128,12 +299,9 @@
             </div>
         </section>
 
-        <!-- Dynamic gradient background (outside main for proper z-index) -->
         <div class="main-gradient" id="mainGradient"></div>
 
-        <!-- Main Content -->
         <main class="main">
-            <!-- Favorites Section -->
             <section class="favorites-section" id="favoritesSection" style="display: none;">
                 <div class="favorites-header">
                     <h3>Your Favorites</h3>
@@ -142,7 +310,6 @@
                 <div class="favorites-list" id="favoritesList"></div>
             </section>
 
-            <!-- Chart List -->
             <section class="chart-section">
                 <div class="chart-header">
                     <h3>Quick Picks</h3>
@@ -155,27 +322,22 @@
                 </div>
             </section>
 
-            <!-- Regional Spotlights -->
             <section class="regional-section" id="regionalSection">
                 <div class="regional-header">
                     <h3>Regional Spotlights</h3>
                     <p class="regional-subtitle">Trending across India's diverse music scenes</p>
                 </div>
-                <div class="regional-grid" id="regionalGrid">
-                    <!-- Regional charts will be rendered here by JS -->
-                </div>
+                <div class="regional-grid" id="regionalGrid"></div>
             </section>
         </main>
 
-        <!-- Footer -->
         <footer class="footer">
             <p class="copyright">&copy; 2025 TLDR Music</p>
         </footer>
     </div>
 
-    <!-- Floating Player Bar -->
+    <!-- Player Bar -->
     <div class="player-bar" id="playerBar">
-        <!-- Video container (mini player) -->
         <div class="video-container" id="videoContainer">
             <div class="video-wrapper" id="videoWrapper">
                 <div class="player-placeholder">
@@ -194,7 +356,6 @@
         </div>
 
         <div class="player-bar-inner">
-            <!-- Song info -->
             <div class="player-bar-info">
                 <img class="player-bar-artwork" id="playerBarArtwork" src="" alt="">
                 <div class="player-bar-text">
@@ -209,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- Center: Controls + Progress -->
             <div class="player-bar-center">
                 <div class="player-bar-controls">
                     <button class="control-btn" id="shuffleBtn" title="Shuffle (S)">
@@ -259,7 +419,6 @@
                 </div>
             </div>
 
-            <!-- Right controls -->
             <div class="player-bar-actions">
                 <button class="action-btn" id="favoriteBtn" title="Add to Favorites (H)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -354,6 +513,170 @@
         <span id="toastMessage"></span>
     </div>
 
+    <!-- Test Overlay -->
+    <div class="test-overlay" id="testOverlay">
+        <div class="test-header">
+            <h2>E2E Test Suite</h2>
+            <p>User Interaction Tests</p>
+        </div>
+        <div class="test-controls">
+            <button class="test-btn" id="runE2ETests">Run Tests</button>
+            <button class="test-btn secondary" id="hideTests">Hide</button>
+        </div>
+        <div class="test-summary" id="testSummary" style="display: none;">
+            <div class="test-stat">
+                <div class="test-stat-value passed" id="e2ePassedCount">0</div>
+                <div class="test-stat-label">Passed</div>
+            </div>
+            <div class="test-stat">
+                <div class="test-stat-value failed" id="e2eFailedCount">0</div>
+                <div class="test-stat-label">Failed</div>
+            </div>
+            <div class="test-stat">
+                <div class="test-stat-value total" id="e2eTotalCount">0</div>
+                <div class="test-stat-label">Total</div>
+            </div>
+        </div>
+        <div class="test-results" id="e2eResults"></div>
+        <div class="test-console" id="e2eConsole">
+            <div class="test-console-line info">Click "Run Tests" to start E2E tests...</div>
+        </div>
+    </div>
+    <button class="test-toggle" id="showTests">Show Tests</button>
+
+    <!-- Load app and test scripts -->
     <script src="app.js?v=30"></script>
+    <script src="e2e-tests.js"></script>
+    <script>
+        const runBtn = document.getElementById('runE2ETests');
+        const hideBtn = document.getElementById('hideTests');
+        const showBtn = document.getElementById('showTests');
+        const overlay = document.getElementById('testOverlay');
+        const summaryEl = document.getElementById('testSummary');
+        const resultsEl = document.getElementById('e2eResults');
+        const consoleEl = document.getElementById('e2eConsole');
+
+        // Console capture
+        const logLines = [];
+        const originalLog = console.log;
+
+        function captureLog(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg =>
+                typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            ).join(' ');
+            logLines.push(message);
+            renderConsole();
+        }
+
+        function renderConsole() {
+            consoleEl.innerHTML = logLines.slice(-50).map(line => {
+                let className = 'info';
+                if (line.includes('✅')) className = 'pass';
+                else if (line.includes('❌')) className = 'fail';
+                else if (line.includes('===') || line.includes('TESTS') || line.includes('▶️') || line.includes('❤️') || line.includes('📋') || line.includes('🔀') || line.includes('📑') || line.includes('⌨️')) className = 'header';
+                return `<div class="test-console-line ${className}">${escapeHtml(line)}</div>`;
+            }).join('');
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderResults(results) {
+            const groups = {
+                'Play': [],
+                'Favorites': [],
+                'Queue': [],
+                'Shuffle/Repeat': [],
+                'Panels': [],
+                'Keyboard': []
+            };
+
+            results.forEach(r => {
+                if (r.name.toLowerCase().includes('play') || r.name.toLowerCase().includes('song') || r.name.toLowerCase().includes('next') || r.name.toLowerCase().includes('previous') || r.name.toLowerCase().includes('hero')) {
+                    groups['Play'].push(r);
+                } else if (r.name.toLowerCase().includes('favorite')) {
+                    groups['Favorites'].push(r);
+                } else if (r.name.toLowerCase().includes('queue')) {
+                    groups['Queue'].push(r);
+                } else if (r.name.toLowerCase().includes('shuffle') || r.name.toLowerCase().includes('repeat')) {
+                    groups['Shuffle/Repeat'].push(r);
+                } else if (r.name.toLowerCase().includes('panel') || r.name.toLowerCase().includes('lyrics') || r.name.toLowerCase().includes('toast') || r.name.toLowerCase().includes('video')) {
+                    groups['Panels'].push(r);
+                } else if (r.name.toLowerCase().includes('key') || r.name.toLowerCase().includes('arrow')) {
+                    groups['Keyboard'].push(r);
+                } else {
+                    groups['Play'].push(r);
+                }
+            });
+
+            resultsEl.innerHTML = Object.entries(groups)
+                .filter(([_, items]) => items.length > 0)
+                .map(([group, items]) => {
+                    const passCount = items.filter(i => i.status === 'PASS').length;
+                    const failCount = items.filter(i => i.status === 'FAIL').length;
+                    return `
+                        <div class="test-group">
+                            <div class="test-group-header">
+                                <span>${group}</span>
+                                <span style="color: ${failCount > 0 ? '#ef4444' : '#22c55e'}">${passCount}/${items.length}</span>
+                            </div>
+                            ${items.map(item => `
+                                <div class="test-item ${item.status.toLowerCase()}">
+                                    ${item.status === 'PASS' ? '✅' : '❌'} ${escapeHtml(item.name)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        hideBtn.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+        });
+
+        showBtn.addEventListener('click', () => {
+            overlay.classList.remove('hidden');
+        });
+
+        runBtn.addEventListener('click', async () => {
+            runBtn.disabled = true;
+            runBtn.textContent = 'Running...';
+            logLines.length = 0;
+
+            console.log = captureLog;
+
+            try {
+                const result = await E2ETestRunner.runAll();
+
+                document.getElementById('e2ePassedCount').textContent = result.passed;
+                document.getElementById('e2eFailedCount').textContent = result.failed;
+                document.getElementById('e2eTotalCount').textContent = result.passed + result.failed;
+
+                summaryEl.style.display = 'flex';
+                renderResults(result.results);
+            } catch (e) {
+                captureLog('Error running tests: ' + e.message);
+                console.error(e);
+            } finally {
+                console.log = originalLog;
+                runBtn.disabled = false;
+                runBtn.textContent = 'Run Tests';
+            }
+        });
+
+        // Also escape HTML in app.js if not defined
+        if (typeof escapeHtml === 'undefined') {
+            window.escapeHtml = function(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            };
+        }
+    </script>
 </body>
 </html>

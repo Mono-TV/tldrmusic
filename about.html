@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - TLDR Music</title>
-    <link rel="stylesheet" href="style.css?v=18">
+    <link rel="stylesheet" href="style.css?v=20">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -407,6 +407,16 @@
         .tech-label {
             font-size: 0.75rem;
             color: var(--text-muted);
+        }
+
+        kbd {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+            color: var(--accent);
         }
 
         .footer-copyright {
@@ -834,6 +844,145 @@
                         Endpoints include <code>/chart/current</code>, <code>/search</code>, and <code>/regional</code>.
                         <a href="https://tldrmusic-api-401132033262.asia-south1.run.app/docs" target="_blank" style="color: var(--accent);">View API Documentation</a>
                     </p>
+                </div>
+            </section>
+
+            <!-- User Features -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">&#9829;</span>
+                    Your Personal Features
+                </h2>
+                <p>
+                    TLDR Music now includes personal features that save to your browser - no account needed!
+                    All your preferences are stored locally and persist across sessions.
+                </p>
+
+                <ul class="step-list">
+                    <li class="step-item">
+                        <span class="step-number">&#9829;</span>
+                        <div class="step-content">
+                            <h4>Favorites</h4>
+                            <p>Click the heart button on the player bar (or press <kbd>H</kbd>) to favorite songs. Your favorites appear in a dedicated section at the top of the page for quick access.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">&#9776;</span>
+                        <div class="step-content">
+                            <h4>Queue</h4>
+                            <p>Build your own playlist! Add songs to queue and they'll play before the chart continues. Click the queue button (or press <kbd>Q</kbd>) to view and manage your queue.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">&#8634;</span>
+                        <div class="step-content">
+                            <h4>Shuffle & Repeat</h4>
+                            <p>Press <kbd>S</kbd> to toggle shuffle mode for random playback. Press <kbd>R</kbd> to cycle through repeat modes: Off → Repeat All → Repeat One.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">&#9201;</span>
+                        <div class="step-content">
+                            <h4>Listening History</h4>
+                            <p>Your recently played songs are automatically tracked (up to 50 songs). Find them in the queue panel for quick replay.</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Keyboard Shortcuts -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">&#9000;</span>
+                    Keyboard Shortcuts
+                </h2>
+                <p>
+                    Power users can control everything with keyboard shortcuts:
+                </p>
+
+                <div class="platform-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">Space</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Play / Pause</div>
+                            <div class="platform-weight">Toggle playback</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">H</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Favorite</div>
+                            <div class="platform-weight">Add/remove from favorites</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">S</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Shuffle</div>
+                            <div class="platform-weight">Toggle shuffle mode</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">R</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Repeat</div>
+                            <div class="platform-weight">Cycle repeat modes</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">Q</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Queue</div>
+                            <div class="platform-weight">Show/hide queue panel</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">L</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Lyrics</div>
+                            <div class="platform-weight">Show/hide lyrics panel</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8593;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Previous</div>
+                            <div class="platform-weight">Play previous song</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8595;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Next</div>
+                            <div class="platform-weight">Play next song</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8592;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Seek Back</div>
+                            <div class="platform-weight">Rewind 10 seconds</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8594;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Seek Forward</div>
+                            <div class="platform-weight">Skip 10 seconds</div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
