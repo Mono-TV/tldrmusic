@@ -492,7 +492,7 @@ function createSongElement(song, index, chartMode = 'india') {
             <div class="song-card-title">${escapeHtml(song.title)}</div>
             <div class="song-card-artist">${escapeHtml(song.artist)}</div>
             <div class="song-card-meta">
-                <span class="score">${song.score.toFixed(1)}</span>
+                <span class="score">${song.score.toFixed(2)}</span>
                 ${rankMovement}
                 ${viewsText ? `<span>${viewsText} views</span>` : ''}
             </div>
