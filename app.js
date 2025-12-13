@@ -1,6 +1,6 @@
 // TLDR Music - Frontend Application
 
-const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
+const API_BASE = 'http://localhost:8000';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // localStorage keys
@@ -103,11 +103,14 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     loadYouTubeAPI();
+    initGoogleAuth();   // Initialize Google Sign-In
+    checkAuthState();   // Check if user is already logged in
     loadUserData();
     renderSkeletons(); // Show skeletons immediately
     await loadChartData();
     setupEventListeners();
     initializePlaybackUI();
+    updateAuthUI();     // Update auth button in header
 }
 
 // Render skeleton loading placeholders
@@ -421,6 +424,9 @@ function playRegionalSong(title, artist, videoId, artworkUrl) {
 
 // Play a regional song directly with video ID
 function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null) {
+    // Require authentication to play
+    if (!requireAuth(() => playRegionalSongDirect(title, artist, videoId, artworkUrl, score))) return;
+
     // Mark that we're playing a regional song
     isRegionalSongPlaying = true;
     currentPlayingVideoId = videoId;  // Track the video ID
@@ -897,6 +903,9 @@ function playSongAtTime(index, startTime = 0) {
 
 // Play song
 function playSong(index) {
+    // Require authentication to play
+    if (!requireAuth(() => playSong(index))) return;
+
     if (!chartData || !chartData.chart[index]) return;
 
     const song = chartData.chart[index];
@@ -1740,6 +1749,9 @@ function handleKeyboard(e) {
     // Skip if typing in an input
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
+    // Skip if modifier keys are pressed (allow browser shortcuts like CMD+SHIFT+R)
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
     if (!chartData) return;
 
     const maxIndex = chartData.chart.length - 1;
@@ -1858,19 +1870,27 @@ function loadUserData() {
 
 function saveFavorites() {
     localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncFavorites === 'function') debouncedSyncFavorites();
 }
 
 function saveHistory() {
     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(playHistory.slice(0, 50)));
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncHistory === 'function') debouncedSyncHistory();
 }
 
 function saveQueue() {
     localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(queue));
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncQueue === 'function') debouncedSyncQueue();
 }
 
 function savePlaybackSettings() {
     localStorage.setItem(STORAGE_KEYS.SHUFFLE, isShuffleOn);
     localStorage.setItem(STORAGE_KEYS.REPEAT, repeatMode);
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncPreferences === 'function') debouncedSyncPreferences();
 }
 
 // ============================================================
