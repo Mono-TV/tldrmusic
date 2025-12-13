@@ -1577,35 +1577,54 @@ const QATestRunner = {
         const favActiveAfter = favoriteBtn?.classList.contains('active');
         this.assert(favActiveBefore !== favActiveAfter, 'Favorite button toggles active state');
 
-        // Test 16: Hero favorite button exists
+        // Test 16: Favorite button updates when switching from favorited to non-favorited song
+        await this.setup();
+        // Favorite song 0
+        this.click(songCards[0]);
+        await this.wait(300);
+        toggleFavorite();
+        await this.wait(100);
+        this.assert(favoriteBtn?.classList.contains('active'), 'Favorite button active after favoriting song 0');
+        // Switch to song 1 (not favorited)
+        this.click(songCards[1]);
+        await this.wait(300);
+        this.assert(!favoriteBtn?.classList.contains('active'), 'Favorite button inactive when switching to non-favorited song');
+
+        // Test 17: Favorite button updates when switching from non-favorited to favorited song
+        // Song 0 is still favorited from previous test
+        this.click(songCards[0]);
+        await this.wait(300);
+        this.assert(favoriteBtn?.classList.contains('active'), 'Favorite button active when switching back to favorited song');
+
+        // Test 18: Hero favorite button exists
         const heroFavBtn = this.$('#heroFavoriteBtn');
         this.assert(heroFavBtn !== null, 'Hero favorite button exists');
 
-        // Test 17: Lyrics toggle button exists
+        // Test 19: Lyrics toggle button exists
         const lyricsBtn = this.$('#lyricsToggleBtn');
         this.assert(lyricsBtn !== null, 'Lyrics toggle button exists');
 
-        // Test 18: Queue toggle button exists
+        // Test 20: Queue toggle button exists
         const queueBtn = this.$('#queueToggleBtn');
         this.assert(queueBtn !== null, 'Queue toggle button exists');
 
-        // Test 19: Video toggle button exists
+        // Test 21: Video toggle button exists
         const videoBtn = this.$('#videoToggleBtn');
         this.assert(videoBtn !== null, 'Video toggle button exists');
 
-        // Test 20: Hero video button exists
+        // Test 22: Hero video button exists
         const heroVideoBtn = this.$('#heroVideoBtn');
         this.assert(heroVideoBtn !== null, 'Hero video button exists');
 
-        // Test 21: Hero lyrics button exists
+        // Test 23: Hero lyrics button exists
         const heroLyricsBtn = this.$('#heroLyricsBtn');
         this.assert(heroLyricsBtn !== null, 'Hero lyrics button exists');
 
-        // Test 22: Share button exists
+        // Test 24: Share button exists
         const shareBtn = this.$('#shareBtn');
         this.assert(shareBtn !== null, 'Share button exists');
 
-        // Test 23: Queue badge updates with queue count
+        // Test 25: Queue badge updates with queue count
         await this.setup();
         const queueBadge = this.$('#queueBadge');
         addToQueue(chartData.chart[0], false);
@@ -1614,28 +1633,28 @@ const QATestRunner = {
         const badgeVisible = queueBadge?.classList.contains('visible');
         this.assert(badgeVisible, 'Queue badge visible when queue has items');
 
-        // Test 24: Clear queue hides badge
+        // Test 26: Clear queue hides badge
         clearQueue();
         await this.wait(100);
         const badgeHidden = !queueBadge?.classList.contains('visible');
         this.assert(badgeHidden, 'Queue badge hidden when queue is empty');
 
-        // Test 25: Play different song updates hero to that song
+        // Test 27: Play different song updates hero to that song
         await this.setup();
         this.click(songCards[2]);
         await this.wait(500);
         const heroTitle = this.$('#heroTitle')?.textContent;
         this.assertEqual(heroTitle, chartData.chart[2].title, 'Hero title updates to clicked song');
 
-        // Test 26: Progress bar fill element exists
+        // Test 28: Progress bar fill element exists
         const progressFill = this.$('#progressFill');
         this.assert(progressFill !== null, 'Progress bar fill element exists');
 
-        // Test 27: Hero progress bar fill element exists
+        // Test 29: Hero progress bar fill element exists
         const heroProgressFill = this.$('#heroProgressFill');
         this.assert(heroProgressFill !== null, 'Hero progress bar fill element exists');
 
-        // Test 28: Time displays show 0:00 format
+        // Test 30: Time displays show 0:00 format
         const timeCurrent = this.$('#timeCurrent');
         const timeDuration = this.$('#timeDuration');
         this.assert(timeCurrent?.textContent?.includes(':'), 'Current time has correct format');
