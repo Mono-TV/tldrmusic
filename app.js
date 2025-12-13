@@ -435,12 +435,12 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
     // Track in history
     addToHistory({ title, artist, youtube_video_id: videoId, artwork_url: artworkUrl });
 
-    // Update favorite button state
-    updateFavoriteButtons();
-
-    // Update player bar UI
+    // Update player bar UI first (so updateFavoriteButtons can read correct title/artist)
     if (playerBarTitle) playerBarTitle.textContent = title;
     if (playerBarArtist) playerBarArtist.textContent = artist;
+
+    // Update favorite button state (after UI update so it reads correct song info)
+    updateFavoriteButtons();
     if (playerBarArtwork && artworkUrl) {
         playerBarArtwork.src = artworkUrl;
     }
@@ -922,15 +922,15 @@ function playSong(index) {
     // Track in history
     addToHistory(song);
 
-    // Update favorite button state
-    updateFavoriteButtons();
-
     // Close theater mode if active (stops theater player, skip resume since new song will play)
     if (isTheaterMode) {
         closeTheaterMode(true);
     }
 
     updateNowPlaying(index);
+
+    // Update favorite button state (after updateNowPlaying so currentSongIndex is correct)
+    updateFavoriteButtons();
 
     const playlist = chartData.chart
         .slice(index)
