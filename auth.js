@@ -782,8 +782,9 @@ function initProfilePanel() {
     document.addEventListener('click', (e) => {
         const panel = document.getElementById('profilePanel');
         const authBtn = document.getElementById('authBtn');
+        const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
         if (panel && panel.classList.contains('visible')) {
-            if (!panel.contains(e.target) && !authBtn?.contains(e.target)) {
+            if (!panel.contains(e.target) && !authBtn?.contains(e.target) && !sidebarProfileBtn?.contains(e.target)) {
                 closeProfilePanel();
             }
         }
