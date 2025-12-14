@@ -11,5 +11,9 @@ requests==2.32.3
 # YouTube API
 google-api-python-client==2.154.0
 
+# MongoDB (for caching)
+motor==3.6.0
+pymongo==4.10.1
+
 # Utilities
 python-dateutil==2.9.0
