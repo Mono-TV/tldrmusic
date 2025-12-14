@@ -506,11 +506,10 @@ function updateAuthUI() {
     }
 
     if (isAuthenticated && currentUser) {
-        // Show user avatar - click opens profile panel
+        // Show user avatar with dropdown menu
         const authBtn = document.createElement('div');
         authBtn.id = 'authBtn';
         authBtn.className = 'auth-btn logged-in';
-        authBtn.onclick = showProfilePanel;
 
         // Get user initials for fallback
         const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -529,7 +528,7 @@ function updateAuthUI() {
             }
         }
 
-        // Create the auth button with avatar
+        // Create the auth button with avatar and dropdown
         const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'User';
 
         authBtn.innerHTML = `
@@ -539,8 +538,43 @@ function updateAuthUI() {
                  referrerpolicy="no-referrer"
                  onerror="this.onerror=null; this.src='${fallbackSvg}';">
             <span class="user-name">${firstName}</span>
+            <div class="auth-dropdown">
+                <button class="auth-dropdown-item auth-dropdown-profile" id="authDropdownProfile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </button>
+                <button class="auth-dropdown-item auth-dropdown-logout" id="authDropdownLogout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Sign Out
+                </button>
+            </div>
         `;
         headerMeta.insertBefore(authBtn, headerMeta.firstChild);
+
+        // Add click handlers for dropdown items
+        const profileBtn = document.getElementById('authDropdownProfile');
+        const logoutBtn = document.getElementById('authDropdownLogout');
+
+        if (profileBtn) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showProfilePanel();
+            });
+        }
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                logout();
+            });
+        }
     } else {
         // Show login button
         const authBtn = document.createElement('button');
