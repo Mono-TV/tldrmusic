@@ -413,6 +413,192 @@ describe('Profile Button', () => {
 });
 
 // ========================================
+// Auth Dropdown Tests
+// ========================================
+
+describe('Auth Dropdown', () => {
+    describe('DOM Structure', () => {
+        test('auth dropdown exists when logged in', () => {
+            if (typeof enableTestMode === 'function') {
+                enableTestMode();
+                const dropdown = document.querySelector('.auth-dropdown');
+                expect(dropdown).not.toBeNull();
+            }
+        });
+
+        test('dropdown has Profile option', () => {
+            if (typeof enableTestMode === 'function') {
+                enableTestMode();
+                const profileOption = document.getElementById('authDropdownProfile');
+                expect(profileOption).not.toBeNull();
+                expect(profileOption.textContent).toContain('Profile');
+            }
+        });
+
+        test('dropdown has Sign Out option', () => {
+            if (typeof enableTestMode === 'function') {
+                enableTestMode();
+                const logoutOption = document.getElementById('authDropdownLogout');
+                expect(logoutOption).not.toBeNull();
+                expect(logoutOption.textContent).toContain('Sign Out');
+            }
+        });
+
+        test('dropdown options have icons (SVG)', () => {
+            if (typeof enableTestMode === 'function') {
+                enableTestMode();
+                const profileOption = document.getElementById('authDropdownProfile');
+                const logoutOption = document.getElementById('authDropdownLogout');
+                expect(profileOption?.querySelector('svg')).not.toBeNull();
+                expect(logoutOption?.querySelector('svg')).not.toBeNull();
+            }
+        });
+    });
+
+    describe('Dropdown Interactions', () => {
+        test('clicking Profile option opens profile panel', () => {
+            if (typeof enableTestMode === 'function') {
+                enableTestMode();
+                const profileOption = document.getElementById('authDropdownProfile');
+                const profilePanel = document.getElementById('profilePanel');
+
+                profileOption?.click();
+
+                expect(profilePanel?.classList.contains('visible')).toBe(true);
+            }
+        });
+
+        test('clicking Sign Out option logs user out', () => {
+            if (typeof enableTestMode === 'function') {
+                enableTestMode();
+                const logoutOption = document.getElementById('authDropdownLogout');
+
+                logoutOption?.click();
+
+                // After logout, isAuthenticated should be false
+                expect(window.isAuthenticated).toBe(false);
+            }
+        });
+    });
+});
+
+// ========================================
+// Logout Cleanup Tests
+// ========================================
+
+describe('Logout Cleanup', () => {
+    beforeEach(() => {
+        // Enable test mode to set up authenticated state
+        if (typeof enableTestMode === 'function') {
+            enableTestMode();
+        }
+    });
+
+    test('logout clears favorites from localStorage', () => {
+        // Add some test favorites first
+        localStorage.setItem('tldr-favorites', JSON.stringify([
+            { title: 'Test Song', artist: 'Test Artist', videoId: 'abc123' }
+        ]));
+
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        const storedFavorites = localStorage.getItem('tldr-favorites');
+        expect(storedFavorites).toBeNull();
+    });
+
+    test('logout clears history from localStorage', () => {
+        // Add some test history first
+        localStorage.setItem('tldr-history', JSON.stringify([
+            { title: 'Test Song', artist: 'Test Artist', videoId: 'abc123', playedAt: Date.now() }
+        ]));
+
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        const storedHistory = localStorage.getItem('tldr-history');
+        expect(storedHistory).toBeNull();
+    });
+
+    test('logout clears auth tokens from localStorage', () => {
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        expect(localStorage.getItem('tldr-access-token')).toBeNull();
+        expect(localStorage.getItem('tldr-refresh-token')).toBeNull();
+        expect(localStorage.getItem('tldr-user')).toBeNull();
+    });
+
+    test('logout resets favorites array', () => {
+        // Add favorites before logout
+        if (typeof favorites !== 'undefined' && typeof toggleFavorite === 'function') {
+            toggleFavorite({ title: 'Test', artist: 'Artist', videoId: 'test' });
+        }
+
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        if (typeof favorites !== 'undefined') {
+            expect(favorites.length).toBe(0);
+        }
+    });
+
+    test('logout hides favorites section', () => {
+        // Add favorites to make section visible
+        localStorage.setItem('tldr-favorites', JSON.stringify([
+            { title: 'Test Song', artist: 'Test Artist', videoId: 'abc123' }
+        ]));
+
+        if (typeof renderFavoritesSection === 'function') {
+            renderFavoritesSection();
+        }
+
+        // Now logout
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        const favSection = document.getElementById('favoritesSection');
+        if (favSection) {
+            const computedStyle = window.getComputedStyle(favSection);
+            expect(computedStyle.display).toBe('none');
+        }
+    });
+
+    test('logout resets isAuthenticated to false', () => {
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        expect(window.isAuthenticated).toBe(false);
+    });
+
+    test('logout resets currentUser to null', () => {
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        expect(window.currentUser).toBeNull();
+    });
+
+    test('sidebar profile button is hidden after logout', () => {
+        if (typeof logout === 'function') {
+            logout();
+        }
+
+        const profileBtn = document.getElementById('sidebarProfileBtn');
+        if (profileBtn) {
+            const computedStyle = window.getComputedStyle(profileBtn);
+            expect(computedStyle.display).toBe('none');
+        }
+    });
+});
+
+// ========================================
 // Header Cleanup Tests
 // ========================================
 
