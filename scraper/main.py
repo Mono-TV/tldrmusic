@@ -186,10 +186,106 @@ def load_scrape_cache() -> Dict[str, List[Song]]:
     return all_songs
 
 
+def load_previous_chart() -> Dict[str, int]:
+    """
+    Load the previous week's chart to calculate rank changes.
+
+    Returns:
+        Dict mapping normalized song key (title|artist) to previous rank
+    """
+    base_path = os.path.join(os.path.dirname(__file__), '..')
+    archive_path = os.path.join(base_path, ARCHIVE_DIR)
+
+    if not os.path.exists(archive_path):
+        return {}
+
+    # Find all archive files and get the most recent one
+    archive_files = []
+    for year_dir in os.listdir(archive_path):
+        year_path = os.path.join(archive_path, year_dir)
+        if os.path.isdir(year_path):
+            for file in os.listdir(year_path):
+                if file.endswith('.json'):
+                    archive_files.append(os.path.join(year_path, file))
+
+    if not archive_files:
+        return {}
+
+    # Sort by filename (week number) and get the most recent
+    archive_files.sort(reverse=True)
+    latest_archive = archive_files[0]
+
+    try:
+        with open(latest_archive, 'r', encoding='utf-8') as f:
+            previous_data = json.load(f)
+
+        # Build lookup dict: normalized key -> previous rank
+        previous_ranks = {}
+        for song in previous_data.get('chart', []):
+            # Create normalized key for matching
+            title = song.get('title', '').lower().strip()
+            artist = song.get('artist', '').lower().strip()
+            key = f"{title}|{artist}"
+            previous_ranks[key] = song.get('rank', 0)
+
+        print(f"[Rank Change] Loaded previous chart from {os.path.basename(latest_archive)} ({len(previous_ranks)} songs)")
+        return previous_ranks
+
+    except Exception as e:
+        print(f"[Rank Change] Could not load previous chart: {e}")
+        return {}
+
+
+def calculate_rank_changes(top_songs: List[ConsolidatedSong], previous_ranks: Dict[str, int]) -> List[Dict]:
+    """
+    Calculate rank changes by comparing current rankings with previous week.
+
+    Args:
+        top_songs: Current chart songs
+        previous_ranks: Dict of previous week's song key -> rank
+
+    Returns:
+        List of dicts with rank_change and is_new for each song
+    """
+    changes = []
+
+    for i, song in enumerate(top_songs, 1):
+        current_rank = i
+        # Create normalized key for matching
+        title = song.canonical_title.lower().strip()
+        artist = song.canonical_artist.lower().strip()
+        key = f"{title}|{artist}"
+
+        if key in previous_ranks:
+            previous_rank = previous_ranks[key]
+            # Positive change means moved UP (lower rank number = higher position)
+            rank_change = previous_rank - current_rank
+            is_new = False
+        else:
+            rank_change = 0
+            is_new = True
+
+        changes.append({
+            'rank_change': rank_change,
+            'is_new': is_new
+        })
+
+    # Stats
+    new_entries = sum(1 for c in changes if c['is_new'])
+    movers_up = sum(1 for c in changes if c['rank_change'] > 0)
+    movers_down = sum(1 for c in changes if c['rank_change'] < 0)
+    unchanged = sum(1 for c in changes if c['rank_change'] == 0 and not c['is_new'])
+
+    print(f"[Rank Change] New entries: {new_entries}, Up: {movers_up}, Down: {movers_down}, Unchanged: {unchanged}")
+
+    return changes
+
+
 def generate_output(
     top_songs: List[ConsolidatedSong],
     video_ids: List[str],
-    regional_songs: Dict[str, List[Song]] = None
+    regional_songs: Dict[str, List[Song]] = None,
+    rank_changes: List[Dict] = None
 ) -> dict:
     """Generate the output JSON structure."""
     now = datetime.utcnow()
@@ -215,6 +311,14 @@ def generate_output(
             "youtube_views": song.youtube_views,
             "artwork_url": song.artwork_url
         }
+
+        # Add rank change data if available
+        if rank_changes and i <= len(rank_changes):
+            change_data = rank_changes[i - 1]
+            if change_data['is_new']:
+                song_data['is_new'] = True
+            elif change_data['rank_change'] != 0:
+                song_data['rank_change'] = change_data['rank_change']
         # Include additional YouTube metadata if available
         if song.youtube_likes:
             song_data["youtube_likes"] = song.youtube_likes
@@ -374,7 +478,11 @@ async def main():
         lyrics = LyricsFetcher()
         top_songs = await lyrics.enrich_songs_with_lyrics(top_songs)
 
-    # Step 6: Generate and save output
+    # Step 6: Calculate rank changes from previous week
+    previous_ranks = load_previous_chart()
+    rank_changes = calculate_rank_changes(top_songs, previous_ranks) if previous_ranks else None
+
+    # Step 7: Generate and save output
     video_ids = get_video_ids_from_songs(top_songs)
     # Extract regional songs for spotlight sections
     regional_songs = {
@@ -382,7 +490,7 @@ async def main():
         if region in ['hindi', 'tamil', 'telugu', 'punjabi', 'bhojpuri', 'haryanvi',
                       'bengali', 'marathi', 'kannada', 'malayalam', 'gujarati']
     }
-    output = generate_output(top_songs, video_ids, regional_songs)
+    output = generate_output(top_songs, video_ids, regional_songs, rank_changes)
     save_output(output)
 
     # Final summary
