@@ -10,7 +10,7 @@ YOUTUBE_MUSIC_TOPIC_ID = "/m/04rlf"  # Music topic for filtered search
 # Platform Weights for Ranking Algorithm
 # Higher weight = more influence on final ranking
 PLATFORM_WEIGHTS = {
-    # Primary platforms (major streaming services)
+    # Primary platforms (major streaming services) - India
     "apple_music": 1.5,
     "spotify": 1.5,
     "billboard": 1.2,
@@ -34,6 +34,10 @@ PLATFORM_WEIGHTS = {
     "kannada": 0.5,
     "malayalam": 0.5,
     "gujarati": 0.5,
+    # Global platforms
+    "spotify_global": 1.5,
+    "billboard_hot100": 1.5,
+    "apple_global": 1.3,
 }
 
 # Chart URLs

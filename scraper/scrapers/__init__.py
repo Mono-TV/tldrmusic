@@ -24,8 +24,14 @@ from .youtube_language import (
     MalayalamChartsScraper,
     GujaratiChartsScraper,
 )
+from .global_charts import (
+    SpotifyGlobalScraper,
+    BillboardHot100Scraper,
+    AppleMusicGlobalScraper,
+)
 
 __all__ = [
+    # India platforms
     "BillboardScraper",
     "YouTubeMusicScraper",
     "GaanaScraper",
@@ -35,6 +41,7 @@ __all__ = [
     "PrimeMusicScraper",
     "ShazamScraper",
     "SpotifyViralScraper",
+    # Regional (India)
     "TamilChartsScraper",
     "TeluguChartsScraper",
     "PunjabiChartsScraper",
@@ -46,4 +53,8 @@ __all__ = [
     "KannadaChartsScraper",
     "MalayalamChartsScraper",
     "GujaratiChartsScraper",
+    # Global platforms
+    "SpotifyGlobalScraper",
+    "BillboardHot100Scraper",
+    "AppleMusicGlobalScraper",
 ]

@@ -24,7 +24,7 @@ from youtube_api import YouTubeAPI, get_video_ids_from_songs
 from artwork_api import ArtworkFetcher
 from lyrics_api import LyricsFetcher
 from mongo_cache import get_mongo_cache
-from config import FINAL_CHART_SIZE
+from config import FINAL_CHART_SIZE, PLATFORM_WEIGHTS
 
 # Configuration from environment
 API_URL = os.environ.get('API_URL', 'https://tldrmusic-api-401132033262.asia-south1.run.app')
@@ -45,12 +45,25 @@ def generate_output(top_songs, regional_songs=None):
     }
 
     for i, song in enumerate(top_songs, 1):
+        # Build platform_ranks array with platform name, position, and weight
+        platform_ranks = []
+        for platform, position in song.platforms.items():
+            weight = PLATFORM_WEIGHTS.get(platform, 1.0)
+            platform_ranks.append({
+                "platform": platform,
+                "rank": position,
+                "weight": weight
+            })
+        # Sort by position for consistent output
+        platform_ranks.sort(key=lambda x: x["rank"])
+
         song_data = {
             "rank": i,
             "title": song.canonical_title,
             "artist": song.canonical_artist,
             "score": round(song.score, 3),
             "platforms_count": song.platforms_count,
+            "platform_ranks": platform_ranks,
             "youtube_video_id": song.youtube_video_id or "",
             "youtube_views": song.youtube_views or 0,
             "artwork_url": song.artwork_url or ""
@@ -95,12 +108,25 @@ def add_global_chart(output, global_top_songs):
     if global_top_songs:
         output["global_chart"] = []
         for i, song in enumerate(global_top_songs, 1):
+            # Build platform_ranks array with platform name, position, and weight
+            platform_ranks = []
+            for platform, position in song.platforms.items():
+                weight = PLATFORM_WEIGHTS.get(platform, 1.0)
+                platform_ranks.append({
+                    "platform": platform,
+                    "rank": position,
+                    "weight": weight
+                })
+            # Sort by position for consistent output
+            platform_ranks.sort(key=lambda x: x["rank"])
+
             song_data = {
                 "rank": i,
                 "title": song.canonical_title,
                 "artist": song.canonical_artist,
                 "score": round(song.score, 3),
                 "platforms_count": song.platforms_count,
+                "platform_ranks": platform_ranks,
                 "youtube_video_id": song.youtube_video_id or "",
                 "youtube_views": song.youtube_views or 0,
                 "artwork_url": song.artwork_url or ""

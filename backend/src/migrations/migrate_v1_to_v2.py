@@ -225,13 +225,24 @@ class MigrationV1ToV2:
 
             self.songs[song_id] = song
 
-        # Create chart entry
+        # Parse platform_ranks from V1 data (if available)
+        v1_platform_ranks = v1_song.get("platform_ranks", [])
+        platform_ranks = [
+            PlatformRank(
+                platform=pr.get("platform", "unknown"),
+                rank=pr.get("rank", 0),
+                weight=pr.get("weight", 1.0)
+            )
+            for pr in v1_platform_ranks
+        ]
+
+        # Create chart entry with all V1 metadata preserved
         chart_entry = ChartEntry(
             rank=rank,
             song_id=song_id,
             score=v1_song.get("score", 0),
             platforms_count=v1_song.get("platforms_count", 0),
-            platform_ranks=[],  # V1 doesn't have detailed platform ranks
+            platform_ranks=platform_ranks,
             movement=ChartMovement(
                 direction=MovementDirection.NEW,  # Default for migration
                 positions=0,
@@ -245,6 +256,23 @@ class MigrationV1ToV2:
             song_artist=artist_name,
             artwork_url=v1_song.get("artwork_url"),
             youtube_video_id=v1_song.get("youtube_video_id"),
+            # V1 rank change fields
+            rank_change=v1_song.get("rank_change"),
+            previous_rank=v1_song.get("previous_rank"),
+            is_new=v1_song.get("is_new", False),
+            # V1 metadata fields
+            youtube_likes=v1_song.get("youtube_likes"),
+            youtube_duration=v1_song.get("youtube_duration"),
+            youtube_published=v1_song.get("youtube_published"),
+            album=v1_song.get("album"),
+            genre=v1_song.get("genre"),
+            duration_ms=v1_song.get("duration_ms"),
+            release_date=v1_song.get("release_date"),
+            preview_url=v1_song.get("preview_url"),
+            itunes_url=v1_song.get("itunes_url"),
+            apple_music_url=v1_song.get("apple_music_url"),
+            lyrics_plain=v1_song.get("lyrics_plain"),
+            lyrics_synced=v1_song.get("lyrics_synced"),
         )
 
         return song_id, chart_entry
@@ -349,17 +377,52 @@ class MigrationV1ToV2:
 
         return regional_charts
 
-    def migrate(self, v1_data: dict) -> dict:
+    def migrate_global_chart(self, v1_data: dict) -> Chart:
+        """
+        Migrate V1 global chart data to V2 Chart entity
+        """
+        entries = []
+
+        for v1_song in v1_data.get("chart", []):
+            rank = v1_song.get("rank", len(entries) + 1)
+            song_id, chart_entry = self.migrate_song(v1_song, rank)
+            entries.append(chart_entry)
+
+        chart = Chart(
+            id=f"global-{v1_data.get('week', 'unknown')}",
+            name="Global Top 25",
+            description="Weekly chart aggregated from global streaming platforms",
+            region=ChartRegion.GLOBAL,
+            week=v1_data.get("week", ""),
+            generated_at=datetime.fromisoformat(
+                v1_data.get("generated_at", datetime.utcnow().isoformat()).replace("Z", "+00:00")
+            ),
+            entries=entries,
+        )
+
+        self.charts.append(chart)
+        return chart
+
+    def migrate(self, v1_data: dict, global_data: dict = None) -> dict:
         """
         Run full migration
+
+        Args:
+            v1_data: India chart data (current.json)
+            global_data: Global chart data (global.json), optional
 
         Returns dict with all migrated entities
         """
         print("Starting V1 to V2 migration...")
 
-        # Migrate main chart
-        print("Migrating main chart...")
+        # Migrate main chart (India)
+        print("Migrating India chart...")
         self.migrate_chart(v1_data)
+
+        # Migrate global chart if provided
+        if global_data:
+            print("Migrating global chart...")
+            self.migrate_global_chart(global_data)
 
         # Migrate regional charts
         print("Migrating regional charts...")
@@ -418,24 +481,34 @@ class MigrationV1ToV2:
 
 
 def main():
-    """Run migration on current.json"""
-    # Paths
-    frontend_dir = Path(__file__).parent.parent.parent.parent / "frontend"
-    current_json = frontend_dir / "current.json"
+    """Run migration on current.json and global.json"""
+    # Paths - look in project root (tldrmusic/) not frontend/
+    project_root = Path(__file__).parent.parent.parent.parent
+    current_json = project_root / "current.json"
+    global_json = project_root / "global.json"
     output_dir = Path(__file__).parent.parent.parent / "data" / "v2"
 
     if not current_json.exists():
         print(f"Error: {current_json} not found")
         return
 
-    # Load V1 data
+    # Load V1 India data
     print(f"Loading {current_json}...")
     with open(current_json, "r", encoding="utf-8") as f:
         v1_data = json.load(f)
 
+    # Load global chart data if available
+    global_data = None
+    if global_json.exists():
+        print(f"Loading {global_json}...")
+        with open(global_json, "r", encoding="utf-8") as f:
+            global_data = json.load(f)
+    else:
+        print(f"[Warning] Global chart not found: {global_json}")
+
     # Run migration
     migrator = MigrationV1ToV2()
-    migrator.migrate(v1_data)
+    migrator.migrate(v1_data, global_data)
 
     # Save to files
     migrator.save_to_files(output_dir)
