@@ -106,6 +106,7 @@ async function init() {
     initGoogleAuth();   // Initialize Google Sign-In
     checkAuthState();   // Check if user is already logged in
     loadUserData();
+    initSidebar();      // Initialize sidebar
     renderSkeletons(); // Show skeletons immediately
     await loadChartData();
     setupEventListeners();
@@ -664,10 +665,13 @@ function updateMetadata() {
 function switchChartMode(mode) {
     currentChartMode = mode;
 
-    // Update toggle button states
+    // Update toggle button states (header toggle)
     chartToggle?.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.chart === mode);
     });
+
+    // Update sidebar active state
+    updateSidebarActiveState(mode);
 
     // Ensure auth UI is preserved after chart switch
     if (typeof updateAuthUI === 'function') {
@@ -2250,3 +2254,63 @@ function initializePlaybackUI() {
     updateQueueBadge();
     renderFavoritesSection();
 }
+
+// ============================================================
+// Sidebar Functions
+// ============================================================
+
+function initSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const headerMenuBtn = document.getElementById('headerMenuBtn');
+    const sidebarIndiaBtn = document.getElementById('sidebarIndiaBtn');
+    const sidebarGlobalBtn = document.getElementById('sidebarGlobalBtn');
+    const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
+
+    if (!sidebar) return;
+
+    // Close button inside sidebar
+    sidebarToggle?.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+    });
+
+    // Header menu button toggles sidebar
+    headerMenuBtn?.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // Chart navigation buttons
+    sidebarIndiaBtn?.addEventListener('click', () => {
+        if (currentChartMode !== 'india') {
+            switchChartMode('india');
+            updateSidebarActiveState('india');
+        }
+    });
+
+    sidebarGlobalBtn?.addEventListener('click', () => {
+        if (currentChartMode !== 'global') {
+            switchChartMode('global');
+            updateSidebarActiveState('global');
+        }
+    });
+
+    // Profile button - opens profile panel
+    sidebarProfileBtn?.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        if (typeof showProfilePanel === 'function') {
+            showProfilePanel();
+        }
+    });
+
+    // Sync with initial chart mode
+    updateSidebarActiveState(currentChartMode);
+}
+
+function updateSidebarActiveState(mode) {
+    const sidebarIndiaBtn = document.getElementById('sidebarIndiaBtn');
+    const sidebarGlobalBtn = document.getElementById('sidebarGlobalBtn');
+
+    sidebarIndiaBtn?.classList.toggle('active', mode === 'india');
+    sidebarGlobalBtn?.classList.toggle('active', mode === 'global');
+}
+

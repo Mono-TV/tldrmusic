@@ -35,7 +35,8 @@ function enableTestMode() {
         google_id: 'test-google-id',
         email: 'testuser@example.com',
         name: 'Test User',
-        picture: 'https://ui-avatars.com/api/?name=Test+User&background=8b5cf6&color=fff'
+        // Use a reliable placeholder image for testing
+        picture: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=96'
     };
 
     currentUser = testUser;
@@ -426,11 +427,12 @@ function showLoginModal(playAction) {
             google.accounts.id.renderButton(
                 document.getElementById('googleSignInBtn'),
                 {
-                    theme: 'filled_black',
+                    theme: 'outline',
                     size: 'large',
-                    width: 280,
+                    width: 300,
                     text: 'continue_with',
-                    shape: 'pill'
+                    shape: 'rectangular',
+                    logo_alignment: 'center'
                 }
             );
         }, 100);
@@ -464,11 +466,8 @@ function createLoginModal() {
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </button>
-            <div class="login-modal-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
-                </svg>
+            <div class="login-modal-logo">
+                <span class="logo-tldr">TLDR</span><span class="logo-music">Music</span>
             </div>
             <h2>Sign in to Play</h2>
             <p>Create a free account to start streaming and save your favorites across devices.</p>
@@ -494,15 +493,46 @@ function updateAuthUI() {
     const existingBtn = document.getElementById('authBtn');
     if (existingBtn) existingBtn.remove();
 
+    // Update sidebar profile button visibility
+    const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
+    if (sidebarProfileBtn) {
+        sidebarProfileBtn.style.display = isAuthenticated ? 'flex' : 'none';
+    }
+
     if (isAuthenticated && currentUser) {
         // Show user avatar - click opens profile panel
         const authBtn = document.createElement('div');
         authBtn.id = 'authBtn';
         authBtn.className = 'auth-btn logged-in';
         authBtn.onclick = showProfilePanel;
+
+        // Get user initials for fallback
+        const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+        // Create inline SVG fallback (no network required)
+        const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56"><rect fill="#D4AF37" width="56" height="56" rx="28"/><text x="28" y="35" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="20" font-weight="600">${initials}</text></svg>`)}`;
+
+        // Process Google profile photo URL to ensure it loads
+        let avatarUrl = currentUser.picture || '';
+        if (avatarUrl) {
+            // Google profile photos: ensure proper size parameter
+            if (avatarUrl.includes('googleusercontent.com')) {
+                // Remove existing size param and add proper one
+                avatarUrl = avatarUrl.replace(/=s\d+-c/, '').replace(/=s\d+/, '');
+                avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 's=96-c';
+            }
+        }
+
+        // Create the auth button with avatar
+        const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'User';
+
         authBtn.innerHTML = `
-            <img src="${currentUser.picture || ''}" alt="${currentUser.name}" class="user-avatar" onerror="this.style.display='none'">
-            <span class="user-name">${currentUser.name.split(' ')[0]}</span>
+            <img src="${avatarUrl || fallbackSvg}"
+                 alt="${currentUser.name}"
+                 class="user-avatar"
+                 referrerpolicy="no-referrer"
+                 onerror="this.onerror=null; this.src='${fallbackSvg}';">
+            <span class="user-name">${firstName}</span>
         `;
         headerMeta.insertBefore(authBtn, headerMeta.firstChild);
     } else {
@@ -557,7 +587,14 @@ function showProfilePanel() {
     const likedCount = document.getElementById('likedCount');
     const historyRowCount = document.getElementById('historyCount');
 
-    if (avatar) avatar.src = currentUser.picture || '';
+    if (avatar) {
+        // Get user initials for fallback
+        const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect fill="#D4AF37" width="96" height="96" rx="48"/><text x="48" y="58" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="36" font-weight="600">${initials}</text></svg>`)}`;
+        avatar.src = currentUser.picture || fallbackSvg;
+        avatar.onerror = function() { this.onerror=null; this.src=fallbackSvg; };
+        avatar.referrerPolicy = 'no-referrer';
+    }
     if (name) name.textContent = currentUser.name;
     if (email) email.textContent = currentUser.email;
 
