@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TLDR Music - QA Test Suite</title>
+    <link rel="stylesheet" href="style.css?v=21">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* QA Test overlay styles */
+        .test-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 420px;
+            max-height: 100vh;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 12px;
+        }
+
+        .test-header {
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(99, 102, 241, 0.1));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-header h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #22c55e, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .test-header p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+
+        .test-controls {
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .test-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .test-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .test-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .test-summary {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
+        }
+
+        .test-stat {
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .test-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .test-stat-value.passed { color: #22c55e; }
+        .test-stat-value.failed { color: #ef4444; }
+        .test-stat-value.total { color: #6366f1; }
+
+        .test-stat-label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .test-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .test-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .test-group-header {
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            margin-bottom: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .test-group-header .category-icon {
+            margin-right: 0.5rem;
+        }
+
+        .test-group-header .category-name {
+            color: #22c55e;
+        }
+
+        .test-group-header .category-stats {
+            font-size: 0.75rem;
+        }
+
+        .test-item {
+            padding: 0.4rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .test-item.pass { color: #22c55e; }
+        .test-item.fail {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .test-console {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #000;
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            line-height: 1.4;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .test-console-line {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .test-console-line.info { color: rgba(255, 255, 255, 0.5); }
+        .test-console-line.pass { color: #22c55e; }
+        .test-console-line.fail { color: #ef4444; }
+        .test-console-line.header { color: #6366f1; font-weight: 600; }
+        .test-console-line.category { color: #f59e0b; font-weight: 600; }
+
+        .test-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10001;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+
+        .test-overlay.hidden {
+            transform: translateX(100%);
+        }
+
+        .test-overlay.hidden + .test-toggle {
+            display: block;
+        }
+
+        /* Category icons */
+        .category-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .category-badge {
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .category-badge.active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .category-badge.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Full App DOM (copied from index.html) -->
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-bg" id="headerBg"></div>
+            <div class="header-overlay"></div>
+            <div class="header-inner">
+                <div class="brand">
+                    <h1 class="logo">TLDR<span>Music</span></h1>
+                    <div class="chart-toggle" id="chartToggle">
+                        <button class="toggle-btn active" data-chart="india">
+                            <span class="toggle-icon">&#127470;&#127475;</span>
+                            <span class="toggle-label">India</span>
+                        </button>
+                        <button class="toggle-btn" data-chart="global">
+                            <span class="toggle-icon">&#127757;</span>
+                            <span class="toggle-label">Global</span>
+                        </button>
+                    </div>
+                    <div class="chart-badge">
+                        <span class="badge-label" id="badgeLabel">India Top 25</span>
+                        <span class="badge-week" id="weekLabel">Weekly Chart</span>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <span class="update-date" id="chartDate">Loading...</span>
+                    <a href="about.html" class="btn-about" title="How it works">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </a>
+                    <button class="btn-share" id="shareBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                        </svg>
+                        Share
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero" id="heroSection">
+            <div class="hero-bg" id="heroBg"></div>
+            <div class="hero-theater" id="heroTheater">
+                <div class="theater-video" id="theaterVideo"></div>
+                <button class="theater-close" id="theaterClose" title="Close theater mode">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="theater-info">
+                    <span class="theater-title" id="theaterTitle"></span>
+                    <span class="theater-artist" id="theaterArtist"></span>
+                </div>
+            </div>
+            <!-- Hero Skeleton Loading -->
+            <div class="hero-skeleton skeleton-container" id="heroSkeleton">
+                <div class="skeleton skeleton-hero-artwork"></div>
+                <div class="skeleton-hero-info">
+                    <div class="skeleton skeleton-label"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-artist"></div>
+                    <div class="skeleton-stats">
+                        <div class="skeleton skeleton-stat"></div>
+                        <div class="skeleton skeleton-stat"></div>
+                    </div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            </div>
+            <div class="hero-inner" id="heroInner" style="display: none;">
+                <div class="hero-artwork-wrapper">
+                    <img class="hero-artwork" id="heroArtwork" src="" alt="" style="display: none;">
+                    <div class="hero-rank">
+                        <span class="rank-hash">#</span>
+                        <span class="rank-num">1</span>
+                    </div>
+                </div>
+                <div class="hero-content">
+                    <span class="hero-label">This Week's #1</span>
+                    <h2 class="hero-title" id="heroTitle">-</h2>
+                    <p class="hero-artist" id="heroArtist">-</p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="heroScore">-</span>
+                            <span class="stat-label">Score</span>
+                        </div>
+                        <div class="stat" id="heroViewsStat">
+                            <span class="stat-value" id="heroViews">-</span>
+                            <span class="stat-label">YT Views</span>
+                        </div>
+                    </div>
+                    <div class="hero-controls">
+                        <button class="btn-play-hero" id="playHeroBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Play Now
+                        </button>
+                        <div class="hero-actions">
+                            <button class="hero-action-btn" id="heroLyricsBtn" title="Lyrics">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 6h16M4 12h16M4 18h10"></path>
+                                </svg>
+                            </button>
+                            <button class="hero-action-btn" id="heroVideoBtn" title="Video">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                    <polygon points="10 9 15 12 10 15" fill="currentColor"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-progress" id="heroProgress">
+                        <div class="hero-progress-bar" id="heroProgressBar">
+                            <div class="hero-progress-fill" id="heroProgressFill"></div>
+                        </div>
+                        <div class="hero-progress-time">
+                            <span id="heroTimeCurrent">0:00</span>
+                            <span id="heroTimeDuration">0:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="main-gradient" id="mainGradient"></div>
+
+        <main class="main">
+            <section class="favorites-section" id="favoritesSection" style="display: none;">
+                <div class="favorites-header">
+                    <h3>Your Favorites</h3>
+                    <span class="favorites-count" id="favoritesCount">0 songs</span>
+                </div>
+                <div class="favorites-list" id="favoritesList"></div>
+            </section>
+
+            <section class="chart-section">
+                <div class="chart-header">
+                    <h3>Quick Picks</h3>
+                </div>
+                <div class="chart-list" id="chartList">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading chart...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="regional-section" id="regionalSection">
+                <div class="regional-header">
+                    <h3>Regional Spotlights</h3>
+                    <p class="regional-subtitle">Trending across India's diverse music scenes</p>
+                </div>
+                <div class="regional-grid" id="regionalGrid"></div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p class="copyright">&copy; 2025 TLDR Music</p>
+        </footer>
+    </div>
+
+    <!-- Player Bar -->
+    <div class="player-bar" id="playerBar">
+        <div class="video-container" id="videoContainer">
+            <div class="video-wrapper" id="videoWrapper">
+                <div class="player-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                    </svg>
+                </div>
+            </div>
+            <button class="video-close" id="videoClose" title="Close video">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="player-bar-inner">
+            <div class="player-bar-info">
+                <img class="player-bar-artwork" id="playerBarArtwork" src="" alt="">
+                <div class="player-bar-text">
+                    <span class="player-bar-title" id="playerBarTitle">Select a song</span>
+                    <span class="player-bar-artist" id="playerBarArtist">to start playing</span>
+                    <span class="player-bar-source">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                        </svg>
+                        YouTube
+                    </span>
+                </div>
+            </div>
+
+            <div class="player-bar-center">
+                <div class="player-bar-controls">
+                    <button class="control-btn" id="shuffleBtn" title="Shuffle (S)">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="prevBtn" title="Previous">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                        </svg>
+                    </button>
+                    <button class="control-btn play-btn" id="playPauseBtn" title="Play/Pause">
+                        <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="nextBtn" title="Next">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="repeatBtn" title="Repeat (R)">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="17 1 21 5 17 9"></polyline>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                            <polyline points="7 23 3 19 7 15"></polyline>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                        </svg>
+                        <span class="repeat-one-badge">1</span>
+                    </button>
+                </div>
+                <div class="progress-inline">
+                    <span class="time-inline" id="timeCurrent">0:00</span>
+                    <div class="progress-bar-inline" id="progressBar">
+                        <div class="progress-fill-inline" id="progressFill"></div>
+                    </div>
+                    <span class="time-inline" id="timeDuration">0:00</span>
+                </div>
+            </div>
+
+            <div class="player-bar-actions">
+                <button class="action-btn" id="favoriteBtn" title="Add to Favorites (H)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+                <button class="action-btn" id="queueToggleBtn" title="Queue (Q)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                    <span class="queue-badge" id="queueBadge"></span>
+                </button>
+                <button class="action-btn" id="lyricsToggleBtn" title="Show lyrics (L)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6h16M4 12h16M4 18h10"></path>
+                    </svg>
+                </button>
+                <button class="action-btn" id="videoToggleBtn" title="Show video">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <polygon points="10 9 15 12 10 15" fill="currentColor"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lyrics Panel -->
+    <div class="lyrics-panel" id="lyricsPanel">
+        <div class="lyrics-panel-header">
+            <div class="lyrics-panel-title">
+                <span class="lyrics-song-title" id="lyricsSongTitle">Lyrics</span>
+                <span class="lyrics-song-artist" id="lyricsSongArtist"></span>
+            </div>
+            <button class="lyrics-close" id="lyricsClose" title="Close lyrics">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="lyrics-content" id="lyricsContent">
+            <div class="lyrics-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M4 6h16M4 12h16M4 18h10"></path>
+                </svg>
+                <p>Select a song to view lyrics</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Queue Panel -->
+    <div class="queue-panel" id="queuePanel">
+        <div class="queue-panel-header">
+            <div class="queue-panel-title">
+                <span>Queue</span>
+                <span class="queue-panel-count" id="queuePanelCount">0 songs</span>
+            </div>
+            <div class="queue-panel-actions">
+                <button class="queue-clear-btn" id="queueClear" title="Clear queue">Clear</button>
+                <button class="queue-close" id="queueClose" title="Close queue">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="queue-content" id="queueContent">
+            <div class="queue-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <p>Your queue is empty</p>
+                <p class="queue-hint">Click + on song cards to add them</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- QA Test Overlay -->
+    <div class="test-overlay" id="testOverlay">
+        <div class="test-header">
+            <h2>QA Test Suite</h2>
+            <p>Comprehensive Quality Assurance Tests</p>
+        </div>
+        <div class="test-controls">
+            <button class="test-btn" id="runQATests">Run All QA Tests</button>
+            <button class="test-btn secondary" id="hideTests">Hide</button>
+        </div>
+        <div class="category-icons" id="categoryIcons"></div>
+        <div class="test-summary" id="testSummary" style="display: none;">
+            <div class="test-stat">
+                <div class="test-stat-value passed" id="qaPassedCount">0</div>
+                <div class="test-stat-label">Passed</div>
+            </div>
+            <div class="test-stat">
+                <div class="test-stat-value failed" id="qaFailedCount">0</div>
+                <div class="test-stat-label">Failed</div>
+            </div>
+            <div class="test-stat">
+                <div class="test-stat-value total" id="qaTotalCount">0</div>
+                <div class="test-stat-label">Total</div>
+            </div>
+        </div>
+        <div class="test-results" id="qaResults"></div>
+        <div class="test-console" id="qaConsole">
+            <div class="test-console-line info">Click "Run All QA Tests" to start comprehensive testing...</div>
+        </div>
+    </div>
+    <button class="test-toggle" id="showTests">Show Tests</button>
+
+    <!-- Load app and test scripts -->
+    <script src="app.js?v=31"></script>
+    <script src="qa-tests.js"></script>
+    <script>
+        const runBtn = document.getElementById('runQATests');
+        const hideBtn = document.getElementById('hideTests');
+        const showBtn = document.getElementById('showTests');
+        const overlay = document.getElementById('testOverlay');
+        const summaryEl = document.getElementById('testSummary');
+        const resultsEl = document.getElementById('qaResults');
+        const consoleEl = document.getElementById('qaConsole');
+        const categoryIconsEl = document.getElementById('categoryIcons');
+
+        // Category mapping
+        const categoryConfig = {
+            'Responsive': { icon: '&#128241;', name: 'Responsive' },
+            'Mobile': { icon: '&#128070;', name: 'Mobile' },
+            'ChartToggle': { icon: '&#127757;', name: 'Chart' },
+            'CrossFeature': { icon: '&#128279;', name: 'Cross-Feature' },
+            'UIState': { icon: '&#127919;', name: 'UI State' },
+            'Progress': { icon: '&#9193;', name: 'Progress' },
+            'Regional': { icon: '&#127917;', name: 'Regional' },
+            'DataIntegrity': { icon: '&#128190;', name: 'Data' },
+            'Accessibility': { icon: '&#9855;', name: 'A11y' },
+            'ErrorHandling': { icon: '&#9888;&#65039;', name: 'Errors' },
+            'Boundary': { icon: '&#128290;', name: 'Boundary' },
+            'Performance': { icon: '&#9889;', name: 'Perf' },
+            'SkeletonUI': { icon: '&#128128;', name: 'Skeleton' },
+            'HumanUsage': { icon: '&#128100;', name: 'Human Usage' },
+            'Playback': { icon: '&#127925;', name: 'Playback' },
+            'Flows': { icon: '&#128260;', name: 'Flows' },
+            'ButtonStates': { icon: '&#127918;', name: 'Button States' }
+        };
+
+        // Console capture
+        const logLines = [];
+        const originalLog = console.log;
+
+        function captureLog(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg =>
+                typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            ).join(' ');
+            logLines.push(message);
+            renderConsole();
+        }
+
+        function renderConsole() {
+            consoleEl.innerHTML = logLines.slice(-50).map(line => {
+                let className = 'info';
+                if (line.includes('\u2705')) className = 'pass';
+                else if (line.includes('\u274C')) className = 'fail';
+                else if (line.includes('===') || line.includes('QA')) className = 'header';
+                else if (line.includes('TESTS') || line.match(/^[^\s].*TESTS$/)) className = 'category';
+                return `<div class="test-console-line ${className}">${escapeHtml(line)}</div>`;
+            }).join('');
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderCategoryIcons(results) {
+            const categories = {};
+            results.forEach(r => {
+                if (!categories[r.category]) {
+                    categories[r.category] = { pass: 0, fail: 0 };
+                }
+                if (r.status === 'PASS') {
+                    categories[r.category].pass++;
+                } else {
+                    categories[r.category].fail++;
+                }
+            });
+
+            categoryIconsEl.innerHTML = Object.entries(categories).map(([cat, stats]) => {
+                const config = categoryConfig[cat] || { icon: '&#128300;', name: cat };
+                const statusClass = stats.fail > 0 ? 'failed' : 'active';
+                return `<span class="category-badge ${statusClass}" title="${config.name}: ${stats.pass}/${stats.pass + stats.fail}">${config.icon} ${stats.pass}/${stats.pass + stats.fail}</span>`;
+            }).join('');
+        }
+
+        function renderResults(results) {
+            const groups = {};
+
+            results.forEach(r => {
+                const cat = r.category || 'Other';
+                if (!groups[cat]) {
+                    groups[cat] = [];
+                }
+                groups[cat].push(r);
+            });
+
+            resultsEl.innerHTML = Object.entries(groups)
+                .map(([group, items]) => {
+                    const config = categoryConfig[group] || { icon: '&#128300;', name: group };
+                    const passCount = items.filter(i => i.status === 'PASS').length;
+                    const failCount = items.filter(i => i.status === 'FAIL').length;
+                    return `
+                        <div class="test-group">
+                            <div class="test-group-header">
+                                <span>
+                                    <span class="category-icon">${config.icon}</span>
+                                    <span class="category-name">${config.name}</span>
+                                </span>
+                                <span class="category-stats" style="color: ${failCount > 0 ? '#ef4444' : '#22c55e'}">${passCount}/${items.length}</span>
+                            </div>
+                            ${items.map(item => `
+                                <div class="test-item ${item.status.toLowerCase()}">
+                                    ${item.status === 'PASS' ? '\u2705' : '\u274C'} ${escapeHtml(item.name)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        hideBtn.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+        });
+
+        showBtn.addEventListener('click', () => {
+            overlay.classList.remove('hidden');
+        });
+
+        runBtn.addEventListener('click', async () => {
+            runBtn.disabled = true;
+            runBtn.textContent = 'Running...';
+            logLines.length = 0;
+            categoryIconsEl.innerHTML = '<span class="category-badge">Running tests...</span>';
+
+            console.log = captureLog;
+
+            try {
+                const result = await QATestRunner.runAll();
+
+                document.getElementById('qaPassedCount').textContent = result.passed;
+                document.getElementById('qaFailedCount').textContent = result.failed;
+                document.getElementById('qaTotalCount').textContent = result.passed + result.failed;
+
+                summaryEl.style.display = 'flex';
+                renderCategoryIcons(result.results);
+                renderResults(result.results);
+            } catch (e) {
+                captureLog('Error running tests: ' + e.message);
+                console.error(e);
+            } finally {
+                console.log = originalLog;
+                runBtn.disabled = false;
+                runBtn.textContent = 'Run All QA Tests';
+            }
+        });
+    </script>
+</body>
+</html>

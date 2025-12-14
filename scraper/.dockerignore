@@ -1,0 +1,16 @@
+# Debug files
+debug_*.html
+debug_*.py
+*.png
+
+# Cache
+__pycache__/
+*.pyc
+data/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/

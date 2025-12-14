@@ -1,0 +1,1727 @@
+[
+  {
+    "id": "5cda5171-aaaf-4d18-9080-98b173a77e90",
+    "name": "Aditya Rikhari",
+    "name_normalized": "aditya rikhari",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "72120036-0cd6-498e-8003-632af69831e0",
+      "c785f114-805a-49fb-b2d7-0907828f9cef"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.877702",
+    "updated_at": "2025-12-13 09:53:27.877880"
+  },
+  {
+    "id": "9175d99a-b975-4b54-9a3f-d42deaa945a2",
+    "name": "Karan Aujla",
+    "name_normalized": "karan aujla",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "e169d676-8a75-4f0b-924f-82e94463bdfa",
+      "2b864f54-3d33-4578-8319-89a037da6dd2"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.878202",
+    "updated_at": "2025-12-13 09:53:27.878202"
+  },
+  {
+    "id": "72b9bc67-badc-460c-b2a1-108c3cd31696",
+    "name": "Tanishk Bagchi",
+    "name_normalized": "tanishk bagchi",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "ecf40119-afed-4b8b-a2c1-e6543041aa06",
+      "28503602-d184-472d-be20-2db44e8fdb87",
+      "f5d5537a-f391-4bd8-9c5c-fd1af7f3666b"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.878498",
+    "updated_at": "2025-12-13 09:53:27.878498"
+  },
+  {
+    "id": "57c290d0-ed46-40b9-b7a7-33380a53952d",
+    "name": "Talwiinder",
+    "name_normalized": "talwiinder",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "10c6ae02-7a3d-4b3b-ad2c-6e86e735b5cd",
+      "a8329549-f119-442e-a812-b2c2fe5ec617",
+      "40b8e119-8355-4dac-897a-17557ea03472"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.879210",
+    "updated_at": "2025-12-13 09:53:27.879210"
+  },
+  {
+    "id": "33c5b652-7376-4396-80f6-183b960b3104",
+    "name": "Kushagra",
+    "name_normalized": "kushagra",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "5f864349-6329-4028-80c6-8d4cdd72739f"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.879348",
+    "updated_at": "2025-12-13 09:53:27.879348"
+  },
+  {
+    "id": "4f4d99a9-014a-4e37-8e79-9855a83fe216",
+    "name": "Sai Abhyankkar",
+    "name_normalized": "sai abhyankkar",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "44697f11-6469-44e1-83cb-52eff545dddc"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.879537",
+    "updated_at": "2025-12-13 09:53:27.879538"
+  },
+  {
+    "id": "bd721d39-48e9-47d2-a119-56cb3bf2bd42",
+    "name": "Flipperachi",
+    "name_normalized": "flipperachi",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "3a14c8db-e625-4413-9e46-2717f5620283"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.879663",
+    "updated_at": "2025-12-13 09:53:27.879664"
+  },
+  {
+    "id": "43f37906-7ea2-4f0f-aec5-4a770765df26",
+    "name": "Mariah Carey",
+    "name_normalized": "mariah carey",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "1488bcb1-036c-4f69-a611-aab105880d64",
+      "82bfecb6-8e54-4dfc-b50f-fdc99de49c42"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.879765",
+    "updated_at": "2025-12-13 09:53:27.879765"
+  },
+  {
+    "id": "beaeba86-462f-47b6-8512-dcc37d0ec97e",
+    "name": "Gajendra Verma",
+    "name_normalized": "gajendra verma",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "51a92607-bc06-4a73-bd9f-b291656eea5a"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880023",
+    "updated_at": "2025-12-13 09:53:27.880023"
+  },
+  {
+    "id": "d87ce38e-0552-4de6-a7ba-9193c7f30816",
+    "name": "Taylor Swi",
+    "name_normalized": "taylor swi",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "e5fecb6c-e4d5-44ad-b5b3-8abb7e69dba5",
+      "489a1ffa-29c0-4e56-bd73-b7e4949fcb15",
+      "6192cd3d-16b7-4c0b-8669-6914e1c47d60"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880109",
+    "updated_at": "2025-12-13 09:53:27.880110"
+  },
+  {
+    "id": "d617c84c-e0d5-471d-99cc-e611a80eb21d",
+    "name": "A.R. Rahman",
+    "name_normalized": "a.r. rahman",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "74e41927-d3b6-4968-9f02-0ddd2c6f654d",
+      "22c92b34-60c9-42e5-9f62-fe27b9933765",
+      "d5151c2c-5ebd-4278-a921-92cdc5c936fb",
+      "143ae9ff-ae3e-4a90-8ee4-8bf33b2a8b3c",
+      "fd4d8d23-b233-47c9-a1e3-132e5f75cd02"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880344",
+    "updated_at": "2025-12-13 09:53:27.880345"
+  },
+  {
+    "id": "257468a0-3e2f-43ee-9eaf-a48f971ed134",
+    "name": "The Rish",
+    "name_normalized": "the rish",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "f633a9e6-a3e0-48f8-9c96-191bf15c8ede",
+      "c57b56b3-3e78-42e1-918d-59079570610d"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880531",
+    "updated_at": "2025-12-13 09:53:27.880531"
+  },
+  {
+    "id": "9fafd7c5-5022-42b4-8731-78a5a68c9a3e",
+    "name": "Vishal Mishra",
+    "name_normalized": "vishal mishra",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "f1d02757-5a4d-4976-9a95-fcf7c55b699c",
+      "59c2d074-e205-40c7-a4d7-4c9a8c5e4554",
+      "2fd75a59-0622-4974-af88-63ba53339d32",
+      "24d765d5-3313-44b7-8963-1b3a6ef69555"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880661",
+    "updated_at": "2025-12-13 09:53:27.880661"
+  },
+  {
+    "id": "14c764b8-d352-4b5d-a7a0-56fb0cbe5d1f",
+    "name": "Bobby Helms",
+    "name_normalized": "bobby helms",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "61eb02d7-f0bf-4505-8de6-744754fcf447",
+      "f0348950-f5ac-41f6-aaa3-a69b331d89f6"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880794",
+    "updated_at": "2025-12-13 09:53:27.880794"
+  },
+  {
+    "id": "788ac65b-acb7-417f-9d31-04e1d1284bb1",
+    "name": "Sidhu Moose Wala",
+    "name_normalized": "sidhu moose wala",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "8c5aafea-cc85-4030-823c-8b65644126e7",
+      "548f06e4-151a-4128-95a2-066b7c2aed29"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.880953",
+    "updated_at": "2025-12-13 09:53:27.880953"
+  },
+  {
+    "id": "4c128163-c492-4588-8b4a-8cafd85f2b05",
+    "name": "Shashwat Sachdev",
+    "name_normalized": "shashwat sachdev",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "bc253cb6-bf42-4117-9201-6935603d4c8d",
+      "95aab0a3-4052-4793-b494-93381b9c7b36"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.881139",
+    "updated_at": "2025-12-13 09:53:27.881139"
+  },
+  {
+    "id": "90a45371-1172-41e9-8795-cc255164901a",
+    "name": "Olivia Dean",
+    "name_normalized": "olivia dean",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "7196a584-617a-4c8c-a6bd-eb1839d7d7bf",
+      "b347526e-afad-421f-b80f-9d73e1f0a0ff"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.881255",
+    "updated_at": "2025-12-13 09:53:27.881255"
+  },
+  {
+    "id": "571bccd4-0002-4ce3-a501-cd804d5d6b94",
+    "name": "Brenda Lee",
+    "name_normalized": "brenda lee",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "ed8c9209-e25c-40a0-85c8-772e960f00b0",
+      "9f4b3ce9-539a-46cf-b0c3-fc6166386e5d"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.881644",
+    "updated_at": "2025-12-13 09:53:27.881645"
+  },
+  {
+    "id": "f5da2685-2baa-4e25-a77f-faa68821dd9a",
+    "name": "Ariana Grande",
+    "name_normalized": "ariana grande",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "f1dddaff-aeaf-46dc-9913-f2feead281dc",
+      "f60744ba-7d8d-446e-b2ba-2b4c4a2d9af4"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.881765",
+    "updated_at": "2025-12-13 09:53:27.881765"
+  },
+  {
+    "id": "0fa701aa-8161-4544-b8ef-0b854102b32e",
+    "name": "Alex Warren",
+    "name_normalized": "alex warren",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "e3bd5728-dc2d-456a-bfcb-ee61a709cd28",
+      "2c3ee4b3-b683-4262-a258-bd6749f66f42"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882016",
+    "updated_at": "2025-12-13 09:53:27.882016"
+  },
+  {
+    "id": "28cd3573-c533-4bf0-b7c9-4c5ed4b01892",
+    "name": "Sachin-Jigar",
+    "name_normalized": "sachin-jigar",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "69d9a68d-2b16-48e1-b2d0-a2445a611e92"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882340",
+    "updated_at": "2025-12-13 09:53:27.882340"
+  },
+  {
+    "id": "67109867-bc1e-48ab-a544-9302aae851d7",
+    "name": "Na.Muthukumar",
+    "name_normalized": "na.muthukumar",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "ded78ab2-d856-42b9-8a65-5fdab98e9b04"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882455",
+    "updated_at": "2025-12-13 09:53:27.882456"
+  },
+  {
+    "id": "fe46afa9-316b-4442-8888-668ec6406895",
+    "name": "Naresh Iyer",
+    "name_normalized": "naresh iyer",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "ce62f650-179e-4cf8-a158-48fd8b52f7aa"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882485",
+    "updated_at": "2025-12-13 09:53:27.882485"
+  },
+  {
+    "id": "2eb0c22c-2b68-4c38-bda7-7887e735fee0",
+    "name": "Harris Jayaraj",
+    "name_normalized": "harris jayaraj",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "8a224614-1be4-4266-b726-5cd567328489",
+      "82a7b10a-606a-4891-aae9-5b0bb4ff475c"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882523",
+    "updated_at": "2025-12-13 09:53:27.882523"
+  },
+  {
+    "id": "c00cd879-e405-4aad-bf33-5ecb3b3cb4cb",
+    "name": "Yuvan Shankar Raja",
+    "name_normalized": "yuvan shankar raja",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "32aee86c-6c34-4c17-ae87-bf1176be6b3f"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882544",
+    "updated_at": "2025-12-13 09:53:27.882545"
+  },
+  {
+    "id": "540c6e15-0a7b-4158-83b1-35173e90f400",
+    "name": "Yugabharathi",
+    "name_normalized": "yugabharathi",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "67444945-25ac-4f56-b436-495b7bda105d"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882597",
+    "updated_at": "2025-12-13 09:53:27.882597"
+  },
+  {
+    "id": "50153e05-7e60-48b7-849c-8046e49f4455",
+    "name": "Karthik",
+    "name_normalized": "karthik",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "18b94785-8443-4a51-b5a1-b8381daef328"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882617",
+    "updated_at": "2025-12-13 09:53:27.882618"
+  },
+  {
+    "id": "117cc28b-e7a4-4d21-af7c-e3b3af7f1103",
+    "name": "Bombay Jayashri",
+    "name_normalized": "bombay jayashri",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "e6ab3046-ca45-412f-a7d5-6a4d9e2491a5"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882648",
+    "updated_at": "2025-12-13 09:53:27.882648"
+  },
+  {
+    "id": "eafbaa23-69b8-451d-969a-2ab8c1b8a1c4",
+    "name": "Jiandro",
+    "name_normalized": "jiandro",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "554e7d0b-937f-46ed-8886-e72be256c7d3"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882674",
+    "updated_at": "2025-12-13 09:53:27.882674"
+  },
+  {
+    "id": "5f6a2dfe-652a-400e-a8c6-75283cbca58f",
+    "name": "IShowSpeed",
+    "name_normalized": "ishowspeed",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "8a2eb24a-2d49-4138-a53b-640992be3c30"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882698",
+    "updated_at": "2025-12-13 09:53:27.882699"
+  },
+  {
+    "id": "0df7c39b-38c5-4af5-9db7-ee91c6845603",
+    "name": "sma$her",
+    "name_normalized": "sma$her",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "2cf8299c-b2f8-4896-8f92-cd6daa7d027b"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882720",
+    "updated_at": "2025-12-13 09:53:27.882720"
+  },
+  {
+    "id": "ec9c907f-196b-4526-b03d-88745a168de1",
+    "name": "HUNTR/X",
+    "name_normalized": "huntr/x",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "c4677497-13d0-4871-88e5-7e3ae4c9679e",
+      "7f5bc43f-3b35-4912-9655-d1463cdd7d20"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882740",
+    "updated_at": "2025-12-13 09:53:27.882740"
+  },
+  {
+    "id": "f5dc4702-0f28-4ff2-b594-f20e1624f781",
+    "name": "DJ Asul",
+    "name_normalized": "dj asul",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "263452aa-5a0c-48fc-b1d3-b73918382c12"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882761",
+    "updated_at": "2025-12-13 09:53:27.882761"
+  },
+  {
+    "id": "07fd7915-411d-4047-9b9d-442bf669ed26",
+    "name": "Billie Eilish",
+    "name_normalized": "billie eilish",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "1591eca4-2cba-4d54-ae66-bff3f3e8d9e6"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882782",
+    "updated_at": "2025-12-13 09:53:27.882782"
+  },
+  {
+    "id": "e2a8b4e8-10f9-4fde-949c-05a5dcac7333",
+    "name": "Limp Bizkit",
+    "name_normalized": "limp bizkit",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "b502bc19-e9c4-46b5-9231-c44280958304"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882804",
+    "updated_at": "2025-12-13 09:53:27.882804"
+  },
+  {
+    "id": "22dbe50d-b6d6-439e-b62e-3ca1408f390d",
+    "name": "Da",
+    "name_normalized": "da",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "4ae1fcb3-fcbf-4b36-a558-e6f1d7dbb4a0"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882853",
+    "updated_at": "2025-12-13 09:53:27.882853"
+  },
+  {
+    "id": "e4a6fb67-0f4e-426f-93c0-4aa2ec32a76b",
+    "name": "Primer",
+    "name_normalized": "primer",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "58853e6a-a4a6-4471-9694-7fa74f713c12"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882874",
+    "updated_at": "2025-12-13 09:53:27.882875"
+  },
+  {
+    "id": "a0785b98-809f-4ea4-b1ce-ef5ed6a88e19",
+    "name": "League of Legends",
+    "name_normalized": "league of legends",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "b8a5d3a5-0d63-4b0a-82ec-f4dab219a05f"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882895",
+    "updated_at": "2025-12-13 09:53:27.882896"
+  },
+  {
+    "id": "68eb9533-379f-4d2c-b089-1a8b245636f2",
+    "name": "AP Dhillon",
+    "name_normalized": "ap dhillon",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "b3fb5ace-c412-4f64-bbb5-c52284330830",
+      "753d7ef1-6522-4be6-b00d-7a9a6d292ad7"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882920",
+    "updated_at": "2025-12-13 09:53:27.882920"
+  },
+  {
+    "id": "c8a6b4a2-9573-4548-a840-60873306752b",
+    "name": "HUSTINDER",
+    "name_normalized": "hustinder",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "e9bc643d-edac-4fe5-b10e-acd0f6689819"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882955",
+    "updated_at": "2025-12-13 09:53:27.882955"
+  },
+  {
+    "id": "867c20e8-1f4a-4684-966b-945c9350895a",
+    "name": "Nirvair Pannu",
+    "name_normalized": "nirvair pannu",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "9e173239-770d-425b-9a01-9f149c91a9bf"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.882975",
+    "updated_at": "2025-12-13 09:53:27.882975"
+  },
+  {
+    "id": "9be34069-2e0d-4674-bff7-b296fb1ddcda",
+    "name": "Shubh",
+    "name_normalized": "shubh",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "a64a1523-e353-472a-8911-c89c60c86165"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883010",
+    "updated_at": "2025-12-13 09:53:27.883011"
+  },
+  {
+    "id": "230bf1d6-69d5-43fc-a537-aec6042b4c10",
+    "name": "Guru Randhawa",
+    "name_normalized": "guru randhawa",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "6ecc6111-d7c7-4fb1-8ba0-1fc9cedd1ef7"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883032",
+    "updated_at": "2025-12-13 09:53:27.883032"
+  },
+  {
+    "id": "b4a257d0-9b9f-4d64-b93f-cb1c3d6901e4",
+    "name": "Prem Dhillon",
+    "name_normalized": "prem dhillon",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "37ad2de2-5e5d-4a5e-b7aa-3340971a6dee"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883057",
+    "updated_at": "2025-12-13 09:53:27.883057"
+  },
+  {
+    "id": "e4e2db94-763d-47b4-b10c-8317c2c7e559",
+    "name": "Diljit Dosanjh",
+    "name_normalized": "diljit dosanjh",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "a60fac93-9224-4f97-9fe5-23cd6fb2c876"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883090",
+    "updated_at": "2025-12-13 09:53:27.883091"
+  },
+  {
+    "id": "6797d4bb-960e-43ff-acaa-966d1972b754",
+    "name": "Mithoon",
+    "name_normalized": "mithoon",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "ac8d4bd2-4c6f-4aaa-b9f6-425c0e102ea2",
+      "a79d8f0c-c505-4186-ada3-0ce06c430766"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883215",
+    "updated_at": "2025-12-13 09:53:27.883215"
+  },
+  {
+    "id": "6cbf01d9-afbf-4cdc-91fe-27403fc057a1",
+    "name": "Wham!",
+    "name_normalized": "wham!",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "6e2e82f3-feda-4769-a5b8-40e85d3d8560",
+      "c9e89ff5-1e58-462a-aa35-20ce8c091e6f"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883396",
+    "updated_at": "2025-12-13 09:53:27.883396"
+  },
+  {
+    "id": "c808e228-b44b-476a-b11c-e951ae13940d",
+    "name": "Kelly Clarkson",
+    "name_normalized": "kelly clarkson",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "66613a10-a184-4e4f-b426-7c60968a1fe5"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883479",
+    "updated_at": "2025-12-13 09:53:27.883479"
+  },
+  {
+    "id": "6dfb2642-ca06-45cc-a98d-f9e1c22c2a86",
+    "name": "sombr",
+    "name_normalized": "sombr",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "91f4ab9b-bfeb-4fbc-87f2-b69b484855ff"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883531",
+    "updated_at": "2025-12-13 09:53:27.883531"
+  },
+  {
+    "id": "10b0e3f0-268a-4a2e-9081-8257b3897762",
+    "name": "HUNTR/X: EJAE",
+    "name_normalized": "huntr/x: ejae",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "6998d250-370a-4a7f-8638-5e78ab2e74a8"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883551",
+    "updated_at": "2025-12-13 09:53:27.883551"
+  },
+  {
+    "id": "8addb43a-860f-418b-9601-5d1e03f97126",
+    "name": "Nat \"King\" Cole",
+    "name_normalized": "nat \"king\" cole",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "8be09e6d-b098-4446-b532-41435ac876d4"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883600",
+    "updated_at": "2025-12-13 09:53:27.883601"
+  },
+  {
+    "id": "27f8a54a-c78a-48d5-bd3c-f0e1498c1841",
+    "name": "Djo",
+    "name_normalized": "djo",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "86c67abb-aaee-4322-b196-f3ae41a3b2c9"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883624",
+    "updated_at": "2025-12-13 09:53:27.883624"
+  },
+  {
+    "id": "688dfbb9-81d9-42e7-a0bc-1850af4b9c77",
+    "name": "Andy Williams",
+    "name_normalized": "andy williams",
+    "bio": null,
+    "images": {
+      "thumbnail": null,
+      "profile": null,
+      "banner": null
+    },
+    "social": {
+      "instagram": null,
+      "twitter": null,
+      "spotify": null,
+      "youtube": null,
+      "apple_music": null,
+      "website": null
+    },
+    "genres": [],
+    "languages": [],
+    "type": "solo",
+    "monthly_listeners": 0,
+    "total_plays": 0,
+    "follower_count": 0,
+    "top_song_ids": [
+      "d0627809-75e3-42d6-ac3d-b830aed5d5d9"
+    ],
+    "album_ids": [],
+    "verified": false,
+    "created_at": "2025-12-13 09:53:27.883644",
+    "updated_at": "2025-12-13 09:53:27.883644"
+  }
+]

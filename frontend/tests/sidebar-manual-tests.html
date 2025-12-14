@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Manual Test Checklist</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #1a1a2e;
+            color: #eee;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #D4AF37;
+            border-bottom: 2px solid #D4AF37;
+            padding-bottom: 0.5rem;
+        }
+        h2 {
+            color: #fff;
+            margin-top: 2rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        .test-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border-left: 4px solid #666;
+        }
+        .test-item:hover {
+            background: rgba(255,255,255,0.08);
+        }
+        .test-item.pass {
+            border-left-color: #4CAF50;
+        }
+        .test-item.fail {
+            border-left-color: #f44336;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #D4AF37;
+        }
+        .test-description {
+            flex: 1;
+        }
+        .test-steps {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+        }
+        .test-steps ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+        .summary {
+            position: sticky;
+            top: 1rem;
+            float: right;
+            background: rgba(0,0,0,0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 100;
+        }
+        .summary h3 {
+            margin: 0 0 0.5rem 0;
+            color: #D4AF37;
+        }
+        .counter {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .pass-count { color: #4CAF50; }
+        .fail-count { color: #f44336; }
+        a {
+            color: #D4AF37;
+        }
+        .open-app {
+            display: inline-block;
+            background: #D4AF37;
+            color: #1a1a2e;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        .open-app:hover {
+            background: #c9a432;
+        }
+    </style>
+</head>
+<body>
+    <div class="summary">
+        <h3>Progress</h3>
+        <div class="counter">
+            <span class="pass-count" id="passCount">0</span> / <span id="totalCount">0</span>
+        </div>
+        <div style="font-size: 0.85rem; margin-top: 0.5rem;">tests passed</div>
+    </div>
+
+    <h1>Sidebar Feature - Manual Test Checklist</h1>
+
+    <p>Open the app and verify each test case manually:</p>
+    <a href="../index.html" target="_blank" class="open-app">Open TLDR Music App</a>
+
+    <h2>1. Sidebar Structure</h2>
+
+    <div class="test-item" data-test="structure-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Hamburger menu button visible in header</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Look at the header (top of page)</li>
+                    <li>Verify a hamburger menu icon (☰) is visible before the logo</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="structure-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sidebar opens with liquid glass design</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Click the hamburger menu button</li>
+                    <li>Verify sidebar slides in from the left</li>
+                    <li>Verify sidebar has a frosted glass/blur effect</li>
+                    <li>Verify sidebar has rounded corners on all sides</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="structure-3">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sidebar does NOT cover the header</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Verify the header remains fully visible above the sidebar</li>
+                    <li>Verify the sidebar starts below the header</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="structure-4">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sidebar is an overlay (no UI shift)</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Verify the main content does NOT shift to the right</li>
+                    <li>Sidebar should appear on top of content</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <h2>2. Toggle Functionality</h2>
+
+    <div class="test-item" data-test="toggle-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Hamburger button opens sidebar</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>With sidebar closed, click the hamburger button in header</li>
+                    <li>Verify sidebar opens with smooth animation</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="toggle-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Hamburger button closes sidebar (toggle)</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>With sidebar open, click the hamburger button in header again</li>
+                    <li>Verify sidebar closes with smooth animation</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="toggle-3">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Close button inside sidebar works</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Look for close (X) button in top-right corner of sidebar</li>
+                    <li>Click the close button</li>
+                    <li>Verify sidebar closes</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <h2>3. Chart Navigation</h2>
+
+    <div class="test-item" data-test="nav-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>India Top 25 button present and styled</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Verify "India Top 25" button is visible with 🇮🇳 flag icon</li>
+                    <li>Verify it has active/highlighted styling by default</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="nav-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Global Top 25 button present and styled</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Verify "Global Top 25" button is visible with 🌍 globe icon</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="nav-3">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Clicking chart buttons switches charts</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Click "Global Top 25"</li>
+                    <li>Verify the chart content changes to global charts</li>
+                    <li>Verify "Global Top 25" button now has active styling</li>
+                    <li>Verify "India Top 25" loses active styling</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="nav-4">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sidebar stays open after selecting chart</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Click "Global Top 25" or "India Top 25"</li>
+                    <li>Verify sidebar remains open (does NOT auto-close)</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Sidebar Footer</h2>
+
+    <div class="test-item" data-test="footer-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>"Refer to a friend" button present</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Scroll to bottom if needed</li>
+                    <li>Verify "Refer to a friend" button is visible with share icon</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="footer-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>"Refer to a friend" triggers share functionality</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Click "Refer to a friend" button</li>
+                    <li>Verify share dialog/functionality appears</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="footer-3">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>About link present in sidebar footer</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open the sidebar</li>
+                    <li>Verify "About" link is visible in footer section</li>
+                    <li>Click it and verify it navigates to about.html</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <h2>5. Header Cleanup</h2>
+
+    <div class="test-item" data-test="header-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>No duplicate About button in header</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Look at the header</li>
+                    <li>Verify there is NO About/info button in the header</li>
+                    <li>(About is only in sidebar now)</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="header-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>No Share button in header</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Look at the header</li>
+                    <li>Verify there is NO Share button in the header</li>
+                    <li>(Share is now "Refer to a friend" in sidebar)</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <h2>6. Sign In Button Styling</h2>
+
+    <div class="test-item" data-test="auth-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sign In button uses Red Hat Display font</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Look at the Sign In button in the header</li>
+                    <li>Verify the font matches the rest of the site (Red Hat Display)</li>
+                    <li>Should NOT look like default system font</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="auth-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sign In button uses accent color (golden)</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Look at the Sign In button</li>
+                    <li>Verify it has a golden/accent background color</li>
+                    <li>Verify dark text for contrast</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="auth-3">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Sign In button hover effect works</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Hover over the Sign In button</li>
+                    <li>Verify color changes slightly on hover</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <h2>7. No Visual Artifacts</h2>
+
+    <div class="test-item" data-test="visual-1">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>No dark shadow/rectangle behind sidebar</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open and close the sidebar multiple times</li>
+                    <li>Verify no dark overlay/backdrop appears</li>
+                    <li>Only the sidebar panel should be visible</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-item" data-test="visual-2">
+        <input type="checkbox" onchange="updateCount(this)">
+        <div class="test-description">
+            <strong>Smooth animations</strong>
+            <div class="test-steps">
+                <ol>
+                    <li>Open and close sidebar</li>
+                    <li>Verify animations are smooth (no jank)</li>
+                    <li>Verify transitions take ~300ms</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCount(checkbox) {
+            const item = checkbox.closest('.test-item');
+            if (checkbox.checked) {
+                item.classList.add('pass');
+                item.classList.remove('fail');
+            } else {
+                item.classList.remove('pass');
+            }
+
+            const total = document.querySelectorAll('.test-item input[type="checkbox"]').length;
+            const passed = document.querySelectorAll('.test-item input[type="checkbox"]:checked').length;
+
+            document.getElementById('passCount').textContent = passed;
+            document.getElementById('totalCount').textContent = total;
+        }
+
+        // Initialize count
+        window.onload = () => {
+            const total = document.querySelectorAll('.test-item input[type="checkbox"]').length;
+            document.getElementById('totalCount').textContent = total;
+        };
+    </script>
+</body>
+</html>

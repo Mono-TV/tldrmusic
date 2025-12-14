@@ -1,0 +1,418 @@
+{
+  "india": {
+    "2025-12-06": {
+      "sahiba-aditya rikhari": {
+        "rank": 1,
+        "song_id": "0f5194d6-b63c-4a9c-9389-ccf559c680a3",
+        "title": "Sahiba",
+        "artist": "Aditya Rikhari"
+      },
+      "saiyaara-tanishk bagchi": {
+        "rank": 2,
+        "song_id": "8e12a4c4-d0f3-4d4d-84f8-93d87862e034",
+        "title": "Saiyaara",
+        "artist": "Tanishk Bagchi"
+      },
+      "finding her-kushagra": {
+        "rank": 3,
+        "song_id": "d7be3ed8-e95c-44b2-85a5-07bb710bfab2",
+        "title": "Finding Her",
+        "artist": "Kushagra"
+      },
+      "oorum blood-sai abhyankkar": {
+        "rank": 4,
+        "song_id": "955c0025-cfea-4822-8b60-a32b85612af2",
+        "title": "Oorum Blood",
+        "artist": "Sai Abhyankkar"
+      },
+      "for a reason-karan aujla": {
+        "rank": 5,
+        "song_id": "9fed0ab8-5b2c-4ca7-9dc3-48be499d2676",
+        "title": "For A Reason",
+        "artist": "Karan Aujla"
+      },
+      "fa9la-flipperachi": {
+        "rank": 6,
+        "song_id": "08f49511-1540-45b6-ab72-715f1f8d11d2",
+        "title": "FA9LA",
+        "artist": "Flipperachi"
+      },
+      "haseen-talwiinder": {
+        "rank": 7,
+        "song_id": "9f79f69d-58f6-4918-9dc2-7813facae115",
+        "title": "Haseen",
+        "artist": "Talwiinder"
+      },
+      "all i want for christmas is you-mariah carey": {
+        "rank": 8,
+        "song_id": "0cd590c6-2f93-4524-a794-0a00ed18f8c4",
+        "title": "All I Want for Christmas Is You",
+        "artist": "Mariah Carey"
+      },
+      "barota-sidhu moose wala": {
+        "rank": 9,
+        "song_id": "72077129-091c-4f0f-b4cd-537b05ac29b7",
+        "title": "Barota",
+        "artist": "Sidhu Moose Wala"
+      },
+      "khayaal-talwiinder": {
+        "rank": 10,
+        "song_id": "6aa6110e-ff3c-4844-a1e8-8d0638123cb3",
+        "title": "Khayaal",
+        "artist": "Talwiinder"
+      },
+      "aawaara angaara-a.r. rahman": {
+        "rank": 11,
+        "song_id": "d46bfab2-00bb-4912-a694-51d9948242ab",
+        "title": "Aawaara Angaara",
+        "artist": "A.R. Rahman"
+      },
+      "man i need-olivia dean": {
+        "rank": 12,
+        "song_id": "28a130a9-e30f-42c3-a154-2975926a0d37",
+        "title": "Man I Need",
+        "artist": "Olivia Dean"
+      },
+      "tum ho toh-vishal mishra": {
+        "rank": 13,
+        "song_id": "496e4771-674e-4261-b1e5-bbcf7a20edfe",
+        "title": "Tum Ho Toh",
+        "artist": "Vishal Mishra"
+      },
+      "jingle bell rock-bobby helms": {
+        "rank": 14,
+        "song_id": "347dbf75-b62d-4b98-84c7-9e1ea5cca886",
+        "title": "Jingle Bell Rock",
+        "artist": "Bobby Helms"
+      },
+      "apna bana le-sachin-jigar": {
+        "rank": 15,
+        "song_id": "89fb795b-d759-4907-98e6-1306c8b80ffc",
+        "title": "Apna Bana Le",
+        "artist": "Sachin-Jigar"
+      },
+      "ishq jalakar - karvaan-shashwat sachdev": {
+        "rank": 16,
+        "song_id": "e191b666-bbca-48c0-b4e0-2ffc1b87953f",
+        "title": "Ishq Jalakar - Karvaan",
+        "artist": "Shashwat Sachdev"
+      },
+      "rockin' around the christmas tree-brenda lee": {
+        "rank": 17,
+        "song_id": "88a96823-5bfb-4cdc-b974-78e582e84897",
+        "title": "Rockin' Around The Christmas Tree",
+        "artist": "Brenda Lee"
+      },
+      "ordinary-alex warren": {
+        "rank": 18,
+        "song_id": "826452f9-b3b9-455d-840b-463dc42fd597",
+        "title": "Ordinary",
+        "artist": "Alex Warren"
+      },
+      "deewaniyat-vishal mishra": {
+        "rank": 19,
+        "song_id": "ae93b09a-da4c-4105-aef6-fab8e1b54530",
+        "title": "Deewaniyat",
+        "artist": "Vishal Mishra"
+      },
+      "dhurandhar - title track-shashwat sachdev": {
+        "rank": 20,
+        "song_id": "1e2f1e3f-2b88-446b-b8b5-36bcc3b70947",
+        "title": "Dhurandhar - Title Track",
+        "artist": "Shashwat Sachdev"
+      },
+      "santa tell me-ariana grande": {
+        "rank": 21,
+        "song_id": "64ff1d61-0bf2-45b1-bf17-e217c7550c1d",
+        "title": "Santa Tell Me",
+        "artist": "Ariana Grande"
+      }
+    },
+    "2025-11-29": {
+      "boyfriend-karan aujla": {
+        "rank": 1,
+        "song_id": "710181e0-0af1-40e4-aab2-5b3f4818b1a2",
+        "title": "Boyfriend",
+        "artist": "Karan Aujla"
+      },
+      "oorum blood-sai abhyankkar": {
+        "rank": 2,
+        "song_id": "955c0025-cfea-4822-8b60-a32b85612af2",
+        "title": "Oorum Blood",
+        "artist": "Sai Abhyankkar"
+      },
+      "saiyaara-tanishk bagchi": {
+        "rank": 3,
+        "song_id": "8e12a4c4-d0f3-4d4d-84f8-93d87862e034",
+        "title": "Saiyaara",
+        "artist": "Tanishk Bagchi"
+      },
+      "all i want for christmas is you-mariah carey": {
+        "rank": 4,
+        "song_id": "0cd590c6-2f93-4524-a794-0a00ed18f8c4",
+        "title": "All I Want for Christmas Is You",
+        "artist": "Mariah Carey"
+      },
+      "finding her-kushagra": {
+        "rank": 5,
+        "song_id": "d7be3ed8-e95c-44b2-85a5-07bb710bfab2",
+        "title": "Finding Her",
+        "artist": "Kushagra"
+      },
+      "mann mera-gajendra verma": {
+        "rank": 6,
+        "song_id": "14695345-e469-444c-a470-b7ae094b46cf",
+        "title": "Mann Mera",
+        "artist": "Gajendra Verma"
+      },
+      "fa9la-flipperachi": {
+        "rank": 7,
+        "song_id": "08f49511-1540-45b6-ab72-715f1f8d11d2",
+        "title": "FA9LA",
+        "artist": "Flipperachi"
+      },
+      "khayaal-talwiinder": {
+        "rank": 8,
+        "song_id": "6aa6110e-ff3c-4844-a1e8-8d0638123cb3",
+        "title": "Khayaal",
+        "artist": "Talwiinder"
+      },
+      "aawaara angaara-a.r. rahman": {
+        "rank": 9,
+        "song_id": "d46bfab2-00bb-4912-a694-51d9948242ab",
+        "title": "Aawaara Angaara",
+        "artist": "A.R. Rahman"
+      },
+      "the fate of ophelia-taylor swi": {
+        "rank": 10,
+        "song_id": "4a1adff5-df17-4b74-8cb4-a39c2f3a38ac",
+        "title": "The Fate of Ophelia",
+        "artist": "Taylor Swi"
+      },
+      "barota-sidhu moose wala": {
+        "rank": 11,
+        "song_id": "72077129-091c-4f0f-b4cd-537b05ac29b7",
+        "title": "Barota",
+        "artist": "Sidhu Moose Wala"
+      },
+      "barbaad-the rish": {
+        "rank": 12,
+        "song_id": "b5dfee2d-3910-455d-ae7f-4893772d5c5a",
+        "title": "Barbaad",
+        "artist": "The Rish"
+      },
+      "tum ho toh-vishal mishra": {
+        "rank": 13,
+        "song_id": "496e4771-674e-4261-b1e5-bbcf7a20edfe",
+        "title": "Tum Ho Toh",
+        "artist": "Vishal Mishra"
+      },
+      "santa tell me-ariana grande": {
+        "rank": 14,
+        "song_id": "64ff1d61-0bf2-45b1-bf17-e217c7550c1d",
+        "title": "Santa Tell Me",
+        "artist": "Ariana Grande"
+      },
+      "man i need-olivia dean": {
+        "rank": 15,
+        "song_id": "28a130a9-e30f-42c3-a154-2975926a0d37",
+        "title": "Man I Need",
+        "artist": "Olivia Dean"
+      },
+      "jingle bell rock-bobby helms": {
+        "rank": 16,
+        "song_id": "347dbf75-b62d-4b98-84c7-9e1ea5cca886",
+        "title": "Jingle Bell Rock",
+        "artist": "Bobby Helms"
+      },
+      "deewaniyat-vishal mishra": {
+        "rank": 17,
+        "song_id": "ae93b09a-da4c-4105-aef6-fab8e1b54530",
+        "title": "Deewaniyat",
+        "artist": "Vishal Mishra"
+      },
+      "ishq jalakar - karvaan-shashwat sachdev": {
+        "rank": 18,
+        "song_id": "e191b666-bbca-48c0-b4e0-2ffc1b87953f",
+        "title": "Ishq Jalakar - Karvaan",
+        "artist": "Shashwat Sachdev"
+      },
+      "dhurandhar - title track-shashwat sachdev": {
+        "rank": 19,
+        "song_id": "1e2f1e3f-2b88-446b-b8b5-36bcc3b70947",
+        "title": "Dhurandhar - Title Track",
+        "artist": "Shashwat Sachdev"
+      },
+      "ordinary-alex warren": {
+        "rank": 20,
+        "song_id": "826452f9-b3b9-455d-840b-463dc42fd597",
+        "title": "Ordinary",
+        "artist": "Alex Warren"
+      },
+      "rockin' around the christmas tree-brenda lee": {
+        "rank": 21,
+        "song_id": "88a96823-5bfb-4cdc-b974-78e582e84897",
+        "title": "Rockin' Around The Christmas Tree",
+        "artist": "Brenda Lee"
+      },
+      "apna bana le-sachin-jigar": {
+        "rank": 22,
+        "song_id": "89fb795b-d759-4907-98e6-1306c8b80ffc",
+        "title": "Apna Bana Le",
+        "artist": "Sachin-Jigar"
+      }
+    },
+    "2025-12-09": {
+      "sahiba-aditya rikhari": {
+        "rank": 1,
+        "song_id": null,
+        "title": "Sahiba",
+        "artist": "Aditya Rikhari"
+      },
+      "for a reason-karan aujla": {
+        "rank": 2,
+        "song_id": null,
+        "title": "For A Reason",
+        "artist": "Karan Aujla"
+      },
+      "saiyaara-tanishk bagchi": {
+        "rank": 3,
+        "song_id": null,
+        "title": "Saiyaara",
+        "artist": "Tanishk Bagchi"
+      },
+      "boyfriend-karan aujla": {
+        "rank": 4,
+        "song_id": null,
+        "title": "Boyfriend",
+        "artist": "Karan Aujla"
+      },
+      "haseen-talwiinder": {
+        "rank": 5,
+        "song_id": null,
+        "title": "Haseen",
+        "artist": "Talwiinder"
+      },
+      "finding her-kushagra": {
+        "rank": 6,
+        "song_id": null,
+        "title": "Finding Her",
+        "artist": "Kushagra"
+      },
+      "oorum blood-sai abhyankkar": {
+        "rank": 7,
+        "song_id": null,
+        "title": "Oorum Blood",
+        "artist": "Sai Abhyankkar"
+      },
+      "fa9la-flipperachi": {
+        "rank": 8,
+        "song_id": null,
+        "title": "FA9LA",
+        "artist": "Flipperachi"
+      },
+      "all i want for christmas is you-mariah carey": {
+        "rank": 9,
+        "song_id": null,
+        "title": "All I Want for Christmas Is You",
+        "artist": "Mariah Carey"
+      },
+      "mann mera-gajendra verma": {
+        "rank": 10,
+        "song_id": null,
+        "title": "Mann Mera",
+        "artist": "Gajendra Verma"
+      },
+      "the fate of ophelia-taylor swi": {
+        "rank": 11,
+        "song_id": null,
+        "title": "The Fate of Ophelia",
+        "artist": "Taylor Swi"
+      },
+      "khayaal-talwiinder": {
+        "rank": 12,
+        "song_id": null,
+        "title": "Khayaal",
+        "artist": "Talwiinder"
+      },
+      "aawaara angaara-a.r. rahman": {
+        "rank": 13,
+        "song_id": null,
+        "title": "Aawaara Angaara",
+        "artist": "A.R. Rahman"
+      },
+      "barbaad-the rish": {
+        "rank": 14,
+        "song_id": null,
+        "title": "Barbaad",
+        "artist": "The Rish"
+      },
+      "tum ho toh-vishal mishra": {
+        "rank": 15,
+        "song_id": null,
+        "title": "Tum Ho Toh",
+        "artist": "Vishal Mishra"
+      },
+      "jingle bell rock-bobby helms": {
+        "rank": 16,
+        "song_id": null,
+        "title": "Jingle Bell Rock",
+        "artist": "Bobby Helms"
+      },
+      "barota-sidhu moose wala": {
+        "rank": 17,
+        "song_id": null,
+        "title": "Barota",
+        "artist": "Sidhu Moose Wala"
+      },
+      "ishq jalakar - karvaan-shashwat sachdev": {
+        "rank": 18,
+        "song_id": null,
+        "title": "Ishq Jalakar - Karvaan",
+        "artist": "Shashwat Sachdev"
+      },
+      "man i need-olivia dean": {
+        "rank": 19,
+        "song_id": null,
+        "title": "Man I Need",
+        "artist": "Olivia Dean"
+      },
+      "dhurandhar - title track-shashwat sachdev": {
+        "rank": 20,
+        "song_id": null,
+        "title": "Dhurandhar - Title Track",
+        "artist": "Shashwat Sachdev"
+      },
+      "rockin' around the christmas tree-brenda lee": {
+        "rank": 21,
+        "song_id": null,
+        "title": "Rockin' Around The Christmas Tree",
+        "artist": "Brenda Lee"
+      },
+      "santa tell me-ariana grande": {
+        "rank": 22,
+        "song_id": null,
+        "title": "Santa Tell Me",
+        "artist": "Ariana Grande"
+      },
+      "ordinary-alex warren": {
+        "rank": 23,
+        "song_id": null,
+        "title": "Ordinary",
+        "artist": "Alex Warren"
+      },
+      "deewaniyat-vishal mishra": {
+        "rank": 24,
+        "song_id": null,
+        "title": "Deewaniyat",
+        "artist": "Vishal Mishra"
+      },
+      "apna bana le-sachin-jigar": {
+        "rank": 25,
+        "song_id": null,
+        "title": "Apna Bana Le",
+        "artist": "Sachin-Jigar"
+      }
+    }
+  }
+}

@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - TLDR Music</title>
+    <link rel="stylesheet" href="style.css?v=33">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .about-page {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
+        }
+
+        .about-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .about-header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        .about-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .platform-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .platform-icon.spotify { background: #1DB954; }
+        .platform-icon.apple { background: linear-gradient(135deg, #fc3c44 0%, #fa57c1 100%); }
+        .platform-icon.youtube { background: #FF0000; }
+        .platform-icon.billboard { background: #000; border: 1px solid #333; }
+        .platform-icon.jiosaavn { background: #2BC5B4; }
+        .platform-icon.gaana { background: #E72C30; }
+
+        .platform-info {
+            flex: 1;
+        }
+
+        .platform-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .platform-weight {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .weight-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .weight-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #7c3aed);
+            border-radius: 2px;
+        }
+
+        .formula-box {
+            background: #1a1a2e;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        .formula-line {
+            color: #a78bfa;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .formula-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .formula-comment {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .example-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-calc {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        .example-calc .line {
+            margin-bottom: 0.25rem;
+        }
+
+        .example-calc .result {
+            color: #22c55e;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tiebreaker-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .tiebreaker-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tiebreaker-item:last-child {
+            border-bottom: none;
+        }
+
+        .tiebreaker-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .tiebreaker-badge.primary {
+            background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 3rem;
+        }
+
+        .footer-note p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-note a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        .creator-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .creator-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .creator-info p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .creator-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .creator-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .creator-link:hover {
+            background: rgba(139, 92, 246, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tech-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tech-icon {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        kbd {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+            color: var(--accent);
+        }
+
+        .footer-copyright {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .about-title {
+                font-size: 1.8rem;
+            }
+
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .step-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .creator-links {
+                flex-direction: column;
+            }
+
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-page">
+        <!-- Header -->
+        <header class="about-header">
+            <div class="about-header-inner">
+                <a href="index.html" class="back-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Charts
+                </a>
+                <div class="brand">
+                    <h1 class="logo" style="font-size: 1.2rem;">TLDR<span>Music</span></h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="about-content">
+            <h1 class="about-title">How TLDR Music Works</h1>
+            <p class="about-subtitle">Understanding how we create India's most comprehensive music chart</p>
+
+            <!-- What is TLDR Music -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">?</span>
+                    What is TLDR Music?
+                </h2>
+                <p>
+                    TLDR Music is an aggregated music chart that combines data from multiple streaming platforms
+                    to show you what songs are <strong>truly popular</strong>. Instead of checking
+                    Spotify, Apple Music, YouTube, and other platforms separately, we do the work for you and create
+                    unified "Top 25" charts for both <strong>India</strong> and <strong>Global</strong> music.
+                </p>
+                <div class="highlight-box">
+                    <p>
+                        <strong>Think of it like this:</strong> If a song is #1 on Spotify but nowhere on Apple Music,
+                        is it really the most popular song? TLDR Music considers popularity across ALL major platforms
+                        to give you a more accurate picture of what's actually trending.
+                    </p>
+                </div>
+            </section>
+
+            <!-- India vs Global -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🌍</span>
+                    India & Global Charts
+                </h2>
+                <p>
+                    TLDR Music now offers two chart views that you can switch between using the sidebar menu (click the ☰ hamburger icon):
+                </p>
+                <ul class="step-list">
+                    <li class="step-item">
+                        <span class="step-number">🇮🇳</span>
+                        <div class="step-content">
+                            <h4>India Top 25</h4>
+                            <p>Aggregates data from Spotify India, Apple Music India, JioSaavn, Gaana, YouTube Music India, Billboard India, and regional charts. Shows what India is listening to - a mix of Bollywood, regional, and international hits.</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <span class="step-number">🌍</span>
+                        <div class="step-content">
+                            <h4>Global Top 25</h4>
+                            <p>Aggregates data from Spotify Global Top 50, Apple Music Global Top 100, and Billboard Hot 100. Shows what the world is listening to - primarily Western and international hits.</p>
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    Both charts use the <strong>same weighted ranking algorithm</strong> - the only difference is which platform charts are used as data sources.
+                </p>
+            </section>
+
+            <!-- Data Sources -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">*</span>
+                    Where Does the Data Come From?
+                </h2>
+                <p>
+                    We collect chart data from 7+ music platforms daily. Each platform has a different "weight"
+                    based on how reliable and representative it is:
+                </p>
+
+                <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem; font-size: 1.1rem;">India Chart Sources</h3>
+                <div class="platform-grid">
+                    <div class="platform-card">
+                        <div class="platform-icon apple">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Apple Music India</div>
+                            <div class="platform-weight">Weight: 1.5x (Highest)</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 100%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon spotify">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Spotify India</div>
+                            <div class="platform-weight">Weight: 1.5x (Highest)</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 100%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon billboard">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Billboard India</div>
+                            <div class="platform-weight">Weight: 1.2x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 80%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon youtube">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">YouTube Music</div>
+                            <div class="platform-weight">Weight: 1.0x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 67%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon jiosaavn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">JioSaavn</div>
+                            <div class="platform-weight">Weight: 1.0x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 67%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon gaana">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Gaana</div>
+                            <div class="platform-weight">Weight: 0.8x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 53%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon spotify">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Spotify Viral India</div>
+                            <div class="platform-weight">Weight: 0.9x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 60%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem; font-size: 1.1rem;">Global Chart Sources</h3>
+                <div class="platform-grid">
+                    <div class="platform-card">
+                        <div class="platform-icon spotify">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Spotify Global Top 50</div>
+                            <div class="platform-weight">Weight: 1.5x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 100%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon apple">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Apple Music Global</div>
+                            <div class="platform-weight">Weight: 1.5x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 100%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon billboard">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Billboard Hot 100</div>
+                            <div class="platform-weight">Weight: 1.2x</div>
+                            <div class="weight-bar"><div class="weight-fill" style="width: 80%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    <strong>Why different weights?</strong> Apple Music and Spotify have the highest weights because
+                    they have the most accurate and standardized data. Platforms like Gaana have lower weights because
+                    their charts can sometimes be influenced by promotional content.
+                </p>
+            </section>
+
+            <!-- The Algorithm -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">=</span>
+                    The Ranking Algorithm
+                </h2>
+                <p>
+                    Here's how we calculate the final ranking, explained step by step:
+                </p>
+
+                <ul class="step-list">
+                    <li class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h4>Collect Data</h4>
+                            <p>We scrape the top 50 songs from each platform's India chart every week. That's potentially 400+ songs!</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h4>Match Same Songs</h4>
+                            <p>The same song might appear as "Tauba Tauba" on one platform and "Tauba Tauba (From Bad Newz)" on another. We use smart matching to identify these as the same song.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h4>Calculate Position Score</h4>
+                            <p>A song's position on each chart matters. Being #1 gives you a score of 1.0, while #50 gives you only 0.02. The formula is simple: <code>(50 - position + 1) / 50</code></p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            <h4>Apply Platform Weights</h4>
+                            <p>We multiply each position score by the platform's weight. So being #1 on Spotify (1.5x) is worth more than being #1 on Gaana (0.8x).</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">5</span>
+                        <div class="step-content">
+                            <h4>Add It All Up</h4>
+                            <p>A song's final score is the sum of all its weighted position scores from every platform it appears on.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="formula-box">
+                    <div class="formula-line">Final Score = Sum of (Platform Weight x Position Score)</div>
+                    <div class="formula-line formula-comment">// Where Position Score = (50 - position + 1) / 50</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="example-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Example Calculation
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                        Let's say "Tauba Tauba" appears on 3 platforms:
+                    </p>
+                    <div class="example-calc">
+                        <div class="line">Spotify #1: 1.5 x (50-1+1)/50 = 1.5 x 1.0 = <strong>1.50</strong></div>
+                        <div class="line">Apple Music #3: 1.5 x (50-3+1)/50 = 1.5 x 0.96 = <strong>1.44</strong></div>
+                        <div class="line">YouTube Music #5: 1.0 x (50-5+1)/50 = 1.0 x 0.92 = <strong>0.92</strong></div>
+                        <div class="result">Total Score = 1.50 + 1.44 + 0.92 = 3.86</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tiebreakers -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">#</span>
+                    What If Songs Have the Same Score?
+                </h2>
+                <p>
+                    When two songs have identical scores, we use tiebreakers to decide which one ranks higher:
+                </p>
+
+                <ul class="tiebreaker-list">
+                    <li class="tiebreaker-item">
+                        <span class="tiebreaker-badge primary">1st</span>
+                        <div>
+                            <strong>Number of Platforms</strong> - A song on 6 platforms beats one on 4 platforms (more widespread = more popular)
+                        </div>
+                    </li>
+                    <li class="tiebreaker-item">
+                        <span class="tiebreaker-badge">2nd</span>
+                        <div>
+                            <strong>YouTube Views</strong> - If still tied, the song with more YouTube views wins
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Regional Charts -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">@</span>
+                    Regional Spotlights
+                </h2>
+                <p>
+                    India's music scene is incredibly diverse! Beyond the main chart, we also track regional charts
+                    for Hindi, Tamil, Telugu, and Punjabi music. These have lower weights (0.6-0.7x) in the main ranking
+                    to prevent regional hits from dominating the national chart, but they're showcased separately in
+                    the Regional Spotlights section.
+                </p>
+            </section>
+
+            <!-- What's New -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">+</span>
+                    What's New
+                </h2>
+                <p>
+                    TLDR Music has been upgraded with several new features to enhance your experience:
+                </p>
+
+                <ul class="step-list">
+                    <li class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h4>Sidebar Navigation</h4>
+                            <p>Access chart navigation through the sleek sidebar menu. Click the hamburger icon (☰) in the header to open the sidebar with liquid glass design. Switch between India Top 25 and Global Top 25 charts, share with friends, or learn more about the app - all from one convenient panel.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h4>India & Global Toggle</h4>
+                            <p>Switch between India and Global charts using the sidebar navigation. India aggregates local platforms like JioSaavn and Gaana, while Global pulls from Spotify Global, Apple Music Global, and Billboard Hot 100.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h4>Rank Movement Tracking</h4>
+                            <p>See how songs are moving on the charts! Green arrows show songs climbing up, red arrows show drops, and "NEW" badges highlight fresh entries to the chart.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            <h4>Cloud-Powered API</h4>
+                            <p>Chart data is served via a dedicated REST API hosted on Google Cloud Run, connected to MongoDB for fast, reliable data delivery with intelligent caching.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">5</span>
+                        <div class="step-content">
+                            <h4>Lyrics Support</h4>
+                            <p>View synced and plain lyrics for most songs. Click the lyrics button while playing to see the words as you listen.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">6</span>
+                        <div class="step-content">
+                            <h4>Enhanced Regional Charts</h4>
+                            <p>Regional songs now include album artwork, YouTube videos, and metadata. Play any regional song directly from the spotlights section.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">7</span>
+                        <div class="step-content">
+                            <h4>Theater Mode</h4>
+                            <p>Watch music videos in an immersive full-width view. Click the video button on the hero section or player bar to enter theater mode.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">8</span>
+                        <div class="step-content">
+                            <h4>Automated Daily Updates</h4>
+                            <p>Charts are automatically refreshed daily at 10 PM IST via Google Cloud Scheduler. No manual intervention needed - always fresh data!</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">9</span>
+                        <div class="step-content">
+                            <h4>Google Sign-In & Cloud Sync</h4>
+                            <p>Sign in with your Google account to sync your favorites, play history, and queue across all your devices. Browse freely - login is only required when you want to play songs.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">10</span>
+                        <div class="step-content">
+                            <h4>User Profile Page</h4>
+                            <p>View your profile with stats, liked songs, and recently played tracks. Click your avatar in the header to access your personalized music dashboard.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p>
+                        <strong>For Developers:</strong> The TLDR Music API is available for integration.
+                        Endpoints include <code>/chart/current</code>, <code>/search</code>, and <code>/regional</code>.
+                        <a href="https://tldrmusic-api-401132033262.asia-south1.run.app/docs" target="_blank" style="color: var(--accent);">View API Documentation</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- User Features -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">&#9829;</span>
+                    Your Personal Features
+                </h2>
+                <p>
+                    TLDR Music includes personal features that save automatically. Sign in with Google to sync
+                    across devices, or use locally without an account - your choice!
+                </p>
+
+                <div class="highlight-box">
+                    <p>
+                        <strong>Cloud Sync:</strong> Sign in with Google to sync your favorites, history, and queue
+                        across all your devices. Your data is securely stored in MongoDB and accessible anywhere.
+                    </p>
+                </div>
+
+                <ul class="step-list">
+                    <li class="step-item">
+                        <span class="step-number">&#9829;</span>
+                        <div class="step-content">
+                            <h4>Favorites</h4>
+                            <p>Click the heart button on the player bar (or press <kbd>H</kbd>) to favorite songs. Your favorites appear in a dedicated section at the top of the page for quick access.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">&#9776;</span>
+                        <div class="step-content">
+                            <h4>Queue</h4>
+                            <p>Build your own playlist! Add songs to queue and they'll play before the chart continues. Click the queue button (or press <kbd>Q</kbd>) to view and manage your queue.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">&#8634;</span>
+                        <div class="step-content">
+                            <h4>Shuffle & Repeat</h4>
+                            <p>Press <kbd>S</kbd> to toggle shuffle mode for random playback. Press <kbd>R</kbd> to cycle through repeat modes: Off → Repeat All → Repeat One.</p>
+                        </div>
+                    </li>
+
+                    <li class="step-item">
+                        <span class="step-number">&#9201;</span>
+                        <div class="step-content">
+                            <h4>Listening History</h4>
+                            <p>Your recently played songs are automatically tracked (up to 50 songs). Find them in the queue panel for quick replay.</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Keyboard Shortcuts -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">&#9000;</span>
+                    Keyboard Shortcuts
+                </h2>
+                <p>
+                    Power users can control everything with keyboard shortcuts:
+                </p>
+
+                <div class="platform-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">Space</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Play / Pause</div>
+                            <div class="platform-weight">Toggle playback</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">H</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Favorite</div>
+                            <div class="platform-weight">Add/remove from favorites</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">S</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Shuffle</div>
+                            <div class="platform-weight">Toggle shuffle mode</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">R</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Repeat</div>
+                            <div class="platform-weight">Cycle repeat modes</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">Q</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Queue</div>
+                            <div class="platform-weight">Show/hide queue panel</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">L</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Lyrics</div>
+                            <div class="platform-weight">Show/hide lyrics panel</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8593;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Previous</div>
+                            <div class="platform-weight">Play previous song</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8595;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Next</div>
+                            <div class="platform-weight">Play next song</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8592;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Seek Back</div>
+                            <div class="platform-weight">Rewind 10 seconds</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: var(--accent); font-weight: 700; font-size: 0.9rem;">&#8594;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Seek Forward</div>
+                            <div class="platform-weight">Skip 10 seconds</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Trust This -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">!</span>
+                    Why This Approach Works
+                </h2>
+                <div class="highlight-box">
+                    <p>
+                        <strong>Cross-platform validation:</strong> A song needs to perform well on MULTIPLE platforms
+                        to rank high. This filters out songs that are artificially boosted on just one platform and
+                        surfaces music that's genuinely popular across India's diverse streaming landscape.
+                    </p>
+                </div>
+                <p>
+                    Our algorithm rewards songs that are:
+                </p>
+                <ul style="color: var(--text-secondary); line-height: 2; padding-left: 1.5rem;">
+                    <li>Ranking high (not just appearing) on charts</li>
+                    <li>Popular across multiple platforms (not just one)</li>
+                    <li>Performing well on reliable, established platforms</li>
+                    <li>Actually being listened to (YouTube views as final tiebreaker)</li>
+                </ul>
+            </section>
+
+            <!-- About the Project -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">~</span>
+                    About the Project
+                </h2>
+                <div class="creator-card">
+                    <div class="creator-info">
+                        <h3>The Story</h3>
+                        <p>
+                            TLDR Music started as a personal project to solve a simple problem: figuring out what music
+                            is actually trending in India without checking multiple apps. What began as a weekend experiment
+                            has grown into a fully automated system that scrapes, ranks, and presents music data daily.
+                        </p>
+                        <p>
+                            The entire project is built with Python for the backend scraping and ranking engine,
+                            a lightweight vanilla JavaScript frontend, and Google Cloud for hosting and automation.
+                        </p>
+                        <div class="creator-links">
+                            <a href="https://github.com/Mono-TV/tldrmusic" target="_blank" class="creator-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                View on GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tech Stack -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">&lt;</span>
+                    Tech Stack
+                </h2>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <span class="tech-icon">Python</span>
+                        <span class="tech-label">Scraping & Ranking</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">FastAPI</span>
+                        <span class="tech-label">REST API</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">MongoDB</span>
+                        <span class="tech-label">Database</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">GCP</span>
+                        <span class="tech-label">Cloud Run & Scheduler</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">Playwright</span>
+                        <span class="tech-label">Web Scraping</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">GitHub</span>
+                        <span class="tech-label">Pages Hosting</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quality Assurance -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">&#10003;</span>
+                    Quality Assurance
+                </h2>
+                <p>
+                    TLDR Music is thoroughly tested with a comprehensive QA test suite to ensure reliability
+                    across desktop and mobile devices. All tests are automated and run in-browser.
+                </p>
+
+                <div class="example-box" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3);">
+                    <div class="example-title" style="font-size: 1.1rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Test Results: 238 Passed, 0 Failed
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                        Latest QA test run covers 17 categories across 238 individual tests:
+                    </p>
+                </div>
+
+                <div class="platform-grid" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); margin-top: 1.5rem;">
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128241;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Responsive Layout</div>
+                            <div class="platform-weight">13 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128070;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Mobile Interactions</div>
+                            <div class="platform-weight">12 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#127757;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Chart Toggle</div>
+                            <div class="platform-weight">10 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128279;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Cross-Feature</div>
+                            <div class="platform-weight">8 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#127919;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">UI State</div>
+                            <div class="platform-weight">8 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#9193;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Progress Bar</div>
+                            <div class="platform-weight">7 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#127917;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Regional Songs</div>
+                            <div class="platform-weight">4 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128190;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Data Integrity</div>
+                            <div class="platform-weight">8 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#9855;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Accessibility</div>
+                            <div class="platform-weight">6 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#9888;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Error Handling</div>
+                            <div class="platform-weight">8 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128290;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Boundary Cases</div>
+                            <div class="platform-weight">9 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#9889;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Performance</div>
+                            <div class="platform-weight">5 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128128;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Skeleton UI</div>
+                            <div class="platform-weight">19 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128100;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Human Usage</div>
+                            <div class="platform-weight">35 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#127925;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Playback</div>
+                            <div class="platform-weight">15 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#128260;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Interaction Flows</div>
+                            <div class="platform-weight">24 tests</div>
+                        </div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon" style="background: #22c55e; font-size: 1rem;">&#127918;</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Button States</div>
+                            <div class="platform-weight">30 tests</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 1.5rem;">
+                    <p>
+                        <strong>Run Tests Yourself:</strong> Open the test runners in your browser:
+                        <br><br>
+                        <a href="qa-test.html" style="color: var(--accent);">QA Test Suite (238 tests)</a> ·
+                        <a href="e2e-test.html" style="color: var(--accent);">E2E Tests (75 tests)</a> ·
+                        <a href="test.html" style="color: var(--accent);">Unit Tests (59 tests)</a> ·
+                        <a href="tests/test-runner.html" style="color: var(--accent);">Sidebar Tests</a> ·
+                        <a href="tests/sidebar-manual-tests.html" style="color: var(--accent);">Sidebar Manual Tests</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Footer Note -->
+            <div class="footer-note">
+                <p>
+                    TLDR Music is updated daily at 10 PM IST. Built with data from 7+ platforms.<br>
+                    Powered by Google Cloud Run + MongoDB + GitHub Pages.<br>
+                    <a href="index.html">Back to Charts</a> · <a href="https://tldrmusic-api-401132033262.asia-south1.run.app/docs" target="_blank">API Docs</a> · <a href="https://github.com/Mono-TV/tldrmusic" target="_blank">Source Code</a>
+                </p>
+                <p class="footer-copyright">
+                    Made with data from Spotify, Apple Music, YouTube Music, JioSaavn, Gaana, Billboard, and more.
+                </p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
