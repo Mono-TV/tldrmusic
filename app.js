@@ -179,6 +179,7 @@ async function loadChartData() {
         if (!response.ok) throw new Error('API request failed');
         chartData = await response.json();
         console.log('Loaded chart data from API');
+        consolidateGlobalChart();
         renderHero();
         renderChart();
         renderRegionalCharts();
@@ -191,6 +192,7 @@ async function loadChartData() {
             if (!response.ok) throw new Error('Failed to load local chart data');
             chartData = await response.json();
             console.log('Loaded chart data from local JSON');
+            consolidateGlobalChart();
             renderHero();
             renderChart();
             renderRegionalCharts();
@@ -200,6 +202,61 @@ async function loadChartData() {
             showError();
         }
     }
+}
+
+// Consolidate global chart from platform data if not already present
+function consolidateGlobalChart() {
+    if (!chartData || chartData.global_chart) return; // Already exists or no data
+
+    if (!chartData.global) {
+        console.warn('No global platform data available');
+        return;
+    }
+
+    // Collect all songs from global platforms with their rankings
+    const songScores = new Map();
+    const platforms = ['spotify_global', 'billboard_hot100', 'apple_global'];
+    const weights = { spotify_global: 1.5, billboard_hot100: 1.2, apple_global: 1.5 };
+
+    platforms.forEach(platform => {
+        const platformData = chartData.global[platform];
+        if (!platformData || !platformData.songs) return;
+
+        platformData.songs.forEach((song, index) => {
+            const key = `${song.title?.toLowerCase()}-${song.artist?.toLowerCase()}`;
+            const positionScore = (10 - index) / 10; // Higher rank = higher score
+            const weightedScore = positionScore * (weights[platform] || 1);
+
+            if (songScores.has(key)) {
+                const existing = songScores.get(key);
+                existing.score += weightedScore;
+                existing.platforms.push(platform);
+            } else {
+                songScores.set(key, {
+                    title: song.title,
+                    artist: song.artist,
+                    artwork: song.artwork || song.image,
+                    video_id: song.video_id,
+                    score: weightedScore,
+                    platforms: [platform]
+                });
+            }
+        });
+    });
+
+    // Sort by score and take top 25
+    const sortedSongs = Array.from(songScores.values())
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 25)
+        .map((song, index) => ({
+            ...song,
+            rank: index + 1,
+            rank_change: 0,
+            is_new: false
+        }));
+
+    chartData.global_chart = sortedSongs;
+    console.log(`Consolidated ${sortedSongs.length} songs into global_chart`);
 }
 
 // Hide skeleton loading and show actual content
