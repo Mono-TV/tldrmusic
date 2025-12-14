@@ -669,6 +669,11 @@ function switchChartMode(mode) {
         btn.classList.toggle('active', btn.dataset.chart === mode);
     });
 
+    // Ensure auth UI is preserved after chart switch
+    if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
+    }
+
     // Update badge label and page title
     if (badgeLabel) {
         badgeLabel.textContent = mode === 'india' ? 'India Top 25' : 'Global Top 25';
