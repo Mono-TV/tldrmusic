@@ -275,8 +275,25 @@ function logout() {
     localStorage.removeItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
 
+    // Clear user data (favorites and history)
+    localStorage.removeItem(STORAGE_KEYS.FAVORITES);
+    localStorage.removeItem(STORAGE_KEYS.HISTORY);
+
     currentUser = null;
     isAuthenticated = false;
+
+    // Reset global favorites array and re-render (hide section)
+    if (typeof favorites !== 'undefined') {
+        favorites.length = 0; // Clear array without reassigning
+    }
+    if (typeof renderFavoritesSection === 'function') {
+        renderFavoritesSection();
+    }
+
+    // Reset play history array
+    if (typeof playHistory !== 'undefined') {
+        playHistory.length = 0;
+    }
 
     updateAuthUI();
     showToast('Logged out');
