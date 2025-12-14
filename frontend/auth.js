@@ -493,6 +493,12 @@ function updateAuthUI() {
     const existingBtn = document.getElementById('authBtn');
     if (existingBtn) existingBtn.remove();
 
+    // Update sidebar profile button visibility
+    const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
+    if (sidebarProfileBtn) {
+        sidebarProfileBtn.style.display = isAuthenticated ? 'flex' : 'none';
+    }
+
     if (isAuthenticated && currentUser) {
         // Show user avatar - click opens profile panel
         const authBtn = document.createElement('div');

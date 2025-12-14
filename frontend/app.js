@@ -2265,6 +2265,7 @@ function initSidebar() {
     const headerMenuBtn = document.getElementById('headerMenuBtn');
     const sidebarIndiaBtn = document.getElementById('sidebarIndiaBtn');
     const sidebarGlobalBtn = document.getElementById('sidebarGlobalBtn');
+    const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
 
     if (!sidebar) return;
 
@@ -2290,6 +2291,14 @@ function initSidebar() {
         if (currentChartMode !== 'global') {
             switchChartMode('global');
             updateSidebarActiveState('global');
+        }
+    });
+
+    // Profile button - opens profile panel
+    sidebarProfileBtn?.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        if (typeof showProfilePanel === 'function') {
+            showProfilePanel();
         }
     });
 
