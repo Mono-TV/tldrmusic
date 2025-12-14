@@ -162,7 +162,12 @@ async function handleGoogleCallback(response) {
 
     } catch (error) {
         console.error('Login error:', error);
-        showToast('Login failed: ' + error.message);
+        // Check if it's a network/CORS error (API not available)
+        if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+            showToast('Sign in is temporarily unavailable. Please try again later.');
+        } else {
+            showToast('Login failed: ' + error.message);
+        }
     }
 }
 
