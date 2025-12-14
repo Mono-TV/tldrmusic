@@ -18,7 +18,7 @@ from datetime import datetime
 # Add current directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from main import scrape_all_platforms, save_scrape_cache
+from main import scrape_all_platforms, scrape_global_platforms, save_scrape_cache
 from ranking import RankingEngine, print_detailed_report, ConsolidatedSong
 from youtube_api import YouTubeAPI, get_video_ids_from_songs
 from artwork_api import ArtworkFetcher
@@ -337,44 +337,63 @@ async def run_job():
                 song.youtube_views = enriched[i].youtube_views
                 song.artwork_url = enriched[i].artwork_url
 
-    # Step 7: Consolidate and enrich global songs
-    print("\n[Step 7/8] Consolidating global chart...")
+    # Step 7: Scrape, consolidate, and enrich global songs
+    print("\n[Step 7/8] Scraping and processing global chart...")
 
-    # Filter only global platforms
-    global_platforms = {
-        platform: songs for platform, songs in all_songs.items()
-        if platform in ['spotify_global', 'billboard_hot100', 'apple_global']
-    }
+    # Scrape global platforms (Spotify Global, Billboard Hot 100, Apple Music Global)
+    print("  Scraping global platforms...")
+    try:
+        global_songs = await scrape_global_platforms(headless=True)
+        print(f"  Scraped {sum(len(s) for s in global_songs.values())} songs from {len(global_songs)} global platforms")
+    except Exception as e:
+        print(f"  [WARNING] Global scraping failed: {e}")
+        global_songs = {}
 
-    # Use ranking engine to consolidate global songs (same as India chart)
+    # Consolidate global songs using ranking engine
     global_engine = RankingEngine()
-    global_top_songs = global_engine.consolidate(global_platforms)
+    global_top_songs = global_engine.consolidate(global_songs)
     print(f"  Consolidated {len(global_top_songs)} global songs")
 
-    # Enrich global songs with YouTube data
-    print("  Enriching global songs with YouTube data...")
-    try:
-        youtube = YouTubeAPI(mongo_cache=mongo_cache)
-        global_top_songs = await youtube.enrich_songs_with_youtube_data(global_top_songs)
-        global_top_songs = sorted(
-            global_top_songs,
-            key=lambda s: (s.score, s.platforms_count, s.youtube_views or 0),
-            reverse=True
-        )[:FINAL_CHART_SIZE]
-    except Exception as e:
-        print(f"    [WARNING] YouTube enrichment failed for global: {e}")
+    if global_top_songs:
+        # Enrich global songs with YouTube data
+        print("  Enriching global songs with YouTube data...")
+        try:
+            youtube = YouTubeAPI(mongo_cache=mongo_cache)
+            global_top_songs = await youtube.enrich_songs_with_youtube_data(global_top_songs)
+            global_top_songs = sorted(
+                global_top_songs,
+                key=lambda s: (s.score, s.platforms_count, s.youtube_views or 0),
+                reverse=True
+            )[:FINAL_CHART_SIZE]
+        except Exception as e:
+            print(f"    [WARNING] YouTube enrichment failed for global: {e}")
 
-    # Enrich with artwork
-    print("  Enriching global songs with artwork...")
-    try:
-        artwork = ArtworkFetcher()
-        global_top_songs = await artwork.enrich_songs_with_artwork(global_top_songs)
-    except Exception as e:
-        print(f"    [WARNING] Artwork enrichment failed for global: {e}")
+        # Enrich with artwork
+        print("  Enriching global songs with artwork...")
+        try:
+            artwork = ArtworkFetcher()
+            global_top_songs = await artwork.enrich_songs_with_artwork(global_top_songs)
+        except Exception as e:
+            print(f"    [WARNING] Artwork enrichment failed for global: {e}")
 
-    # Apply fallback and save to cache
-    global_top_songs = await apply_cached_metadata_fallback(global_top_songs, mongo_cache)
-    await save_song_metadata_to_cache(global_top_songs, mongo_cache)
+        # Enrich with lyrics
+        print("  Enriching global songs with lyrics...")
+        try:
+            lyrics_fetcher = LyricsFetcher()
+            global_top_songs = await lyrics_fetcher.enrich_songs_with_lyrics(global_top_songs)
+        except Exception as e:
+            print(f"    [WARNING] Lyrics enrichment failed for global: {e}")
+
+        # Apply fallback and save to cache
+        global_top_songs = await apply_cached_metadata_fallback(global_top_songs, mongo_cache)
+        await save_song_metadata_to_cache(global_top_songs, mongo_cache)
+
+        # Print global chart summary
+        print("\n  Global Top 10:")
+        for i, song in enumerate(global_top_songs[:10], 1):
+            print(f"    {i:2}. {song.canonical_title} - {song.canonical_artist}")
+    else:
+        print("  [WARNING] No global songs consolidated")
 
     # Step 8: Generate output and upload
     print("\n[Step 8/8] Uploading to API...")
