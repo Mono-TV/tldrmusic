@@ -6,7 +6,9 @@
 // Configuration
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
-    API_BASE: 'http://localhost:8000'  // Update for production
+    API_BASE: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8000'
+        : 'https://tldrmusic-api-401132033262.asia-south1.run.app'
 };
 
 // Storage keys for auth
