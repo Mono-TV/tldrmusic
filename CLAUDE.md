@@ -18,40 +18,102 @@ Ranking Engine (weighted scoring)
 YouTube API (search + video IDs)
     |
     v
-JSON output (data/current.json)
+Cloud Run Job → API Upload
     |
     v
-Static Frontend (HTML/CSS/JS)
+FastAPI Backend (MongoDB)
+    |
+    v
+Static Frontend (GitHub Pages)
 ```
 
 ## File Structure
 
 ```
 tldrmusic/
-   scraper/
-      main.py              # Entry point
-      config.py            # API keys, weights, URLs
-      ranking.py           # Consolidation algorithm
-      youtube_api.py       # YouTube search + playlist
-      requirements.txt
-      scrapers/
-          base.py          # Base scraper class
-          billboard.py
-          youtube_music.py
-          gaana.py
-          jiosaavn.py
-          spotify.py
-          apple_music.py
-          prime_music.py
-   data/
-      current.json         # Latest chart
-      youtube_cache.json   # Cached YouTube searches
-      archive/             # Historical charts
-   frontend/
-      index.html
-      style.css
-      app.js
-   CLAUDE.md                # This file
+├── index.html, app.js, auth.js, style.css  # Frontend (GitHub Pages serves from root)
+├── scraper/
+│   ├── run_job.py           # Cloud Run Job entry point
+│   ├── main.py              # Local scraper entry point
+│   ├── config.py            # API keys, weights, URLs
+│   ├── ranking.py           # Consolidation algorithm
+│   ├── youtube_api.py       # YouTube search + enrichment
+│   ├── mongo_cache.py       # MongoDB caching
+│   └── scrapers/            # Platform-specific scrapers
+├── backend/
+│   └── src/                 # FastAPI backend
+├── scripts/
+│   ├── run-tests.js         # CLI test runner
+│   ├── precommit-check.js   # Pre-commit validation
+│   └── feature.sh           # Feature branch helper
+├── tests/                   # Test files
+├── data/                    # Cache files (local dev)
+└── package.json             # Version management
+```
+
+## Development Workflow
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+# or
+node scripts/run-tests.js
+```
+
+### Feature Branch Workflow
+
+The project enforces a strict branching strategy:
+
+1. **Main branch is protected** - Tests must pass before committing to main
+2. **Feature branches** - Use for work-in-progress code
+
+```bash
+# Start a new feature
+./scripts/feature.sh start my-feature-name
+
+# Run tests
+./scripts/feature.sh test
+
+# Commit your changes (on feature branch, tests are optional)
+git add . && git commit -m "Add new feature"
+
+# Merge back to main (tests run automatically)
+./scripts/feature.sh finish
+```
+
+### Pre-commit Checks
+
+The pre-commit hook automatically runs:
+1. **Localhost URL check** - Blocks commits with localhost API URLs
+2. **JavaScript syntax check** - Validates all staged .js files
+3. **Python syntax check** - Validates all staged .py files
+4. **Full test suite** (main branch only) - Must pass to commit
+
+If tests fail on main branch:
+```bash
+# Option 1: Fix issues and retry
+# Option 2: Create feature branch
+git stash
+git checkout -b feature/my-fix
+git stash pop
+git add . && git commit -m "WIP: fixing issue"
+
+# Option 3: Skip tests (not recommended)
+git commit --no-verify
+```
+
+### Version Management
+
+```bash
+# Check current version
+./scripts/feature.sh version
+
+# Bump version
+./scripts/feature.sh version patch  # 1.0.0 -> 1.0.1
+./scripts/feature.sh version minor  # 1.0.0 -> 1.1.0
+./scripts/feature.sh version major  # 1.0.0 -> 2.0.0
 ```
 
 ## Quick Start
@@ -59,70 +121,82 @@ tldrmusic/
 ### 1. Install Dependencies
 
 ```bash
+# Python dependencies
 cd scraper
 pip install -r requirements.txt
 playwright install chromium
+
+# Node.js (for testing)
+# No npm install needed - uses built-in Node.js modules
 ```
 
-### 2. Run the Scraper
+### 2. Run the Scraper (Local)
 
 ```bash
-# Full run (scrape + YouTube enrichment)
-python main.py
+python scraper/main.py
 
-# Dry run (scrape only, no API calls)
-python main.py --dry-run
-
-# Use cached scrape data
-python main.py --skip-scrape
-
-# Show browser during scraping
-python main.py --no-headless
+# Options:
+python scraper/main.py --dry-run      # Scrape only, no API calls
+python scraper/main.py --skip-scrape  # Use cached data
+python scraper/main.py --no-headless  # Show browser
 ```
 
-### 3. View the Chart
-
-Open `frontend/index.html` in a browser, or serve it locally:
+### 3. Run Cloud Job (Production)
 
 ```bash
-cd frontend
-python -m http.server 8000
-# Visit http://localhost:8000
+gcloud run jobs execute tldrmusic-scraper --region asia-south1
 ```
+
+### 4. View the Site
+
+- **Production**: https://mono-tv.github.io/tldrmusic/
+- **Local**: Open `index.html` in browser
 
 ## Platform Weights
 
+| Platform | Weight | Notes |
+|----------|--------|-------|
+| Apple Music | 1.5 | Primary |
+| Spotify | 1.5 | Primary |
+| Billboard | 1.2 | Industry standard |
+| Shazam | 1.1 | Discovery signal |
+| YouTube Music | 1.0 | Base |
+| JioSaavn | 1.0 | India-specific |
+| Spotify Viral | 0.9 | Emerging songs |
+| Gaana | 0.8 | India-specific |
+| Prime Music | 0.7 | Lower weight |
+
+### Global Chart Weights
 | Platform | Weight |
 |----------|--------|
-| Apple Music | 1.5 |
-| Spotify | 1.5 |
-| Billboard | 1.2 |
-| YouTube Music | 1.0 |
-| JioSaavn | 1.0 |
-| Gaana | 0.8 |
-| Prime Music | 0.7 |
+| Spotify Global | 1.5 |
+| Billboard Hot 100 | 1.5 |
+| Apple Music Global | 1.3 |
 
-## Ranking Algorithm
+## API Endpoints
 
-```
-Score = sum(platform_weight * position_score)
-where position_score = (max_position - position + 1) / max_position
+**Base URL**: `https://tldrmusic-api-401132033262.asia-south1.run.app`
 
-Tiebreakers:
-1. Number of platforms (more = higher)
-2. YouTube views (higher = higher)
-```
-
-## YouTube API Usage
-
-- Search limited to 1 result per song (topic ID: /m/04rlf for music)
-- Results cached in `data/youtube_cache.json`
-- Estimated cost per run: ~3,800 units
+- `GET /chart/current` - Current chart data
+- `GET /docs` - API documentation
+- `POST /admin/upload` - Upload new chart (requires API key)
 
 ## Configuration
 
-Edit `scraper/config.py` to modify:
-- `YOUTUBE_API_KEY` - Your API key
+Edit `scraper/config.py`:
+- `YOUTUBE_API_KEY` - YouTube Data API key
 - `PLATFORM_WEIGHTS` - Ranking weights
-- `FINAL_CHART_SIZE` - Number of songs in output (default: 25)
+- `FINAL_CHART_SIZE` - Songs in output (default: 25)
 - `CHART_URLS` - Source chart URLs
+
+## Testing
+
+Tests include:
+- JavaScript syntax validation
+- Python syntax validation
+- API endpoint consistency (no localhost)
+- Required files check
+- HTML structure validation
+- Version consistency
+
+Run tests before every commit to main to ensure code quality.

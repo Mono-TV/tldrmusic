@@ -1,0 +1,22 @@
+{
+  "name": "tldrmusic",
+  "version": "1.0.0",
+  "description": "TLDR Music - India's Top 25 Music Chart Aggregator",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/run-tests.js",
+    "test:watch": "node scripts/run-tests.js --watch",
+    "lint": "node scripts/lint-check.js",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "precommit": "node scripts/precommit-check.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mono-TV/tldrmusic.git"
+  },
+  "keywords": ["music", "charts", "india", "aggregator"],
+  "author": "Mono-TV",
+  "license": "MIT"
+}
