@@ -1,6 +1,6 @@
 // TLDR Music - Frontend Application
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // localStorage keys
