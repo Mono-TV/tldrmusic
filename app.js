@@ -9,7 +9,8 @@ const STORAGE_KEYS = {
     HISTORY: 'tldr-history',
     SHUFFLE: 'tldr-shuffle',
     REPEAT: 'tldr-repeat',
-    QUEUE: 'tldr-queue'
+    QUEUE: 'tldr-queue',
+    PLAYLISTS: 'tldr-playlists'
 };
 
 // State
@@ -36,6 +37,12 @@ let playHistory = [];         // Array of recently played songs
 let queue = [];               // Custom queue
 let isShuffleOn = false;
 let repeatMode = 'off';       // 'off', 'all', 'one'
+
+// Playlist data
+let playlists = [];           // Array of {id, name, description, songs[], createdAt, updatedAt}
+let currentPlaylistId = null; // Currently viewing/playing playlist
+let currentContextPlaylistId = null; // For context menu
+let isPlaylistPanelVisible = false;
 
 // DOM Elements
 const chartList = document.getElementById('chartList');
@@ -657,6 +664,18 @@ function createSongElement(song, index, chartMode = 'india') {
                 ${rankMovement}
                 ${viewsText ? `<span>${viewsText} views</span>` : ''}
             </div>
+        </div>
+        <div class="song-card-actions">
+            <button class="song-add-playlist" title="Add to playlist" onclick="event.stopPropagation(); showAddToPlaylistModal({
+                title: '${escapeHtml(song.title).replace(/'/g, "\\'")}',
+                artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}',
+                videoId: '${song.youtube_video_id || ''}',
+                artwork: '${song.artwork_url || ''}'
+            })">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"></path>
+                </svg>
+            </button>
         </div>
     `;
 
@@ -1873,8 +1892,16 @@ function handleKeyboard(e) {
             e.preventDefault();
             toggleQueue();
             break;
+        case 'p':
+        case 'P':
+            e.preventDefault();
+            togglePlaylistPanel();
+            break;
         case 'Escape':
-            if (isQueueVisible) {
+            if (isPlaylistPanelVisible) {
+                e.preventDefault();
+                togglePlaylistPanel();
+            } else if (isQueueVisible) {
                 e.preventDefault();
                 toggleQueue();
             } else if (isTheaterMode) {
@@ -1926,9 +1953,10 @@ function loadUserData() {
         favorites = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
         playHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
         queue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [];
+        playlists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
         isShuffleOn = localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true';
         repeatMode = localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off';
-        console.log(`Loaded user data: ${favorites.length} favorites, ${playHistory.length} history items`);
+        console.log(`Loaded user data: ${favorites.length} favorites, ${playlists.length} playlists`);
     } catch (e) {
         console.warn('Error loading user data:', e);
     }
@@ -1957,6 +1985,14 @@ function savePlaybackSettings() {
     localStorage.setItem(STORAGE_KEYS.REPEAT, repeatMode);
     // Sync to cloud if authenticated
     if (typeof debouncedSyncPreferences === 'function') debouncedSyncPreferences();
+}
+
+function savePlaylists() {
+    localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(playlists));
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncPlaylists === 'function') debouncedSyncPlaylists();
+    // Update UI
+    updatePlaylistCount();
 }
 
 // ============================================================
@@ -2260,6 +2296,651 @@ function renderQueuePanel() {
             }
         });
     });
+}
+
+// ============================================================
+// Playlist Functions
+// ============================================================
+
+function generatePlaylistId() {
+    return 'pl_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
+
+function createPlaylist(name, description = '') {
+    if (!name || !name.trim()) {
+        showToast('Please enter a playlist name');
+        return null;
+    }
+
+    const playlist = {
+        id: generatePlaylistId(),
+        name: name.trim(),
+        description: description.trim(),
+        songs: [],
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        isPublic: false
+    };
+
+    playlists.unshift(playlist);
+    savePlaylists();
+    showToast(`Created "${playlist.name}"`);
+    renderPlaylistPanel();
+    return playlist;
+}
+
+function deletePlaylist(playlistId) {
+    const index = playlists.findIndex(p => p.id === playlistId);
+    if (index === -1) return false;
+
+    const playlist = playlists[index];
+    playlists.splice(index, 1);
+    savePlaylists();
+    showToast(`Deleted "${playlist.name}"`);
+    renderPlaylistPanel();
+
+    // Close detail view if this playlist was open
+    if (currentPlaylistId === playlistId) {
+        currentPlaylistId = null;
+        hidePlaylistDetail();
+    }
+    return true;
+}
+
+function renamePlaylist(playlistId, newName) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist || !newName || !newName.trim()) return false;
+
+    playlist.name = newName.trim();
+    playlist.updatedAt = Date.now();
+    savePlaylists();
+    renderPlaylistPanel();
+    return true;
+}
+
+function addToPlaylist(playlistId, song) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist || !song) return false;
+
+    // Check if song already in playlist
+    const songId = `${song.title}-${song.artist}`.toLowerCase();
+    const exists = playlist.songs.some(s =>
+        `${s.title}-${s.artist}`.toLowerCase() === songId
+    );
+
+    if (exists) {
+        showToast('Song already in playlist');
+        return false;
+    }
+
+    playlist.songs.push({
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id || song.videoId,
+        artwork: song.artwork_url || song.artwork,
+        addedAt: Date.now()
+    });
+    playlist.updatedAt = Date.now();
+    savePlaylists();
+    showToast(`Added to "${playlist.name}"`);
+    return true;
+}
+
+function removeFromPlaylist(playlistId, songIndex) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist || songIndex < 0 || songIndex >= playlist.songs.length) return false;
+
+    playlist.songs.splice(songIndex, 1);
+    playlist.updatedAt = Date.now();
+    savePlaylists();
+    renderPlaylistDetail(playlistId);
+    return true;
+}
+
+function reorderPlaylistSongs(playlistId, fromIndex, toIndex) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return false;
+
+    const [song] = playlist.songs.splice(fromIndex, 1);
+    playlist.songs.splice(toIndex, 0, song);
+    playlist.updatedAt = Date.now();
+    savePlaylists();
+    return true;
+}
+
+function playPlaylist(playlistId, startIndex = 0) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist || !playlist.songs.length) {
+        showToast('Playlist is empty');
+        return;
+    }
+
+    // Load remaining songs into queue
+    queue = playlist.songs.slice(startIndex + 1).map((s, i) => ({
+        id: Date.now() + i,
+        title: s.title,
+        artist: s.artist,
+        videoId: s.videoId,
+        artwork: s.artwork
+    }));
+    saveQueue();
+    renderQueuePanel();
+
+    // Play first song
+    const firstSong = playlist.songs[startIndex];
+    playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.videoId, firstSong.artwork);
+    showToast(`Playing "${playlist.name}"`);
+}
+
+function shufflePlaylist(playlistId) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist || !playlist.songs.length) {
+        showToast('Playlist is empty');
+        return;
+    }
+
+    // Shuffle songs
+    const shuffled = [...playlist.songs].sort(() => Math.random() - 0.5);
+
+    // Load all but first into queue
+    queue = shuffled.slice(1).map((s, i) => ({
+        id: Date.now() + i,
+        title: s.title,
+        artist: s.artist,
+        videoId: s.videoId,
+        artwork: s.artwork
+    }));
+    saveQueue();
+    renderQueuePanel();
+
+    // Play first shuffled song
+    const firstSong = shuffled[0];
+    playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.videoId, firstSong.artwork);
+    showToast(`Shuffling "${playlist.name}"`);
+}
+
+function updatePlaylistCount() {
+    const countEl = document.getElementById('playlistPanelCount');
+    if (countEl) {
+        countEl.textContent = `${playlists.length} playlist${playlists.length !== 1 ? 's' : ''}`;
+    }
+    // Update sidebar badge if exists
+    const badge = document.getElementById('playlistBadge');
+    if (badge) {
+        badge.textContent = playlists.length || '';
+        badge.style.display = playlists.length ? 'inline' : 'none';
+    }
+}
+
+function togglePlaylistPanel() {
+    isPlaylistPanelVisible = !isPlaylistPanelVisible;
+    const panel = document.getElementById('playlistPanel');
+    if (panel) {
+        panel.classList.toggle('visible', isPlaylistPanelVisible);
+    }
+    if (isPlaylistPanelVisible) {
+        renderPlaylistPanel();
+        // Close queue panel if open
+        if (isQueueVisible) {
+            toggleQueuePanel();
+        }
+    }
+}
+
+function renderPlaylistPanel() {
+    const content = document.getElementById('playlistContent');
+    if (!content) return;
+
+    updatePlaylistCount();
+
+    if (playlists.length === 0) {
+        content.innerHTML = `
+            <div class="playlist-empty">
+                <p>No playlists yet</p>
+                <button class="create-playlist-btn" onclick="showCreatePlaylistModal()">
+                    + Create your first playlist
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = playlists.map(playlist => `
+        <div class="playlist-card" data-id="${playlist.id}">
+            <div class="playlist-card-artwork">
+                ${playlist.songs.length > 0 && playlist.songs[0].artwork
+                    ? `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}">`
+                    : `<div class="playlist-card-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18V5l12-2v13"></path>
+                            <circle cx="6" cy="18" r="3"></circle>
+                            <circle cx="18" cy="16" r="3"></circle>
+                        </svg>
+                    </div>`
+                }
+            </div>
+            <div class="playlist-card-info">
+                <div class="playlist-card-name">${escapeHtml(playlist.name)}</div>
+                <div class="playlist-card-meta">${playlist.songs.length} song${playlist.songs.length !== 1 ? 's' : ''}</div>
+            </div>
+            <div class="playlist-card-actions">
+                <button class="playlist-play-btn" onclick="event.stopPropagation(); playPlaylist('${playlist.id}')" title="Play">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
+                <button class="playlist-menu-btn" onclick="event.stopPropagation(); showPlaylistMenu('${playlist.id}', event)" title="More">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    // Add click handlers for detail view
+    content.querySelectorAll('.playlist-card').forEach(card => {
+        card.addEventListener('click', () => {
+            showPlaylistDetail(card.dataset.id);
+        });
+    });
+}
+
+function showCreatePlaylistModal() {
+    const modal = document.getElementById('createPlaylistModal');
+    if (modal) {
+        modal.classList.add('visible');
+        const input = modal.querySelector('#newPlaylistName');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+    }
+}
+
+function hideCreatePlaylistModal() {
+    const modal = document.getElementById('createPlaylistModal');
+    if (modal) {
+        modal.classList.remove('visible');
+    }
+}
+
+function handleCreatePlaylist() {
+    const input = document.getElementById('newPlaylistName');
+    const name = input?.value?.trim();
+    if (name) {
+        createPlaylist(name);
+        hideCreatePlaylistModal();
+    }
+}
+
+function showAddToPlaylistModal(song) {
+    const modal = document.getElementById('addToPlaylistModal');
+    if (!modal) return;
+
+    modal.dataset.song = JSON.stringify(song);
+    modal.classList.add('visible');
+
+    const list = document.getElementById('playlistSelectList');
+    if (list) {
+        if (playlists.length === 0) {
+            list.innerHTML = '<p class="no-playlists">No playlists yet</p>';
+        } else {
+            list.innerHTML = playlists.map(p => `
+                <button class="playlist-select-item" onclick="addSongToSelectedPlaylist('${p.id}')">
+                    <span class="playlist-select-name">${escapeHtml(p.name)}</span>
+                    <span class="playlist-select-count">${p.songs.length} songs</span>
+                </button>
+            `).join('');
+        }
+    }
+}
+
+function hideAddToPlaylistModal() {
+    const modal = document.getElementById('addToPlaylistModal');
+    if (modal) {
+        modal.classList.remove('visible');
+        delete modal.dataset.song;
+    }
+}
+
+function addSongToSelectedPlaylist(playlistId) {
+    const modal = document.getElementById('addToPlaylistModal');
+    if (!modal?.dataset.song) return;
+
+    try {
+        const song = JSON.parse(modal.dataset.song);
+        addToPlaylist(playlistId, song);
+        hideAddToPlaylistModal();
+    } catch (e) {
+        console.error('Error adding song to playlist:', e);
+    }
+}
+
+function showPlaylistDetail(playlistId) {
+    currentPlaylistId = playlistId;
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    const panel = document.getElementById('playlistDetailPanel');
+    if (panel) {
+        panel.classList.add('visible');
+        renderPlaylistDetail(playlistId);
+    }
+}
+
+function hidePlaylistDetail() {
+    currentPlaylistId = null;
+    const panel = document.getElementById('playlistDetailPanel');
+    if (panel) {
+        panel.classList.remove('visible');
+    }
+}
+
+function renderPlaylistDetail(playlistId) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    const content = document.getElementById('playlistDetailContent');
+    if (!content) return;
+
+    const header = document.getElementById('playlistDetailHeader');
+    if (header) {
+        header.innerHTML = `
+            <button class="back-btn" onclick="hidePlaylistDetail()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div class="playlist-detail-title">
+                <h2>${escapeHtml(playlist.name)}</h2>
+                <span>${playlist.songs.length} song${playlist.songs.length !== 1 ? 's' : ''}</span>
+            </div>
+            <div class="playlist-detail-actions">
+                <button class="play-all-btn" onclick="playPlaylist('${playlist.id}')" ${playlist.songs.length === 0 ? 'disabled' : ''}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Play
+                </button>
+                <button class="shuffle-btn" onclick="shufflePlaylist('${playlist.id}')" ${playlist.songs.length === 0 ? 'disabled' : ''}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 3 21 3 21 8"></polyline>
+                        <line x1="4" y1="20" x2="21" y2="3"></line>
+                        <polyline points="21 16 21 21 16 21"></polyline>
+                        <line x1="15" y1="15" x2="21" y2="21"></line>
+                        <line x1="4" y1="4" x2="9" y2="9"></line>
+                    </svg>
+                    Shuffle
+                </button>
+                <button class="share-playlist-btn" onclick="sharePlaylist('${playlist.id}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    Share
+                </button>
+                <button class="export-playlist-btn" onclick="showExportModal('${playlist.id}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Export
+                </button>
+            </div>
+        `;
+    }
+
+    if (playlist.songs.length === 0) {
+        content.innerHTML = `
+            <div class="playlist-empty">
+                <p>This playlist is empty</p>
+                <p class="hint">Add songs from the chart using the + button</p>
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = playlist.songs.map((song, index) => `
+        <div class="playlist-song" data-index="${index}">
+            <span class="playlist-song-num">${index + 1}</span>
+            <div class="playlist-song-artwork">
+                ${song.artwork
+                    ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
+                    : '<div class="placeholder"></div>'
+                }
+            </div>
+            <div class="playlist-song-info">
+                <div class="playlist-song-title">${escapeHtml(song.title)}</div>
+                <div class="playlist-song-artist">${escapeHtml(song.artist)}</div>
+            </div>
+            <div class="playlist-song-actions">
+                <button class="play-song-btn" onclick="event.stopPropagation(); playPlaylist('${playlist.id}', ${index})" title="Play">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
+                <button class="remove-song-btn" onclick="event.stopPropagation(); removeFromPlaylist('${playlist.id}', ${index})" title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showPlaylistMenu(playlistId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    currentContextPlaylistId = playlistId;
+    const menu = document.getElementById('playlistContextMenu');
+
+    // Position near the button
+    const rect = event.target.closest('button').getBoundingClientRect();
+    menu.style.top = `${rect.bottom + 5}px`;
+    menu.style.left = `${Math.min(rect.left, window.innerWidth - 200)}px`;
+    menu.classList.add('visible');
+
+    // Close when clicking outside
+    const closeMenu = (e) => {
+        if (!menu.contains(e.target)) {
+            menu.classList.remove('visible');
+            currentContextPlaylistId = null;
+            document.removeEventListener('click', closeMenu);
+        }
+    };
+
+    setTimeout(() => {
+        document.addEventListener('click', closeMenu);
+    }, 0);
+}
+
+function hidePlaylistContextMenu() {
+    const menu = document.getElementById('playlistContextMenu');
+    if (menu) menu.classList.remove('visible');
+}
+
+function promptRenamePlaylist(playlistId) {
+    hidePlaylistContextMenu();
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    const newName = prompt('Enter new playlist name:', playlist.name);
+    if (newName && newName.trim() && newName.trim() !== playlist.name) {
+        renamePlaylist(playlistId, newName);
+    }
+}
+
+function confirmDeletePlaylist(playlistId) {
+    hidePlaylistContextMenu();
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    if (confirm(`Delete "${playlist.name}"? This cannot be undone.`)) {
+        deletePlaylist(playlistId);
+    }
+}
+
+async function sharePlaylist(playlistId) {
+    hidePlaylistContextMenu();
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    // For now, create a shareable text format
+    // In production, this would generate a URL
+    const songList = playlist.songs.map((s, i) => `${i + 1}. ${s.title} - ${s.artist}`).join('\n');
+    const shareText = `${playlist.name}\n\n${songList}\n\nShared from TLDR Music`;
+
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: playlist.name,
+                text: shareText
+            });
+        } catch (e) {
+            if (e.name !== 'AbortError') {
+                copyToClipboard(shareText);
+            }
+        }
+    } else {
+        copyToClipboard(shareText);
+    }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('Copied to clipboard');
+    }).catch(() => {
+        showToast('Failed to copy');
+    });
+}
+
+function showExportModal(playlistId) {
+    document.querySelectorAll('.playlist-context-menu').forEach(m => m.remove());
+    const modal = document.getElementById('exportPlaylistModal');
+    if (modal) {
+        modal.dataset.playlistId = playlistId;
+        modal.classList.add('visible');
+    }
+}
+
+function hideExportModal() {
+    const modal = document.getElementById('exportPlaylistModal');
+    if (modal) {
+        modal.classList.remove('visible');
+        delete modal.dataset.playlistId;
+    }
+}
+
+// ============================================================
+// Export Functions
+// ============================================================
+
+function getExportPlaylistId() {
+    const modal = document.getElementById('exportPlaylistModal');
+    return modal?.dataset.playlistId || currentPlaylistId;
+}
+
+async function exportToSpotify() {
+    hideExportModal();
+    const playlistId = getExportPlaylistId();
+    const playlist = playlists.find(p => p.id === playlistId);
+
+    if (!playlist || playlist.songs.length === 0) {
+        showToast('Playlist is empty');
+        return;
+    }
+
+    showToast('Opening Spotify...');
+
+    // Generate a Spotify search URL for the playlist
+    // This creates a shareable text that users can use to recreate the playlist
+    const songList = playlist.songs.map(s => `${s.title} ${s.artist}`).join('\n');
+
+    // Copy songs to clipboard for easy addition
+    try {
+        await navigator.clipboard.writeText(songList);
+        showToast('Song list copied! Paste into Spotify search');
+    } catch (e) {
+        // Fallback
+    }
+
+    // Open Spotify with search for the first song
+    const firstSong = playlist.songs[0];
+    const searchQuery = encodeURIComponent(`${firstSong.title} ${firstSong.artist}`);
+    window.open(`https://open.spotify.com/search/${searchQuery}`, '_blank');
+}
+
+async function exportToYouTube() {
+    hideExportModal();
+    const playlistId = getExportPlaylistId();
+    const playlist = playlists.find(p => p.id === playlistId);
+
+    if (!playlist || playlist.songs.length === 0) {
+        showToast('Playlist is empty');
+        return;
+    }
+
+    showToast('Opening YouTube Music...');
+
+    // Copy songs to clipboard
+    const songList = playlist.songs.map(s => `${s.title} - ${s.artist}`).join('\n');
+
+    try {
+        await navigator.clipboard.writeText(songList);
+        showToast('Song list copied! Add to YouTube Music');
+    } catch (e) {
+        // Fallback
+    }
+
+    // If we have video IDs, open a YouTube Mix based on first song
+    const firstSong = playlist.songs[0];
+    if (firstSong.videoId) {
+        window.open(`https://music.youtube.com/watch?v=${firstSong.videoId}&list=RD${firstSong.videoId}`, '_blank');
+    } else {
+        const searchQuery = encodeURIComponent(`${firstSong.title} ${firstSong.artist}`);
+        window.open(`https://music.youtube.com/search?q=${searchQuery}`, '_blank');
+    }
+}
+
+async function exportToAppleMusic() {
+    hideExportModal();
+    const playlistId = getExportPlaylistId();
+    const playlist = playlists.find(p => p.id === playlistId);
+
+    if (!playlist || playlist.songs.length === 0) {
+        showToast('Playlist is empty');
+        return;
+    }
+
+    showToast('Opening Apple Music...');
+
+    // Copy songs to clipboard
+    const songList = playlist.songs.map(s => `${s.title} - ${s.artist}`).join('\n');
+
+    try {
+        await navigator.clipboard.writeText(songList);
+        showToast('Song list copied! Add to Apple Music');
+    } catch (e) {
+        // Fallback
+    }
+
+    // Open Apple Music with search for first song
+    const firstSong = playlist.songs[0];
+    const searchQuery = encodeURIComponent(`${firstSong.title} ${firstSong.artist}`);
+    window.open(`https://music.apple.com/search?term=${searchQuery}`, '_blank');
 }
 
 // ============================================================

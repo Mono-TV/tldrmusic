@@ -313,6 +313,7 @@ async function syncFromCloud() {
             local_favorites: JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [],
             local_history: JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [],
             local_queue: JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [],
+            local_playlists: JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [],
             local_preferences: {
                 shuffle: localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true',
                 repeat: localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off'
@@ -332,6 +333,9 @@ async function syncFromCloud() {
             localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(merged.merged_favorites));
             localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(merged.merged_history));
             localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(merged.merged_queue));
+            if (merged.merged_playlists) {
+                localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(merged.merged_playlists));
+            }
             localStorage.setItem(STORAGE_KEYS.SHUFFLE, merged.preferences.shuffle);
             localStorage.setItem(STORAGE_KEYS.REPEAT, merged.preferences.repeat);
 
@@ -347,11 +351,15 @@ async function syncFromCloud() {
             if (typeof renderFavoritesSection === 'function') {
                 renderFavoritesSection();
             }
+            if (typeof renderPlaylistPanel === 'function') {
+                renderPlaylistPanel();
+            }
 
             console.log('Synced from cloud:', {
                 favorites: merged.merged_favorites.length,
                 history: merged.merged_history.length,
-                queue: merged.merged_queue.length
+                queue: merged.merged_queue.length,
+                playlists: merged.merged_playlists ? merged.merged_playlists.length : 0
             });
         }
     } catch (error) {
@@ -387,6 +395,10 @@ async function syncToCloud(type) {
                     shuffle: localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true',
                     repeat: localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off'
                 };
+                break;
+            case 'playlists':
+                endpoint = '/user/playlists';
+                body = { playlists: JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [] };
                 break;
             default:
                 return;
@@ -424,6 +436,7 @@ const debouncedSyncFavorites = debounce(() => syncToCloud('favorites'), 1000);
 const debouncedSyncHistory = debounce(() => syncToCloud('history'), 1000);
 const debouncedSyncQueue = debounce(() => syncToCloud('queue'), 1000);
 const debouncedSyncPreferences = debounce(() => syncToCloud('preferences'), 1000);
+const debouncedSyncPlaylists = debounce(() => syncToCloud('playlists'), 1000);
 
 // ============================================================
 // LOGIN MODAL
