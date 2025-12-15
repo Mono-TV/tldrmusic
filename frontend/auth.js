@@ -3,10 +3,9 @@
  * Handles Google Sign-In and cloud sync
  */
 
-// Configuration
+// Configuration - Always use production API
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
-    // Always use production API (set to 'http://localhost:8000' if running local API server)
     API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'
 };
 
