@@ -314,6 +314,47 @@ function logout() {
         renderPlaylistPanel();
     }
 
+    // Hide playlists view if visible and return to main content
+    if (typeof isPlaylistPanelVisible !== 'undefined' && isPlaylistPanelVisible) {
+        if (typeof hidePlaylistsView === 'function') {
+            hidePlaylistsView();
+        }
+    }
+
+    // Hide all detail views (favorites, history, playlist detail)
+    const detailViews = ['favoritesDetailView', 'historyDetailView', 'playlistDetailView'];
+    detailViews.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Close all modals and panels
+    const modalsAndPanels = [
+        'createPlaylistModal',
+        'addToPlaylistModal',
+        'sharePlaylistModal',
+        'exportPlaylistModal',
+        'artworkModal',
+        'profilePanel',
+        'publicProfileView'
+    ];
+    modalsAndPanels.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+    });
+
+    // Restore body scroll (in case profile panel was open)
+    document.body.style.overflow = '';
+
+    // Hide context menu
+    if (typeof hidePlaylistContextMenu === 'function') {
+        hidePlaylistContextMenu();
+    }
+
+    // Show main content
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) mainContent.style.display = 'block';
+
     updateAuthUI();
     showToast('Logged out');
 }
