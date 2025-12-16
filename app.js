@@ -2978,6 +2978,355 @@ function shuffleHistory() {
 }
 
 // ============================================================
+// Chart Detail View Functions
+// ============================================================
+
+let currentChartDetailData = null;
+let currentChartDetailType = null;
+
+function showChartDetail(chartType) {
+    currentChartDetailType = chartType;
+
+    // Hide other views
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('playlistsView').style.display = 'none';
+    document.getElementById('playlistDetailView').style.display = 'none';
+    document.getElementById('favoritesDetailView').style.display = 'none';
+    document.getElementById('historyDetailView').style.display = 'none';
+    const heroSection = document.getElementById('heroSection');
+    if (heroSection) heroSection.style.display = 'none';
+
+    // Show chart detail view
+    const detailView = document.getElementById('chartDetailView');
+    detailView.style.display = 'block';
+
+    // Get chart data based on type
+    let chartData, chartName, chartCoverClass, chartIcon, chartMeta;
+
+    if (chartType === 'india') {
+        chartData = window.chartData || [];
+        chartName = 'India Top 25';
+        chartCoverClass = 'india';
+        chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+        </svg>`;
+        chartMeta = 'Updated weekly • Aggregated from 9 platforms';
+    } else if (chartType === 'global') {
+        chartData = window.globalChartData || [];
+        chartName = 'Global Top 25';
+        chartCoverClass = 'global';
+        chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>`;
+        chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
+    } else {
+        // Regional chart
+        chartData = window.regionalChartData?.[chartType] || [];
+        chartName = chartType.charAt(0).toUpperCase() + chartType.slice(1) + ' Top 10';
+        chartCoverClass = 'regional';
+        chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+        </svg>`;
+        chartMeta = `Updated weekly • ${chartType.charAt(0).toUpperCase() + chartType.slice(1)} music`;
+    }
+
+    currentChartDetailData = chartData;
+    renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, chartMeta);
+}
+
+function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, chartMeta) {
+    const header = document.getElementById('chartDetailHeader');
+    const songsContainer = document.getElementById('chartDetailSongs');
+
+    // Render header
+    header.innerHTML = `
+        <button class="chart-detail-back" onclick="hideChartDetail()" title="Back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="chart-detail-hero">
+            <div class="chart-detail-cover ${chartCoverClass}">
+                <div class="chart-detail-cover-icon">
+                    ${chartIcon}
+                    <span class="chart-detail-cover-badge">TOP ${chartData.length}</span>
+                </div>
+            </div>
+            <div class="chart-detail-info">
+                <span class="chart-detail-type">Chart</span>
+                <h1 class="chart-detail-name">${chartName}</h1>
+                <div class="chart-detail-meta">
+                    <span class="chart-detail-meta-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        ${chartMeta}
+                    </span>
+                </div>
+                <div class="chart-detail-buttons">
+                    <button class="chart-detail-btn primary" onclick="playChartDetailAll()" ${chartData.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play All
+                    </button>
+                    <button class="chart-detail-btn secondary" onclick="shuffleChartDetail()" ${chartData.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Render songs
+    if (!chartData || chartData.length === 0) {
+        songsContainer.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <p>No chart data available</p>
+                <span>Check back later</span>
+            </div>
+        `;
+        return;
+    }
+
+    songsContainer.innerHTML = `
+        <div class="chart-detail-songs-header">
+            <span>#</span>
+            <span>Title</span>
+            <span></span>
+        </div>
+        ${chartData.map((song, index) => {
+            const rank = song.rank || index + 1;
+            const rankChange = song.rank_change || 0;
+            const isNew = song.is_new || false;
+            const isPlaying = currentlyPlaying && currentlyPlaying.title === song.title;
+
+            let changeHtml = '';
+            if (isNew) {
+                changeHtml = '<span class="chart-song-change new">NEW</span>';
+            } else if (rankChange > 0) {
+                changeHtml = `<span class="chart-song-change up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>${rankChange}</span>`;
+            } else if (rankChange < 0) {
+                changeHtml = `<span class="chart-song-change down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>${Math.abs(rankChange)}</span>`;
+            } else {
+                changeHtml = '<span class="chart-song-change same">—</span>';
+            }
+
+            const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+
+            return `
+                <div class="chart-song-item ${isPlaying ? 'playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-artwork="${song.artwork_url || ''}">
+                    <div class="chart-song-rank">
+                        <span class="chart-song-rank-number">${rank}</span>
+                        ${changeHtml}
+                    </div>
+                    <div class="chart-song-info">
+                        <div class="chart-song-artwork">
+                            ${song.artwork_url
+                                ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}">`
+                                : `<div class="chart-song-placeholder"></div>`}
+                        </div>
+                        <div class="chart-song-details">
+                            <span class="chart-song-title">${escapeHtml(song.title)}</span>
+                            <span class="chart-song-artist">${escapeHtml(song.artist)}</span>
+                        </div>
+                    </div>
+                    <div class="chart-song-actions">
+                        <button class="chart-song-action-btn ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleChartSongFavorite(${index})" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                        <button class="chart-song-action-btn" onclick="event.stopPropagation(); addChartSongToQueue(${index})" title="Add to queue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('')}
+    `;
+
+    // Add click handlers for playing songs
+    songsContainer.querySelectorAll('.chart-song-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const index = parseInt(item.dataset.index);
+            playChartDetailFromIndex(index);
+        });
+    });
+}
+
+function hideChartDetail() {
+    currentChartDetailData = null;
+    currentChartDetailType = null;
+
+    // Hide chart detail view
+    const detailView = document.getElementById('chartDetailView');
+    if (detailView) detailView.style.display = 'none';
+
+    // Show main content
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    if (mainContent) mainContent.style.display = 'block';
+    if (heroSection) heroSection.style.display = 'block';
+}
+
+function playChartDetailAll() {
+    if (!currentChartDetailData || currentChartDetailData.length === 0) return;
+    playChartDetailFromIndex(0);
+}
+
+function playChartDetailFromIndex(startIndex) {
+    if (!currentChartDetailData || currentChartDetailData.length === 0) return;
+
+    // Clear queue and add all songs from startIndex
+    queue.length = 0;
+    for (let i = startIndex + 1; i < currentChartDetailData.length; i++) {
+        const song = currentChartDetailData[i];
+        if (song.youtube_video_id) {
+            queue.push({
+                title: song.title,
+                artist: song.artist,
+                videoId: song.youtube_video_id,
+                artwork: song.artwork_url
+            });
+        }
+    }
+
+    // Play first song
+    const firstSong = currentChartDetailData[startIndex];
+    if (firstSong && firstSong.youtube_video_id) {
+        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.youtube_video_id, firstSong.artwork_url);
+    }
+
+    updateQueueBadge();
+}
+
+function shuffleChartDetail() {
+    if (!currentChartDetailData || currentChartDetailData.length === 0) return;
+
+    // Create shuffled copy
+    const shuffled = [...currentChartDetailData].sort(() => Math.random() - 0.5);
+
+    // Clear queue and add shuffled songs
+    queue.length = 0;
+    shuffled.forEach(song => {
+        if (song.youtube_video_id) {
+            queue.push({
+                title: song.title,
+                artist: song.artist,
+                videoId: song.youtube_video_id,
+                artwork: song.artwork_url
+            });
+        }
+    });
+
+    // Play first song from queue
+    const first = queue.shift();
+    if (first && first.videoId) {
+        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
+    }
+
+    updateQueueBadge();
+    showToast(`Shuffling ${currentChartDetailData.length} songs`);
+}
+
+function toggleChartSongFavorite(index) {
+    if (!currentChartDetailData || !currentChartDetailData[index]) return;
+
+    const song = currentChartDetailData[index];
+    const existingIndex = favorites.findIndex(f => f.title === song.title && f.artist === song.artist);
+
+    if (existingIndex >= 0) {
+        favorites.splice(existingIndex, 1);
+        showToast('Removed from favorites');
+    } else {
+        favorites.push({
+            title: song.title,
+            artist: song.artist,
+            videoId: song.youtube_video_id,
+            artwork: song.artwork_url,
+            addedAt: Date.now()
+        });
+        showToast('Added to favorites');
+    }
+
+    saveFavorites();
+
+    // Re-render the chart detail to update heart icons
+    if (currentChartDetailType) {
+        const chartData = currentChartDetailData;
+        let chartName, chartCoverClass, chartIcon, chartMeta;
+
+        if (currentChartDetailType === 'india') {
+            chartName = 'India Top 25';
+            chartCoverClass = 'india';
+            chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+            </svg>`;
+            chartMeta = 'Updated weekly • Aggregated from 9 platforms';
+        } else if (currentChartDetailType === 'global') {
+            chartName = 'Global Top 25';
+            chartCoverClass = 'global';
+            chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>`;
+            chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
+        } else {
+            chartName = currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1) + ' Top 10';
+            chartCoverClass = 'regional';
+            chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>`;
+            chartMeta = `Updated weekly • ${currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1)} music`;
+        }
+
+        renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, chartMeta);
+    }
+}
+
+function addChartSongToQueue(index) {
+    if (!currentChartDetailData || !currentChartDetailData[index]) return;
+
+    const song = currentChartDetailData[index];
+    if (song.youtube_video_id) {
+        queue.push({
+            title: song.title,
+            artist: song.artist,
+            videoId: song.youtube_video_id,
+            artwork: song.artwork_url
+        });
+        updateQueueBadge();
+        showToast(`Added "${song.title}" to queue`);
+    }
+}
+
+// ============================================================
 // Queue Functions
 // ============================================================
 

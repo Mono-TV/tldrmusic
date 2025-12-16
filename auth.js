@@ -321,8 +321,8 @@ function logout() {
         }
     }
 
-    // Hide all detail views (favorites, history, playlist detail)
-    const detailViews = ['favoritesDetailView', 'historyDetailView', 'playlistDetailView'];
+    // Hide all detail views (favorites, history, playlist detail, chart detail)
+    const detailViews = ['favoritesDetailView', 'historyDetailView', 'playlistDetailView', 'chartDetailView'];
     detailViews.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';

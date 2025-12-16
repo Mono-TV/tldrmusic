@@ -6582,3 +6582,421 @@ body::before {
         border-radius: 16px;
     }
 }
+
+/* ============================================================
+   Chart Detail View Template
+   ============================================================ */
+
+.chart-detail-view {
+    padding: 2rem;
+    background:
+        radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.10) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(30, 30, 35, 0.9) 0%, rgba(18, 18, 22, 0.95) 100%);
+    border-radius: 16px;
+    margin: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    min-height: calc(100vh - 200px);
+}
+
+.chart-detail-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chart-detail-hero {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Chart Cover/Badge */
+.chart-detail-cover {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.chart-detail-cover.india {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+}
+
+.chart-detail-cover.global {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+}
+
+.chart-detail-cover.regional {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+}
+
+.chart-detail-cover-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+}
+
+.chart-detail-cover-icon svg {
+    width: 64px;
+    height: 64px;
+    opacity: 0.95;
+}
+
+.chart-detail-cover-badge {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+/* Chart Info */
+.chart-detail-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.chart-detail-type {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.chart-detail-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.chart-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.chart-detail-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.chart-detail-meta-item svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+.chart-detail-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.chart-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font);
+}
+
+.chart-detail-btn.primary {
+    background: var(--accent);
+    border: none;
+    color: var(--bg-dark);
+}
+
+.chart-detail-btn.primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.chart-detail-btn.secondary {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.chart-detail-btn.secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-light);
+}
+
+/* Chart Songs List */
+.chart-detail-songs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.chart-detail-songs-header {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0.5rem;
+}
+
+.chart-song-item {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.chart-song-item:hover {
+    background: var(--bg-elevated);
+}
+
+.chart-song-item.playing {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.chart-song-rank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    min-width: 50px;
+}
+
+.chart-song-rank-number {
+    width: 28px;
+    text-align: center;
+}
+
+.chart-song-change {
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    min-width: 32px;
+}
+
+.chart-song-change.up {
+    color: #22c55e;
+}
+
+.chart-song-change.down {
+    color: #ef4444;
+}
+
+.chart-song-change.new {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.65rem;
+}
+
+.chart-song-change.same {
+    color: var(--text-muted);
+}
+
+.chart-song-change svg {
+    width: 12px;
+    height: 12px;
+}
+
+.chart-song-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.chart-song-artwork {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    flex-shrink: 0;
+}
+
+.chart-song-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chart-song-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.chart-song-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.2rem;
+}
+
+.chart-song-item.playing .chart-song-title {
+    color: var(--accent);
+}
+
+.chart-song-artist {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chart-song-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chart-song-action-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+}
+
+.chart-song-item:hover .chart-song-action-btn {
+    opacity: 1;
+}
+
+.chart-song-action-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.chart-song-action-btn.liked {
+    color: #ec4899;
+    opacity: 1;
+}
+
+/* Back Button */
+.chart-detail-back {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+}
+
+.chart-detail-back:hover {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chart-detail-view {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+
+    .chart-detail-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .chart-detail-cover {
+        width: 160px;
+        height: 160px;
+    }
+
+    .chart-detail-cover-icon svg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .chart-detail-cover-badge {
+        font-size: 1.25rem;
+    }
+
+    .chart-detail-name {
+        font-size: 1.75rem;
+    }
+
+    .chart-detail-meta {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .chart-detail-buttons {
+        justify-content: center;
+    }
+
+    .chart-detail-btn {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    .chart-song-item {
+        grid-template-columns: 40px 1fr auto;
+        padding: 0.6rem 0.75rem;
+    }
+
+    .chart-song-rank {
+        min-width: 40px;
+    }
+
+    .chart-song-artwork {
+        width: 40px;
+        height: 40px;
+    }
+
+    .chart-song-action-btn {
+        opacity: 1;
+    }
+}
