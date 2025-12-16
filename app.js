@@ -78,6 +78,8 @@ const timeCurrent = document.getElementById('timeCurrent');
 const timeDuration = document.getElementById('timeDuration');
 const regionalSection = document.getElementById('regionalSection');
 const regionalGrid = document.getElementById('regionalGrid');
+const globalSpotlightsSection = document.getElementById('globalSpotlightsSection');
+const globalSpotlightsGrid = document.getElementById('globalSpotlightsGrid');
 const heroSection = document.getElementById('heroSection');
 const heroTheater = document.getElementById('heroTheater');
 const theaterVideo = document.getElementById('theaterVideo');
@@ -868,6 +870,102 @@ function renderRegionalCharts() {
     }
 }
 
+// Render global platform spotlights (Spotify, Billboard, Apple Music)
+function renderGlobalSpotlights() {
+    if (!chartData || !chartData.global || !globalSpotlightsGrid) {
+        if (globalSpotlightsSection) globalSpotlightsSection.style.display = 'none';
+        return;
+    }
+
+    globalSpotlightsGrid.innerHTML = '';
+
+    // Platform configuration
+    const platforms = [
+        { key: 'spotify_global', name: 'Spotify', icon: '🎧', label: 'Global Top 5' },
+        { key: 'billboard_hot100', name: 'Billboard', icon: '📊', label: 'Hot 100 Top 5' },
+        { key: 'apple_global', name: 'Apple Music', icon: '🍎', label: 'Global Top 5' }
+    ];
+
+    let platformCount = 0;
+
+    platforms.forEach(platform => {
+        const platformData = chartData.global[platform.key];
+        if (!platformData || !platformData.songs || platformData.songs.length === 0) return;
+
+        platformCount++;
+
+        const card = document.createElement('div');
+        card.className = 'regional-card';
+
+        const songsHtml = platformData.songs.slice(0, 5).map((song, i) => {
+            const artworkUrl = song.artwork_url || '';
+            const videoId = song.youtube_video_id || '';
+
+            const placeholderSvg = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                </svg>
+            `;
+
+            const playSvg = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+            `;
+
+            return `
+                <div class="regional-song" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-video-id="${videoId}" data-artwork="${artworkUrl}">
+                    <div class="regional-song-artwork">
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                            : `<div class="regional-song-artwork-placeholder">${placeholderSvg}</div>`}
+                        <div class="regional-song-play">${playSvg}</div>
+                    </div>
+                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${i + 1}</span>
+                    <span class="rank-dot">●</span>
+                    <div class="regional-song-info">
+                        <div class="regional-song-title">${escapeHtml(song.title)}</div>
+                        <div class="regional-song-artist">${escapeHtml(song.artist)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="regional-card-header">
+                <span class="regional-icon">${platform.icon}</span>
+                <div>
+                    <div class="regional-card-title">${platform.name}</div>
+                    <div class="regional-card-label">${platform.label}</div>
+                </div>
+            </div>
+            <div class="regional-list">
+                ${songsHtml}
+            </div>
+        `;
+
+        // Add click handlers for global songs
+        card.querySelectorAll('.regional-song').forEach(songEl => {
+            songEl.addEventListener('click', () => {
+                const title = songEl.dataset.title;
+                const artist = songEl.dataset.artist;
+                const videoId = songEl.dataset.videoId;
+                const artwork = songEl.dataset.artwork;
+                playRegionalSong(title, artist, videoId, artwork);
+            });
+        });
+
+        globalSpotlightsGrid.appendChild(card);
+    });
+
+    // Update Global Spotlights count badge
+    const globalSpotlightsCount = document.getElementById('globalSpotlightsCount');
+    if (globalSpotlightsCount) {
+        globalSpotlightsCount.textContent = platformCount;
+    }
+}
+
 // Find a song in the main chart by title/artist
 function findSongInMainChart(title, artist) {
     if (!chartData || !chartData.chart) return null;
@@ -1209,12 +1307,15 @@ function switchChartMode(mode) {
     // Re-render chart list with appropriate data
     if (mode === 'india') {
         renderChart();
-        // Show regional section for India mode
+        // Show regional section, hide global spotlights for India mode
         if (regionalSection) regionalSection.style.display = 'block';
+        if (globalSpotlightsSection) globalSpotlightsSection.style.display = 'none';
     } else {
         renderGlobalMainChart();
-        // Hide regional section for Global mode
+        renderGlobalSpotlights();
+        // Hide regional section, show global spotlights for Global mode
         if (regionalSection) regionalSection.style.display = 'none';
+        if (globalSpotlightsSection) globalSpotlightsSection.style.display = 'block';
     }
 
     // Only update hero if nothing is playing, otherwise keep showing current song
