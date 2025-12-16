@@ -2586,6 +2586,52 @@ function addToHistory(song) {
     playHistory = playHistory.slice(0, 50);
 
     saveHistory();
+    renderHistorySection();
+}
+
+function renderHistorySection() {
+    const section = document.getElementById('historySection');
+    const list = document.getElementById('historyList');
+    const count = document.getElementById('historyCountBadge');
+
+    if (!section || !list) return;
+
+    if (playHistory.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = 'block';
+    if (count) count.textContent = playHistory.length;
+
+    list.innerHTML = playHistory.map(item => `
+        <div class="history-card" data-video-id="${item.videoId || ''}" data-title="${escapeHtml(item.title)}" data-artist="${escapeHtml(item.artist)}" data-artwork="${item.artwork || ''}">
+            <div class="history-card-artwork">
+                ${item.artwork
+                    ? `<img src="${item.artwork}" alt="${escapeHtml(item.title)}" loading="lazy">`
+                    : `<div class="history-card-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                        </svg>
+                    </div>`}
+            </div>
+            <div class="history-card-info">
+                <div class="history-card-title">${escapeHtml(item.title)}</div>
+                <div class="history-card-artist">${escapeHtml(item.artist)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Add click handlers
+    list.querySelectorAll('.history-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const videoId = card.dataset.videoId;
+            if (videoId) {
+                playRegionalSongDirect(card.dataset.title, card.dataset.artist, videoId, card.dataset.artwork);
+            }
+        });
+    });
 }
 
 // ============================================================
@@ -4322,6 +4368,7 @@ function initializePlaybackUI() {
     updateRepeatButton();
     updateQueueBadge();
     renderFavoritesSection();
+    renderHistorySection();
 }
 
 // ============================================================
