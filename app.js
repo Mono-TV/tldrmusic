@@ -2512,7 +2512,7 @@ function renderFavoritesSection() {
     }
 
     section.style.display = 'block';
-    if (count) count.textContent = `${favorites.length} song${favorites.length !== 1 ? 's' : ''}`;
+    if (count) count.textContent = favorites.length;
 
     list.innerHTML = favorites.map(fav => `
         <div class="favorite-card" data-video-id="${fav.videoId || ''}" data-title="${escapeHtml(fav.title)}" data-artist="${escapeHtml(fav.artist)}" data-artwork="${fav.artwork || ''}">
