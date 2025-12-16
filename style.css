@@ -3765,16 +3765,25 @@ body::before {
     margin: 0;
 }
 
-.playlists-view-count {
-    font-size: 0.95rem;
-    color: var(--text-muted);
+.playlists-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+    border-radius: 1rem;
 }
 
 /* Header Actions */
 .playlists-header-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 /* Sorting Controls */

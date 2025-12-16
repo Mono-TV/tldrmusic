@@ -3009,7 +3009,7 @@ function renderPlaylistsView() {
     const divider = document.getElementById('allPlaylistsDivider');
 
     if (countEl) {
-        countEl.textContent = `${playlists.length} playlist${playlists.length !== 1 ? 's' : ''}`;
+        countEl.textContent = playlists.length;
     }
 
     if (!grid) return;
