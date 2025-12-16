@@ -872,12 +872,15 @@ function renderRegionalCharts() {
 
 // Render global platform spotlights (Spotify, Billboard, Apple Music)
 function renderGlobalSpotlights() {
-    if (!chartData || !chartData.global || !globalSpotlightsGrid) {
-        if (globalSpotlightsSection) globalSpotlightsSection.style.display = 'none';
+    const spotlightsGrid = document.getElementById('globalSpotlightsGrid');
+    const spotlightsSection = document.getElementById('globalSpotlightsSection');
+
+    if (!chartData || !chartData.global || !spotlightsGrid) {
+        if (spotlightsSection) spotlightsSection.style.display = 'none';
         return;
     }
 
-    globalSpotlightsGrid.innerHTML = '';
+    spotlightsGrid.innerHTML = '';
 
     // Platform configuration
     const platforms = [
@@ -956,13 +959,13 @@ function renderGlobalSpotlights() {
             });
         });
 
-        globalSpotlightsGrid.appendChild(card);
+        spotlightsGrid.appendChild(card);
     });
 
     // Update Global Spotlights count badge
-    const globalSpotlightsCount = document.getElementById('globalSpotlightsCount');
-    if (globalSpotlightsCount) {
-        globalSpotlightsCount.textContent = platformCount;
+    const countBadge = document.getElementById('globalSpotlightsCount');
+    if (countBadge) {
+        countBadge.textContent = platformCount;
     }
 }
 
@@ -1305,17 +1308,20 @@ function switchChartMode(mode) {
     }
 
     // Re-render chart list with appropriate data
+    const regSection = document.getElementById('regionalSection');
+    const globalSection = document.getElementById('globalSpotlightsSection');
+
     if (mode === 'india') {
         renderChart();
         // Show regional section, hide global spotlights for India mode
-        if (regionalSection) regionalSection.style.display = 'block';
-        if (globalSpotlightsSection) globalSpotlightsSection.style.display = 'none';
+        if (regSection) regSection.style.display = 'block';
+        if (globalSection) globalSection.style.display = 'none';
     } else {
         renderGlobalMainChart();
         renderGlobalSpotlights();
         // Hide regional section, show global spotlights for Global mode
-        if (regionalSection) regionalSection.style.display = 'none';
-        if (globalSpotlightsSection) globalSpotlightsSection.style.display = 'block';
+        if (regSection) regSection.style.display = 'none';
+        if (globalSection) globalSection.style.display = 'block';
     }
 
     // Only update hero if nothing is playing, otherwise keep showing current song
