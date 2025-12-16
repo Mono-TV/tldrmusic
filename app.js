@@ -2650,27 +2650,37 @@ function showFavoritesDetail() {
     // Render header
     const header = document.getElementById('favoritesDetailHeader');
     header.innerHTML = `
-        <button class="back-btn" onclick="showPlaylistsView()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="detail-back-btn" onclick="showPlaylistsView()" title="Back to Library">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            Back
         </button>
-        <div class="detail-header-content">
+        <div class="detail-hero">
             <div class="detail-cover favorites-cover">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
             </div>
             <div class="detail-info">
-                <h1>Liked Songs</h1>
+                <span class="detail-type">Library</span>
+                <h1 class="detail-name">Liked Songs</h1>
                 <p class="detail-meta">${favorites.length} song${favorites.length !== 1 ? 's' : ''}</p>
-                <div class="detail-actions">
-                    <button class="btn-primary" onclick="playAllFavorites()">
+                <div class="detail-buttons">
+                    <button class="btn-primary" onclick="playAllFavorites()" ${favorites.length === 0 ? 'disabled' : ''}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
-                        Play All
+                        Play
+                    </button>
+                    <button class="btn-secondary" onclick="shuffleFavorites()" ${favorites.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
                     </button>
                 </div>
             </div>
@@ -2756,6 +2766,33 @@ function playAllFavorites() {
     showToast(`Playing ${favorites.length} songs`);
 }
 
+function shuffleFavorites() {
+    if (favorites.length === 0) return;
+
+    // Create shuffled copy
+    const shuffled = [...favorites].sort(() => Math.random() - 0.5);
+
+    // Clear queue and add shuffled favorites
+    queue.length = 0;
+    shuffled.forEach(fav => {
+        queue.push({
+            title: fav.title,
+            artist: fav.artist,
+            videoId: fav.videoId,
+            artwork: fav.artwork
+        });
+    });
+
+    // Play first song
+    const first = queue.shift();
+    if (first && first.videoId) {
+        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
+    }
+
+    updateQueueBadge();
+    showToast(`Shuffling ${favorites.length} songs`);
+}
+
 // ============================================================
 // History Functions
 // ============================================================
@@ -2809,13 +2846,12 @@ function showHistoryDetail() {
     // Render header
     const header = document.getElementById('historyDetailHeader');
     header.innerHTML = `
-        <button class="back-btn" onclick="showPlaylistsView()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="detail-back-btn" onclick="showPlaylistsView()" title="Back to Library">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            Back
         </button>
-        <div class="detail-header-content">
+        <div class="detail-hero">
             <div class="detail-cover history-cover">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
@@ -2823,14 +2859,25 @@ function showHistoryDetail() {
                 </svg>
             </div>
             <div class="detail-info">
-                <h1>Recently Played</h1>
+                <span class="detail-type">Library</span>
+                <h1 class="detail-name">Recently Played</h1>
                 <p class="detail-meta">${playHistory.length} song${playHistory.length !== 1 ? 's' : ''}</p>
-                <div class="detail-actions">
-                    <button class="btn-primary" onclick="playAllHistory()">
+                <div class="detail-buttons">
+                    <button class="btn-primary" onclick="playAllHistory()" ${playHistory.length === 0 ? 'disabled' : ''}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
-                        Play All
+                        Play
+                    </button>
+                    <button class="btn-secondary" onclick="shuffleHistory()" ${playHistory.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
                     </button>
                 </div>
             </div>
@@ -2901,6 +2948,33 @@ function playAllHistory() {
 
     updateQueueBadge();
     showToast(`Playing ${playHistory.length} songs`);
+}
+
+function shuffleHistory() {
+    if (playHistory.length === 0) return;
+
+    // Create shuffled copy
+    const shuffled = [...playHistory].sort(() => Math.random() - 0.5);
+
+    // Clear queue and add shuffled history
+    queue.length = 0;
+    shuffled.forEach(item => {
+        queue.push({
+            title: item.title,
+            artist: item.artist,
+            videoId: item.videoId,
+            artwork: item.artwork
+        });
+    });
+
+    // Play first song
+    const first = queue.shift();
+    if (first && first.videoId) {
+        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
+    }
+
+    updateQueueBadge();
+    showToast(`Shuffling ${playHistory.length} songs`);
 }
 
 // ============================================================
