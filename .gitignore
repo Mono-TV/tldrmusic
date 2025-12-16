@@ -10,3 +10,7 @@ Thumbs.db
 
 # Local development
 *.log
+
+# Background images
+green background.jpg
+patterns background.jpg
