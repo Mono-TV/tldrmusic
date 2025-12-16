@@ -3095,15 +3095,17 @@ async function deletePlaylist(playlistId) {
     // Delete from server first if authenticated
     if (typeof isAuthenticated !== 'undefined' && isAuthenticated) {
         try {
-            const response = await fetch(`${API_BASE}/playlists/${playlistId}`, {
-                method: 'DELETE',
-                headers: getAuthHeaders()
+            const response = await fetchWithAuth(`/playlists/${playlistId}`, {
+                method: 'DELETE'
             });
             if (!response.ok) {
                 console.error('Failed to delete playlist from server:', response.status);
             }
         } catch (error) {
             console.error('Error deleting playlist from server:', error);
+            if (error.message === 'Session expired, please login again') {
+                showToast('Session expired. Please login again.');
+            }
         }
     }
 
@@ -4186,11 +4188,10 @@ async function togglePlaylistVisibility(playlistId) {
     const newVisibility = !playlist.is_public;
 
     try {
-        const response = await fetch(`${API_BASE}/playlists/${playlistId}/publish`, {
+        const response = await fetchWithAuth(`/playlists/${playlistId}/publish`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
-                ...getAuthHeaders()
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ is_public: newVisibility })
         });
@@ -4210,7 +4211,11 @@ async function togglePlaylistVisibility(playlistId) {
         showToast(newVisibility ? 'Playlist is now public' : 'Playlist is now private');
     } catch (error) {
         console.error('Error toggling visibility:', error);
-        showToast(error.message || 'Failed to update visibility');
+        if (error.message === 'Session expired, please login again') {
+            showToast('Session expired. Please login again.');
+        } else {
+            showToast(error.message || 'Failed to update visibility');
+        }
     }
 }
 
