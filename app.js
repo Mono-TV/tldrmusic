@@ -3119,7 +3119,7 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
             const rank = song.rank || index + 1;
             const rankChange = song.rank_change || 0;
             const isNew = song.is_new || false;
-            const isPlaying = currentlyPlaying && currentlyPlaying.title === song.title;
+            const isPlaying = currentPlayingVideoId && song.youtube_video_id === currentPlayingVideoId;
 
             let changeHtml = '';
             if (isNew) {
