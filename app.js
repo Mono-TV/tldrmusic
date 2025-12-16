@@ -3536,16 +3536,34 @@ function renderPlaylistDetail(playlistId) {
 
     const header = document.getElementById('playlistDetailHeader');
     if (header) {
-        // Get cover image (custom artwork > first song's artwork > placeholder)
+        // Get cover image (custom artwork > grid of song artworks > placeholder)
         let coverArt;
         let coverArtUrl = null;
+        let isMulti = false;
+
         if (playlist.artwork_url) {
             coverArtUrl = playlist.artwork_url;
             coverArt = `<img src="${playlist.artwork_url}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
-        } else if (playlist.songs.length > 0 && playlist.songs[0].artwork) {
-            coverArtUrl = playlist.songs[0].artwork;
-            coverArt = `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
         } else {
+            // Use cover_urls or first 4 songs' artworks for collage
+            const artworks = playlist.cover_urls?.length > 0
+                ? playlist.cover_urls.map(url => ({ artwork: url }))
+                : (playlist.songs || []).slice(0, 4).filter(s => s.artwork);
+
+            if (artworks.length === 0) {
+                coverArt = null; // Will use placeholder below
+            } else if (artworks.length === 1) {
+                coverArtUrl = artworks[0].artwork;
+                coverArt = `<img src="${artworks[0].artwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
+            } else {
+                // Multiple artworks - create collage
+                coverArtUrl = artworks[0].artwork; // Use first for gradient
+                coverArt = artworks.map(s => `<img src="${s.artwork}" alt="" crossorigin="anonymous">`).join('');
+                isMulti = true;
+            }
+        }
+
+        if (!coverArt) {
             coverArt = `<div class="detail-cover-placeholder">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M9 18V5l12-2v13"></path>
@@ -3562,7 +3580,7 @@ function renderPlaylistDetail(playlistId) {
                 </svg>
             </button>
             <div class="detail-hero">
-                <div class="detail-cover" onclick="showArtworkModal('${playlist.id}')" title="Click to change artwork">
+                <div class="detail-cover ${isMulti ? 'multi' : ''}" onclick="showArtworkModal('${playlist.id}')" title="Click to change artwork">
                     ${coverArt}
                     <div class="detail-cover-edit-overlay">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

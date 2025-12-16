@@ -4281,6 +4281,18 @@ body::before {
     object-fit: cover;
 }
 
+.detail-cover.multi {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+}
+
+.detail-cover.multi img {
+    width: 100%;
+    height: 100%;
+}
+
 .detail-cover-placeholder {
     width: 100%;
     height: 100%;
