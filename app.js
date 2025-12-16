@@ -759,6 +759,12 @@ function renderChart() {
         const songEl = createSongElement(song, index);
         chartList.appendChild(songEl);
     });
+
+    // Update Quick Picks count badge
+    const quickPicksCount = document.getElementById('quickPicksCount');
+    if (quickPicksCount) {
+        quickPicksCount.textContent = chartData.chart.length;
+    }
 }
 
 // Render regional charts
@@ -853,6 +859,13 @@ function renderRegionalCharts() {
 
         regionalGrid.appendChild(card);
     });
+
+    // Update Regional Spotlights count badge
+    const regionalCount = document.getElementById('regionalCount');
+    if (regionalCount) {
+        const count = regionalGrid.querySelectorAll('.regional-card').length;
+        regionalCount.textContent = count;
+    }
 }
 
 // Find a song in the main chart by title/artist
