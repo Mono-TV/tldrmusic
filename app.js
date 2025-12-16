@@ -215,8 +215,8 @@ function renderSharedPlaylistDetail(playlist) {
 
     // Get cover image
     let coverArt;
-    if (playlist.customArtwork) {
-        coverArt = `<img src="${playlist.customArtwork}" alt="${escapeHtml(playlist.name)}">`;
+    if (playlist.artwork_url) {
+        coverArt = `<img src="${playlist.artwork_url}" alt="${escapeHtml(playlist.name)}">`;
     } else if (playlist.songs && playlist.songs.length > 0 && playlist.songs[0].artwork) {
         coverArt = `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}">`;
     } else {
@@ -467,7 +467,7 @@ function renderPublicProfileView(profile, playlists) {
             <h2>Public Playlists</h2>
             <div class="public-profile-playlist-grid">
                 ${playlists.map(playlist => {
-                    const coverArt = playlist.cover_urls?.[0] || playlist.customArtwork ||
+                    const coverArt = playlist.cover_urls?.[0] || playlist.artwork_url ||
                         (playlist.songs?.[0]?.artwork) || '/og-image.png';
                     return `
                         <div class="public-profile-playlist-card" onclick="loadSharedPlaylist('${playlist.id}'); hidePublicProfileView();">
@@ -3053,8 +3053,8 @@ function renderPlaylistsView() {
         let artworkHtml = '';
         let isMulti = false;
 
-        if (playlist.customArtwork) {
-            artworkHtml = `<img src="${playlist.customArtwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous">`;
+        if (playlist.artwork_url) {
+            artworkHtml = `<img src="${playlist.artwork_url}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous">`;
         } else {
             const artworks = playlist.cover_urls?.length > 0
                 ? playlist.cover_urls.map(url => ({ artwork: url }))
@@ -3312,7 +3312,7 @@ function renderRecentlyPlayedPlaylists() {
     if (divider) divider.style.display = 'flex';
 
     const cards = recentPlaylists.map(playlist => {
-        const artwork = playlist.customArtwork
+        const artwork = playlist.artwork_url
             || playlist.cover_urls?.[0]
             || playlist.songs?.[0]?.artwork
             || '';
@@ -3539,9 +3539,9 @@ function renderPlaylistDetail(playlistId) {
         // Get cover image (custom artwork > first song's artwork > placeholder)
         let coverArt;
         let coverArtUrl = null;
-        if (playlist.customArtwork) {
-            coverArtUrl = playlist.customArtwork;
-            coverArt = `<img src="${playlist.customArtwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
+        if (playlist.artwork_url) {
+            coverArtUrl = playlist.artwork_url;
+            coverArt = `<img src="${playlist.artwork_url}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
         } else if (playlist.songs.length > 0 && playlist.songs[0].artwork) {
             coverArtUrl = playlist.songs[0].artwork;
             coverArt = `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
@@ -4029,7 +4029,7 @@ function showArtworkModal(playlistId) {
     if (!modal) return;
 
     modal.dataset.playlistId = playlistId;
-    pendingArtwork = playlist.customArtwork || null;
+    pendingArtwork = playlist.artwork_url || null;
 
     // Update preview
     updateArtworkPreview(pendingArtwork || (playlist.songs.length > 0 ? playlist.songs[0].artwork : null));
@@ -4138,9 +4138,11 @@ function savePlaylistArtwork() {
     if (!playlist) return;
 
     if (pendingArtwork) {
-        playlist.customArtwork = pendingArtwork;
+        playlist.artwork_url = pendingArtwork;
+        playlist.custom_artwork = true;
     } else {
-        delete playlist.customArtwork;
+        delete playlist.artwork_url;
+        playlist.custom_artwork = false;
     }
 
     savePlaylists();

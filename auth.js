@@ -449,7 +449,8 @@ async function syncToCloud(type) {
                                     ? serverPlaylist.cover_urls
                                     : (localMatch?.cover_urls || []),
                                 // Preserve custom artwork from local playlist
-                                customArtwork: serverPlaylist.customArtwork || localMatch?.customArtwork || null,
+                                artwork_url: serverPlaylist.artwork_url || localMatch?.artwork_url || null,
+                                custom_artwork: serverPlaylist.custom_artwork ?? localMatch?.custom_artwork ?? false,
                                 is_public: serverPlaylist.is_public ?? false,
                                 is_owner: serverPlaylist.is_owner ?? true
                             };
