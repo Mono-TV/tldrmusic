@@ -414,5 +414,94 @@
         "artist": "Sachin-Jigar"
       }
     }
+  },
+  "global": {
+    "2025-12-15": {
+      "all i want for christmas is you-mariah carey": {
+        "rank": 1,
+        "title": "All I Want for Christmas Is You",
+        "artist": "Mariah Carey"
+      },
+      "the fate of ophelia-taylor swi": {
+        "rank": 2,
+        "title": "The Fate of Ophelia",
+        "artist": "Taylor Swi"
+      },
+      "last christmas-wham!": {
+        "rank": 3,
+        "title": "Last Christmas",
+        "artist": "Wham!"
+      },
+      "golden-huntr/x": {
+        "rank": 4,
+        "title": "Golden",
+        "artist": "HUNTR/X"
+      },
+      "jingle bell rock-bobby helms": {
+        "rank": 5,
+        "title": "Jingle Bell Rock",
+        "artist": "Bobby Helms"
+      },
+      "rockin' around the christmas tree-brenda lee": {
+        "rank": 6,
+        "title": "Rockin' Around The Christmas Tree",
+        "artist": "Brenda Lee"
+      },
+      "man i need-olivia dean": {
+        "rank": 7,
+        "title": "Man I Need",
+        "artist": "Olivia Dean"
+      },
+      "underneath the tree-kelly clarkson": {
+        "rank": 8,
+        "title": "Underneath the Tree",
+        "artist": "Kelly Clarkson"
+      },
+      "santa tell me-ariana grande": {
+        "rank": 9,
+        "title": "Santa Tell Me",
+        "artist": "Ariana Grande"
+      },
+      "ordinary-alex warren": {
+        "rank": 10,
+        "title": "Ordinary",
+        "artist": "Alex Warren"
+      },
+      "back to friends-sombr": {
+        "rank": 11,
+        "title": "back to friends",
+        "artist": "sombr"
+      },
+      "golden-huntr/x: ejae": {
+        "rank": 12,
+        "title": "Golden",
+        "artist": "HUNTR/X: EJAE"
+      },
+      "last christmas (single version)-wham!": {
+        "rank": 13,
+        "title": "Last Christmas (Single Version)",
+        "artist": "Wham!"
+      },
+      "opalite-taylor swi": {
+        "rank": 14,
+        "title": "Opalite",
+        "artist": "Taylor Swi"
+      },
+      "the christmas song (merry christmas to you)-nat \"king\" cole": {
+        "rank": 15,
+        "title": "The Christmas Song (Merry Christmas To You)",
+        "artist": "Nat \"King\" Cole"
+      },
+      "end of beginning-djo": {
+        "rank": 16,
+        "title": "End of Beginning",
+        "artist": "Djo"
+      },
+      "it's the most wonderful time of the year-andy williams": {
+        "rank": 17,
+        "title": "It's The Most Wonderful Time Of The Year",
+        "artist": "Andy Williams"
+      }
+    }
   }
 }

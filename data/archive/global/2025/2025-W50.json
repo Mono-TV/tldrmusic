@@ -1,0 +1,361 @@
+{
+  "generated_at": "2025-12-16T20:39:59.009490Z",
+  "week": "2025-W50",
+  "total_songs": 17,
+  "chart": [
+    {
+      "rank": 1,
+      "title": "All I Want for Christmas Is You",
+      "artist": "Mariah Carey",
+      "score": 3.9000000000000004,
+      "platforms_count": 3,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 1,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 3,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 1,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swi",
+      "score": 3.45,
+      "platforms_count": 3,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 2,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 1,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 6,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "title": "Last Christmas",
+      "artist": "Wham!",
+      "score": 2.43,
+      "platforms_count": 2,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 2,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 2,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "title": "Golden",
+      "artist": "HUNTR/X",
+      "score": 2.25,
+      "platforms_count": 2,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 3,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 4,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "title": "Jingle Bell Rock",
+      "artist": "Bobby Helms",
+      "score": 2.04,
+      "platforms_count": 3,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 6,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 8,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 4,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 6,
+      "title": "Rockin' Around The Christmas Tree",
+      "artist": "Brenda Lee",
+      "score": 1.8599999999999999,
+      "platforms_count": 2,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 5,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 3,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 7,
+      "title": "Man I Need",
+      "artist": "Olivia Dean",
+      "score": 1.65,
+      "platforms_count": 2,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 4,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 7,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 8,
+      "title": "Underneath the Tree",
+      "artist": "Kelly Clarkson",
+      "score": 0.8999999999999999,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 5,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 9,
+      "title": "Santa Tell Me",
+      "artist": "Ariana Grande",
+      "score": 0.81,
+      "platforms_count": 3,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 10,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 9,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 8,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 10,
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "score": 0.78,
+      "platforms_count": 2,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 9,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 7,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 11,
+      "title": "back to friends",
+      "artist": "sombr",
+      "score": 0.75,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 6,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 12,
+      "title": "Golden",
+      "artist": "HUNTR/X: EJAE",
+      "score": 0.72,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 5,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 13,
+      "title": "Last Christmas (Single Version)",
+      "artist": "Wham!",
+      "score": 0.6000000000000001,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 7,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 14,
+      "title": "Opalite",
+      "artist": "Taylor Swi",
+      "score": 0.44999999999999996,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 8,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 15,
+      "title": "The Christmas Song (Merry Christmas To You)",
+      "artist": "Nat \"King\" Cole",
+      "score": 0.24,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 9,
+          "weight": 1.2
+        }
+      ]
+    },
+    {
+      "rank": 16,
+      "title": "End of Beginning",
+      "artist": "Djo",
+      "score": 0.15000000000000002,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 10,
+          "weight": 1.5
+        }
+      ]
+    },
+    {
+      "rank": 17,
+      "title": "It's The Most Wonderful Time Of The Year",
+      "artist": "Andy Williams",
+      "score": 0.12,
+      "platforms_count": 1,
+      "youtube_video_id": null,
+      "youtube_views": null,
+      "artwork_url": null,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 10,
+          "weight": 1.2
+        }
+      ]
+    }
+  ]
+}
