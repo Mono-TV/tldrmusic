@@ -2973,7 +2973,7 @@ body::before {
 
 .favorite-card {
     flex-shrink: 0;
-    width: 140px;
+    width: 200px;
     cursor: pointer;
     transition: transform 0.2s;
 }
@@ -2984,8 +2984,8 @@ body::before {
 
 .favorite-card-artwork {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 200px;
+    height: 200px;
     border-radius: 12px;
     overflow: hidden;
     background: var(--bg-elevated);
