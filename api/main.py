@@ -33,6 +33,9 @@ from user_models import (
     RefreshTokenRequest,
     TokenResponse,
     UserProfile,
+    PublicProfile,
+    UsernameCheck,
+    UsernameUpdate,
     SyncRequest,
     SyncResponse,
     FavoritesUpdate,
@@ -54,7 +57,9 @@ from playlist_models import (
     ReorderSongsRequest,
     PublishRequest,
     DiscoverPlaylistsResponse,
-    SuccessResponse as PlaylistSuccessResponse
+    SuccessResponse as PlaylistSuccessResponse,
+    SyncPlaylistsRequest,
+    SyncPlaylistsResponse
 )
 from og_image_models import (
     RegenerateOGImageRequest,
@@ -385,6 +390,7 @@ async def get_profile(current_user: Dict = Depends(get_current_user)):
         id=user["_id"],
         email=user["email"],
         name=user["name"],
+        username=user.get("username"),
         picture=user.get("picture"),
         favorites=user.get("favorites", []),
         history=user.get("history", []),
@@ -436,6 +442,132 @@ async def update_preferences(
     return SuccessResponse(success=True)
 
 
+@app.put("/user/playlists", response_model=SyncPlaylistsResponse, tags=["User"])
+async def sync_playlists(
+    request: SyncPlaylistsRequest,
+    current_user: Dict = Depends(get_current_user)
+):
+    """
+    Sync playlists from client to server.
+
+    - Playlists with client-generated IDs (not valid ObjectIds) are created as new
+    - Playlists with valid ObjectIds are updated if owned by user
+    - Returns the synced playlists with proper server-side IDs
+    """
+    user_id = current_user["sub"]
+    synced_playlists = await db.sync_user_playlists(user_id, request.playlists)
+
+    return SyncPlaylistsResponse(
+        success=True,
+        playlists=synced_playlists,
+        count=len(synced_playlists)
+    )
+
+
+# ============================================================
+# USERNAME & PUBLIC PROFILE ENDPOINTS
+# ============================================================
+
+import re
+
+def validate_username(username: str) -> tuple[bool, str]:
+    """Validate username format. Returns (is_valid, error_message)."""
+    if not username:
+        return False, "Username is required"
+    if len(username) < 3:
+        return False, "Username must be at least 3 characters"
+    if len(username) > 20:
+        return False, "Username must be 20 characters or less"
+    if not re.match(r'^[a-zA-Z0-9_]+$', username):
+        return False, "Username can only contain letters, numbers, and underscores"
+    if username[0].isdigit():
+        return False, "Username cannot start with a number"
+    return True, ""
+
+
+@app.get("/users/check-username/{username}", response_model=UsernameCheck, tags=["User"])
+async def check_username(
+    username: str,
+    current_user: Dict = Depends(get_optional_user)
+):
+    """Check if a username is available."""
+    is_valid, error_msg = validate_username(username)
+    if not is_valid:
+        return UsernameCheck(username=username, available=False, message=error_msg)
+
+    # Check availability, excluding current user if logged in
+    exclude_id = current_user.get("sub") if current_user else None
+    available = await db.check_username_available(username, exclude_id)
+
+    return UsernameCheck(
+        username=username,
+        available=available,
+        message=None if available else "Username is already taken"
+    )
+
+
+@app.put("/user/username", response_model=SuccessResponse, tags=["User"])
+async def set_username(
+    request: UsernameUpdate,
+    current_user: Dict = Depends(get_current_user)
+):
+    """Set or update the current user's username."""
+    is_valid, error_msg = validate_username(request.username)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error_msg)
+
+    # Check if username is available
+    available = await db.check_username_available(request.username, current_user["sub"])
+    if not available:
+        raise HTTPException(status_code=409, detail="Username is already taken")
+
+    # Update username
+    success = await db.update_user_username(current_user["sub"], request.username)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to update username")
+
+    return SuccessResponse(success=True, message=f"Username set to @{request.username.lower()}")
+
+
+@app.get("/user/{username}", response_model=PublicProfile, tags=["User"])
+async def get_public_profile(username: str):
+    """Get a user's public profile by username."""
+    user = await db.get_user_by_username(username)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    playlist_count = await db.count_public_playlists(user["id"])
+
+    return PublicProfile(
+        id=user["id"],
+        name=user["name"],
+        username=user["username"],
+        picture=user.get("picture"),
+        playlist_count=playlist_count
+    )
+
+
+@app.get("/user/{username}/playlists", response_model=PlaylistListResponse, tags=["User"])
+async def get_user_public_playlists(
+    username: str,
+    limit: int = 20,
+    offset: int = 0,
+    current_user: Dict = Depends(get_optional_user)
+):
+    """Get a user's public playlists."""
+    user = await db.get_user_by_username(username)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    viewer_id = current_user.get("sub") if current_user else None
+    playlists = await db.get_user_public_playlists(user["id"], limit, offset, viewer_id)
+
+    return PlaylistListResponse(
+        playlists=playlists,
+        total=await db.count_public_playlists(user["id"])
+    )
+
+
 @app.post("/user/sync", response_model=SyncResponse, tags=["User"])
 async def sync_user_data(
     request: SyncRequest,
@@ -482,11 +614,15 @@ async def sync_user_data(
     await db.update_user_history(current_user["sub"], merged_history)
     await db.update_user_queue(current_user["sub"], merged_queue)
 
+    # Fetch user's playlists from database
+    user_playlists = await db.get_user_playlists(current_user["sub"])
+
     return SyncResponse(
         merged_favorites=merged_favorites,
         merged_history=merged_history,
         merged_queue=merged_queue,
-        preferences=preferences
+        preferences=preferences,
+        merged_playlists=user_playlists
     )
 
 
@@ -1037,6 +1173,138 @@ async def share_playlist_page(playlist_id: str):
     <div class="container">
         <h1>{name}</h1>
         <p>by {owner_name} • {song_count} song{'s' if song_count != 1 else ''}</p>
+        <p class="loading">Opening in TLDR Music...</p>
+    </div>
+</body>
+</html>
+    """
+
+    return HTMLResponse(content=html_content, status_code=200)
+
+
+@app.get("/u/{username}", response_class=HTMLResponse, tags=["Share"])
+async def share_profile_page(username: str):
+    """
+    Returns an HTML page with Open Graph meta tags for rich link previews of user profiles.
+    Automatically redirects to the main app with the user profile.
+    """
+    user = await db.get_user_by_username(username)
+
+    if not user:
+        # Return a generic page for invalid users
+        return HTMLResponse(content=f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TLDR Music - India's Top 25</title>
+    <meta name="description" content="Discover India's definitive music chart, aggregated from 7 major platforms.">
+    <meta property="og:title" content="TLDR Music - India's Top 25">
+    <meta property="og:description" content="Discover India's definitive music chart, aggregated from 7 major platforms.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://tldrmusic.in/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <script>window.location.href = '/';</script>
+</head>
+<body>
+    <p>Redirecting to TLDR Music...</p>
+</body>
+</html>
+        """, status_code=200)
+
+    # Get user details
+    name = user.get("name", "User")
+    user_username = user.get("username", username)
+    picture = user.get("picture", "https://tldrmusic.in/og-image.png")
+    playlist_count = await db.count_public_playlists(user["id"])
+
+    meta_description = f"@{user_username} on TLDR Music • {playlist_count} public playlist{'s' if playlist_count != 1 else ''}"
+
+    # Frontend URL
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:8080")
+    redirect_url = f"{frontend_url}/?user={user_username}"
+
+    html_content = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{name} (@{user_username}) - TLDR Music</title>
+    <meta name="description" content="{meta_description}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="{redirect_url}">
+    <meta property="og:title" content="{name} (@{user_username})">
+    <meta property="og:description" content="{meta_description}">
+    <meta property="og:image" content="{picture}">
+    <meta property="og:site_name" content="TLDR Music">
+    <meta property="profile:username" content="{user_username}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="{redirect_url}">
+    <meta name="twitter:title" content="{name} (@{user_username})">
+    <meta name="twitter:description" content="{meta_description}">
+    <meta name="twitter:image" content="{picture}">
+
+    <!-- Additional meta -->
+    <meta name="robots" content="index, follow">
+
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }}
+        .container {{
+            padding: 2rem;
+        }}
+        .avatar {{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }}
+        h1 {{
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }}
+        .username {{
+            color: rgba(255,255,255,0.7);
+            margin: 0 0 0.5rem 0;
+        }}
+        .stats {{
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }}
+        .loading {{
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+        }}
+    </style>
+
+    <script>
+        setTimeout(function() {{
+            window.location.href = '{redirect_url}';
+        }}, 100);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="{picture}" alt="{name}" class="avatar">
+        <h1>{name}</h1>
+        <p class="username">@{user_username}</p>
+        <p class="stats">{playlist_count} public playlist{'s' if playlist_count != 1 else ''}</p>
         <p class="loading">Opening in TLDR Music...</p>
     </div>
 </body>

@@ -9,6 +9,10 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 import jwt
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configuration
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")

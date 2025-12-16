@@ -3,7 +3,7 @@
  * Handles Google Sign-In and cloud sync
  */
 
-// Configuration - Always use production API
+// Configuration
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
     API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'
@@ -238,6 +238,17 @@ async function refreshAccessToken() {
 }
 
 /**
+ * Get auth headers for API requests
+ */
+function getAuthHeaders() {
+    const token = localStorage.getItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
+    if (token) {
+        return { 'Authorization': `Bearer ${token}` };
+    }
+    return {};
+}
+
+/**
  * Make authenticated fetch request with auto token refresh
  */
 async function fetchWithAuth(endpoint, options = {}) {
@@ -274,9 +285,10 @@ function logout() {
     localStorage.removeItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
 
-    // Clear user data (favorites and history)
+    // Clear user data (favorites, history, and playlists)
     localStorage.removeItem(STORAGE_KEYS.FAVORITES);
     localStorage.removeItem(STORAGE_KEYS.HISTORY);
+    localStorage.removeItem(STORAGE_KEYS.PLAYLISTS);
 
     currentUser = null;
     isAuthenticated = false;
@@ -292,6 +304,14 @@ function logout() {
     // Reset play history array
     if (typeof playHistory !== 'undefined') {
         playHistory.length = 0;
+    }
+
+    // Reset playlists array and re-render
+    if (typeof playlists !== 'undefined') {
+        playlists.length = 0;
+    }
+    if (typeof renderPlaylistPanel === 'function') {
+        renderPlaylistPanel();
     }
 
     updateAuthUI();
@@ -398,8 +418,58 @@ async function syncToCloud(type) {
                 break;
             case 'playlists':
                 endpoint = '/user/playlists';
-                body = { playlists: JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [] };
-                break;
+                const localPlaylists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
+                body = { playlists: localPlaylists };
+
+                // Handle playlist sync specially to update IDs
+                const playlistRes = await fetchWithAuth(endpoint, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (playlistRes.ok) {
+                    const syncResult = await playlistRes.json();
+                    if (syncResult.playlists) {
+                        // Merge server response with local data to preserve songs
+                        // Server response has updated IDs but no songs array
+                        const mergedPlaylists = syncResult.playlists.map(serverPlaylist => {
+                            // Find matching local playlist by old ID or name
+                            const localMatch = localPlaylists.find(lp =>
+                                lp.id === serverPlaylist.id ||
+                                (lp.name === serverPlaylist.name && lp.id.startsWith('pl_'))
+                            );
+
+                            return {
+                                ...serverPlaylist,
+                                // Preserve songs from local playlist if server doesn't have them
+                                songs: serverPlaylist.songs || localMatch?.songs || [],
+                                song_count: serverPlaylist.song_count ?? localMatch?.songs?.length ?? 0,
+                                cover_urls: serverPlaylist.cover_urls?.length > 0
+                                    ? serverPlaylist.cover_urls
+                                    : (localMatch?.cover_urls || []),
+                                is_public: serverPlaylist.is_public ?? false,
+                                is_owner: serverPlaylist.is_owner ?? true
+                            };
+                        });
+
+                        // Update local storage with merged playlists
+                        localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(mergedPlaylists));
+
+                        // Update global playlists array
+                        if (typeof playlists !== 'undefined') {
+                            playlists.length = 0;
+                            mergedPlaylists.forEach(p => playlists.push(p));
+                        }
+
+                        // Re-render playlists panel
+                        if (typeof renderPlaylistPanel === 'function') {
+                            renderPlaylistPanel();
+                        }
+                    }
+                    console.log(`Synced playlists to cloud: ${syncResult.count} playlists`);
+                }
+                return;
             default:
                 return;
         }
@@ -667,6 +737,18 @@ function showProfilePanel() {
     if (name) name.textContent = currentUser.name;
     if (email) email.textContent = currentUser.email;
 
+    // Update username display
+    const usernameEl = document.getElementById('profileUsername');
+    if (usernameEl) {
+        if (currentUser.username) {
+            usernameEl.textContent = `@${currentUser.username}`;
+            usernameEl.classList.add('has-username');
+        } else {
+            usernameEl.textContent = 'Set a username';
+            usernameEl.classList.remove('has-username');
+        }
+    }
+
     // Update stats
     const favs = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
     const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
@@ -819,6 +901,204 @@ function playHistoryFromProfile(index) {
         playRegionalSongDirect(song.title, song.artist, song.videoId, song.artwork);
     } else if (typeof playSongDirect === 'function') {
         playSongDirect(song);
+    }
+}
+
+// ============================================================
+// USERNAME MODAL FUNCTIONS
+// ============================================================
+
+let usernameCheckTimeout = null;
+let isUsernameAvailable = false;
+
+/**
+ * Show the username modal
+ */
+function showUsernameModal() {
+    if (!isAuthenticated || !currentUser) {
+        showToast('Please sign in first');
+        return;
+    }
+
+    const modal = document.getElementById('usernameModal');
+    const input = document.getElementById('usernameInput');
+    const status = document.getElementById('usernameStatus');
+    const saveBtn = document.getElementById('saveUsernameBtn');
+
+    if (!modal) return;
+
+    // Pre-fill with current username if exists
+    if (input) {
+        input.value = currentUser.username || '';
+    }
+    if (status) {
+        status.textContent = '';
+        status.className = 'username-status';
+    }
+    if (saveBtn) {
+        saveBtn.disabled = true;
+    }
+
+    isUsernameAvailable = false;
+    modal.classList.add('visible');
+
+    // Focus input
+    setTimeout(() => input?.focus(), 100);
+}
+
+/**
+ * Hide the username modal
+ */
+function hideUsernameModal() {
+    const modal = document.getElementById('usernameModal');
+    if (modal) {
+        modal.classList.remove('visible');
+    }
+    if (usernameCheckTimeout) {
+        clearTimeout(usernameCheckTimeout);
+        usernameCheckTimeout = null;
+    }
+}
+
+/**
+ * Check username availability with debounce
+ */
+function checkUsernameAvailability() {
+    const input = document.getElementById('usernameInput');
+    const status = document.getElementById('usernameStatus');
+    const saveBtn = document.getElementById('saveUsernameBtn');
+
+    if (!input || !status) return;
+
+    const username = input.value.trim();
+
+    // Clear previous timeout
+    if (usernameCheckTimeout) {
+        clearTimeout(usernameCheckTimeout);
+    }
+
+    // Reset state
+    isUsernameAvailable = false;
+    if (saveBtn) saveBtn.disabled = true;
+
+    // Validate length
+    if (username.length === 0) {
+        status.textContent = '';
+        status.className = 'username-status';
+        return;
+    }
+
+    if (username.length < 3) {
+        status.textContent = 'Username must be at least 3 characters';
+        status.className = 'username-status unavailable';
+        return;
+    }
+
+    // Validate format
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        status.textContent = 'Only letters, numbers, and underscores allowed';
+        status.className = 'username-status unavailable';
+        return;
+    }
+
+    if (/^\d/.test(username)) {
+        status.textContent = 'Username cannot start with a number';
+        status.className = 'username-status unavailable';
+        return;
+    }
+
+    // If same as current username, just enable save
+    if (currentUser.username && username.toLowerCase() === currentUser.username.toLowerCase()) {
+        status.textContent = 'This is your current username';
+        status.className = 'username-status';
+        return;
+    }
+
+    // Show checking state
+    status.textContent = 'Checking availability...';
+    status.className = 'username-status checking';
+
+    // Debounce API call
+    usernameCheckTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`${AUTH_CONFIG.API_BASE}/users/check-username/${encodeURIComponent(username)}`, {
+                method: 'GET',
+                headers: getAuthHeaders()
+            });
+
+            const data = await response.json();
+
+            if (data.available) {
+                status.textContent = `@${username.toLowerCase()} is available!`;
+                status.className = 'username-status available';
+                isUsernameAvailable = true;
+                if (saveBtn) saveBtn.disabled = false;
+            } else {
+                status.textContent = data.message || 'Username is not available';
+                status.className = 'username-status unavailable';
+                isUsernameAvailable = false;
+                if (saveBtn) saveBtn.disabled = true;
+            }
+        } catch (error) {
+            console.error('Error checking username:', error);
+            status.textContent = 'Error checking availability';
+            status.className = 'username-status unavailable';
+        }
+    }, 500);
+}
+
+/**
+ * Save the username
+ */
+async function saveUsername() {
+    const input = document.getElementById('usernameInput');
+    const saveBtn = document.getElementById('saveUsernameBtn');
+
+    if (!input || !isUsernameAvailable) return;
+
+    const username = input.value.trim();
+
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+    }
+
+    try {
+        const response = await fetch(`${AUTH_CONFIG.API_BASE}/user/username`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeaders()
+            },
+            body: JSON.stringify({ username })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to save username');
+        }
+
+        // Update local user data
+        currentUser.username = username.toLowerCase();
+        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(currentUser));
+
+        // Update profile display
+        const usernameEl = document.getElementById('profileUsername');
+        if (usernameEl) {
+            usernameEl.textContent = `@${username.toLowerCase()}`;
+            usernameEl.classList.add('has-username');
+        }
+
+        showToast(`Username set to @${username.toLowerCase()}`);
+        hideUsernameModal();
+    } catch (error) {
+        console.error('Error saving username:', error);
+        showToast(error.message || 'Failed to save username');
+    } finally {
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Username';
+        }
     }
 }
 

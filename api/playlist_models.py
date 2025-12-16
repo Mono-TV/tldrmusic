@@ -139,6 +139,36 @@ class PublishRequest(BaseModel):
 
 
 # ============================================================
+# SYNC
+# ============================================================
+
+class SyncPlaylistItem(BaseModel):
+    """A playlist item for syncing from client"""
+    id: str  # Can be client-generated (pl_xxx) or MongoDB ObjectId
+    name: str
+    description: str = ""
+    songs: List[PlaylistSong] = []
+    is_public: bool = False
+    created_at: Optional[int] = None
+    updated_at: Optional[int] = None
+
+    class Config:
+        extra = "allow"
+
+
+class SyncPlaylistsRequest(BaseModel):
+    """Request to sync playlists from client"""
+    playlists: List[SyncPlaylistItem]
+
+
+class SyncPlaylistsResponse(BaseModel):
+    """Response from playlist sync with updated IDs"""
+    success: bool = True
+    playlists: List[PlaylistSummary]
+    count: int
+
+
+# ============================================================
 # RESPONSES
 # ============================================================
 

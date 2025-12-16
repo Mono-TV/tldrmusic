@@ -119,6 +119,423 @@ async function init() {
     setupEventListeners();
     initializePlaybackUI();
     updateAuthUI();     // Update auth button in header
+
+    // Handle URL parameters for shared content
+    handleUrlParameters();
+}
+
+// ============================================================
+// URL PARAMETER HANDLING (for shared playlists and profiles)
+// ============================================================
+
+function handleUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Handle ?playlist={id} - shared playlist
+    const playlistId = urlParams.get('playlist');
+    if (playlistId) {
+        loadSharedPlaylist(playlistId);
+        return; // Don't process other params if playlist is being loaded
+    }
+
+    // Handle ?user={username} - public profile
+    const username = urlParams.get('user');
+    if (username) {
+        loadUserProfile(username);
+        return;
+    }
+}
+
+async function loadSharedPlaylist(playlistId) {
+    try {
+        // Show loading state
+        showToast('Loading shared playlist...');
+
+        // Fetch playlist from API (works without auth for public playlists)
+        const response = await fetch(`${API_BASE}/playlists/${playlistId}`);
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                showToast('Playlist not found');
+            } else if (response.status === 403) {
+                showToast('This playlist is private');
+            } else {
+                showToast('Failed to load playlist');
+            }
+            return;
+        }
+
+        const data = await response.json();
+        const playlist = data.playlist;
+
+        // Convert API playlist format to local format
+        const localPlaylist = {
+            id: playlist.id || playlist._id,
+            name: playlist.name,
+            description: playlist.description || '',
+            songs: playlist.songs || [],
+            is_public: playlist.is_public,
+            owner: playlist.owner,
+            song_count: playlist.song_count,
+            follower_count: playlist.follower_count,
+            createdAt: playlist.created_at,
+            updatedAt: playlist.updated_at
+        };
+
+        // Show the shared playlist view
+        showSharedPlaylistView(localPlaylist);
+
+    } catch (error) {
+        console.error('Error loading shared playlist:', error);
+        showToast('Failed to load playlist');
+    }
+}
+
+function showSharedPlaylistView(playlist) {
+    // Hide main content sections
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'block';
+
+    // Render the playlist with shared mode flag
+    renderSharedPlaylistDetail(playlist);
+}
+
+function renderSharedPlaylistDetail(playlist) {
+    const content = document.getElementById('playlistDetailSongs');
+    const header = document.getElementById('playlistDetailHeader');
+
+    if (!header || !content) return;
+
+    // Get cover image
+    let coverArt;
+    if (playlist.customArtwork) {
+        coverArt = `<img src="${playlist.customArtwork}" alt="${escapeHtml(playlist.name)}">`;
+    } else if (playlist.songs && playlist.songs.length > 0 && playlist.songs[0].artwork) {
+        coverArt = `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}">`;
+    } else {
+        coverArt = `<div class="detail-cover-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+        </div>`;
+    }
+
+    const ownerName = playlist.owner?.name || 'Unknown';
+    const songCount = playlist.songs?.length || playlist.song_count || 0;
+    const isOwner = isAuthenticated && currentUser?.sub === playlist.owner?.id;
+
+    header.innerHTML = `
+        <button class="detail-back-btn" onclick="closeSharedPlaylist()" title="Back to Charts">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="detail-hero">
+            <div class="detail-cover">
+                ${coverArt}
+            </div>
+            <div class="detail-info">
+                <span class="detail-type">Playlist${playlist.is_public ? ' • Public' : ''}</span>
+                <h1 class="detail-name">${escapeHtml(playlist.name)}</h1>
+                <span class="detail-meta">
+                    <span class="shared-playlist-owner">by ${escapeHtml(ownerName)}</span>
+                    • ${songCount} song${songCount !== 1 ? 's' : ''}
+                </span>
+                <div class="detail-buttons">
+                    <button class="btn-primary" onclick="playSharedPlaylist()" ${songCount === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play
+                    </button>
+                    <button class="btn-secondary" onclick="shuffleSharedPlaylist()" ${songCount === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                    ${!isOwner ? `
+                    <button class="btn-secondary" onclick="saveSharedPlaylistToLibrary('${playlist.id}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        ${isAuthenticated ? 'Save to Library' : 'Sign in to Save'}
+                    </button>
+                    ` : ''}
+                    <button class="btn-secondary" onclick="sharePlaylistFromShared('${playlist.id}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Store the shared playlist for playback
+    window.currentSharedPlaylist = playlist;
+
+    if (!playlist.songs || playlist.songs.length === 0) {
+        content.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <h3>This playlist is empty</h3>
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${playlist.songs.map((song, index) => `
+                <div class="detail-song" onclick="playSharedPlaylistFromIndex(${index})">
+                    <span class="detail-song-num">${index + 1}</span>
+                    <div class="detail-song-artwork">
+                        ${song.artwork
+                            ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
+                            : '<div class="placeholder"></div>'
+                        }
+                        <div class="detail-song-play-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="detail-song-info">
+                        <div class="detail-song-title">${escapeHtml(song.title)}</div>
+                        <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function closeSharedPlaylist() {
+    // Clear URL params
+    history.replaceState(null, '', window.location.pathname);
+
+    // Show main content
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'block';
+    if (heroSection) heroSection.style.display = 'block';
+
+    // Clear shared playlist data
+    window.currentSharedPlaylist = null;
+}
+
+function playSharedPlaylist() {
+    const playlist = window.currentSharedPlaylist;
+    if (!playlist || !playlist.songs || playlist.songs.length === 0) return;
+    playSharedPlaylistFromIndex(0);
+}
+
+function shuffleSharedPlaylist() {
+    const playlist = window.currentSharedPlaylist;
+    if (!playlist || !playlist.songs || playlist.songs.length === 0) return;
+
+    const randomIndex = Math.floor(Math.random() * playlist.songs.length);
+    playSharedPlaylistFromIndex(randomIndex);
+}
+
+function playSharedPlaylistFromIndex(index) {
+    const playlist = window.currentSharedPlaylist;
+    if (!playlist || !playlist.songs) return;
+
+    const song = playlist.songs[index];
+    if (!song) return;
+
+    // Play the song
+    if (song.videoId) {
+        playSong(song.videoId, song.title, song.artist, song.artwork);
+    }
+}
+
+async function saveSharedPlaylistToLibrary(playlistId) {
+    if (!isAuthenticated) {
+        showLoginModal();
+        return;
+    }
+
+    try {
+        const response = await fetchWithAuth(`/playlists/${playlistId}/follow`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            showToast('Playlist saved to your library!');
+        } else {
+            const error = await response.json();
+            showToast(error.detail || 'Failed to save playlist');
+        }
+    } catch (error) {
+        showToast('Failed to save playlist');
+    }
+}
+
+function sharePlaylistFromShared(playlistId) {
+    const playlist = window.currentSharedPlaylist;
+    if (playlist) {
+        showShareModal(playlist);
+    }
+}
+
+// ============================================================
+// PUBLIC PROFILE VIEW
+// ============================================================
+
+async function loadUserProfile(username) {
+    try {
+        showToast('Loading profile...');
+
+        // Fetch user profile and playlists in parallel
+        const [profileResponse, playlistsResponse] = await Promise.all([
+            fetch(`${API_BASE}/user/${encodeURIComponent(username)}`),
+            fetch(`${API_BASE}/user/${encodeURIComponent(username)}/playlists`)
+        ]);
+
+        if (!profileResponse.ok) {
+            if (profileResponse.status === 404) {
+                showToast('User not found');
+            } else {
+                showToast('Failed to load profile');
+            }
+            // Clear URL params
+            window.history.replaceState({}, '', window.location.pathname);
+            return;
+        }
+
+        const profile = await profileResponse.json();
+        const playlistsData = playlistsResponse.ok ? await playlistsResponse.json() : { playlists: [] };
+
+        // Store current profile
+        window.currentPublicProfile = { profile, playlists: playlistsData.playlists };
+
+        // Render the profile view
+        renderPublicProfileView(profile, playlistsData.playlists);
+
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        showToast('Failed to load profile');
+        window.history.replaceState({}, '', window.location.pathname);
+    }
+}
+
+function renderPublicProfileView(profile, playlists) {
+    // Get or create the public profile container
+    let profileView = document.getElementById('publicProfileView');
+
+    if (!profileView) {
+        profileView = document.createElement('div');
+        profileView.id = 'publicProfileView';
+        profileView.className = 'public-profile-view';
+        document.body.appendChild(profileView);
+    }
+
+    // Get initials for avatar fallback
+    const initials = (profile.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect fill="#D4AF37" width="96" height="96" rx="48"/><text x="48" y="58" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="36" font-weight="600">${initials}</text></svg>`)}`;
+
+    const playlistsHTML = playlists.length > 0 ? `
+        <div class="public-profile-playlists">
+            <h2>Public Playlists</h2>
+            <div class="public-profile-playlist-grid">
+                ${playlists.map(playlist => {
+                    const coverArt = playlist.cover_urls?.[0] || playlist.customArtwork ||
+                        (playlist.songs?.[0]?.artwork) || '/og-image.png';
+                    return `
+                        <div class="public-profile-playlist-card" onclick="loadSharedPlaylist('${playlist.id}'); hidePublicProfileView();">
+                            <div class="public-profile-playlist-cover">
+                                <img src="${coverArt}" alt="${escapeHtml(playlist.name)}" onerror="this.src='/og-image.png'">
+                                <div class="public-profile-playlist-play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                </div>
+                            </div>
+                            <div class="public-profile-playlist-info">
+                                <h3>${escapeHtml(playlist.name)}</h3>
+                                <p>${playlist.song_count || 0} songs</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    ` : `
+        <div class="public-profile-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <p>No public playlists yet</p>
+        </div>
+    `;
+
+    profileView.innerHTML = `
+        <div class="public-profile-backdrop" onclick="hidePublicProfileView()"></div>
+        <div class="public-profile-container">
+            <button class="public-profile-close" onclick="hidePublicProfileView()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+
+            <div class="public-profile-hero">
+                <img class="public-profile-avatar" src="${profile.picture || fallbackSvg}" alt="${escapeHtml(profile.name)}"
+                     referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${fallbackSvg}'">
+                <div class="public-profile-info">
+                    <h1 class="public-profile-name">${escapeHtml(profile.name)}</h1>
+                    <p class="public-profile-username">@${profile.username}</p>
+                    <p class="public-profile-stats">${profile.playlist_count} public playlist${profile.playlist_count !== 1 ? 's' : ''}</p>
+                </div>
+            </div>
+
+            ${playlistsHTML}
+        </div>
+    `;
+
+    profileView.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+}
+
+function hidePublicProfileView() {
+    const profileView = document.getElementById('publicProfileView');
+    if (profileView) {
+        profileView.classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+    // Clear URL params if present
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('user')) {
+        window.history.replaceState({}, '', window.location.pathname);
+    }
+    window.currentPublicProfile = null;
 }
 
 // Render skeleton loading placeholders
@@ -666,12 +1083,7 @@ function createSongElement(song, index, chartMode = 'india') {
             </div>
         </div>
         <div class="song-card-actions">
-            <button class="song-add-playlist" title="Add to playlist" onclick="event.stopPropagation(); showAddToPlaylistModal({
-                title: '${escapeHtml(song.title).replace(/'/g, "\\'")}',
-                artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}',
-                videoId: '${song.youtube_video_id || ''}',
-                artwork: '${song.artwork_url || ''}'
-            })">
+            <button class="song-add-playlist" title="Add to playlist">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 5v14M5 12h14"></path>
                 </svg>
@@ -697,6 +1109,21 @@ function createSongElement(song, index, chartMode = 'india') {
             }
         }
     });
+
+    // Add to playlist button handler - uses data attributes to avoid special character issues
+    const addToPlaylistBtn = el.querySelector('.song-add-playlist');
+    if (addToPlaylistBtn) {
+        addToPlaylistBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            showAddToPlaylistModal({
+                title: el.dataset.title,
+                artist: el.dataset.artist,
+                videoId: el.dataset.videoId,
+                artwork: el.dataset.artwork
+            });
+        });
+    }
+
     return el;
 }
 
@@ -1954,6 +2381,17 @@ function loadUserData() {
         playHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
         queue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [];
         playlists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
+
+        // Ensure all playlists have required fields
+        playlists = playlists.map(p => ({
+            ...p,
+            songs: p.songs || [],
+            song_count: p.song_count ?? p.songs?.length ?? 0,
+            cover_urls: p.cover_urls || [],
+            is_public: p.is_public ?? false,
+            is_owner: p.is_owner ?? true
+        }));
+
         isShuffleOn = localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true';
         repeatMode = localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off';
         console.log(`Loaded user data: ${favorites.length} favorites, ${playlists.length} playlists`);
@@ -2312,14 +2750,18 @@ function createPlaylist(name, description = '') {
         return null;
     }
 
+    const now = Date.now();
     const playlist = {
         id: generatePlaylistId(),
         name: name.trim(),
         description: description.trim(),
         songs: [],
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        isPublic: false
+        song_count: 0,
+        cover_urls: [],
+        is_public: false,
+        is_owner: true,
+        created_at: now,
+        updated_at: now
     };
 
     playlists.unshift(playlist);
@@ -2329,11 +2771,28 @@ function createPlaylist(name, description = '') {
     return playlist;
 }
 
-function deletePlaylist(playlistId) {
+async function deletePlaylist(playlistId) {
     const index = playlists.findIndex(p => p.id === playlistId);
     if (index === -1) return false;
 
     const playlist = playlists[index];
+
+    // Delete from server first if authenticated
+    if (typeof isAuthenticated !== 'undefined' && isAuthenticated) {
+        try {
+            const response = await fetch(`${API_BASE}/playlists/${playlistId}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) {
+                console.error('Failed to delete playlist from server:', response.status);
+            }
+        } catch (error) {
+            console.error('Error deleting playlist from server:', error);
+        }
+    }
+
+    // Remove from local state
     playlists.splice(index, 1);
     savePlaylists();
     showToast(`Deleted "${playlist.name}"`);
@@ -2352,7 +2811,7 @@ function renamePlaylist(playlistId, newName) {
     if (!playlist || !newName || !newName.trim()) return false;
 
     playlist.name = newName.trim();
-    playlist.updatedAt = Date.now();
+    playlist.updated_at = Date.now();
     savePlaylists();
     renderPlaylistPanel();
     return true;
@@ -2378,9 +2837,11 @@ function addToPlaylist(playlistId, song) {
         artist: song.artist,
         videoId: song.youtube_video_id || song.videoId,
         artwork: song.artwork_url || song.artwork,
-        addedAt: Date.now()
+        added_at: Date.now()
     });
-    playlist.updatedAt = Date.now();
+    playlist.song_count = playlist.songs.length;
+    playlist.cover_urls = playlist.songs.slice(0, 4).map(s => s.artwork).filter(Boolean);
+    playlist.updated_at = Date.now();
     savePlaylists();
     showToast(`Added to "${playlist.name}"`);
     return true;
@@ -2391,7 +2852,9 @@ function removeFromPlaylist(playlistId, songIndex) {
     if (!playlist || songIndex < 0 || songIndex >= playlist.songs.length) return false;
 
     playlist.songs.splice(songIndex, 1);
-    playlist.updatedAt = Date.now();
+    playlist.song_count = playlist.songs.length;
+    playlist.cover_urls = playlist.songs.slice(0, 4).map(s => s.artwork).filter(Boolean);
+    playlist.updated_at = Date.now();
     savePlaylists();
     renderPlaylistDetail(playlistId);
     return true;
@@ -2403,17 +2866,20 @@ function reorderPlaylistSongs(playlistId, fromIndex, toIndex) {
 
     const [song] = playlist.songs.splice(fromIndex, 1);
     playlist.songs.splice(toIndex, 0, song);
-    playlist.updatedAt = Date.now();
+    playlist.updated_at = Date.now();
     savePlaylists();
     return true;
 }
 
 function playPlaylist(playlistId, startIndex = 0) {
     const playlist = playlists.find(p => p.id === playlistId);
-    if (!playlist || !playlist.songs.length) {
+    if (!playlist || !playlist.songs || !playlist.songs.length) {
         showToast('Playlist is empty');
         return;
     }
+
+    // Track this playlist as recently played
+    trackPlaylistPlayed(playlistId);
 
     // Load remaining songs into queue
     queue = playlist.songs.slice(startIndex + 1).map((s, i) => ({
@@ -2472,80 +2938,479 @@ function updatePlaylistCount() {
     }
 }
 
+// Show playlists view in main content
+function showPlaylistsView() {
+    isPlaylistPanelVisible = true;
+
+    // Hide main content (charts, regional)
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'block';
+
+    // Update sidebar active state
+    document.querySelectorAll('.sidebar-nav-item').forEach(btn => btn.classList.remove('active'));
+    const playlistsBtn = document.getElementById('sidebarPlaylistsBtn');
+    if (playlistsBtn) playlistsBtn.classList.add('active');
+
+    // Restore sort dropdown value
+    const sortSelect = document.getElementById('playlistsSortSelect');
+    if (sortSelect) sortSelect.value = playlistSortOrder;
+
+    renderPlaylistsView();
+}
+
+// Hide playlists view, return to charts
+function hidePlaylistsView() {
+    isPlaylistPanelVisible = false;
+    currentPlaylistId = null;
+
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+
+    if (mainContent) mainContent.style.display = 'block';
+    if (heroSection) heroSection.style.display = 'block';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+
+    // Update sidebar active state back to current chart
+    document.querySelectorAll('.sidebar-nav-item').forEach(btn => btn.classList.remove('active'));
+    const chartBtn = document.querySelector(`[data-chart="${currentChart}"]`);
+    if (chartBtn) chartBtn.classList.add('active');
+}
+
+// Legacy function name for compatibility
 function togglePlaylistPanel() {
-    isPlaylistPanelVisible = !isPlaylistPanelVisible;
-    const panel = document.getElementById('playlistPanel');
-    if (panel) {
-        panel.classList.toggle('visible', isPlaylistPanelVisible);
-    }
     if (isPlaylistPanelVisible) {
-        renderPlaylistPanel();
-        // Close queue panel if open
-        if (isQueueVisible) {
-            toggleQueuePanel();
-        }
+        hidePlaylistsView();
+    } else {
+        showPlaylistsView();
     }
 }
 
-function renderPlaylistPanel() {
-    const content = document.getElementById('playlistContent');
-    if (!content) return;
+// Playlist sorting preference
+let playlistSortOrder = localStorage.getItem('playlistSortOrder') || 'recent';
 
-    updatePlaylistCount();
+// Recently played playlists (stored by ID with timestamp)
+let recentlyPlayedPlaylists = JSON.parse(localStorage.getItem('recentlyPlayedPlaylists') || '[]');
+
+function renderPlaylistsView() {
+    const grid = document.getElementById('playlistsGrid');
+    const countEl = document.getElementById('playlistsViewCount');
+    const recentSection = document.getElementById('recentlyPlayedSection');
+    const recentScroll = document.getElementById('recentlyPlayedScroll');
+    const divider = document.getElementById('allPlaylistsDivider');
+
+    if (countEl) {
+        countEl.textContent = `${playlists.length} playlist${playlists.length !== 1 ? 's' : ''}`;
+    }
+
+    if (!grid) return;
+
+    // Hide recently played and divider if no playlists
+    if (recentSection) recentSection.style.display = 'none';
+    if (divider) divider.style.display = 'none';
 
     if (playlists.length === 0) {
-        content.innerHTML = `
-            <div class="playlist-empty">
-                <p>No playlists yet</p>
-                <button class="create-playlist-btn" onclick="showCreatePlaylistModal()">
-                    + Create your first playlist
+        grid.innerHTML = `
+            <div class="playlists-empty">
+                <div class="playlists-empty-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 18V5l12-2v13"></path>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <circle cx="18" cy="16" r="3"></circle>
+                    </svg>
+                </div>
+                <h3>Start Your Collection</h3>
+                <p>Create playlists to organize your favorite songs and discover new music</p>
+                <button class="btn-primary" onclick="showCreatePlaylistModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Create Your First Playlist
                 </button>
             </div>
         `;
         return;
     }
 
-    content.innerHTML = playlists.map(playlist => `
-        <div class="playlist-card" data-id="${playlist.id}">
-            <div class="playlist-card-artwork">
-                ${playlist.songs.length > 0 && playlist.songs[0].artwork
-                    ? `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}">`
-                    : `<div class="playlist-card-placeholder">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    // Render Recently Played section
+    renderRecentlyPlayedPlaylists();
+
+    // Sort playlists
+    const sortedPlaylists = getSortedPlaylists();
+
+    const cards = sortedPlaylists.map(playlist => {
+        // Get artwork: custom artwork > grid of song artworks > placeholder
+        let artworkHtml = '';
+        let isMulti = false;
+
+        if (playlist.customArtwork) {
+            artworkHtml = `<img src="${playlist.customArtwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous">`;
+        } else {
+            const artworks = playlist.cover_urls?.length > 0
+                ? playlist.cover_urls.map(url => ({ artwork: url }))
+                : (playlist.songs || []).slice(0, 4);
+
+            if (artworks.length === 0) {
+                artworkHtml = `
+                    <div class="playlist-grid-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M9 18V5l12-2v13"></path>
                             <circle cx="6" cy="18" r="3"></circle>
                             <circle cx="18" cy="16" r="3"></circle>
                         </svg>
-                    </div>`
-                }
+                    </div>
+                `;
+            } else if (artworks.length === 1) {
+                artworkHtml = `<img src="${artworks[0].artwork}" alt="" crossorigin="anonymous">`;
+            } else {
+                artworkHtml = artworks.map(s => `<img src="${s.artwork}" alt="" crossorigin="anonymous">`).join('');
+                isMulti = true;
+            }
+        }
+
+        // Public/Private badge
+        const isPublic = playlist.is_public;
+        const badgeHtml = `
+            <div class="playlist-grid-badge ${isPublic ? 'public' : 'private'}">
+                ${isPublic ? `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    Public
+                ` : `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Private
+                `}
             </div>
-            <div class="playlist-card-info">
-                <div class="playlist-card-name">${escapeHtml(playlist.name)}</div>
-                <div class="playlist-card-meta">${playlist.songs.length} song${playlist.songs.length !== 1 ? 's' : ''}</div>
-            </div>
-            <div class="playlist-card-actions">
-                <button class="playlist-play-btn" onclick="event.stopPropagation(); playPlaylist('${playlist.id}')" title="Play">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        `;
+
+        const songCount = playlist.song_count ?? playlist.songs?.length ?? 0;
+
+        return `
+            <div class="playlist-grid-card" data-id="${playlist.id}" onclick="showPlaylistDetail('${playlist.id}')">
+                <div class="playlist-grid-artwork ${isMulti ? 'multi' : ''}">
+                    ${artworkHtml}
+                </div>
+                <div class="playlist-grid-info">
+                    <div class="playlist-grid-name">${escapeHtml(playlist.name)}</div>
+                    <div class="playlist-grid-meta">${songCount} song${songCount !== 1 ? 's' : ''}</div>
+                    ${badgeHtml}
+                </div>
+                <button class="playlist-grid-play" onclick="event.stopPropagation(); playPlaylist('${playlist.id}')" title="Play">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <polygon points="5 3 19 12 5 21 5 3"></polygon>
                     </svg>
                 </button>
-                <button class="playlist-menu-btn" onclick="event.stopPropagation(); showPlaylistMenu('${playlist.id}', event)" title="More">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="1"></circle>
-                        <circle cx="12" cy="5" r="1"></circle>
-                        <circle cx="12" cy="19" r="1"></circle>
-                    </svg>
-                </button>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
-    // Add click handlers for detail view
-    content.querySelectorAll('.playlist-card').forEach(card => {
-        card.addEventListener('click', () => {
-            showPlaylistDetail(card.dataset.id);
-        });
+    grid.innerHTML = cards;
+
+    // Extract colors from artwork and apply gradients
+    applyArtworkGradients();
+}
+
+// Vibrant color palette for fallback gradients
+const gradientColorPalette = [
+    { r: 239, g: 68, b: 68 },    // Red
+    { r: 249, g: 115, b: 22 },   // Orange
+    { r: 245, g: 158, b: 11 },   // Amber
+    { r: 34, g: 197, b: 94 },    // Green
+    { r: 20, g: 184, b: 166 },   // Teal
+    { r: 59, g: 130, b: 246 },   // Blue
+    { r: 99, g: 102, b: 241 },   // Indigo
+    { r: 139, g: 92, b: 246 },   // Purple
+    { r: 236, g: 72, b: 153 },   // Pink
+    { r: 244, g: 63, b: 94 },    // Rose
+];
+
+// Apply color gradients to playlist cards
+function applyArtworkGradients() {
+    const cards = document.querySelectorAll('.playlist-grid-card');
+
+    cards.forEach(card => {
+        const info = card.querySelector('.playlist-grid-info');
+        const img = card.querySelector('.playlist-grid-artwork img');
+        const playlistId = card.dataset.id;
+
+        if (!info || !playlistId) return;
+
+        // Try to extract color from image
+        if (img) {
+            if (img.complete && img.naturalWidth > 0) {
+                extractColorFromImage(img, info, playlistId);
+            } else {
+                img.addEventListener('load', () => {
+                    extractColorFromImage(img, info, playlistId);
+                }, { once: true });
+
+                // Fallback if image fails to load
+                img.addEventListener('error', () => {
+                    applyFallbackGradient(info, playlistId);
+                }, { once: true });
+            }
+        } else {
+            // No image, use fallback
+            applyFallbackGradient(info, playlistId);
+        }
     });
+}
+
+// Extract color from image and apply gradient
+function extractColorFromImage(img, infoElement, playlistId) {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        canvas.width = 50;
+        canvas.height = 50;
+
+        ctx.drawImage(img, 0, 0, 50, 50);
+
+        // Sample from bottom portion of image
+        const imageData = ctx.getImageData(0, 30, 50, 20);
+        const data = imageData.data;
+
+        let r = 0, g = 0, b = 0, count = 0;
+
+        for (let i = 0; i < data.length; i += 16) { // Sample every 4th pixel for speed
+            const pr = data[i];
+            const pg = data[i + 1];
+            const pb = data[i + 2];
+
+            const brightness = (pr + pg + pb) / 3;
+            if (brightness > 25 && brightness < 230) {
+                r += pr;
+                g += pg;
+                b += pb;
+                count++;
+            }
+        }
+
+        if (count > 0) {
+            r = Math.round(r / count);
+            g = Math.round(g / count);
+            b = Math.round(b / count);
+
+            // Boost saturation slightly for more vibrant colors
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const satBoost = 1.2;
+
+            if (max !== min) {
+                r = Math.min(255, Math.round(r + (r - (r + g + b) / 3) * (satBoost - 1)));
+                g = Math.min(255, Math.round(g + (g - (r + g + b) / 3) * (satBoost - 1)));
+                b = Math.min(255, Math.round(b + (b - (r + g + b) / 3) * (satBoost - 1)));
+            }
+
+            applyGradientColor(infoElement, r, g, b);
+        } else {
+            applyFallbackGradient(infoElement, playlistId);
+        }
+    } catch (e) {
+        // CORS error - use fallback
+        applyFallbackGradient(infoElement, playlistId);
+    }
+}
+
+// Apply gradient with given color
+function applyGradientColor(infoElement, r, g, b) {
+    infoElement.style.background = `linear-gradient(
+        135deg,
+        rgba(${r}, ${g}, ${b}, 0.25) 0%,
+        rgba(${r}, ${g}, ${b}, 0.1) 50%,
+        rgba(20, 20, 24, 0.95) 100%
+    )`;
+}
+
+// Apply fallback gradient based on playlist ID hash
+function applyFallbackGradient(infoElement, playlistId) {
+    const hash = playlistId.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+
+    const colorIndex = Math.abs(hash) % gradientColorPalette.length;
+    const color = gradientColorPalette[colorIndex];
+
+    applyGradientColor(infoElement, color.r, color.g, color.b);
+}
+
+// Sort playlists based on current sort order
+function getSortedPlaylists() {
+    const sorted = [...playlists];
+
+    switch (playlistSortOrder) {
+        case 'name':
+            sorted.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        case 'name-desc':
+            sorted.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+        case 'songs':
+            sorted.sort((a, b) => {
+                const countA = a.song_count ?? a.songs?.length ?? 0;
+                const countB = b.song_count ?? b.songs?.length ?? 0;
+                return countB - countA;
+            });
+            break;
+        case 'created':
+            sorted.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+            break;
+        case 'recent':
+        default:
+            sorted.sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0));
+            break;
+    }
+
+    return sorted;
+}
+
+// Sort playlists handler
+function sortPlaylists(order) {
+    playlistSortOrder = order;
+    localStorage.setItem('playlistSortOrder', order);
+    renderPlaylistsView();
+}
+
+// Render recently played playlists
+function renderRecentlyPlayedPlaylists() {
+    const recentSection = document.getElementById('recentlyPlayedSection');
+    const recentScroll = document.getElementById('recentlyPlayedScroll');
+    const divider = document.getElementById('allPlaylistsDivider');
+
+    if (!recentSection || !recentScroll) return;
+
+    // Get recently played playlists that still exist
+    const recentPlaylists = recentlyPlayedPlaylists
+        .map(r => playlists.find(p => p.id === r.id))
+        .filter(Boolean)
+        .slice(0, 6);
+
+    if (recentPlaylists.length === 0) {
+        recentSection.style.display = 'none';
+        if (divider) divider.style.display = 'none';
+        return;
+    }
+
+    recentSection.style.display = 'block';
+    if (divider) divider.style.display = 'flex';
+
+    const cards = recentPlaylists.map(playlist => {
+        const artwork = playlist.customArtwork
+            || playlist.cover_urls?.[0]
+            || playlist.songs?.[0]?.artwork
+            || '';
+
+        return `
+            <div class="recently-played-card" onclick="showPlaylistDetail('${playlist.id}')">
+                <div class="recently-played-artwork">
+                    ${artwork
+                        ? `<img src="${artwork}" alt="${escapeHtml(playlist.name)}">`
+                        : `<div class="playlist-grid-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M9 18V5l12-2v13"></path>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <circle cx="18" cy="16" r="3"></circle>
+                            </svg>
+                        </div>`
+                    }
+                </div>
+                <div class="recently-played-info">
+                    <div class="recently-played-name">${escapeHtml(playlist.name)}</div>
+                    <div class="recently-played-meta">${playlist.song_count ?? playlist.songs?.length ?? 0} songs</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    recentScroll.innerHTML = cards;
+}
+
+// Track when a playlist is played
+function trackPlaylistPlayed(playlistId) {
+    // Remove existing entry for this playlist
+    recentlyPlayedPlaylists = recentlyPlayedPlaylists.filter(r => r.id !== playlistId);
+
+    // Add to beginning
+    recentlyPlayedPlaylists.unshift({ id: playlistId, playedAt: Date.now() });
+
+    // Keep only last 10
+    recentlyPlayedPlaylists = recentlyPlayedPlaylists.slice(0, 10);
+
+    // Save to localStorage
+    localStorage.setItem('recentlyPlayedPlaylists', JSON.stringify(recentlyPlayedPlaylists));
+}
+
+// Toggle playlist actions menu
+function togglePlaylistActionsMenu(playlistId) {
+    const menu = document.getElementById(`playlistActionsMenu-${playlistId}`);
+    if (!menu) return;
+
+    const isVisible = menu.classList.contains('visible');
+
+    // Close all other menus first
+    closeAllActionMenus();
+
+    if (!isVisible) {
+        menu.classList.add('visible');
+        // Close menu when clicking outside
+        setTimeout(() => {
+            document.addEventListener('click', closeAllActionMenus, { once: true });
+        }, 0);
+    }
+}
+
+// Close all action menus
+function closeAllActionMenus() {
+    document.querySelectorAll('.playlist-actions-menu.visible').forEach(menu => {
+        menu.classList.remove('visible');
+    });
+}
+
+// Edit playlist name
+function editPlaylistName(playlistId) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    const newName = prompt('Enter new playlist name:', playlist.name);
+    if (newName && newName.trim() && newName.trim() !== playlist.name) {
+        playlist.name = newName.trim();
+        playlist.updated_at = Date.now();
+        savePlaylists();
+        renderPlaylistsView();
+        showToast('Playlist renamed');
+    }
+}
+
+// Confirm delete playlist
+function confirmDeletePlaylist(playlistId) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    if (confirm(`Delete "${playlist.name}"? This cannot be undone.`)) {
+        deletePlaylist(playlistId);
+    }
+}
+
+// Keep old function name for backward compatibility
+function renderPlaylistPanel() {
+    renderPlaylistsView();
 }
 
 function showCreatePlaylistModal() {
@@ -2586,14 +3451,29 @@ function showAddToPlaylistModal(song) {
     const list = document.getElementById('playlistSelectList');
     if (list) {
         if (playlists.length === 0) {
-            list.innerHTML = '<p class="no-playlists">No playlists yet</p>';
+            list.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No playlists yet. Create one below!</p>';
         } else {
-            list.innerHTML = playlists.map(p => `
-                <button class="playlist-select-item" onclick="addSongToSelectedPlaylist('${p.id}')">
-                    <span class="playlist-select-name">${escapeHtml(p.name)}</span>
-                    <span class="playlist-select-count">${p.songs.length} songs</span>
-                </button>
-            `).join('');
+            list.innerHTML = playlists.map(p => {
+                const artworkUrl = p.cover_urls?.[0] || p.songs?.[0]?.artwork;
+                const songCount = p.song_count ?? p.songs?.length ?? 0;
+                return `
+                <div class="playlist-select-item" onclick="addSongToSelectedPlaylist('${p.id}')">
+                    <div class="playlist-select-artwork">
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="">`
+                            : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin:auto;display:block;color:var(--text-muted);">
+                                <path d="M9 18V5l12-2v13"></path>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <circle cx="18" cy="16" r="3"></circle>
+                            </svg>`
+                        }
+                    </div>
+                    <div class="playlist-select-info">
+                        <div class="playlist-select-name">${escapeHtml(p.name)}</div>
+                        <div class="playlist-select-count">${songCount} song${songCount !== 1 ? 's' : ''}</div>
+                    </div>
+                </div>
+            `}).join('');
         }
     }
 }
@@ -2624,117 +3504,290 @@ function showPlaylistDetail(playlistId) {
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    const panel = document.getElementById('playlistDetailPanel');
-    if (panel) {
-        panel.classList.add('visible');
-        renderPlaylistDetail(playlistId);
-    }
+    // Hide playlists grid, show detail view
+    const playlistsView = document.getElementById('playlistsView');
+    const detailView = document.getElementById('playlistDetailView');
+
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (detailView) detailView.style.display = 'block';
+
+    renderPlaylistDetail(playlistId);
 }
 
 function hidePlaylistDetail() {
     currentPlaylistId = null;
-    const panel = document.getElementById('playlistDetailPanel');
-    if (panel) {
-        panel.classList.remove('visible');
-    }
+
+    // Show playlists grid, hide detail view
+    const playlistsView = document.getElementById('playlistsView');
+    const detailView = document.getElementById('playlistDetailView');
+
+    if (detailView) detailView.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'block';
+
+    renderPlaylistsView();
 }
 
 function renderPlaylistDetail(playlistId) {
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    const content = document.getElementById('playlistDetailContent');
+    const content = document.getElementById('playlistDetailSongs');
     if (!content) return;
 
     const header = document.getElementById('playlistDetailHeader');
     if (header) {
+        // Get cover image (custom artwork > first song's artwork > placeholder)
+        let coverArt;
+        let coverArtUrl = null;
+        if (playlist.customArtwork) {
+            coverArtUrl = playlist.customArtwork;
+            coverArt = `<img src="${playlist.customArtwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
+        } else if (playlist.songs.length > 0 && playlist.songs[0].artwork) {
+            coverArtUrl = playlist.songs[0].artwork;
+            coverArt = `<img src="${playlist.songs[0].artwork}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous" id="detailCoverImg">`;
+        } else {
+            coverArt = `<div class="detail-cover-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+            </div>`;
+        }
+
         header.innerHTML = `
-            <button class="back-btn" onclick="hidePlaylistDetail()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="detail-back-btn" onclick="hidePlaylistDetail()" title="Back to Playlists">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
             </button>
-            <div class="playlist-detail-title">
-                <h2>${escapeHtml(playlist.name)}</h2>
-                <span>${playlist.songs.length} song${playlist.songs.length !== 1 ? 's' : ''}</span>
-            </div>
-            <div class="playlist-detail-actions">
-                <button class="play-all-btn" onclick="playPlaylist('${playlist.id}')" ${playlist.songs.length === 0 ? 'disabled' : ''}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                    </svg>
-                    Play
-                </button>
-                <button class="shuffle-btn" onclick="shufflePlaylist('${playlist.id}')" ${playlist.songs.length === 0 ? 'disabled' : ''}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="16 3 21 3 21 8"></polyline>
-                        <line x1="4" y1="20" x2="21" y2="3"></line>
-                        <polyline points="21 16 21 21 16 21"></polyline>
-                        <line x1="15" y1="15" x2="21" y2="21"></line>
-                        <line x1="4" y1="4" x2="9" y2="9"></line>
-                    </svg>
-                    Shuffle
-                </button>
-                <button class="share-playlist-btn" onclick="sharePlaylist('${playlist.id}')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="18" cy="5" r="3"></circle>
-                        <circle cx="6" cy="12" r="3"></circle>
-                        <circle cx="18" cy="19" r="3"></circle>
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                    </svg>
-                    Share
-                </button>
-                <button class="export-playlist-btn" onclick="showExportModal('${playlist.id}')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    Export
-                </button>
+            <div class="detail-hero">
+                <div class="detail-cover" onclick="showArtworkModal('${playlist.id}')" title="Click to change artwork">
+                    ${coverArt}
+                    <div class="detail-cover-edit-overlay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span>Edit</span>
+                    </div>
+                </div>
+                <div class="detail-info">
+                    <span class="detail-type">Playlist</span>
+                    <h1 class="detail-name">${escapeHtml(playlist.name)}</h1>
+                    <div class="detail-meta-row">
+                        <span class="detail-meta">${playlist.songs.length} song${playlist.songs.length !== 1 ? 's' : ''}</span>
+                        <button class="visibility-toggle ${playlist.is_public ? 'public' : 'private'}" onclick="togglePlaylistVisibility('${playlist.id}')" title="${playlist.is_public ? 'Public - Anyone with the link can view' : 'Private - Only you can view'}">
+                            ${playlist.is_public ? `
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                                Public
+                            ` : `
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                Private
+                            `}
+                        </button>
+                    </div>
+                    <div class="detail-buttons">
+                        <button class="btn-primary" onclick="playPlaylist('${playlist.id}')" ${playlist.songs.length === 0 ? 'disabled' : ''}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Play
+                        </button>
+                        <button class="btn-secondary" onclick="shufflePlaylist('${playlist.id}')" ${playlist.songs.length === 0 ? 'disabled' : ''}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 3 21 3 21 8"></polyline>
+                                <line x1="4" y1="20" x2="21" y2="3"></line>
+                                <polyline points="21 16 21 21 16 21"></polyline>
+                                <line x1="15" y1="15" x2="21" y2="21"></line>
+                                <line x1="4" y1="4" x2="9" y2="9"></line>
+                            </svg>
+                            Shuffle
+                        </button>
+                        <button class="btn-secondary" onclick="sharePlaylist('${playlist.id}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                            Share
+                        </button>
+                        <button class="btn-secondary" onclick="showExportModal('${playlist.id}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="btn-danger" onclick="confirmDeletePlaylist('${playlist.id}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Delete
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
     }
 
     if (playlist.songs.length === 0) {
         content.innerHTML = `
-            <div class="playlist-empty">
-                <p>This playlist is empty</p>
-                <p class="hint">Add songs from the chart using the + button</p>
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <h3>This playlist is empty</h3>
+                <p>Add songs from the chart using the + button on song cards</p>
+                <button class="btn-secondary" onclick="hidePlaylistsView()">Browse Charts</button>
             </div>
         `;
+        // Apply gradient even for empty playlist
+        applyDetailViewGradient(playlistId);
         return;
     }
 
-    content.innerHTML = playlist.songs.map((song, index) => `
-        <div class="playlist-song" data-index="${index}">
-            <span class="playlist-song-num">${index + 1}</span>
-            <div class="playlist-song-artwork">
-                ${song.artwork
-                    ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
-                    : '<div class="placeholder"></div>'
-                }
-            </div>
-            <div class="playlist-song-info">
-                <div class="playlist-song-title">${escapeHtml(song.title)}</div>
-                <div class="playlist-song-artist">${escapeHtml(song.artist)}</div>
-            </div>
-            <div class="playlist-song-actions">
-                <button class="play-song-btn" onclick="event.stopPropagation(); playPlaylist('${playlist.id}', ${index})" title="Play">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                    </svg>
-                </button>
-                <button class="remove-song-btn" onclick="event.stopPropagation(); removeFromPlaylist('${playlist.id}', ${index})" title="Remove">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${playlist.songs.map((song, index) => `
+                <div class="detail-song" onclick="playPlaylist('${playlist.id}', ${index})">
+                    <span class="detail-song-num">${index + 1}</span>
+                    <div class="detail-song-artwork">
+                        ${song.artwork
+                            ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
+                            : '<div class="placeholder"></div>'
+                        }
+                        <div class="detail-song-play-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="detail-song-info">
+                        <div class="detail-song-title">${escapeHtml(song.title)}</div>
+                        <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
+                    </div>
+                    <button class="detail-song-remove" onclick="event.stopPropagation(); removeFromPlaylist('${playlist.id}', ${index})" title="Remove from playlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            `).join('')}
         </div>
-    `).join('');
+    `;
+
+    // Apply gradient based on cover art
+    applyDetailViewGradient(playlistId);
+}
+
+// Apply gradient to playlist detail view based on cover artwork
+function applyDetailViewGradient(playlistId) {
+    const detailView = document.getElementById('playlistDetailView');
+    const coverImg = document.getElementById('detailCoverImg');
+
+    if (!detailView) return;
+
+    if (coverImg) {
+        if (coverImg.complete && coverImg.naturalWidth > 0) {
+            extractDetailViewColor(coverImg, detailView, playlistId);
+        } else {
+            coverImg.addEventListener('load', () => {
+                extractDetailViewColor(coverImg, detailView, playlistId);
+            }, { once: true });
+
+            coverImg.addEventListener('error', () => {
+                applyFallbackDetailGradient(detailView, playlistId);
+            }, { once: true });
+        }
+    } else {
+        applyFallbackDetailGradient(detailView, playlistId);
+    }
+}
+
+// Extract color from cover image and apply to detail view
+function extractDetailViewColor(img, detailView, playlistId) {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        canvas.width = 50;
+        canvas.height = 50;
+
+        ctx.drawImage(img, 0, 0, 50, 50);
+
+        const imageData = ctx.getImageData(0, 0, 50, 50);
+        const data = imageData.data;
+
+        let r = 0, g = 0, b = 0, count = 0;
+
+        for (let i = 0; i < data.length; i += 16) {
+            const pr = data[i];
+            const pg = data[i + 1];
+            const pb = data[i + 2];
+
+            const brightness = (pr + pg + pb) / 3;
+            if (brightness > 25 && brightness < 230) {
+                r += pr;
+                g += pg;
+                b += pb;
+                count++;
+            }
+        }
+
+        if (count > 0) {
+            r = Math.round(r / count);
+            g = Math.round(g / count);
+            b = Math.round(b / count);
+
+            // Boost saturation
+            const avg = (r + g + b) / 3;
+            const satBoost = 1.3;
+            r = Math.min(255, Math.round(avg + (r - avg) * satBoost));
+            g = Math.min(255, Math.round(avg + (g - avg) * satBoost));
+            b = Math.min(255, Math.round(avg + (b - avg) * satBoost));
+
+            applyDetailGradientColor(detailView, r, g, b);
+        } else {
+            applyFallbackDetailGradient(detailView, playlistId);
+        }
+    } catch (e) {
+        applyFallbackDetailGradient(detailView, playlistId);
+    }
+}
+
+// Apply gradient color to detail view
+function applyDetailGradientColor(detailView, r, g, b) {
+    detailView.style.background = `
+        radial-gradient(ellipse at top left, rgba(${r}, ${g}, ${b}, 0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(${r}, ${g}, ${b}, 0.15) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(30, 30, 35, 0.9) 0%, rgba(18, 18, 22, 0.95) 100%)
+    `;
+}
+
+// Apply fallback gradient to detail view
+function applyFallbackDetailGradient(detailView, playlistId) {
+    const hash = playlistId.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+
+    const colorIndex = Math.abs(hash) % gradientColorPalette.length;
+    const color = gradientColorPalette[colorIndex];
+
+    applyDetailGradientColor(detailView, color.r, color.g, color.b);
 }
 
 function showPlaylistMenu(playlistId, event) {
@@ -2793,29 +3846,147 @@ function confirmDeletePlaylist(playlistId) {
     }
 }
 
+async function togglePlaylistVisibility(playlistId) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    const newVisibility = !playlist.is_public;
+
+    try {
+        const response = await fetch(`${API_BASE}/playlists/${playlistId}/publish`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeaders()
+            },
+            body: JSON.stringify({ is_public: newVisibility })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Visibility toggle error:', response.status, errorData);
+            throw new Error(errorData.detail || 'Failed to update visibility');
+        }
+
+        // Update local state
+        playlist.is_public = newVisibility;
+
+        // Re-render the playlist detail
+        renderPlaylistDetail(playlistId);
+
+        showToast(newVisibility ? 'Playlist is now public' : 'Playlist is now private');
+    } catch (error) {
+        console.error('Error toggling visibility:', error);
+        showToast(error.message || 'Failed to update visibility');
+    }
+}
+
 async function sharePlaylist(playlistId) {
     hidePlaylistContextMenu();
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    // For now, create a shareable text format
-    // In production, this would generate a URL
-    const songList = playlist.songs.map((s, i) => `${i + 1}. ${s.title} - ${s.artist}`).join('\n');
-    const shareText = `${playlist.name}\n\n${songList}\n\nShared from TLDR Music`;
+    // Check if playlist is public before allowing share
+    if (!playlist.is_public) {
+        showToast('Make this playlist public to share it');
+        // Show playlist detail so user can toggle visibility
+        showPlaylistDetail(playlistId);
+        return;
+    }
+
+    showShareModal(playlist);
+}
+
+// ============================================================
+// Share Modal Functions
+// ============================================================
+
+let currentSharePlaylist = null;
+
+function showShareModal(playlist) {
+    currentSharePlaylist = playlist;
+    const shareUrl = `${window.location.origin}/share/playlist/${playlist.id}`;
+
+    document.getElementById('sharePlaylistName').textContent = playlist.name;
+    document.getElementById('shareUrlInput').value = shareUrl;
+
+    // Update visibility badge
+    const badge = document.getElementById('shareVisibilityBadge');
+    if (badge) {
+        if (playlist.is_public) {
+            badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Public';
+            badge.className = 'share-visibility-badge public';
+        } else {
+            badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Private';
+            badge.className = 'share-visibility-badge private';
+        }
+    }
+
+    document.getElementById('sharePlaylistModal').classList.add('visible');
+}
+
+function hideShareModal() {
+    document.getElementById('sharePlaylistModal').classList.remove('visible');
+    currentSharePlaylist = null;
+}
+
+function copyShareUrl() {
+    const input = document.getElementById('shareUrlInput');
+    navigator.clipboard.writeText(input.value).then(() => {
+        showToast('Link copied to clipboard');
+    }).catch(() => {
+        // Fallback for older browsers
+        input.select();
+        document.execCommand('copy');
+        showToast('Link copied to clipboard');
+    });
+}
+
+function shareToTwitter() {
+    if (!currentSharePlaylist) return;
+    const shareUrl = document.getElementById('shareUrlInput').value;
+    const text = `Check out "${currentSharePlaylist.name}" on TLDR Music!`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
+}
+
+function shareToFacebook() {
+    const shareUrl = document.getElementById('shareUrlInput').value;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    window.open(facebookUrl, '_blank', 'width=550,height=420');
+}
+
+function shareToWhatsApp() {
+    if (!currentSharePlaylist) return;
+    const shareUrl = document.getElementById('shareUrlInput').value;
+    const text = `Check out "${currentSharePlaylist.name}" on TLDR Music!\n${shareUrl}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+function shareToInstagram() {
+    copyShareUrl();
+    showToast('Link copied! Paste it in your Instagram story or bio.');
+}
+
+async function shareNative() {
+    if (!currentSharePlaylist) return;
+    const shareUrl = document.getElementById('shareUrlInput').value;
 
     if (navigator.share) {
         try {
             await navigator.share({
-                title: playlist.name,
-                text: shareText
+                title: currentSharePlaylist.name,
+                text: `Check out "${currentSharePlaylist.name}" on TLDR Music!`,
+                url: shareUrl
             });
         } catch (e) {
             if (e.name !== 'AbortError') {
-                copyToClipboard(shareText);
+                copyShareUrl();
             }
         }
     } else {
-        copyToClipboard(shareText);
+        copyShareUrl();
     }
 }
 
@@ -2842,6 +4013,146 @@ function hideExportModal() {
         modal.classList.remove('visible');
         delete modal.dataset.playlistId;
     }
+}
+
+// ============================================================
+// Artwork Customization
+// ============================================================
+
+let pendingArtwork = null;
+
+function showArtworkModal(playlistId) {
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist) return;
+
+    const modal = document.getElementById('artworkModal');
+    if (!modal) return;
+
+    modal.dataset.playlistId = playlistId;
+    pendingArtwork = playlist.customArtwork || null;
+
+    // Update preview
+    updateArtworkPreview(pendingArtwork || (playlist.songs.length > 0 ? playlist.songs[0].artwork : null));
+
+    // Populate song artworks
+    const grid = document.getElementById('artworkSongsGrid');
+    const songsSection = document.getElementById('artworkFromSongs');
+
+    if (playlist.songs.length > 0) {
+        songsSection.style.display = 'block';
+        const uniqueArtworks = [...new Set(playlist.songs.map(s => s.artwork).filter(Boolean))];
+        grid.innerHTML = uniqueArtworks.slice(0, 8).map(artwork => `
+            <button class="artwork-song-option ${pendingArtwork === artwork ? 'selected' : ''}" onclick="selectSongArtwork('${artwork}')">
+                <img src="${artwork}" alt="Song artwork">
+            </button>
+        `).join('');
+    } else {
+        songsSection.style.display = 'none';
+    }
+
+    modal.classList.add('visible');
+}
+
+function hideArtworkModal() {
+    const modal = document.getElementById('artworkModal');
+    if (modal) {
+        modal.classList.remove('visible');
+        delete modal.dataset.playlistId;
+        pendingArtwork = null;
+    }
+}
+
+function updateArtworkPreview(artworkUrl) {
+    const preview = document.getElementById('artworkPreview');
+    if (!preview) return;
+
+    if (artworkUrl) {
+        preview.innerHTML = `<img src="${artworkUrl}" alt="Playlist artwork">`;
+    } else {
+        preview.innerHTML = `
+            <div class="artwork-preview-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+            </div>
+        `;
+    }
+}
+
+function handleArtworkUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        showToast('Please select an image file', 'error');
+        return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('Image must be less than 5MB', 'error');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        pendingArtwork = e.target.result;
+        updateArtworkPreview(pendingArtwork);
+
+        // Deselect song options
+        document.querySelectorAll('.artwork-song-option').forEach(btn => btn.classList.remove('selected'));
+    };
+    reader.readAsDataURL(file);
+}
+
+function selectSongArtwork(artworkUrl) {
+    pendingArtwork = artworkUrl;
+    updateArtworkPreview(pendingArtwork);
+
+    // Update selection state
+    document.querySelectorAll('.artwork-song-option').forEach(btn => {
+        btn.classList.toggle('selected', btn.querySelector('img')?.src === artworkUrl);
+    });
+}
+
+function removeCustomArtwork() {
+    const modal = document.getElementById('artworkModal');
+    const playlistId = modal?.dataset.playlistId;
+    const playlist = playlists.find(p => p.id === playlistId);
+
+    pendingArtwork = null;
+    updateArtworkPreview(playlist?.songs.length > 0 ? playlist.songs[0].artwork : null);
+
+    // Deselect song options
+    document.querySelectorAll('.artwork-song-option').forEach(btn => btn.classList.remove('selected'));
+}
+
+function savePlaylistArtwork() {
+    const modal = document.getElementById('artworkModal');
+    const playlistId = modal?.dataset.playlistId;
+    const playlist = playlists.find(p => p.id === playlistId);
+
+    if (!playlist) return;
+
+    if (pendingArtwork) {
+        playlist.customArtwork = pendingArtwork;
+    } else {
+        delete playlist.customArtwork;
+    }
+
+    savePlaylists();
+    hideArtworkModal();
+
+    // Refresh views
+    if (currentPlaylistId === playlistId) {
+        renderPlaylistDetail(playlistId);
+    }
+    renderPlaylistsView();
+
+    showToast('Artwork updated!', 'success');
 }
 
 // ============================================================
@@ -3019,17 +4330,27 @@ function initSidebar() {
 
     // Chart navigation buttons
     sidebarIndiaBtn?.addEventListener('click', () => {
+        // Hide playlists view if visible
+        if (isPlaylistPanelVisible) {
+            hidePlaylistsView();
+        }
         if (currentChartMode !== 'india') {
             switchChartMode('india');
-            updateSidebarActiveState('india');
         }
+        updateSidebarActiveState('india');
+        sidebar.classList.remove('open'); // Close sidebar on mobile
     });
 
     sidebarGlobalBtn?.addEventListener('click', () => {
+        // Hide playlists view if visible
+        if (isPlaylistPanelVisible) {
+            hidePlaylistsView();
+        }
         if (currentChartMode !== 'global') {
             switchChartMode('global');
-            updateSidebarActiveState('global');
         }
+        updateSidebarActiveState('global');
+        sidebar.classList.remove('open'); // Close sidebar on mobile
     });
 
     // Profile button - opens profile panel
@@ -3037,6 +4358,19 @@ function initSidebar() {
         sidebar.classList.remove('open');
         if (typeof showProfilePanel === 'function') {
             showProfilePanel();
+        }
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!sidebar.classList.contains('open')) return;
+
+        // Check if click is outside sidebar and not on the menu button
+        const isClickInsideSidebar = sidebar.contains(e.target);
+        const isClickOnMenuBtn = headerMenuBtn?.contains(e.target);
+
+        if (!isClickInsideSidebar && !isClickOnMenuBtn) {
+            sidebar.classList.remove('open');
         }
     });
 

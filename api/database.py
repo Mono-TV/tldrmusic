@@ -577,6 +577,79 @@ class Database:
         return result.deleted_count > 0
 
     # ============================================================
+    # USERNAME OPERATIONS
+    # ============================================================
+
+    async def get_user_by_username(self, username: str) -> Optional[Dict]:
+        """Get a user by their username (case-insensitive)."""
+        user = await self.db.users.find_one({"username": username.lower()})
+        if user:
+            user["id"] = str(user["_id"])
+            del user["_id"]
+        return user
+
+    async def check_username_available(self, username: str, exclude_user_id: Optional[str] = None) -> bool:
+        """Check if a username is available (case-insensitive)."""
+        from bson import ObjectId
+
+        query = {"username": username.lower()}
+        if exclude_user_id:
+            query["_id"] = {"$ne": ObjectId(exclude_user_id)}
+
+        existing = await self.db.users.find_one(query)
+        return existing is None
+
+    async def update_user_username(self, user_id: str, username: str) -> bool:
+        """Set or update a user's username."""
+        from bson import ObjectId
+        from datetime import datetime
+
+        result = await self.db.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"username": username.lower(), "updated_at": datetime.utcnow()}}
+        )
+        return result.modified_count > 0
+
+    async def count_public_playlists(self, user_id: str) -> int:
+        """Count how many public playlists a user has."""
+        from bson import ObjectId
+        return await self.db.playlists.count_documents({
+            "owner_id": ObjectId(user_id),
+            "is_public": True
+        })
+
+    async def get_user_public_playlists(
+        self,
+        owner_id: str,
+        limit: int = 20,
+        offset: int = 0,
+        viewer_id: Optional[str] = None
+    ) -> List[Dict]:
+        """Get a user's public playlists."""
+        from bson import ObjectId
+
+        cursor = self.db.playlists.find({
+            "owner_id": ObjectId(owner_id),
+            "is_public": True
+        }).sort("created_at", -1).skip(offset).limit(limit)
+
+        playlists = []
+        async for playlist in cursor:
+            playlist["id"] = str(playlist["_id"])
+            del playlist["_id"]
+            playlist["owner_id"] = str(playlist["owner_id"])
+
+            # Add viewer-specific data
+            if viewer_id:
+                playlist["is_following"] = viewer_id in [str(f) for f in playlist.get("followers", [])]
+            else:
+                playlist["is_following"] = False
+
+            playlists.append(playlist)
+
+        return playlists
+
+    # ============================================================
     # PLAYLIST OPERATIONS
     # ============================================================
 
@@ -643,24 +716,139 @@ class Database:
             return None
 
     async def get_user_playlists(self, user_id: str) -> List[Dict]:
-        """Get all playlists owned by a user."""
+        """Get all playlists owned by a user with full song data."""
         from bson import ObjectId
 
         cursor = self.db.playlists.find(
-            {"owner_id": ObjectId(user_id)},
-            {"songs": 0}  # Exclude full song list for summary
+            {"owner_id": ObjectId(user_id)}
         ).sort("created_at", DESCENDING)
 
         playlists = []
         async for playlist in cursor:
-            playlist["_id"] = str(playlist["_id"])
+            playlist["id"] = str(playlist.pop("_id"))
             playlist["owner_id"] = str(playlist["owner_id"])
             playlist["is_owner"] = True
             playlist["is_following"] = False
             playlist["followers"] = []  # Don't need full list for summary
+            # Ensure songs array exists
+            if "songs" not in playlist:
+                playlist["songs"] = []
+            if "song_count" not in playlist:
+                playlist["song_count"] = len(playlist["songs"])
+            if "cover_urls" not in playlist:
+                playlist["cover_urls"] = [s.get("artwork") for s in playlist["songs"][:4] if s.get("artwork")]
             playlists.append(playlist)
 
         return playlists
+
+    async def sync_user_playlists(self, user_id: str, client_playlists: List) -> List[Dict]:
+        """
+        Sync playlists from client to server.
+
+        - Client playlists with non-ObjectId IDs are created as new
+        - Client playlists with valid ObjectIds are updated if owned by user
+        - Returns list of synced playlists in PlaylistSummary format
+        """
+        from bson import ObjectId
+        from bson.errors import InvalidId
+        from datetime import datetime
+
+        synced = []
+        now = int(datetime.utcnow().timestamp() * 1000)
+
+        for client_playlist in client_playlists:
+            playlist_id = client_playlist.id
+            is_valid_oid = False
+
+            # Check if it's a valid MongoDB ObjectId
+            try:
+                ObjectId(playlist_id)
+                is_valid_oid = True
+            except (InvalidId, TypeError):
+                is_valid_oid = False
+
+            if is_valid_oid:
+                # Try to update existing playlist if owned by user
+                existing = await self.db.playlists.find_one({
+                    "_id": ObjectId(playlist_id),
+                    "owner_id": ObjectId(user_id)
+                })
+
+                if existing:
+                    # Update existing playlist
+                    songs = [s.model_dump() for s in client_playlist.songs]
+                    cover_urls = [s.get("artwork") for s in songs[:4] if s.get("artwork")]
+
+                    await self.db.playlists.update_one(
+                        {"_id": ObjectId(playlist_id)},
+                        {"$set": {
+                            "name": client_playlist.name,
+                            "description": client_playlist.description,
+                            "songs": songs,
+                            "song_count": len(songs),
+                            "cover_urls": cover_urls,
+                            "updated_at": now
+                        }}
+                    )
+
+                    synced.append({
+                        "id": playlist_id,
+                        "name": client_playlist.name,
+                        "description": client_playlist.description,
+                        "owner_id": user_id,
+                        "is_public": existing.get("is_public", False),
+                        "cover_urls": cover_urls,
+                        "songs": songs,
+                        "song_count": len(songs),
+                        "follower_count": existing.get("follower_count", 0),
+                        "is_following": False,
+                        "is_owner": True,
+                        "created_at": existing.get("created_at", now),
+                        "updated_at": now
+                    })
+                    continue
+
+            # Create new playlist (either invalid OID or not found/not owned)
+            songs = [s.model_dump() for s in client_playlist.songs]
+            cover_urls = [s.get("artwork") for s in songs[:4] if s.get("artwork")]
+
+            playlist_doc = {
+                "name": client_playlist.name,
+                "description": client_playlist.description,
+                "owner_id": ObjectId(user_id),
+                "is_public": False,
+                "published_at": None,
+                "cover_urls": cover_urls,
+                "songs": songs,
+                "song_count": len(songs),
+                "follower_count": 0,
+                "followers": [],
+                "created_at": client_playlist.created_at or now,
+                "updated_at": now,
+                "play_count": 0,
+                "weekly_plays": 0
+            }
+
+            result = await self.db.playlists.insert_one(playlist_doc)
+            new_id = str(result.inserted_id)
+
+            synced.append({
+                "id": new_id,
+                "name": client_playlist.name,
+                "description": client_playlist.description,
+                "owner_id": user_id,
+                "is_public": False,
+                "cover_urls": cover_urls,
+                "songs": songs,
+                "song_count": len(songs),
+                "follower_count": 0,
+                "is_following": False,
+                "is_owner": True,
+                "created_at": client_playlist.created_at or now,
+                "updated_at": now
+            })
+
+        return synced
 
     async def get_followed_playlists(self, user_id: str) -> List[Dict]:
         """Get playlists that a user follows."""

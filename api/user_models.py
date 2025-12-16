@@ -102,11 +102,33 @@ class UserProfile(BaseModel):
     id: str
     email: str
     name: str
+    username: Optional[str] = None
     picture: Optional[str] = None
     favorites: List[FavoriteItem] = []
     history: List[HistoryItem] = []
     queue: List[QueueItem] = []
     preferences: UserPreferences = UserPreferences()
+
+
+class PublicProfile(BaseModel):
+    """Public profile visible to other users"""
+    id: str
+    name: str
+    username: str
+    picture: Optional[str] = None
+    playlist_count: int = 0
+
+
+class UsernameCheck(BaseModel):
+    """Response for username availability check"""
+    username: str
+    available: bool
+    message: Optional[str] = None
+
+
+class UsernameUpdate(BaseModel):
+    """Request to update username"""
+    username: str
 
 
 # ============================================================
@@ -127,6 +149,7 @@ class SyncResponse(BaseModel):
     merged_history: List[HistoryItem]
     merged_queue: List[QueueItem]
     preferences: UserPreferences
+    merged_playlists: List[Dict[str, Any]] = []
 
 
 # ============================================================
