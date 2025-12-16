@@ -2513,62 +2513,131 @@ function updateFavoriteButtons() {
 }
 
 function renderFavoritesSection() {
-    const section = document.getElementById('favoritesSection');
-    const list = document.getElementById('favoritesList');
-    const count = document.getElementById('favoritesCount');
+    // Update the library card count
+    const countEl = document.getElementById('favoritesCardCount');
+    if (countEl) {
+        countEl.textContent = `${favorites.length} song${favorites.length !== 1 ? 's' : ''}`;
+    }
+}
 
-    if (!section || !list) return;
+function showFavoritesDetail() {
+    // Hide other views
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('playlistsView').style.display = 'none';
+    document.getElementById('playlistDetailView').style.display = 'none';
+    document.getElementById('historyDetailView').style.display = 'none';
 
+    // Show favorites detail
+    const detailView = document.getElementById('favoritesDetailView');
+    detailView.style.display = 'block';
+
+    // Render header
+    const header = document.getElementById('favoritesDetailHeader');
+    header.innerHTML = `
+        <button class="back-btn" onclick="showPlaylistsView()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back
+        </button>
+        <div class="detail-header-content">
+            <div class="detail-cover favorites-cover">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </div>
+            <div class="detail-info">
+                <h1>Liked Songs</h1>
+                <p class="detail-meta">${favorites.length} song${favorites.length !== 1 ? 's' : ''}</p>
+                <div class="detail-actions">
+                    <button class="btn-primary" onclick="playAllFavorites()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play All
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Render songs
+    const songsContainer = document.getElementById('favoritesDetailSongs');
     if (favorites.length === 0) {
-        section.style.display = 'none';
+        songsContainer.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <p>No liked songs yet</p>
+                <span>Songs you like will appear here</span>
+            </div>
+        `;
         return;
     }
 
-    section.style.display = 'block';
-    if (count) count.textContent = favorites.length;
-
-    list.innerHTML = favorites.map(fav => `
-        <div class="favorite-card" data-video-id="${fav.videoId || ''}" data-title="${escapeHtml(fav.title)}" data-artist="${escapeHtml(fav.artist)}" data-artwork="${fav.artwork || ''}">
-            <div class="favorite-card-artwork">
+    songsContainer.innerHTML = favorites.map((fav, index) => `
+        <div class="detail-song" data-index="${index}" data-video-id="${fav.videoId || ''}" data-title="${escapeHtml(fav.title)}" data-artist="${escapeHtml(fav.artist)}" data-artwork="${fav.artwork || ''}">
+            <span class="detail-song-num">${index + 1}</span>
+            <div class="detail-song-artwork">
                 ${fav.artwork
-                    ? `<img src="${fav.artwork}" alt="${escapeHtml(fav.title)}" loading="lazy">`
-                    : `<div class="favorite-card-placeholder">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
-                        </svg>
-                    </div>`}
-                <button class="favorite-remove" title="Remove from favorites">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
+                    ? `<img src="${fav.artwork}" alt="${escapeHtml(fav.title)}">`
+                    : `<div class="detail-song-placeholder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon></svg></div>`}
             </div>
-            <div class="favorite-card-info">
-                <div class="favorite-card-title">${escapeHtml(fav.title)}</div>
-                <div class="favorite-card-artist">${escapeHtml(fav.artist)}</div>
+            <div class="detail-song-info">
+                <span class="detail-song-title">${escapeHtml(fav.title)}</span>
+                <span class="detail-song-artist">${escapeHtml(fav.artist)}</span>
             </div>
+            <button class="detail-song-remove" title="Remove from favorites" onclick="event.stopPropagation(); removeFavoriteByIndex(${index})">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
     `).join('');
 
     // Add click handlers
-    list.querySelectorAll('.favorite-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (e.target.closest('.favorite-remove')) {
-                // Remove from favorites
-                const title = card.dataset.title;
-                const artist = card.dataset.artist;
-                toggleFavorite({ title, artist });
-                return;
-            }
-            // Play the song
-            const videoId = card.dataset.videoId;
+    songsContainer.querySelectorAll('.detail-song').forEach(song => {
+        song.addEventListener('click', () => {
+            const videoId = song.dataset.videoId;
             if (videoId) {
-                playRegionalSongDirect(card.dataset.title, card.dataset.artist, videoId, card.dataset.artwork);
+                playRegionalSongDirect(song.dataset.title, song.dataset.artist, videoId, song.dataset.artwork);
             }
         });
     });
+}
+
+function removeFavoriteByIndex(index) {
+    if (index >= 0 && index < favorites.length) {
+        const fav = favorites[index];
+        toggleFavorite({ title: fav.title, artist: fav.artist });
+        showFavoritesDetail(); // Re-render
+    }
+}
+
+function playAllFavorites() {
+    if (favorites.length === 0) return;
+
+    // Clear queue and add all favorites
+    queue.length = 0;
+    favorites.forEach(fav => {
+        queue.push({
+            title: fav.title,
+            artist: fav.artist,
+            videoId: fav.videoId,
+            artwork: fav.artwork
+        });
+    });
+
+    // Play first song
+    const first = queue.shift();
+    if (first && first.videoId) {
+        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
+    }
+
+    updateQueueBadge();
+    showToast(`Playing ${favorites.length} songs`);
 }
 
 // ============================================================
@@ -2603,48 +2672,119 @@ function addToHistory(song) {
 }
 
 function renderHistorySection() {
-    const section = document.getElementById('historySection');
-    const list = document.getElementById('historyList');
-    const count = document.getElementById('historyCountBadge');
+    // Update the library card count
+    const countEl = document.getElementById('historyCardCount');
+    if (countEl) {
+        countEl.textContent = `${playHistory.length} song${playHistory.length !== 1 ? 's' : ''}`;
+    }
+}
 
-    if (!section || !list) return;
+function showHistoryDetail() {
+    // Hide other views
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('playlistsView').style.display = 'none';
+    document.getElementById('playlistDetailView').style.display = 'none';
+    document.getElementById('favoritesDetailView').style.display = 'none';
 
+    // Show history detail
+    const detailView = document.getElementById('historyDetailView');
+    detailView.style.display = 'block';
+
+    // Render header
+    const header = document.getElementById('historyDetailHeader');
+    header.innerHTML = `
+        <button class="back-btn" onclick="showPlaylistsView()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back
+        </button>
+        <div class="detail-header-content">
+            <div class="detail-cover history-cover">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <div class="detail-info">
+                <h1>Recently Played</h1>
+                <p class="detail-meta">${playHistory.length} song${playHistory.length !== 1 ? 's' : ''}</p>
+                <div class="detail-actions">
+                    <button class="btn-primary" onclick="playAllHistory()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play All
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Render songs
+    const songsContainer = document.getElementById('historyDetailSongs');
     if (playHistory.length === 0) {
-        section.style.display = 'none';
+        songsContainer.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <p>No play history yet</p>
+                <span>Songs you play will appear here</span>
+            </div>
+        `;
         return;
     }
 
-    section.style.display = 'block';
-    if (count) count.textContent = playHistory.length;
-
-    list.innerHTML = playHistory.map(item => `
-        <div class="history-card" data-video-id="${item.videoId || ''}" data-title="${escapeHtml(item.title)}" data-artist="${escapeHtml(item.artist)}" data-artwork="${item.artwork || ''}">
-            <div class="history-card-artwork">
+    songsContainer.innerHTML = playHistory.map((item, index) => `
+        <div class="detail-song" data-index="${index}" data-video-id="${item.videoId || ''}" data-title="${escapeHtml(item.title)}" data-artist="${escapeHtml(item.artist)}" data-artwork="${item.artwork || ''}">
+            <span class="detail-song-num">${index + 1}</span>
+            <div class="detail-song-artwork">
                 ${item.artwork
-                    ? `<img src="${item.artwork}" alt="${escapeHtml(item.title)}" loading="lazy">`
-                    : `<div class="history-card-placeholder">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
-                        </svg>
-                    </div>`}
+                    ? `<img src="${item.artwork}" alt="${escapeHtml(item.title)}">`
+                    : `<div class="detail-song-placeholder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon></svg></div>`}
             </div>
-            <div class="history-card-info">
-                <div class="history-card-title">${escapeHtml(item.title)}</div>
-                <div class="history-card-artist">${escapeHtml(item.artist)}</div>
+            <div class="detail-song-info">
+                <span class="detail-song-title">${escapeHtml(item.title)}</span>
+                <span class="detail-song-artist">${escapeHtml(item.artist)}</span>
             </div>
         </div>
     `).join('');
 
     // Add click handlers
-    list.querySelectorAll('.history-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const videoId = card.dataset.videoId;
+    songsContainer.querySelectorAll('.detail-song').forEach(song => {
+        song.addEventListener('click', () => {
+            const videoId = song.dataset.videoId;
             if (videoId) {
-                playRegionalSongDirect(card.dataset.title, card.dataset.artist, videoId, card.dataset.artwork);
+                playRegionalSongDirect(song.dataset.title, song.dataset.artist, videoId, song.dataset.artwork);
             }
         });
     });
+}
+
+function playAllHistory() {
+    if (playHistory.length === 0) return;
+
+    // Clear queue and add all history
+    queue.length = 0;
+    playHistory.forEach(item => {
+        queue.push({
+            title: item.title,
+            artist: item.artist,
+            videoId: item.videoId,
+            artwork: item.artwork
+        });
+    });
+
+    // Play first song
+    const first = queue.shift();
+    if (first && first.videoId) {
+        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
+    }
+
+    updateQueueBadge();
+    showToast(`Playing ${playHistory.length} songs`);
 }
 
 // ============================================================

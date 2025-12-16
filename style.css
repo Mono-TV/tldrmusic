@@ -3979,6 +3979,71 @@ body::before {
     border-color: var(--accent);
 }
 
+/* Library Cards (Favorites & History) */
+.library-cards {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.library-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(40, 40, 48, 0.8) 0%, rgba(30, 30, 36, 0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    max-width: 280px;
+}
+
+.library-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.library-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.library-card-icon.favorites-icon {
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+    color: white;
+}
+
+.library-card-icon.history-icon {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: white;
+}
+
+.library-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.library-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.library-card-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
 /* Recently Played Section */
 .recently-played-section {
     margin-bottom: 2.5rem;
@@ -4468,6 +4533,22 @@ body::before {
 .detail-cover-placeholder svg {
     color: var(--accent);
     opacity: 0.6;
+}
+
+.detail-cover.favorites-cover {
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.detail-cover.history-cover {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
 }
 
 .detail-info {
