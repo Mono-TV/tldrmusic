@@ -875,7 +875,7 @@ function renderGlobalSpotlights() {
     const spotlightsGrid = document.getElementById('globalSpotlightsGrid');
     const spotlightsSection = document.getElementById('globalSpotlightsSection');
 
-    if (!chartData || !chartData.global || !spotlightsGrid) {
+    if (!chartData || !chartData.global_chart || !spotlightsGrid) {
         if (spotlightsSection) spotlightsSection.style.display = 'none';
         return;
     }
@@ -892,15 +892,24 @@ function renderGlobalSpotlights() {
     let platformCount = 0;
 
     platforms.forEach(platform => {
-        const platformData = chartData.global[platform.key];
-        if (!platformData || !platformData.songs || platformData.songs.length === 0) return;
+        // Extract songs that have this platform in their platform_ranks
+        const platformSongs = chartData.global_chart
+            .filter(song => song.platform_ranks?.some(pr => pr.platform === platform.key))
+            .map(song => {
+                const platformRank = song.platform_ranks.find(pr => pr.platform === platform.key);
+                return { ...song, platformRank: platformRank?.rank || 999 };
+            })
+            .sort((a, b) => a.platformRank - b.platformRank)
+            .slice(0, 5);
+
+        if (platformSongs.length === 0) return;
 
         platformCount++;
 
         const card = document.createElement('div');
         card.className = 'regional-card';
 
-        const songsHtml = platformData.songs.slice(0, 5).map((song, i) => {
+        const songsHtml = platformSongs.map((song, i) => {
             const artworkUrl = song.artwork_url || '';
             const videoId = song.youtube_video_id || '';
 
@@ -925,7 +934,7 @@ function renderGlobalSpotlights() {
                             : `<div class="regional-song-artwork-placeholder">${placeholderSvg}</div>`}
                         <div class="regional-song-play">${playSvg}</div>
                     </div>
-                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${i + 1}</span>
+                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${song.platformRank}</span>
                     <span class="rank-dot">●</span>
                     <div class="regional-song-info">
                         <div class="regional-song-title">${escapeHtml(song.title)}</div>
