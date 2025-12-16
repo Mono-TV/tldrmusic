@@ -987,6 +987,36 @@ body::before {
     border-radius: 1rem;
 }
 
+/* See All Button */
+.see-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font);
+}
+
+.see-all-btn:hover {
+    color: var(--accent);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.see-all-btn svg {
+    transition: transform 0.2s;
+}
+
+.see-all-btn:hover svg {
+    transform: translateX(2px);
+}
+
 .chart-legend {
     display: flex;
     gap: 0.5rem;
