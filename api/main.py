@@ -334,7 +334,8 @@ async def google_login(request: GoogleLoginRequest):
             id=user_id,
             email=google_data["email"],
             name=google_data["name"],
-            picture=google_data.get("picture")
+            picture=google_data.get("picture"),
+            username=user.get("username")
         )
     )
 

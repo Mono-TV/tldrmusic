@@ -82,6 +82,7 @@ class UserInfo(BaseModel):
     email: str
     name: str
     picture: Optional[str] = None
+    username: Optional[str] = None
 
 
 class TokenResponse(BaseModel):
