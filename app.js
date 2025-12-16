@@ -3001,10 +3001,10 @@ function showChartDetail(chartType) {
     detailView.style.display = 'block';
 
     // Get chart data based on type
-    let chartData, chartName, chartCoverClass, chartIcon, chartMeta;
+    let detailData, chartName, chartCoverClass, chartIcon, chartMeta;
 
     if (chartType === 'india') {
-        chartData = window.chartData || [];
+        detailData = chartData?.chart || [];
         chartName = 'India Top 25';
         chartCoverClass = 'india';
         chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -3013,7 +3013,7 @@ function showChartDetail(chartType) {
         </svg>`;
         chartMeta = 'Updated weekly • Aggregated from 9 platforms';
     } else if (chartType === 'global') {
-        chartData = window.globalChartData || [];
+        detailData = chartData?.global_chart || [];
         chartName = 'Global Top 25';
         chartCoverClass = 'global';
         chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -3022,8 +3022,9 @@ function showChartDetail(chartType) {
         </svg>`;
         chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
     } else {
-        // Regional chart
-        chartData = window.regionalChartData?.[chartType] || [];
+        // Regional chart - get from chartData.regional
+        const regionalData = chartData?.regional?.[chartType];
+        detailData = regionalData?.songs || [];
         chartName = chartType.charAt(0).toUpperCase() + chartType.slice(1) + ' Top 10';
         chartCoverClass = 'regional';
         chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -3034,8 +3035,8 @@ function showChartDetail(chartType) {
         chartMeta = `Updated weekly • ${chartType.charAt(0).toUpperCase() + chartType.slice(1)} music`;
     }
 
-    currentChartDetailData = chartData;
-    renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, chartMeta);
+    currentChartDetailData = detailData;
+    renderChartDetail(detailData, chartName, chartCoverClass, chartIcon, chartMeta);
 }
 
 function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, chartMeta) {
@@ -3276,7 +3277,7 @@ function toggleChartSongFavorite(index) {
 
     // Re-render the chart detail to update heart icons
     if (currentChartDetailType) {
-        const chartData = currentChartDetailData;
+        const detailData = currentChartDetailData;
         let chartName, chartCoverClass, chartIcon, chartMeta;
 
         if (currentChartDetailType === 'india') {
@@ -3306,7 +3307,7 @@ function toggleChartSongFavorite(index) {
             chartMeta = `Updated weekly • ${currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1)} music`;
         }
 
-        renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, chartMeta);
+        renderChartDetail(detailData, chartName, chartCoverClass, chartIcon, chartMeta);
     }
 }
 
