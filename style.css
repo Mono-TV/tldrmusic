@@ -626,6 +626,9 @@ body::before {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .stat-label {
@@ -1274,6 +1277,16 @@ body::before {
 .song-card-meta .score {
     color: var(--accent);
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+/* Rating Icon */
+.rating-icon {
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
 }
 
 .song-card-meta .platform-source {

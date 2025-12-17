@@ -708,6 +708,8 @@ function renderHero() {
     document.getElementById('heroTitle').textContent = song.title;
     document.getElementById('heroArtist').textContent = song.artist;
     document.getElementById('heroScore').textContent = song.score.toFixed(2);
+    const heroRatingIcon1 = document.getElementById('heroRatingIcon');
+    if (heroRatingIcon1) heroRatingIcon1.style.display = 'inline';
 
     // Hero artwork
     const heroArtwork = document.getElementById('heroArtwork');
@@ -1089,6 +1091,8 @@ function updateHeroForDirectPlay(title, artist, artworkUrl, score) {
     if (heroTitle) heroTitle.textContent = title;
     if (heroArtist) heroArtist.textContent = artist;
     if (heroScore) heroScore.textContent = score ? score.toFixed(2) : '-';
+    const heroRatingIcon2 = document.getElementById('heroRatingIcon');
+    if (heroRatingIcon2) heroRatingIcon2.style.display = score ? 'inline' : 'none';
 
     // Update artwork
     if (heroArtwork && artworkUrl) {
@@ -1200,7 +1204,7 @@ function createSongElement(song, index, chartMode = 'india') {
             <div class="song-card-title">${escapeHtml(song.title)}</div>
             <div class="song-card-artist">${escapeHtml(song.artist)}</div>
             <div class="song-card-meta">
-                <span class="score">${song.score.toFixed(2)}</span>
+                <span class="score"><img src="✦.png" alt="" class="rating-icon">${song.score.toFixed(2)}</span>
                 ${rankMovement}
                 ${viewsText ? `<span>${viewsText} views</span>` : ''}
             </div>
@@ -1363,6 +1367,8 @@ function renderGlobalHero() {
     document.getElementById('heroTitle').textContent = song.title;
     document.getElementById('heroArtist').textContent = song.artist;
     document.getElementById('heroScore').textContent = song.score.toFixed(2);
+    const heroRatingIcon3 = document.getElementById('heroRatingIcon');
+    if (heroRatingIcon3) heroRatingIcon3.style.display = 'inline';
 
     const heroArtwork = document.getElementById('heroArtwork');
     if (heroArtwork && song.artwork_url) {
@@ -1473,6 +1479,8 @@ function updateHeroWithSong(song, index) {
     if (heroTitle) heroTitle.textContent = song.title;
     if (heroArtist) heroArtist.textContent = song.artist;
     if (heroScore) heroScore.textContent = song.score.toFixed(2);
+    const heroRatingIcon4 = document.getElementById('heroRatingIcon');
+    if (heroRatingIcon4) heroRatingIcon4.style.display = 'inline';
 
     // Update rank number
     if (heroRankNum) heroRankNum.textContent = index + 1;
