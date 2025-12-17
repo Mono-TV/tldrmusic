@@ -4793,7 +4793,7 @@ body::before {
 
 .detail-song-title {
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--accent);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5454,7 +5454,7 @@ body::before {
 .playlist-song-title {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--accent);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
