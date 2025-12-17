@@ -225,10 +225,12 @@ def add_global_chart(output, global_top_songs, rank_changes=None):
                 change_data = rank_changes[i - 1]
                 if change_data["is_new"]:
                     song_data["is_new"] = True
-                elif change_data["rank_change"] != 0:
-                    song_data["rank_change"] = change_data["rank_change"]
-                if change_data.get("previous_rank"):
-                    song_data["previous_rank"] = change_data["previous_rank"]
+                    song_data["rank_change"] = None  # New entries don't have rank change
+                else:
+                    song_data["is_new"] = False
+                    song_data["rank_change"] = change_data["rank_change"]  # Include even if 0
+                    if change_data.get("previous_rank"):
+                        song_data["previous_rank"] = change_data["previous_rank"]
 
             if song.lyrics_plain:
                 song_data["lyrics_plain"] = song.lyrics_plain

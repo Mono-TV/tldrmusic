@@ -65,7 +65,7 @@ async def enrich_regional_songs():
                 print(f"\n[{i+1}/{len(songs)}] {title} - {artist}")
 
                 # 1. YouTube data
-                yt_result = youtube.search_song(title, artist)
+                yt_result = await youtube.search_song(title, artist)
                 if yt_result:
                     song['youtube_video_id'] = yt_result.get('video_id', '')
                     song['youtube_views'] = yt_result.get('views', 0)

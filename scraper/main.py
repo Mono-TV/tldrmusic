@@ -751,7 +751,7 @@ async def main():
     # Step 3: Enrich with YouTube data (unless dry run)
     if not args.dry_run:
         youtube = YouTubeAPI()
-        top_songs = youtube.enrich_songs_with_youtube_data(top_songs)
+        top_songs = await youtube.enrich_songs_with_youtube_data(top_songs)
 
         # Re-sort with YouTube views as tiebreaker
         top_songs = sorted(
@@ -820,7 +820,7 @@ async def main():
     if not args.dry_run:
         print("\n[Global] Enriching with YouTube data...")
         youtube = YouTubeAPI()
-        top_global_songs = youtube.enrich_songs_with_youtube_data(top_global_songs)
+        top_global_songs = await youtube.enrich_songs_with_youtube_data(top_global_songs)
 
         # Re-sort with YouTube views as tiebreaker
         top_global_songs = sorted(

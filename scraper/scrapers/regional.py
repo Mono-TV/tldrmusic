@@ -67,7 +67,7 @@ class TamilChartsScraper(RegionalBaseScraper):
     def __init__(self):
         super().__init__(
             platform_name="tamil",
-            url="https://open.spotify.com/playlist/37i9dQZF1DX6XceWZP1znY"  # Top 50 Tamil
+            url="https://open.spotify.com/playlist/37i9dQZF1DX1i3hvzHpcQV"  # Hot Hits Tamil (Official)
         )
 
 
@@ -77,7 +77,7 @@ class TeluguChartsScraper(RegionalBaseScraper):
     def __init__(self):
         super().__init__(
             platform_name="telugu",
-            url="https://open.spotify.com/playlist/37i9dQZF1DWTyiBJ6yEqeu"  # Top 50 Telugu
+            url="https://open.spotify.com/playlist/37i9dQZF1DWWwrjLPC16W7"  # Latest Telugu (Official)
         )
 
 
@@ -97,5 +97,5 @@ class HindiChartsScraper(RegionalBaseScraper):
     def __init__(self):
         super().__init__(
             platform_name="hindi",
-            url="https://open.spotify.com/playlist/37i9dQZF1DXd8cOUiye2V6"  # Hot Hits Hindi
+            url="https://open.spotify.com/playlist/37i9dQZF1DX0XUfTFmNBRM"  # Hot Hits Hindi (Official)
         )

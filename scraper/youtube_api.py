@@ -21,16 +21,24 @@ class YouTubeAPI:
     1. Searching songs and getting video IDs
     2. Getting video view counts
     3. Creating public playlists
+
+    Supports both file-based and MongoDB caching.
     """
 
-    def __init__(self):
+    def __init__(self, mongo_cache=None):
         self.api_key = YOUTUBE_API_KEY
         self.youtube = build('youtube', 'v3', developerKey=self.api_key)
-        self.cache = self._load_cache()
+        self.mongo_cache = mongo_cache
+        self.cache = {}  # Will be loaded async if using MongoDB
         self.api_calls_made = 0
+        self.quota_exceeded = False
 
-    def _load_cache(self) -> Dict:
-        """Load cached YouTube search results."""
+        # Load file cache if no MongoDB
+        if not mongo_cache:
+            self.cache = self._load_file_cache()
+
+    def _load_file_cache(self) -> Dict:
+        """Load cached YouTube search results from file."""
         cache_path = os.path.join(os.path.dirname(__file__), '..', YOUTUBE_CACHE_FILE)
         if os.path.exists(cache_path):
             try:
@@ -40,18 +48,44 @@ class YouTubeAPI:
                 return {}
         return {}
 
-    def _save_cache(self) -> None:
-        """Save YouTube search results to cache."""
+    def _save_file_cache(self) -> None:
+        """Save YouTube search results to file cache."""
         cache_path = os.path.join(os.path.dirname(__file__), '..', YOUTUBE_CACHE_FILE)
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
         with open(cache_path, 'w', encoding='utf-8') as f:
             json.dump(self.cache, f, indent=2, ensure_ascii=False)
 
+    async def _get_cached(self, cache_key: str) -> Optional[Dict]:
+        """Get cached result from MongoDB or file cache."""
+        if self.mongo_cache:
+            try:
+                cached = await self.mongo_cache.db.youtube_cache.find_one({"cache_key": cache_key})
+                if cached:
+                    return cached.get("data")
+            except Exception as e:
+                print(f"  [MongoDB Cache] Error reading: {e}")
+        return self.cache.get(cache_key)
+
+    async def _set_cached(self, cache_key: str, data: Dict) -> None:
+        """Save result to MongoDB or file cache."""
+        if self.mongo_cache:
+            try:
+                await self.mongo_cache.db.youtube_cache.update_one(
+                    {"cache_key": cache_key},
+                    {"$set": {"cache_key": cache_key, "data": data}},
+                    upsert=True
+                )
+            except Exception as e:
+                print(f"  [MongoDB Cache] Error saving: {e}")
+        else:
+            self.cache[cache_key] = data
+            self._save_file_cache()
+
     def _get_cache_key(self, title: str, artist: str) -> str:
         """Generate cache key for a song."""
         return f"{title.lower()}|{artist.lower()}"
 
-    def search_song(self, title: str, artist: str) -> Optional[Dict]:
+    async def search_song(self, title: str, artist: str) -> Optional[Dict]:
         """
         Search for a song on YouTube and return the top result.
 
@@ -67,10 +101,16 @@ class YouTubeAPI:
         """
         cache_key = self._get_cache_key(title, artist)
 
-        # Check cache first
-        if cache_key in self.cache:
+        # Check cache first (async for MongoDB support)
+        cached = await self._get_cached(cache_key)
+        if cached:
             print(f"  [Cache] Found: {title} - {artist}")
-            return self.cache[cache_key]
+            return cached
+
+        # Skip API calls if quota exceeded
+        if self.quota_exceeded:
+            print(f"  [Quota] Skipping: {title} - {artist}")
+            return None
 
         query = f"{title} {artist}"
         print(f"  [API] Searching: {query}")
@@ -109,15 +149,19 @@ class YouTubeAPI:
                 'published': details['published'],
             }
 
-            # Cache the result
-            self.cache[cache_key] = result
-            self._save_cache()
+            # Cache the result (async for MongoDB support)
+            await self._set_cached(cache_key, result)
 
             print(f"  [API] Found: {result['title']} ({details['views']:,} views, {details['likes']:,} likes)")
             return result
 
         except HttpError as e:
-            print(f"  [API Error] {e}")
+            error_str = str(e)
+            if 'quotaExceeded' in error_str or 'quota' in error_str.lower():
+                print(f"  [API] Quota exceeded - skipping remaining songs")
+                self.quota_exceeded = True
+            else:
+                print(f"  [API Error] {e}")
             return None
 
     def _get_video_details(self, video_id: str) -> Dict:
@@ -153,7 +197,7 @@ class YouTubeAPI:
         details = self._get_video_details(video_id)
         return details['views']
 
-    def enrich_songs_with_youtube_data(self, songs: List[ConsolidatedSong]) -> List[ConsolidatedSong]:
+    async def enrich_songs_with_youtube_data(self, songs: List[ConsolidatedSong]) -> List[ConsolidatedSong]:
         """
         Search YouTube for each song and add video metadata.
 
@@ -175,7 +219,7 @@ class YouTubeAPI:
         for i, song in enumerate(songs, 1):
             print(f"\n[{i}/{len(songs)}] {song.canonical_title} - {song.canonical_artist}")
 
-            result = self.search_song(song.canonical_title, song.canonical_artist)
+            result = await self.search_song(song.canonical_title, song.canonical_artist)
 
             if result:
                 song.youtube_video_id = result['video_id']
