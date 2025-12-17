@@ -3723,11 +3723,17 @@ function hidePlaylistsView() {
     const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
 
     if (mainContent) mainContent.style.display = 'block';
     if (heroSection) heroSection.style.display = 'block';
     if (playlistsView) playlistsView.style.display = 'none';
     if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
 
     // Update sidebar active state back to current chart
     document.querySelectorAll('.sidebar-nav-item').forEach(btn => btn.classList.remove('active'));
@@ -5103,10 +5109,8 @@ function initSidebar() {
 
     // Chart navigation buttons
     sidebarIndiaBtn?.addEventListener('click', () => {
-        // Hide playlists view if visible
-        if (isPlaylistPanelVisible) {
-            hidePlaylistsView();
-        }
+        // Hide all detail views and return to main chart view
+        hidePlaylistsView();
         if (currentChartMode !== 'india') {
             switchChartMode('india');
         }
@@ -5115,10 +5119,8 @@ function initSidebar() {
     });
 
     sidebarGlobalBtn?.addEventListener('click', () => {
-        // Hide playlists view if visible
-        if (isPlaylistPanelVisible) {
-            hidePlaylistsView();
-        }
+        // Hide all detail views and return to main chart view
+        hidePlaylistsView();
         if (currentChartMode !== 'global') {
             switchChartMode('global');
         }
