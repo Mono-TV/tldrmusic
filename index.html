@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TLDR Music - India's Top 25</title>
-    <link rel="stylesheet" href="style.css?v=45">
+    <link rel="stylesheet" href="style.css?v=52">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -28,16 +28,16 @@
 
             <!-- Sidebar Content -->
             <div class="sidebar-content">
-                <!-- Chart Navigation -->
+                <!-- Home Navigation -->
                 <nav class="sidebar-nav">
-                    <div class="sidebar-nav-label">Charts</div>
-                    <button class="sidebar-nav-item active" data-chart="india" id="sidebarIndiaBtn">
-                        <span class="sidebar-nav-icon">🇮🇳</span>
-                        <span class="sidebar-nav-text">India Top 25</span>
-                    </button>
-                    <button class="sidebar-nav-item" data-chart="global" id="sidebarGlobalBtn">
-                        <span class="sidebar-nav-icon">🌍</span>
-                        <span class="sidebar-nav-text">Global Top 25</span>
+                    <button class="sidebar-nav-item active" id="sidebarHomeBtn" onclick="showHomeView()">
+                        <span class="sidebar-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-text">Home</span>
                     </button>
                 </nav>
 
@@ -101,7 +101,7 @@
                             <line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg>
                     </button>
-                    <h1 class="logo">TLDR<span>Music</span></h1>
+                    <h1 class="logo" onclick="showHomeView()" style="cursor: pointer;">TLDR<span>Music</span></h1>
                     <div class="chart-toggle" id="chartToggle">
                         <button class="toggle-btn active" data-chart="india">
                             <span class="toggle-icon">🇮🇳</span>
@@ -216,6 +216,32 @@
 
         <!-- Main Content -->
         <main class="main">
+            <!-- Home View (shown by default) -->
+            <section class="home-view" id="homeView">
+                <!-- Chart selector cards -->
+                <div class="home-chart-selector">
+                    <div class="home-chart-card india active" id="homeIndiaCard" onclick="selectHomeChart('india')">
+                        <div class="home-chart-icon">
+                            <span class="home-chart-flag">🇮🇳</span>
+                        </div>
+                        <div class="home-chart-info">
+                            <h3>India Top 25</h3>
+                            <p class="home-chart-subtitle">Trending across India</p>
+                        </div>
+                    </div>
+
+                    <div class="home-chart-card global" id="homeGlobalCard" onclick="selectHomeChart('global')">
+                        <div class="home-chart-icon">
+                            <span class="home-chart-flag">🌍</span>
+                        </div>
+                        <div class="home-chart-info">
+                            <h3>Global Top 25</h3>
+                            <p class="home-chart-subtitle">Worldwide hits</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Playlists View (shown when clicking Playlists in sidebar) -->
             <section class="playlists-view" id="playlistsView" style="display: none;">
                 <div class="playlists-view-header">
@@ -856,6 +882,6 @@
     </div>
 
     <script src="auth.js?v=6"></script>
-    <script src="app.js?v=41"></script>
+    <script src="app.js?v=47"></script>
 </body>
 </html>

@@ -195,11 +195,13 @@ async function loadSharedPlaylist(playlistId) {
 
 function showSharedPlaylistView(playlist) {
     // Hide main content sections
+    const homeView = document.getElementById('homeView');
     const mainContent = document.getElementById('mainContent');
     const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const playlistDetailView = document.getElementById('playlistDetailView');
 
+    if (homeView) homeView.style.display = 'none';
     if (mainContent) mainContent.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'none';
@@ -542,11 +544,11 @@ function hidePublicProfileView() {
 
 // Render skeleton loading placeholders
 function renderSkeletons() {
-    // Chart skeleton - 25 cards directly in chartList
+    // Chart skeleton - 10 cards directly in chartList
     const chartList = document.getElementById('chartList');
     if (chartList) {
         let skeletonHTML = '';
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 10; i++) {
             skeletonHTML += `
                 <div class="skeleton-card" data-skeleton="true">
                     <div class="skeleton skeleton-artwork"></div>
@@ -759,7 +761,9 @@ function renderChart() {
 
     chartList.innerHTML = '';
 
-    chartData.chart.forEach((song, index) => {
+    // Show only first 10 songs on home page
+    const displayCount = 10;
+    chartData.chart.slice(0, displayCount).forEach((song, index) => {
         const songEl = createSongElement(song, index);
         chartList.appendChild(songEl);
     });
@@ -767,7 +771,7 @@ function renderChart() {
     // Update Quick Picks count badge
     const quickPicksCount = document.getElementById('quickPicksCount');
     if (quickPicksCount) {
-        quickPicksCount.textContent = chartData.chart.length;
+        quickPicksCount.textContent = displayCount;
     }
 }
 
@@ -1404,10 +1408,18 @@ function renderGlobalMainChart() {
 
     chartList.innerHTML = '';
 
-    chartData.global_chart.forEach((song, index) => {
+    // Show only first 10 songs on home page
+    const displayCount = 10;
+    chartData.global_chart.slice(0, displayCount).forEach((song, index) => {
         const songEl = createSongElement(song, index, 'global');
         chartList.appendChild(songEl);
     });
+
+    // Update Quick Picks count badge
+    const quickPicksCount = document.getElementById('quickPicksCount');
+    if (quickPicksCount) {
+        quickPicksCount.textContent = displayCount;
+    }
 }
 
 // Update now playing UI
@@ -2646,6 +2658,10 @@ function renderFavoritesSection() {
 
 function showFavoritesDetail() {
     // Hide other views
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
+    if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
     document.getElementById('mainContent').style.display = 'none';
     document.getElementById('playlistsView').style.display = 'none';
     document.getElementById('playlistDetailView').style.display = 'none';
@@ -2842,6 +2858,10 @@ function renderHistorySection() {
 
 function showHistoryDetail() {
     // Hide other views
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
+    if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
     document.getElementById('mainContent').style.display = 'none';
     document.getElementById('playlistsView').style.display = 'none';
     document.getElementById('playlistDetailView').style.display = 'none';
@@ -2996,13 +3016,15 @@ function showChartDetail(chartType) {
     currentChartDetailType = chartType;
 
     // Hide other views
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
+    if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
     document.getElementById('mainContent').style.display = 'none';
     document.getElementById('playlistsView').style.display = 'none';
     document.getElementById('playlistDetailView').style.display = 'none';
     document.getElementById('favoritesDetailView').style.display = 'none';
     document.getElementById('historyDetailView').style.display = 'none';
-    const heroSection = document.getElementById('heroSection');
-    if (heroSection) heroSection.style.display = 'none';
 
     // Show chart detail view
     const detailView = document.getElementById('chartDetailView');
@@ -3690,22 +3712,23 @@ function updatePlaylistCount() {
 // Show playlists view in main content
 function showPlaylistsView() {
     isPlaylistPanelVisible = true;
+    isHomeViewVisible = false;
 
-    // Hide main content (charts, regional)
+    // Hide main content (charts, regional) and home view
+    const homeView = document.getElementById('homeView');
     const mainContent = document.getElementById('mainContent');
     const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const playlistDetailView = document.getElementById('playlistDetailView');
 
+    if (homeView) homeView.style.display = 'none';
     if (mainContent) mainContent.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
     if (playlistDetailView) playlistDetailView.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'block';
 
     // Update sidebar active state
-    document.querySelectorAll('.sidebar-nav-item').forEach(btn => btn.classList.remove('active'));
-    const playlistsBtn = document.getElementById('sidebarPlaylistsBtn');
-    if (playlistsBtn) playlistsBtn.classList.add('active');
+    updateSidebarActiveState('playlists');
 
     // Restore sort dropdown value
     const sortSelect = document.getElementById('playlistsSortSelect');
@@ -4259,10 +4282,14 @@ function showPlaylistDetail(playlistId) {
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    // Hide playlists grid, show detail view
+    // Hide other views
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const detailView = document.getElementById('playlistDetailView');
 
+    if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'none';
     if (detailView) detailView.style.display = 'block';
 
@@ -5091,8 +5118,6 @@ function initSidebar() {
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
     const headerMenuBtn = document.getElementById('headerMenuBtn');
-    const sidebarIndiaBtn = document.getElementById('sidebarIndiaBtn');
-    const sidebarGlobalBtn = document.getElementById('sidebarGlobalBtn');
     const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
 
     if (!sidebar) return;
@@ -5105,27 +5130,6 @@ function initSidebar() {
     // Header menu button toggles sidebar
     headerMenuBtn?.addEventListener('click', () => {
         sidebar.classList.toggle('open');
-    });
-
-    // Chart navigation buttons
-    sidebarIndiaBtn?.addEventListener('click', () => {
-        // Hide all detail views and return to main chart view
-        hidePlaylistsView();
-        if (currentChartMode !== 'india') {
-            switchChartMode('india');
-        }
-        updateSidebarActiveState('india');
-        sidebar.classList.remove('open'); // Close sidebar on mobile
-    });
-
-    sidebarGlobalBtn?.addEventListener('click', () => {
-        // Hide all detail views and return to main chart view
-        hidePlaylistsView();
-        if (currentChartMode !== 'global') {
-            switchChartMode('global');
-        }
-        updateSidebarActiveState('global');
-        sidebar.classList.remove('open'); // Close sidebar on mobile
     });
 
     // Profile button - opens profile panel
@@ -5149,15 +5153,91 @@ function initSidebar() {
         }
     });
 
-    // Sync with initial chart mode
-    updateSidebarActiveState(currentChartMode);
+    // Sync with initial state (home view)
+    updateSidebarActiveState('home');
 }
 
 function updateSidebarActiveState(mode) {
-    const sidebarIndiaBtn = document.getElementById('sidebarIndiaBtn');
-    const sidebarGlobalBtn = document.getElementById('sidebarGlobalBtn');
+    const sidebarHomeBtn = document.getElementById('sidebarHomeBtn');
+    const sidebarPlaylistsBtn = document.getElementById('sidebarPlaylistsBtn');
 
-    sidebarIndiaBtn?.classList.toggle('active', mode === 'india');
-    sidebarGlobalBtn?.classList.toggle('active', mode === 'global');
+    // Remove active from all nav items
+    sidebarHomeBtn?.classList.remove('active');
+    sidebarPlaylistsBtn?.classList.remove('active');
+
+    // Set active based on mode
+    if (mode === 'home') {
+        sidebarHomeBtn?.classList.add('active');
+    } else if (mode === 'playlists') {
+        sidebarPlaylistsBtn?.classList.add('active');
+    }
 }
+
+// ============================================================
+// HOME VIEW FUNCTIONS
+// ============================================================
+
+let isHomeViewVisible = true;
+
+function showHomeView() {
+    isHomeViewVisible = true;
+    isPlaylistPanelVisible = false;
+
+    // Show home view with chart content
+    const homeView = document.getElementById('homeView');
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+
+    if (homeView) homeView.style.display = 'block';
+    if (mainContent) mainContent.style.display = 'block';
+    if (heroSection) heroSection.style.display = 'block';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+
+    // Update sidebar active state
+    updateSidebarActiveState('home');
+
+    // Close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    sidebar?.classList.remove('open');
+}
+
+function hideHomeView() {
+    isHomeViewVisible = false;
+    const homeView = document.getElementById('homeView');
+    if (homeView) homeView.style.display = 'none';
+}
+
+// Select chart from home page cards (switches chart without hiding content)
+function selectHomeChart(mode) {
+    // Update active state on cards
+    const indiaCard = document.getElementById('homeIndiaCard');
+    const globalCard = document.getElementById('homeGlobalCard');
+
+    if (indiaCard) indiaCard.classList.toggle('active', mode === 'india');
+    if (globalCard) globalCard.classList.toggle('active', mode === 'global');
+
+    // Switch chart mode
+    if (currentChartMode !== mode) {
+        switchChartMode(mode);
+    }
+
+    // Update sidebar active state
+    updateSidebarActiveState('home');
+}
+
+// Legacy function for direct chart navigation (from sidebar)
+function selectChart(mode) {
+    showHomeView();
+    selectHomeChart(mode);
+}
+
 

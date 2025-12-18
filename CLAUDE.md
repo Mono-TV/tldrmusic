@@ -129,12 +129,22 @@ tldrmusic/
 - **Sharing**: Share playlists via unique links
 - **Export**: Export playlists to Spotify/Apple Music/YouTube Music
 
+### Home Page
+
+- **Chart Selector Cards**: Toggle between India Top 25 and Global Top 25
+- **Quick Picks**: Shows top 10 songs from the selected chart
+- **Hero Section**: Full-width spotlight for #1 song
+- **Regional Spotlights**: Language-specific charts (India only)
+- **Logo Navigation**: Clicking TLDRMusic logo returns to home
+
 ### UI Components
 
-- **Sidebar Navigation**: Charts, Library, Playlists
-- **Detail Views**: Full-page views for playlists, favorites, history
+- **Sidebar Navigation**: Home and Playlists (simplified navigation)
+- **Chart Selector**: Card-based toggle for India/Global charts on home page
+- **Detail Views**: Full-page views for playlists, favorites, history, full charts
 - **Profile Panel**: User settings, logout
 - **Modals**: Create playlist, add to playlist, share, export
+- **Max Content Width**: 1400px for optimal readability
 
 ## Backend API
 
