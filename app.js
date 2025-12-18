@@ -6485,9 +6485,36 @@ async function playAISongBySearch(index) {
     showToast(`Searching for "${song.title}"...`);
 
     try {
-        // Search YouTube for the song
-        const searchQuery = `${song.title} ${song.artist}`;
-        const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(searchQuery)}&limit=1`);
+        // First try searching Music Harvester catalog (has video IDs)
+        const catalogQuery = `${song.title} ${song.artist}`;
+        const catalogResponse = await fetch(`${AI_PLAYLIST_API_BASE}/api/catalog/songs?q=${encodeURIComponent(catalogQuery)}&per_page=5`);
+
+        if (catalogResponse.ok) {
+            const catalogData = await catalogResponse.json();
+            if (catalogData.songs && catalogData.songs.length > 0) {
+                // Find best match by comparing titles
+                const matchedSong = catalogData.songs.find(s =>
+                    s.title.toLowerCase().includes(song.title.toLowerCase().substring(0, 10)) ||
+                    song.title.toLowerCase().includes(s.title.toLowerCase().substring(0, 10))
+                ) || catalogData.songs[0];
+
+                if (matchedSong.platforms?.youtube_music?.video_id) {
+                    song.videoId = matchedSong.platforms.youtube_music.video_id;
+                    song.artwork = matchedSong.platforms.youtube_music.thumbnails?.[1]?.url ||
+                                   matchedSong.platforms.youtube_music.thumbnails?.[0]?.url || '';
+
+                    // Update queue
+                    queue[index] = song;
+
+                    // Play the song
+                    playSongFromQueue(index);
+                    return;
+                }
+            }
+        }
+
+        // Fallback: Try TLDR Music API search
+        const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(catalogQuery)}&limit=1`);
 
         if (response.ok) {
             const results = await response.json();
@@ -6507,25 +6534,30 @@ async function playAISongBySearch(index) {
             }
         }
 
-        // If search via API fails, try direct YouTube search
+        // If all searches fail, use YouTube iframe search
         showToast(`Playing "${song.title}"...`);
         searchAndPlayOnYouTube(song.title, song.artist);
 
     } catch (error) {
         console.error('Error searching for song:', error);
-        showToast('Failed to find song on YouTube');
+        showToast('Failed to find song. Trying YouTube...');
+        searchAndPlayOnYouTube(song.title, song.artist);
     }
 }
 
 function searchAndPlayOnYouTube(title, artist) {
-    // Use YouTube search URL as fallback
-    const searchQuery = encodeURIComponent(`${title} ${artist} official audio`);
-    // For now, just update the player bar with song info
+    // Open YouTube Music search as fallback
+    const searchQuery = encodeURIComponent(`${title} ${artist}`);
+
+    // Update player bar to show the song info
     updatePlayerBar({
         title: title,
         artist: artist,
         artwork: ''
     });
-    showToast(`Search for "${title}" on YouTube to play`);
+
+    // Open YouTube Music search in new tab
+    window.open(`https://music.youtube.com/search?q=${searchQuery}`, '_blank');
+    showToast(`Opening YouTube Music to play "${title}"`);
 }
 
