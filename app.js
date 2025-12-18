@@ -764,13 +764,9 @@ function renderChart() {
 // Current selected regional language
 let currentRegionalLanguage = 'hindi';
 
-// Render regional charts (disabled - keeping only Top 25)
+// Render regional charts
 function renderRegionalCharts() {
-    // Regional charts are disabled - only showing Top 25 on home
     const regionalSection = document.getElementById('regionalSection');
-    if (regionalSection) regionalSection.style.display = 'none';
-    return;
-
     const languageSelector = document.getElementById('regionalLanguageSelector');
     const chartGrid = document.getElementById('regionalChartGrid');
 
@@ -917,13 +913,9 @@ function createRegionalSongCard(song, index) {
 // Current selected global platform
 let currentGlobalPlatform = 'spotify_global';
 
-// Render global platform spotlights (disabled - keeping only Top 25)
+// Render global platform spotlights (Spotify, Billboard, Apple Music)
 function renderGlobalSpotlights() {
-    // Platform charts are disabled - only showing Top 25 on home
     const spotlightsSection = document.getElementById('globalSpotlightsSection');
-    if (spotlightsSection) spotlightsSection.style.display = 'none';
-    return;
-
     const platformSelector = document.getElementById('globalPlatformSelector');
     const chartGrid = document.getElementById('globalPlatformGrid');
 
