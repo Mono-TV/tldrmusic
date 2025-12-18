@@ -48,6 +48,16 @@
                         </span>
                         <span class="sidebar-nav-text">Discover</span>
                     </button>
+                    <button class="sidebar-nav-item" id="sidebarAIGeneratedBtn" onclick="showAIGeneratedView()">
+                        <span class="sidebar-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-text">AI Playlists</span>
+                    </button>
                 </nav>
 
                 <!-- Library Section -->
@@ -413,6 +423,23 @@
             <section class="curated-detail-view" id="curatedDetailView" style="display: none;">
                 <div class="curated-detail-header" id="curatedDetailHeader"></div>
                 <div class="curated-detail-songs" id="curatedDetailSongs"></div>
+            </section>
+
+            <!-- AI Generated View -->
+            <section class="ai-generated-view" id="aiGeneratedView" style="display: none;">
+                <div class="ai-generated-header">
+                    <h2>AI Playlists</h2>
+                    <p class="ai-generated-subtitle">Smart playlists powered by AI from 68,000+ tracks</p>
+                </div>
+                <div class="ai-generated-content" id="aiGeneratedContent">
+                    <!-- Content will be rendered by JS -->
+                </div>
+            </section>
+
+            <!-- AI Playlist Detail View -->
+            <section class="ai-playlist-detail-view" id="aiPlaylistDetailView" style="display: none;">
+                <div class="ai-playlist-detail-header" id="aiPlaylistDetailHeader"></div>
+                <div class="ai-playlist-detail-songs" id="aiPlaylistDetailSongs"></div>
             </section>
 
             <!-- Main Content (charts, etc.) -->

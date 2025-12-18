@@ -2,6 +2,7 @@
 
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const CURATED_API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
+const AI_PLAYLIST_API_BASE = 'https://music-harvester-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // localStorage keys
@@ -5270,11 +5271,13 @@ function updateSidebarActiveState(mode) {
     const sidebarHomeBtn = document.getElementById('sidebarHomeBtn');
     const sidebarPlaylistsBtn = document.getElementById('sidebarPlaylistsBtn');
     const sidebarDiscoverBtn = document.getElementById('sidebarDiscoverBtn');
+    const sidebarAIGeneratedBtn = document.getElementById('sidebarAIGeneratedBtn');
 
     // Remove active from all nav items
     sidebarHomeBtn?.classList.remove('active');
     sidebarPlaylistsBtn?.classList.remove('active');
     sidebarDiscoverBtn?.classList.remove('active');
+    sidebarAIGeneratedBtn?.classList.remove('active');
 
     // Set active based on mode
     if (mode === 'home') {
@@ -5283,6 +5286,8 @@ function updateSidebarActiveState(mode) {
         sidebarPlaylistsBtn?.classList.add('active');
     } else if (mode === 'discover') {
         sidebarDiscoverBtn?.classList.add('active');
+    } else if (mode === 'ai-generated') {
+        sidebarAIGeneratedBtn?.classList.add('active');
     }
 }
 
@@ -5876,5 +5881,562 @@ function playCuratedSong(index) {
 
     currentSongIndex = index;
     playSongFromQueue(index);
+}
+
+// ===========================================
+// AI Generated Playlists
+// ===========================================
+
+let aiPlaylistPresets = [];
+let currentAIPlaylist = null;
+
+// Preset icons mapping
+const AI_PRESET_ICONS = {
+    // Moods
+    'chill_vibes': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>',
+    'workout_energy': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'party_hits': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3L2 22l10.7-3.8"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>',
+    'focus_flow': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+    'romantic_mood': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>',
+    'feel_good': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+    'sleep_sounds': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    'sad_songs': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+    // Genres
+    'bollywood_hits': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    'kollywood_beats': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    'tollywood_vibes': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    'punjabi_power': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'desi_hiphop': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><path d="M8 17V5l12-2v12"/></svg>',
+    'electronic_essentials': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+    'pop_playlist': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>',
+    'rock_classics': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>',
+    'rnb_soul': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>',
+    'latin_heat': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
+    'classical_calm': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    // Sub-genres
+    'lofi_beats': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+    'edm_bangers': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'kpop_hits': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    // Combo playlists
+    'chill_bollywood': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>',
+    'workout_hindi': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'party_punjabi': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3L2 22l10.7-3.8"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38"/></svg>',
+    'romantic_bollywood': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>',
+    'focus_electronic': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    // Decades
+    '90s_bollywood': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    '2000s_hits': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    '2010s_anthems': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    'new_releases': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    // Languages
+    'tamil_top': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
+    'telugu_top': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
+    'english_hits': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
+};
+
+// Preset colors for gradients
+const AI_PRESET_COLORS = {
+    'chill_vibes': '#4A90D9',
+    'workout_energy': '#E63946',
+    'party_hits': '#FF6B6B',
+    'focus_flow': '#00BCD4',
+    'romantic_mood': '#E91E63',
+    'feel_good': '#FFC107',
+    'sleep_sounds': '#3F51B5',
+    'sad_songs': '#5C6BC0',
+    'bollywood_hits': '#FF5722',
+    'kollywood_beats': '#E91E63',
+    'tollywood_vibes': '#9C27B0',
+    'punjabi_power': '#FF9800',
+    'desi_hiphop': '#607D8B',
+    'electronic_essentials': '#00BCD4',
+    'pop_playlist': '#E91E63',
+    'rock_classics': '#795548',
+    'rnb_soul': '#9C27B0',
+    'latin_heat': '#FF5722',
+    'classical_calm': '#607D8B',
+    'lofi_beats': '#9E9E9E',
+    'edm_bangers': '#00BCD4',
+    'kpop_hits': '#E91E63',
+    'chill_bollywood': '#4A90D9',
+    'workout_hindi': '#E63946',
+    'party_punjabi': '#FF9800',
+    'romantic_bollywood': '#E91E63',
+    'focus_electronic': '#00BCD4',
+    '90s_bollywood': '#FF9800',
+    '2000s_hits': '#9C27B0',
+    '2010s_anthems': '#2196F3',
+    'new_releases': '#1DB954',
+    'tamil_top': '#E91E63',
+    'telugu_top': '#9C27B0',
+    'english_hits': '#2196F3',
+};
+
+function showAIGeneratedView() {
+    isHomeViewVisible = false;
+    isPlaylistPanelVisible = false;
+
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'block';
+
+    // Update sidebar active state
+    updateSidebarActiveState('ai-generated');
+
+    // Close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    sidebar?.classList.remove('open');
+
+    // Render AI playlists
+    renderAIGeneratedView();
+}
+
+async function renderAIGeneratedView() {
+    const content = document.getElementById('aiGeneratedContent');
+    if (!content) return;
+
+    // Show loading state
+    content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading AI playlists...</p></div>';
+
+    try {
+        // Fetch presets from API
+        const response = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/presets`);
+        if (!response.ok) throw new Error('Failed to load presets');
+
+        const data = await response.json();
+        aiPlaylistPresets = data.presets || [];
+
+        // Categorize presets
+        const categories = categorizePresets(aiPlaylistPresets);
+
+        // Render categories
+        content.innerHTML = `
+            <!-- Mood Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>Moods & Vibes</h3>
+                    <span class="ai-section-count">${categories.moods.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.moods.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
+
+            <!-- Genre Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>By Genre</h3>
+                    <span class="ai-section-count">${categories.genres.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.genres.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
+
+            <!-- Combo Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>Smart Mixes</h3>
+                    <span class="ai-section-count">${categories.combos.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.combos.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
+
+            <!-- Era Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>By Era</h3>
+                    <span class="ai-section-count">${categories.eras.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.eras.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
+
+            <!-- Language Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>By Language</h3>
+                    <span class="ai-section-count">${categories.languages.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.languages.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
+        `;
+
+    } catch (error) {
+        console.error('Error loading AI playlists:', error);
+        content.innerHTML = `
+            <div class="ai-error">
+                <p>Failed to load AI playlists</p>
+                <button onclick="renderAIGeneratedView()">Try Again</button>
+            </div>
+        `;
+    }
+}
+
+function categorizePresets(presets) {
+    const categories = {
+        moods: [],
+        genres: [],
+        combos: [],
+        eras: [],
+        languages: [],
+    };
+
+    const moodKeys = ['chill_vibes', 'workout_energy', 'party_hits', 'focus_flow', 'romantic_mood', 'feel_good', 'sleep_sounds', 'sad_songs'];
+    const genreKeys = ['bollywood_hits', 'kollywood_beats', 'tollywood_vibes', 'punjabi_power', 'desi_hiphop', 'electronic_essentials', 'pop_playlist', 'rock_classics', 'rnb_soul', 'latin_heat', 'classical_calm', 'lofi_beats', 'edm_bangers', 'kpop_hits'];
+    const eraKeys = ['90s_bollywood', '2000s_hits', '2010s_anthems', 'new_releases'];
+    const languageKeys = ['tamil_top', 'telugu_top', 'english_hits'];
+
+    presets.forEach(preset => {
+        if (moodKeys.includes(preset.key)) {
+            categories.moods.push(preset);
+        } else if (genreKeys.includes(preset.key)) {
+            categories.genres.push(preset);
+        } else if (eraKeys.includes(preset.key)) {
+            categories.eras.push(preset);
+        } else if (languageKeys.includes(preset.key)) {
+            categories.languages.push(preset);
+        } else {
+            categories.combos.push(preset);
+        }
+    });
+
+    return categories;
+}
+
+function renderAIPresetCard(preset) {
+    const icon = AI_PRESET_ICONS[preset.key] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    const color = AI_PRESET_COLORS[preset.key] || '#1DB954';
+
+    return `
+        <div class="ai-card" onclick="openAIPlaylist('${preset.key}')" style="--card-color: ${color}">
+            <div class="ai-card-bg"></div>
+            <div class="ai-card-content">
+                <div class="ai-card-icon">${icon}</div>
+                <h4 class="ai-card-title">${escapeHtml(preset.name)}</h4>
+                <span class="ai-card-meta">${escapeHtml(preset.description)}</span>
+            </div>
+        </div>
+    `;
+}
+
+async function openAIPlaylist(presetKey) {
+    showToast('Generating playlist...');
+
+    try {
+        // First try to get existing playlist
+        const preset = aiPlaylistPresets.find(p => p.key === presetKey);
+        const playlistName = preset ? preset.name : presetKey;
+
+        let playlist;
+
+        // Try to fetch existing playlist first
+        const existingResponse = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/${encodeURIComponent(playlistName)}`);
+
+        if (existingResponse.ok) {
+            playlist = await existingResponse.json();
+        } else {
+            // Generate new playlist
+            const generateResponse = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/generate/${presetKey}?size=50`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+
+            if (!generateResponse.ok) {
+                throw new Error('Failed to generate playlist');
+            }
+
+            playlist = await generateResponse.json();
+        }
+
+        currentAIPlaylist = playlist;
+        showAIPlaylistDetailView(playlist, presetKey);
+
+    } catch (error) {
+        console.error('Error opening AI playlist:', error);
+        showToast('Failed to load playlist. Please try again.');
+    }
+}
+
+function showAIPlaylistDetailView(playlist, presetKey) {
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'block';
+
+    // Render the detail view
+    renderAIPlaylistDetailView(playlist, presetKey);
+
+    // Apply gradient
+    const color = AI_PRESET_COLORS[presetKey] || '#1DB954';
+    const mainGradient = document.getElementById('mainGradient');
+    if (mainGradient) {
+        mainGradient.style.background = `linear-gradient(180deg, ${color}40 0%, var(--bg-primary) 40%)`;
+    }
+
+    // Update sidebar
+    updateSidebarActiveState('ai-generated');
+}
+
+function hideAIPlaylistDetailView() {
+    currentAIPlaylist = null;
+
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'block';
+
+    // Reset gradient
+    const mainGradient = document.getElementById('mainGradient');
+    if (mainGradient) {
+        mainGradient.style.background = 'linear-gradient(180deg, rgba(29, 185, 84, 0.3) 0%, var(--bg-primary) 40%)';
+    }
+}
+
+function renderAIPlaylistDetailView(playlist, presetKey) {
+    const header = document.getElementById('aiPlaylistDetailHeader');
+    const content = document.getElementById('aiPlaylistDetailSongs');
+
+    if (!header || !content) return;
+
+    const icon = AI_PRESET_ICONS[presetKey] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    const songCount = playlist.songs ? playlist.songs.length : 0;
+
+    header.innerHTML = `
+        <button class="detail-back-btn" onclick="hideAIPlaylistDetailView()" title="Back to AI Playlists">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="detail-playlist-cover ai-playlist-cover">
+            <div class="ai-playlist-icon">${icon}</div>
+        </div>
+        <div class="detail-info">
+            <span class="detail-type">AI Generated Playlist</span>
+            <h1 class="detail-title">${escapeHtml(playlist.name)}</h1>
+            <p class="detail-description">${escapeHtml(playlist.description || '')}</p>
+            <div class="detail-meta">
+                <span>${songCount} songs</span>
+                ${playlist.total_duration_formatted ? `<span>${playlist.total_duration_formatted}</span>` : ''}
+            </div>
+        </div>
+        <div class="detail-actions">
+            <button class="detail-play-btn" onclick="playAIPlaylist(0)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Play
+            </button>
+            <button class="detail-shuffle-btn" onclick="shuffleAIPlaylist()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 3 21 3 21 8"></polyline>
+                    <line x1="4" y1="20" x2="21" y2="3"></line>
+                    <polyline points="21 16 21 21 16 21"></polyline>
+                    <line x1="15" y1="15" x2="21" y2="21"></line>
+                    <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
+                Shuffle
+            </button>
+        </div>
+    `;
+
+    // Render songs
+    if (!playlist.songs || playlist.songs.length === 0) {
+        content.innerHTML = '<p class="no-songs">No songs in this playlist</p>';
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${playlist.songs.map((song, index) => `
+                <div class="detail-song" onclick="playAISong(${index})">
+                    <span class="detail-song-num">${index + 1}</span>
+                    <div class="detail-song-artwork">
+                        <div class="placeholder"></div>
+                        <div class="detail-song-play-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="detail-song-info">
+                        <span class="detail-song-title">${escapeHtml(song.title)}</span>
+                        <span class="detail-song-artist">${escapeHtml(song.artist)}</span>
+                    </div>
+                    <span class="detail-song-duration">${formatDuration(song.duration_seconds)}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function formatDuration(seconds) {
+    if (!seconds) return '';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+async function playAIPlaylist(startIndex = 0) {
+    if (!currentAIPlaylist || !currentAIPlaylist.songs) return;
+
+    const songs = currentAIPlaylist.songs;
+    if (songs.length === 0) return;
+
+    // Set up queue - we'll search YouTube for each song
+    queue = songs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        videoId: null, // Will be resolved when playing
+        artwork: '',
+        needsSearch: true,
+    }));
+
+    currentSongIndex = startIndex;
+    await playAISongBySearch(startIndex);
+}
+
+async function shuffleAIPlaylist() {
+    if (!currentAIPlaylist || !currentAIPlaylist.songs) return;
+
+    const songs = currentAIPlaylist.songs;
+    if (songs.length === 0) return;
+
+    // Shuffle the songs
+    const shuffled = [...songs].sort(() => Math.random() - 0.5);
+
+    // Set up queue
+    queue = shuffled.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        videoId: null,
+        artwork: '',
+        needsSearch: true,
+    }));
+
+    currentSongIndex = 0;
+    await playAISongBySearch(0);
+
+    showToast('Shuffling playlist...');
+}
+
+async function playAISong(index) {
+    if (!currentAIPlaylist || !currentAIPlaylist.songs) return;
+    if (index >= currentAIPlaylist.songs.length) return;
+
+    // Set up queue
+    queue = currentAIPlaylist.songs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        videoId: null,
+        artwork: '',
+        needsSearch: true,
+    }));
+
+    currentSongIndex = index;
+    await playAISongBySearch(index);
+}
+
+async function playAISongBySearch(index) {
+    const song = queue[index];
+    if (!song) return;
+
+    showToast(`Searching for "${song.title}"...`);
+
+    try {
+        // Search YouTube for the song
+        const searchQuery = `${song.title} ${song.artist}`;
+        const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(searchQuery)}&limit=1`);
+
+        if (response.ok) {
+            const results = await response.json();
+            if (results.songs && results.songs.length > 0) {
+                const found = results.songs[0];
+                song.videoId = found.youtube_video_id || found.video_id;
+                song.artwork = found.artwork_url || '';
+
+                // Update queue
+                queue[index] = song;
+
+                // Play the song
+                if (song.videoId) {
+                    playSongFromQueue(index);
+                    return;
+                }
+            }
+        }
+
+        // If search via API fails, try direct YouTube search
+        showToast(`Playing "${song.title}"...`);
+        searchAndPlayOnYouTube(song.title, song.artist);
+
+    } catch (error) {
+        console.error('Error searching for song:', error);
+        showToast('Failed to find song on YouTube');
+    }
+}
+
+function searchAndPlayOnYouTube(title, artist) {
+    // Use YouTube search URL as fallback
+    const searchQuery = encodeURIComponent(`${title} ${artist} official audio`);
+    // For now, just update the player bar with song info
+    updatePlayerBar({
+        title: title,
+        artist: artist,
+        artwork: ''
+    });
+    showToast(`Search for "${title}" on YouTube to play`);
 }
 
