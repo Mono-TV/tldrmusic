@@ -13,13 +13,13 @@ class Settings(BaseSettings):
     """
     # Application
     APP_NAME: str = "TLDR Music API"
-    APP_VERSION: str = "2.0.0"
+    APP_VERSION: str = "2.1.0"
     DEBUG: bool = False
     ENVIRONMENT: str = "development"  # development, staging, production
 
     # API
     API_PREFIX: str = "/api"  # Unified API (no version prefix)
-    CORS_ORIGINS: List[str] = ["http://localhost:8000", "http://localhost:3000", "http://localhost:8002", "http://127.0.0.1:8002"]
+    CORS_ORIGINS: List[str] = ["http://localhost:8000", "http://localhost:3000", "http://localhost:8002", "http://127.0.0.1:8002", "https://mono-tv.github.io", "https://tldrmusic.com"]
 
     # MongoDB
     MONGODB_URL: str = "mongodb://localhost:27017"

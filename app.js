@@ -1,6 +1,6 @@
 // TLDR Music - Frontend Application
 
-const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
+const API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // localStorage keys
@@ -5268,16 +5268,20 @@ function initSidebar() {
 function updateSidebarActiveState(mode) {
     const sidebarHomeBtn = document.getElementById('sidebarHomeBtn');
     const sidebarPlaylistsBtn = document.getElementById('sidebarPlaylistsBtn');
+    const sidebarDiscoverBtn = document.getElementById('sidebarDiscoverBtn');
 
     // Remove active from all nav items
     sidebarHomeBtn?.classList.remove('active');
     sidebarPlaylistsBtn?.classList.remove('active');
+    sidebarDiscoverBtn?.classList.remove('active');
 
     // Set active based on mode
     if (mode === 'home') {
         sidebarHomeBtn?.classList.add('active');
     } else if (mode === 'playlists') {
         sidebarPlaylistsBtn?.classList.add('active');
+    } else if (mode === 'discover') {
+        sidebarDiscoverBtn?.classList.add('active');
     }
 }
 
@@ -5300,6 +5304,8 @@ function showHomeView() {
     const favoritesDetailView = document.getElementById('favoritesDetailView');
     const historyDetailView = document.getElementById('historyDetailView');
     const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
 
     if (homeView) homeView.style.display = 'block';
     if (mainContent) mainContent.style.display = 'block';
@@ -5309,6 +5315,8 @@ function showHomeView() {
     if (favoritesDetailView) favoritesDetailView.style.display = 'none';
     if (historyDetailView) historyDetailView.style.display = 'none';
     if (chartDetailView) chartDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
 
     // Update sidebar active state
     updateSidebarActiveState('home');
@@ -5348,4 +5356,524 @@ function selectChart(mode) {
     selectHomeChart(mode);
 }
 
+// ============================================================
+// DISCOVER VIEW FUNCTIONS
+// ============================================================
+
+// Curated playlist data (will be fetched from API later)
+const CURATED_PLAYLISTS = {
+    moods: [
+        { id: 'mood-chill', name: 'Chill Vibes', mood: 'chill', songCount: 3215, icon: 'chill' },
+        { id: 'mood-workout', name: 'Workout Beats', mood: 'workout', songCount: 1597, icon: 'workout' },
+        { id: 'mood-party', name: 'Party Anthems', mood: 'party', songCount: 1770, icon: 'party' },
+        { id: 'mood-romance', name: 'Love Songs', mood: 'romance', songCount: 1711, icon: 'romance' },
+        { id: 'mood-sad', name: 'Sad Songs', mood: 'sad', songCount: 2015, icon: 'sad' },
+        { id: 'mood-focus', name: 'Deep Focus', mood: 'focus', songCount: 2100, icon: 'focus' },
+        { id: 'mood-gaming', name: 'Gaming Mode', mood: 'gaming', songCount: 1354, icon: 'gaming' },
+        { id: 'mood-feel-good', name: 'Feel Good Hits', mood: 'feel-good', songCount: 2165, icon: 'feel-good' },
+        { id: 'mood-sleep', name: 'Sleep Sounds', mood: 'sleep', songCount: 1735, icon: 'sleep' },
+        { id: 'mood-commute', name: 'Road Trip Mix', mood: 'commute', songCount: 2924, icon: 'commute' },
+        { id: 'mood-energize', name: 'Energy Boost', mood: 'energize', songCount: 2866, icon: 'energize' }
+    ],
+    languages: [
+        { id: 'lang-hindi', name: 'Hindi Hits', lang: 'hindi', songCount: 13404 },
+        { id: 'lang-tamil', name: 'Tamil Tracks', lang: 'tamil', songCount: 4858 },
+        { id: 'lang-telugu', name: 'Telugu Tunes', lang: 'telugu', songCount: 3874 },
+        { id: 'lang-punjabi', name: 'Punjabi Beats', lang: 'punjabi', songCount: 2491 },
+        { id: 'lang-english', name: 'English Pop', lang: 'english', songCount: 2074 },
+        { id: 'lang-bengali', name: 'Bengali Vibes', lang: 'bengali', songCount: 1495 },
+        { id: 'lang-kannada', name: 'Kannada Hits', lang: 'kannada', songCount: 1438 },
+        { id: 'lang-malayalam', name: 'Malayalam Melodies', lang: 'malayalam', songCount: 858 },
+        { id: 'lang-bhojpuri', name: 'Bhojpuri Beats', lang: 'bhojpuri', songCount: 618 },
+        { id: 'lang-marathi', name: 'Marathi Mix', lang: 'marathi', songCount: 268 },
+        { id: 'lang-gujarati', name: 'Gujarati Grooves', lang: 'gujarati', songCount: 302 },
+        { id: 'lang-haryanvi', name: 'Haryanvi Hits', lang: 'haryanvi', songCount: 157 }
+    ],
+    artists: [
+        { id: 'artist-arijit', name: 'Arijit Singh', songCount: 108 },
+        { id: 'artist-anirudh', name: 'Anirudh Ravichander', songCount: 99 },
+        { id: 'artist-masoom', name: 'Masoom Sharma', songCount: 86 },
+        { id: 'artist-kishore', name: 'Kishore Kumar', songCount: 77 },
+        { id: 'artist-shreya', name: 'Shreya Ghoshal', songCount: 76 },
+        { id: 'artist-sonu', name: 'Sonu Nigam', songCount: 75 },
+        { id: 'artist-taylor', name: 'Taylor Swift', songCount: 74 },
+        { id: 'artist-lata', name: 'Lata Mangeshkar', songCount: 70 },
+        { id: 'artist-rafi', name: 'Mohammed Rafi', songCount: 57 },
+        { id: 'artist-badshah', name: 'Badshah', songCount: 57 },
+        { id: 'artist-udit', name: 'Udit Narayan', songCount: 56 },
+        { id: 'artist-diljit', name: 'Diljit Dosanjh', songCount: 55 },
+        { id: 'artist-ed', name: 'Ed Sheeran', songCount: 52 },
+        { id: 'artist-karan', name: 'Karan Aujla', songCount: 51 },
+        { id: 'artist-kumar', name: 'Kumar Sanu', songCount: 50 },
+        { id: 'artist-chris', name: 'Chris Brown', songCount: 48 },
+        { id: 'artist-drake', name: 'Drake', songCount: 47 },
+        { id: 'artist-khesari', name: 'Khesari Lal Yadav', songCount: 47 },
+        { id: 'artist-weeknd', name: 'The Weeknd', songCount: 45 },
+        { id: 'artist-neha', name: 'Neha Kakkar', songCount: 40 }
+    ],
+    eras: [
+        { id: 'era-2025', name: '2025 Fresh', era: '2025', songCount: 3187 },
+        { id: 'era-2024', name: '2024 Top Picks', era: '2024', songCount: 3147 },
+        { id: 'era-2023', name: '2023 Best Of', era: '2023', songCount: 2459 },
+        { id: 'era-2022', name: '2022 Favorites', era: '2022', songCount: 2331 },
+        { id: 'era-2010s', name: '2010s Throwback', era: '2010s', songCount: 5000 },
+        { id: 'era-retro', name: 'Retro Classics', era: 'retro', songCount: 3000 }
+    ]
+};
+
+// Mood icons SVG
+const MOOD_ICONS = {
+    chill: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+    workout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5L17.5 17.5M6.5 17.5L17.5 6.5M2 12h4M18 12h4M12 2v4M12 18v4"/></svg>',
+    party: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3L2 22l10.7-3.8M15 3v4M3 9h4M21 9h-4M18 3l-2 2M6 3l2 2"/><circle cx="12" cy="12" r="4"/></svg>',
+    romance: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    sad: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+    focus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    gaming: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="16" cy="10" r="1"/><circle cx="18" cy="12" r="1"/></svg>',
+    'feel-good': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+    sleep: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    commute: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    energize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'
+};
+
+function showDiscoverView() {
+    isHomeViewVisible = false;
+    isPlaylistPanelVisible = false;
+
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'block';
+
+    // Update sidebar active state
+    updateSidebarActiveState('discover');
+
+    // Close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    sidebar?.classList.remove('open');
+
+    // Render discover playlists
+    renderDiscoverPlaylists();
+}
+
+function renderDiscoverPlaylists() {
+    renderMoodPlaylists();
+    renderLanguagePlaylists();
+    renderArtistPlaylists();
+    renderEraPlaylists();
+}
+
+function renderMoodPlaylists() {
+    const grid = document.getElementById('moodPlaylistsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = CURATED_PLAYLISTS.moods.map(mood => `
+        <div class="discover-card" data-mood="${mood.mood}" onclick="openCuratedPlaylist('mood', '${mood.id}')">
+            <div class="discover-card-bg"></div>
+            <div class="discover-card-content">
+                <div class="discover-card-icon">${MOOD_ICONS[mood.mood] || ''}</div>
+                <h4 class="discover-card-title">${mood.name}</h4>
+                <span class="discover-card-meta">${mood.songCount.toLocaleString()} songs</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderLanguagePlaylists() {
+    const grid = document.getElementById('languagePlaylistsGrid');
+    if (!grid) return;
+
+    const musicIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+
+    grid.innerHTML = CURATED_PLAYLISTS.languages.map(lang => `
+        <div class="discover-card" data-lang="${lang.lang}" onclick="openCuratedPlaylist('language', '${lang.id}')">
+            <div class="discover-card-bg"></div>
+            <div class="discover-card-content">
+                <div class="discover-card-icon">${musicIcon}</div>
+                <h4 class="discover-card-title">${lang.name}</h4>
+                <span class="discover-card-meta">${lang.songCount.toLocaleString()} songs</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderArtistPlaylists() {
+    const scroll = document.getElementById('artistPlaylistsScroll');
+    if (!scroll) return;
+
+    const personIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+
+    scroll.innerHTML = CURATED_PLAYLISTS.artists.map(artist => `
+        <div class="artist-card" onclick="openCuratedPlaylist('artist', '${artist.id}')">
+            <div class="artist-card-image">${personIcon}</div>
+            <div class="artist-card-name">${artist.name}</div>
+            <div class="artist-card-count">${artist.songCount} songs</div>
+        </div>
+    `).join('');
+}
+
+function renderEraPlaylists() {
+    const grid = document.getElementById('eraPlaylistsGrid');
+    if (!grid) return;
+
+    const calendarIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+    grid.innerHTML = CURATED_PLAYLISTS.eras.map(era => `
+        <div class="discover-card" data-era="${era.era}" onclick="openCuratedPlaylist('era', '${era.id}')">
+            <div class="discover-card-bg"></div>
+            <div class="discover-card-content">
+                <div class="discover-card-icon">${calendarIcon}</div>
+                <h4 class="discover-card-title">${era.name}</h4>
+                <span class="discover-card-meta">${era.songCount.toLocaleString()} songs</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Current curated playlist state
+let currentCuratedPlaylist = null;
+let currentCuratedType = null;
+
+async function openCuratedPlaylist(type, id) {
+    // Extract the key from id (e.g., "mood-chill" -> "chill")
+    const key = id.replace(`${type}-`, '').replace('lang-', '').replace('artist-', '').replace('era-', '');
+
+    // Show loading state
+    showToast('Loading playlist...');
+
+    try {
+        // Fetch from API
+        const response = await fetch(`${API_BASE}/api/curated/${type}/${key}`);
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Curated playlists API not deployed yet');
+            }
+            throw new Error(`Failed to load playlist: ${response.status}`);
+        }
+
+        const playlist = await response.json();
+        currentCuratedPlaylist = playlist;
+        currentCuratedType = type;
+
+        // Show the curated detail view
+        showCuratedDetailView(playlist);
+
+    } catch (error) {
+        console.error('Error loading curated playlist:', error);
+        showToast(error.message || 'Failed to load playlist. Please try again.');
+    }
+}
+
+function showCuratedDetailView(playlist) {
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'block';
+
+    // Render the detail view
+    renderCuratedDetailView(playlist);
+
+    // Apply gradient based on type
+    applyCuratedGradient(playlist);
+
+    // Update sidebar
+    updateSidebarActiveState('discover');
+}
+
+function hideCuratedDetailView() {
+    currentCuratedPlaylist = null;
+    currentCuratedType = null;
+
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    const discoverView = document.getElementById('discoverView');
+
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'block';
+
+    // Reset gradient
+    const mainGradient = document.getElementById('mainGradient');
+    if (mainGradient) {
+        mainGradient.style.background = 'linear-gradient(180deg, rgba(29, 185, 84, 0.3) 0%, var(--bg-primary) 40%)';
+    }
+}
+
+function renderCuratedDetailView(playlist) {
+    const header = document.getElementById('curatedDetailHeader');
+    const content = document.getElementById('curatedDetailSongs');
+
+    if (!header || !content) return;
+
+    // Get icon based on type
+    const icon = getCuratedPlaylistIcon(playlist.type, playlist.mood || playlist.language || playlist.era);
+
+    // Get type label
+    const typeLabel = playlist.type.charAt(0).toUpperCase() + playlist.type.slice(1);
+
+    header.innerHTML = `
+        <button class="detail-back-btn" onclick="hideCuratedDetailView()" title="Back to Discover">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="curated-detail-hero">
+            <div class="curated-detail-cover">
+                ${icon}
+            </div>
+            <div class="curated-detail-info">
+                <span class="curated-detail-type">${typeLabel} Playlist</span>
+                <h1 class="curated-detail-name">${escapeHtml(playlist.name)}</h1>
+                <p class="curated-detail-meta">${playlist.total.toLocaleString()} songs</p>
+                <div class="curated-detail-buttons">
+                    <button class="btn-primary" onclick="playCuratedPlaylist()" ${playlist.songs.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play
+                    </button>
+                    <button class="btn-secondary" onclick="shuffleCuratedPlaylist()" ${playlist.songs.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    if (playlist.songs.length === 0) {
+        content.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <h3>No playable songs found</h3>
+                <p>This playlist doesn't have any songs with video IDs yet</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Filter to only show songs with video_id
+    const playableSongs = playlist.songs.filter(s => s.youtube_video_id);
+
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${playableSongs.map((song, index) => `
+                <div class="detail-song" onclick="playCuratedSong(${index})">
+                    <span class="detail-song-num">${index + 1}</span>
+                    <div class="detail-song-artwork">
+                        ${song.artwork_url
+                            ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}">`
+                            : '<div class="placeholder"></div>'
+                        }
+                        <div class="detail-song-play-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="detail-song-info">
+                        <span class="detail-song-title">${escapeHtml(song.title)}</span>
+                        <span class="detail-song-artist">${escapeHtml(song.artist)}</span>
+                    </div>
+                    <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${song.artwork_url || ''}'})" title="Add to playlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+        ${playlist.songs.length > playableSongs.length ? `
+            <p class="detail-meta" style="text-align: center; margin-top: 1rem; color: var(--text-muted);">
+                Showing ${playableSongs.length} playable songs (${playlist.songs.length - playableSongs.length} without video)
+            </p>
+        ` : ''}
+    `;
+}
+
+function getCuratedPlaylistIcon(type, key) {
+    // Return appropriate icon based on type
+    if (type === 'mood' && MOOD_ICONS[key]) {
+        return `<div class="curated-icon">${MOOD_ICONS[key]}</div>`;
+    }
+
+    // Default icons by type
+    const defaultIcons = {
+        mood: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+        language: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
+        artist: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        era: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    };
+
+    return `<div class="curated-icon">${defaultIcons[type] || defaultIcons.mood}</div>`;
+}
+
+function applyCuratedGradient(playlist) {
+    const mainGradient = document.getElementById('mainGradient');
+    if (!mainGradient) return;
+
+    // Color mappings for different types
+    const moodColors = {
+        'chill': '#4A90D9',
+        'workout': '#E63946',
+        'party': '#FF6B6B',
+        'romance': '#E91E63',
+        'sad': '#5C6BC0',
+        'focus': '#00BCD4',
+        'gaming': '#9C27B0',
+        'feel-good': '#FFC107',
+        'sleep': '#3F51B5',
+        'commute': '#FF9800',
+        'energize': '#FFEB3B',
+    };
+
+    const langColors = {
+        'hindi': '#FF5722',
+        'tamil': '#E91E63',
+        'telugu': '#9C27B0',
+        'punjabi': '#FF9800',
+        'english': '#2196F3',
+        'bengali': '#4CAF50',
+        'kannada': '#673AB7',
+        'malayalam': '#009688',
+        'bhojpuri': '#795548',
+        'marathi': '#FF5722',
+        'gujarati': '#FFC107',
+        'haryanvi': '#8BC34A',
+    };
+
+    const eraColors = {
+        '2025': '#1DB954',
+        '2024': '#1DB954',
+        '2023': '#FF6B6B',
+        '2022': '#9C27B0',
+        '2010s': '#FF9800',
+        'retro': '#795548',
+    };
+
+    let color = '#1DB954'; // Default green
+
+    if (playlist.type === 'mood' && moodColors[playlist.mood]) {
+        color = moodColors[playlist.mood];
+    } else if (playlist.type === 'language' && langColors[playlist.language]) {
+        color = langColors[playlist.language];
+    } else if (playlist.type === 'era' && eraColors[playlist.era]) {
+        color = eraColors[playlist.era];
+    } else if (playlist.type === 'artist') {
+        color = '#E91E63'; // Pink for artists
+    }
+
+    mainGradient.style.background = `linear-gradient(180deg, ${color}40 0%, var(--bg-primary) 40%)`;
+}
+
+function playCuratedPlaylist(startIndex = 0) {
+    if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
+
+    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
+    if (playableSongs.length === 0) return;
+
+    // Set up queue with curated songs
+    queue = playableSongs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id,
+        artwork: song.artwork_url || '',
+    }));
+
+    // Play starting from specified index
+    currentSongIndex = startIndex;
+    const song = queue[currentSongIndex];
+
+    if (song) {
+        playSongFromQueue(currentSongIndex);
+    }
+}
+
+function shuffleCuratedPlaylist() {
+    if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
+
+    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
+    if (playableSongs.length === 0) return;
+
+    // Shuffle the songs
+    const shuffled = [...playableSongs].sort(() => Math.random() - 0.5);
+
+    // Set up queue with shuffled songs
+    queue = shuffled.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id,
+        artwork: song.artwork_url || '',
+    }));
+
+    // Play first song
+    currentSongIndex = 0;
+    playSongFromQueue(0);
+
+    showToast('Shuffling playlist...');
+}
+
+function playCuratedSong(index) {
+    if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
+
+    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
+    if (index >= playableSongs.length) return;
+
+    // Set up queue and play
+    queue = playableSongs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id,
+        artwork: song.artwork_url || '',
+    }));
+
+    currentSongIndex = index;
+    playSongFromQueue(index);
+}
 

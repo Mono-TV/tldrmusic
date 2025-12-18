@@ -10,6 +10,7 @@ from .search import router as search_router
 from .rank_history import router as rank_history_router
 from .regional import router as regional_router
 from .global_chart import router as global_router
+from .curated import router as curated_router
 
 __all__ = [
     "auth_router",
@@ -22,4 +23,5 @@ __all__ = [
     "rank_history_router",
     "regional_router",
     "global_router",
+    "curated_router",
 ]

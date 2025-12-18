@@ -1553,6 +1553,375 @@ body::before {
     }
 }
 
+/* ===== DISCOVER PAGE ===== */
+.discover-view {
+    padding: 0 0 2rem 0;
+}
+
+.discover-header {
+    margin-bottom: 2rem;
+}
+
+.discover-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.discover-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.discover-section {
+    margin-bottom: 2.5rem;
+}
+
+.discover-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.discover-section-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.discover-section-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+}
+
+.discover-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.discover-grid.mood-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* Discover Card */
+.discover-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    aspect-ratio: 1.2;
+}
+
+.discover-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.discover-card-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--card-color) 0%, color-mix(in srgb, var(--card-color) 60%, #000) 100%);
+}
+
+.discover-card-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.discover-card-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+}
+
+.discover-card-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.discover-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 0.25rem 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.discover-card-meta {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Mood Cards - specific colors */
+.discover-card[data-mood="chill"] { --card-color: #4A90D9; }
+.discover-card[data-mood="workout"] { --card-color: #E63946; }
+.discover-card[data-mood="party"] { --card-color: #9B59B6; }
+.discover-card[data-mood="romance"] { --card-color: #E91E63; }
+.discover-card[data-mood="sad"] { --card-color: #607D8B; }
+.discover-card[data-mood="focus"] { --card-color: #00897B; }
+.discover-card[data-mood="gaming"] { --card-color: #7C4DFF; }
+.discover-card[data-mood="feel-good"] { --card-color: #FF9800; }
+.discover-card[data-mood="sleep"] { --card-color: #3F51B5; }
+.discover-card[data-mood="commute"] { --card-color: #00ACC1; }
+.discover-card[data-mood="energize"] { --card-color: #FF5722; }
+
+/* Language Cards - use platform-btn style colors */
+.discover-card[data-lang="hindi"] { --card-color: #FF6B35; }
+.discover-card[data-lang="tamil"] { --card-color: #C41E3A; }
+.discover-card[data-lang="telugu"] { --card-color: #E6B800; }
+.discover-card[data-lang="punjabi"] { --card-color: #FFB833; }
+.discover-card[data-lang="english"] { --card-color: #1DB954; }
+.discover-card[data-lang="bengali"] { --card-color: #228B22; }
+.discover-card[data-lang="kannada"] { --card-color: #E31837; }
+.discover-card[data-lang="malayalam"] { --card-color: #00A86B; }
+.discover-card[data-lang="bhojpuri"] { --card-color: #FF8C00; }
+.discover-card[data-lang="marathi"] { --card-color: #FF7F00; }
+.discover-card[data-lang="gujarati"] { --card-color: #DC143C; }
+.discover-card[data-lang="haryanvi"] { --card-color: #2E8B57; }
+
+/* Era Cards */
+.discover-card[data-era="2025"] { --card-color: #7C4DFF; }
+.discover-card[data-era="2024"] { --card-color: #00BCD4; }
+.discover-card[data-era="2023"] { --card-color: #4CAF50; }
+.discover-card[data-era="2022"] { --card-color: #FF9800; }
+.discover-card[data-era="2010s"] { --card-color: #E91E63; }
+.discover-card[data-era="retro"] { --card-color: #795548; }
+
+/* Artist Scroll */
+.discover-scroll-container {
+    overflow: hidden;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.discover-scroll {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.discover-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.discover-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.discover-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Artist Card - circular style */
+.artist-card {
+    flex: 0 0 auto;
+    width: 140px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.artist-card:hover {
+    transform: scale(1.05);
+}
+
+.artist-card-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 0.75rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.artist-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.artist-card-image svg {
+    width: 48px;
+    height: 48px;
+    color: var(--text-muted);
+}
+
+.artist-card-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist-card-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Curated Detail View */
+.curated-detail-view {
+    padding: 0 0 120px 0;
+}
+
+.curated-detail-header {
+    margin-bottom: 2rem;
+}
+
+.curated-detail-hero {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.curated-detail-cover {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.curated-detail-cover svg {
+    width: 64px;
+    height: 64px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.curated-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.curated-icon svg {
+    width: 64px;
+    height: 64px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.curated-detail-info {
+    flex: 1;
+}
+
+.curated-detail-type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.curated-detail-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+}
+
+.curated-detail-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.curated-detail-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Discover responsive */
+@media (max-width: 768px) {
+    .discover-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .discover-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .discover-grid.mood-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .artist-card {
+        width: 120px;
+    }
+
+    .artist-card-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .curated-detail-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .curated-detail-cover {
+        width: 180px;
+        height: 180px;
+    }
+
+    .curated-detail-name {
+        font-size: 1.75rem;
+    }
+
+    .curated-detail-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 500px) {
+    .discover-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .discover-card {
+        aspect-ratio: 1;
+    }
+
+    .discover-card-title {
+        font-size: 0.95rem;
+    }
+}
+
 /* ===== FLOATING PLAYER BAR ===== */
 .player-bar {
     position: fixed;

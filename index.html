@@ -39,6 +39,15 @@
                         </span>
                         <span class="sidebar-nav-text">Home</span>
                     </button>
+                    <button class="sidebar-nav-item" id="sidebarDiscoverBtn" onclick="showDiscoverView()">
+                        <span class="sidebar-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-text">Discover</span>
+                    </button>
                 </nav>
 
                 <!-- Library Section -->
@@ -344,6 +353,66 @@
             <section class="chart-detail-view" id="chartDetailView" style="display: none;">
                 <div class="chart-detail-header" id="chartDetailHeader"></div>
                 <div class="chart-detail-songs" id="chartDetailSongs"></div>
+            </section>
+
+            <!-- Discover View -->
+            <section class="discover-view" id="discoverView" style="display: none;">
+                <div class="discover-header">
+                    <h2>Discover</h2>
+                    <p class="discover-subtitle">Curated playlists from 68,000+ songs</p>
+                </div>
+
+                <!-- Mood Playlists -->
+                <div class="discover-section">
+                    <div class="discover-section-header">
+                        <h3>Moods & Vibes</h3>
+                        <span class="discover-section-count" id="moodPlaylistsCount">11</span>
+                    </div>
+                    <div class="discover-grid mood-grid" id="moodPlaylistsGrid">
+                        <!-- Mood cards will be rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Language Playlists -->
+                <div class="discover-section">
+                    <div class="discover-section-header">
+                        <h3>By Language</h3>
+                        <span class="discover-section-count" id="languagePlaylistsCount">12</span>
+                    </div>
+                    <div class="discover-grid language-grid" id="languagePlaylistsGrid">
+                        <!-- Language cards will be rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Artist Spotlights -->
+                <div class="discover-section">
+                    <div class="discover-section-header">
+                        <h3>Artist Spotlights</h3>
+                        <span class="discover-section-count" id="artistPlaylistsCount">20</span>
+                    </div>
+                    <div class="discover-scroll-container">
+                        <div class="discover-scroll" id="artistPlaylistsScroll">
+                            <!-- Artist cards will be rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decades / Era -->
+                <div class="discover-section">
+                    <div class="discover-section-header">
+                        <h3>By Era</h3>
+                        <span class="discover-section-count" id="eraPlaylistsCount">6</span>
+                    </div>
+                    <div class="discover-grid era-grid" id="eraPlaylistsGrid">
+                        <!-- Era cards will be rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Curated Playlist Detail View -->
+            <section class="curated-detail-view" id="curatedDetailView" style="display: none;">
+                <div class="curated-detail-header" id="curatedDetailHeader"></div>
+                <div class="curated-detail-songs" id="curatedDetailSongs"></div>
             </section>
 
             <!-- Main Content (charts, etc.) -->
