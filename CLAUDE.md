@@ -134,7 +134,8 @@ tldrmusic/
 - **Chart Selector Cards**: Toggle between India Top 25 and Global Top 25
 - **Quick Picks**: Shows top 10 songs from the selected chart
 - **Hero Section**: Full-width spotlight for #1 song
-- **Regional Spotlights**: Language-specific charts (India only)
+- **Regional Charts** (India): Language selector (Hindi, Punjabi, Tamil, etc.) with grid of top 10 songs
+- **Platform Charts** (Global): Platform selector (Spotify, Billboard, Apple Music) with grid of top 10 songs
 - **Logo Navigation**: Clicking TLDRMusic logo returns to home
 
 ### UI Components

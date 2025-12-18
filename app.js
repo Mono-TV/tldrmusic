@@ -77,9 +77,7 @@ const progressHandle = document.getElementById('progressHandle');
 const timeCurrent = document.getElementById('timeCurrent');
 const timeDuration = document.getElementById('timeDuration');
 const regionalSection = document.getElementById('regionalSection');
-const regionalGrid = document.getElementById('regionalGrid');
 const globalSpotlightsSection = document.getElementById('globalSpotlightsSection');
-const globalSpotlightsGrid = document.getElementById('globalSpotlightsGrid');
 const heroSection = document.getElementById('heroSection');
 const heroTheater = document.getElementById('heroTheater');
 const theaterVideo = document.getElementById('theaterVideo');
@@ -566,36 +564,22 @@ function renderSkeletons() {
         chartList.innerHTML = skeletonHTML;
     }
 
-    // Regional skeleton - 4 language groups with 5 songs each
-    const regionalGrid = document.getElementById('regionalGrid');
-    if (regionalGrid) {
+    // Regional skeleton - show skeleton cards in grid format
+    const regionalChartGrid = document.getElementById('regionalChartGrid');
+    if (regionalChartGrid) {
         let regionalHTML = '';
-        for (let r = 0; r < 4; r++) {
-            let songsHTML = '';
-            for (let s = 0; s < 5; s++) {
-                songsHTML += `
-                    <div class="skeleton-regional-song">
-                        <div class="skeleton skeleton-thumb"></div>
-                        <div class="skeleton-song-info">
-                            <div class="skeleton skeleton-song-title"></div>
-                            <div class="skeleton skeleton-song-artist"></div>
-                        </div>
-                    </div>
-                `;
-            }
+        for (let i = 0; i < 10; i++) {
             regionalHTML += `
-                <div class="skeleton-regional" data-skeleton="true">
-                    <div class="skeleton-regional-header">
-                        <div class="skeleton skeleton-icon"></div>
-                        <div class="skeleton skeleton-name"></div>
-                    </div>
-                    <div class="skeleton-regional-songs">
-                        ${songsHTML}
+                <div class="skeleton-card" data-skeleton="true">
+                    <div class="skeleton skeleton-artwork"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-artist"></div>
                     </div>
                 </div>
             `;
         }
-        regionalGrid.innerHTML = regionalHTML;
+        regionalChartGrid.innerHTML = regionalHTML;
     }
 }
 
@@ -775,10 +759,15 @@ function renderChart() {
     }
 }
 
+// Current selected regional language
+let currentRegionalLanguage = 'hindi';
+
 // Render regional charts
 function renderRegionalCharts() {
-    if (!chartData || !chartData.regional || !regionalGrid) {
-        // Hide section if no regional data
+    const languageSelector = document.getElementById('regionalLanguageSelector');
+    const chartGrid = document.getElementById('regionalChartGrid');
+
+    if (!chartData || !chartData.regional || !languageSelector || !chartGrid) {
         if (regionalSection) regionalSection.style.display = 'none';
         return;
     }
@@ -786,202 +775,279 @@ function renderRegionalCharts() {
     // Show section
     if (regionalSection) regionalSection.style.display = 'block';
 
-    regionalGrid.innerHTML = '';
-
-    // Order: All regional languages
-    const regionOrder = [
-        'hindi', 'tamil', 'telugu', 'punjabi',
-        'bhojpuri', 'haryanvi', 'bengali', 'marathi',
-        'kannada', 'malayalam', 'gujarati'
+    // Language configuration
+    const languages = [
+        { key: 'hindi', name: 'Hindi' },
+        { key: 'punjabi', name: 'Punjabi' },
+        { key: 'tamil', name: 'Tamil' },
+        { key: 'telugu', name: 'Telugu' },
+        { key: 'bengali', name: 'Bengali' },
+        { key: 'marathi', name: 'Marathi' },
+        { key: 'kannada', name: 'Kannada' },
+        { key: 'malayalam', name: 'Malayalam' },
+        { key: 'bhojpuri', name: 'Bhojpuri' },
+        { key: 'haryanvi', name: 'Haryanvi' },
+        { key: 'gujarati', name: 'Gujarati' }
     ];
 
-    regionOrder.forEach(regionKey => {
-        const region = chartData.regional[regionKey];
-        if (!region || !region.songs || region.songs.length === 0) return;
+    // Filter to only languages that have data
+    const availableLanguages = languages.filter(lang =>
+        chartData.regional[lang.key]?.songs?.length > 0
+    );
 
-        const card = document.createElement('div');
-        card.className = 'regional-card';
+    // Set default language if current doesn't have data
+    if (!chartData.regional[currentRegionalLanguage]?.songs?.length && availableLanguages.length > 0) {
+        currentRegionalLanguage = availableLanguages[0].key;
+    }
 
-        const songsHtml = region.songs.slice(0, 5).map((song, i) => {
-            // Use artwork from song data, or try main chart as fallback
-            const artworkUrl = song.artwork_url || findSongInMainChart(song.title, song.artist)?.artwork_url || '';
-            const videoId = song.youtube_video_id || '';
+    // Render language selector buttons
+    languageSelector.innerHTML = availableLanguages.map(lang => `
+        <button class="regional-lang-btn ${lang.key === currentRegionalLanguage ? 'active' : ''}"
+                data-lang="${lang.key}" onclick="selectRegionalLanguage('${lang.key}')">
+            ${lang.name}
+        </button>
+    `).join('');
 
-            const placeholderSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
-                </svg>
-            `;
-
-            const playSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                </svg>
-            `;
-
-            // Get rank movement for regional song
-            const rankMovement = getRankMovementHtml(song);
-
-            return `
-                <div class="regional-song" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-video-id="${videoId}" data-artwork="${artworkUrl}">
-                    <div class="regional-song-artwork">
-                        ${artworkUrl
-                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
-                            : `<div class="regional-song-artwork-placeholder">${placeholderSvg}</div>`}
-                        <div class="regional-song-play">${playSvg}</div>
-                    </div>
-                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${song.rank}</span>
-                    ${rankMovement}
-                    <div class="regional-song-info">
-                        <div class="regional-song-title">${escapeHtml(song.title)}</div>
-                        <div class="regional-song-artist">${escapeHtml(song.artist)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        card.innerHTML = `
-            <div class="regional-card-header">
-                <span class="regional-icon">${region.icon}</span>
-                <div>
-                    <div class="regional-card-title">${region.name}</div>
-                    <div class="regional-card-label">Top 5</div>
-                </div>
-            </div>
-            <div class="regional-list">
-                ${songsHtml}
-            </div>
-        `;
-
-        // Add click handlers for regional songs
-        card.querySelectorAll('.regional-song').forEach(songEl => {
-            songEl.addEventListener('click', () => {
-                const title = songEl.dataset.title;
-                const artist = songEl.dataset.artist;
-                const videoId = songEl.dataset.videoId;
-                const artwork = songEl.dataset.artwork;
-                playRegionalSong(title, artist, videoId, artwork);
-            });
-        });
-
-        regionalGrid.appendChild(card);
-    });
-
-    // Update Regional Spotlights count badge
+    // Update count badge
     const regionalCount = document.getElementById('regionalCount');
     if (regionalCount) {
-        const count = regionalGrid.querySelectorAll('.regional-card').length;
-        regionalCount.textContent = count;
+        regionalCount.textContent = availableLanguages.length;
     }
+
+    // Render songs for selected language
+    renderRegionalSongs(currentRegionalLanguage);
 }
+
+// Select a regional language
+function selectRegionalLanguage(langKey) {
+    currentRegionalLanguage = langKey;
+
+    // Update active button
+    document.querySelectorAll('.regional-lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === langKey);
+    });
+
+    // Re-render songs
+    renderRegionalSongs(langKey);
+}
+
+// Render songs for a specific language
+function renderRegionalSongs(langKey) {
+    const chartGrid = document.getElementById('regionalChartGrid');
+    if (!chartGrid || !chartData?.regional?.[langKey]) return;
+
+    const region = chartData.regional[langKey];
+    const songs = region.songs || [];
+
+    chartGrid.innerHTML = '';
+
+    songs.slice(0, 10).forEach((song, index) => {
+        const songEl = createRegionalSongCard(song, index);
+        chartGrid.appendChild(songEl);
+    });
+}
+
+// Create a regional song card (same style as Quick Picks)
+function createRegionalSongCard(song, index) {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+    card.dataset.title = song.title;
+    card.dataset.artist = song.artist;
+    card.dataset.videoId = song.youtube_video_id || '';
+    card.dataset.artwork = song.artwork_url || '';
+
+    const artworkUrl = song.artwork_url || findSongInMainChart(song.title, song.artist)?.artwork_url || '';
+    const rank = index + 1;
+
+    const placeholderSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+        </svg>
+    `;
+
+    card.innerHTML = `
+        <div class="song-card-artwork">
+            ${artworkUrl
+                ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
+            <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
+            <div class="song-card-play">
+                <div class="song-card-play-btn">
+                    <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                    </svg>
+                    <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </div>
+            </div>
+            <div class="song-card-equalizer">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="song-card-info">
+            <div class="song-card-title">${escapeHtml(song.title)}</div>
+            <div class="song-card-artist">${escapeHtml(song.artist)}</div>
+        </div>
+    `;
+
+    // Click handler
+    card.addEventListener('click', () => {
+        playRegionalSong(song.title, song.artist, song.youtube_video_id, artworkUrl);
+    });
+
+    return card;
+}
+
+// Current selected global platform
+let currentGlobalPlatform = 'spotify_global';
 
 // Render global platform spotlights (Spotify, Billboard, Apple Music)
 function renderGlobalSpotlights() {
-    const spotlightsGrid = document.getElementById('globalSpotlightsGrid');
+    const platformSelector = document.getElementById('globalPlatformSelector');
+    const chartGrid = document.getElementById('globalPlatformGrid');
     const spotlightsSection = document.getElementById('globalSpotlightsSection');
 
-    if (!chartData || !chartData.global_chart || !spotlightsGrid) {
+    if (!chartData || !chartData.global_chart || !platformSelector || !chartGrid) {
         if (spotlightsSection) spotlightsSection.style.display = 'none';
         return;
     }
 
-    spotlightsGrid.innerHTML = '';
-
     // Platform configuration
     const platforms = [
-        { key: 'spotify_global', name: 'Spotify', icon: '🎧', label: 'Global Top 5' },
-        { key: 'billboard_hot100', name: 'Billboard', icon: '📊', label: 'Hot 100 Top 5' },
-        { key: 'apple_global', name: 'Apple Music', icon: '🍎', label: 'Global Top 5' }
+        { key: 'spotify_global', name: 'Spotify' },
+        { key: 'billboard_hot100', name: 'Billboard' },
+        { key: 'apple_global', name: 'Apple Music' }
     ];
 
-    let platformCount = 0;
-
-    platforms.forEach(platform => {
-        // Extract songs that have this platform in their platform_ranks
-        const platformSongs = chartData.global_chart
-            .filter(song => song.platform_ranks?.some(pr => pr.platform === platform.key))
-            .map(song => {
-                const platformRank = song.platform_ranks.find(pr => pr.platform === platform.key);
-                return { ...song, platformRank: platformRank?.rank || 999 };
-            })
-            .sort((a, b) => a.platformRank - b.platformRank)
-            .slice(0, 5);
-
-        if (platformSongs.length === 0) return;
-
-        platformCount++;
-
-        const card = document.createElement('div');
-        card.className = 'regional-card';
-
-        const songsHtml = platformSongs.map((song, i) => {
-            const artworkUrl = song.artwork_url || '';
-            const videoId = song.youtube_video_id || '';
-
-            const placeholderSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
-                </svg>
-            `;
-
-            const playSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                </svg>
-            `;
-
-            return `
-                <div class="regional-song" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-video-id="${videoId}" data-artwork="${artworkUrl}">
-                    <div class="regional-song-artwork">
-                        ${artworkUrl
-                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
-                            : `<div class="regional-song-artwork-placeholder">${placeholderSvg}</div>`}
-                        <div class="regional-song-play">${playSvg}</div>
-                    </div>
-                    <span class="regional-song-rank ${i < 3 ? 'top-3' : ''}">${song.platformRank}</span>
-                    <span class="rank-dot">●</span>
-                    <div class="regional-song-info">
-                        <div class="regional-song-title">${escapeHtml(song.title)}</div>
-                        <div class="regional-song-artist">${escapeHtml(song.artist)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        card.innerHTML = `
-            <div class="regional-card-header">
-                <span class="regional-icon">${platform.icon}</span>
-                <div>
-                    <div class="regional-card-title">${platform.name}</div>
-                    <div class="regional-card-label">${platform.label}</div>
-                </div>
-            </div>
-            <div class="regional-list">
-                ${songsHtml}
-            </div>
-        `;
-
-        // Add click handlers for global songs
-        card.querySelectorAll('.regional-song').forEach(songEl => {
-            songEl.addEventListener('click', () => {
-                const title = songEl.dataset.title;
-                const artist = songEl.dataset.artist;
-                const videoId = songEl.dataset.videoId;
-                const artwork = songEl.dataset.artwork;
-                playRegionalSong(title, artist, videoId, artwork);
-            });
-        });
-
-        spotlightsGrid.appendChild(card);
+    // Filter to platforms that have songs
+    const availablePlatforms = platforms.filter(platform => {
+        return chartData.global_chart.some(song =>
+            song.platform_ranks?.some(pr => pr.platform === platform.key)
+        );
     });
 
-    // Update Global Spotlights count badge
+    if (availablePlatforms.length === 0) {
+        if (spotlightsSection) spotlightsSection.style.display = 'none';
+        return;
+    }
+
+    // Set default platform if current doesn't have data
+    const currentHasData = chartData.global_chart.some(song =>
+        song.platform_ranks?.some(pr => pr.platform === currentGlobalPlatform)
+    );
+    if (!currentHasData && availablePlatforms.length > 0) {
+        currentGlobalPlatform = availablePlatforms[0].key;
+    }
+
+    // Render platform selector buttons
+    platformSelector.innerHTML = availablePlatforms.map(platform => `
+        <button class="regional-lang-btn ${platform.key === currentGlobalPlatform ? 'active' : ''}"
+                data-platform="${platform.key}" onclick="selectGlobalPlatform('${platform.key}')">
+            ${platform.name}
+        </button>
+    `).join('');
+
+    // Update count badge
     const countBadge = document.getElementById('globalSpotlightsCount');
     if (countBadge) {
-        countBadge.textContent = platformCount;
+        countBadge.textContent = availablePlatforms.length;
     }
+
+    // Render songs for selected platform
+    renderGlobalPlatformSongs(currentGlobalPlatform);
+}
+
+// Select a global platform
+function selectGlobalPlatform(platformKey) {
+    currentGlobalPlatform = platformKey;
+
+    // Update active button
+    document.querySelectorAll('#globalPlatformSelector .regional-lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.platform === platformKey);
+    });
+
+    // Re-render songs
+    renderGlobalPlatformSongs(platformKey);
+}
+
+// Render songs for a specific platform
+function renderGlobalPlatformSongs(platformKey) {
+    const chartGrid = document.getElementById('globalPlatformGrid');
+    if (!chartGrid || !chartData?.global_chart) return;
+
+    // Extract songs for this platform
+    const platformSongs = chartData.global_chart
+        .filter(song => song.platform_ranks?.some(pr => pr.platform === platformKey))
+        .map(song => {
+            const platformRank = song.platform_ranks.find(pr => pr.platform === platformKey);
+            return { ...song, platformRank: platformRank?.rank || 999 };
+        })
+        .sort((a, b) => a.platformRank - b.platformRank)
+        .slice(0, 10);
+
+    chartGrid.innerHTML = '';
+
+    platformSongs.forEach((song, index) => {
+        const songEl = createGlobalPlatformSongCard(song, index);
+        chartGrid.appendChild(songEl);
+    });
+}
+
+// Create a global platform song card (same style as Quick Picks)
+function createGlobalPlatformSongCard(song, index) {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+    card.dataset.title = song.title;
+    card.dataset.artist = song.artist;
+    card.dataset.videoId = song.youtube_video_id || '';
+    card.dataset.artwork = song.artwork_url || '';
+
+    const artworkUrl = song.artwork_url || '';
+    const rank = song.platformRank;
+
+    const placeholderSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+        </svg>
+    `;
+
+    card.innerHTML = `
+        <div class="song-card-artwork">
+            ${artworkUrl
+                ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
+            <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
+            <div class="song-card-play">
+                <div class="song-card-play-btn">
+                    <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                    </svg>
+                    <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </div>
+            </div>
+            <div class="song-card-equalizer">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="song-card-info">
+            <div class="song-card-title">${escapeHtml(song.title)}</div>
+            <div class="song-card-artist">${escapeHtml(song.artist)}</div>
+        </div>
+    `;
+
+    // Click handler
+    card.addEventListener('click', () => {
+        playRegionalSong(song.title, song.artist, song.youtube_video_id, artworkUrl);
+    });
+
+    return card;
 }
 
 // Find a song in the main chart by title/artist
