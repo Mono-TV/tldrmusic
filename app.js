@@ -6340,15 +6340,19 @@ function renderAIPlaylistDetailView(playlist, presetKey) {
         </div>
         ${playlist.songs.map((song, index) => {
             const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+            const hasVideo = !!song.video_id;
 
             return `
-                <div class="chart-song-item" data-index="${index}">
+                <div class="chart-song-item${hasVideo ? '' : ' no-video'}" data-index="${index}">
                     <div class="chart-song-rank">
                         <span class="chart-song-rank-number">${index + 1}</span>
                     </div>
                     <div class="chart-song-info">
                         <div class="chart-song-artwork">
-                            <div class="chart-song-placeholder"></div>
+                            ${song.thumbnail_url
+                                ? `<img src="${song.thumbnail_url}" alt="${escapeHtml(song.title)}" loading="lazy" />`
+                                : '<div class="chart-song-placeholder"></div>'
+                            }
                         </div>
                         <div class="chart-song-details">
                             <span class="chart-song-title">${escapeHtml(song.title)}</span>
@@ -6387,8 +6391,8 @@ function toggleAISongFavorite(index) {
     const favoriteData = {
         title: song.title,
         artist: song.artist,
-        videoId: null, // Will be searched when played
-        artwork: '',
+        videoId: song.video_id || null,
+        artwork: song.thumbnail_url || '',
         addedAt: new Date().toISOString()
     };
 
@@ -6424,17 +6428,23 @@ async function playAIPlaylist(startIndex = 0) {
     const songs = currentAIPlaylist.songs;
     if (songs.length === 0) return;
 
-    // Set up queue - we'll search YouTube for each song
+    // Set up queue - use video_id from playlist if available
     queue = songs.map(song => ({
         title: song.title,
         artist: song.artist,
-        videoId: null, // Will be resolved when playing
-        artwork: '',
-        needsSearch: true,
+        videoId: song.video_id || null,
+        artwork: song.thumbnail_url || '',
+        needsSearch: !song.video_id,
     }));
 
     currentSongIndex = startIndex;
-    await playAISongBySearch(startIndex);
+
+    // If song has video_id, play directly; otherwise search
+    if (queue[startIndex].videoId) {
+        playSongFromQueue(startIndex);
+    } else {
+        await playAISongBySearch(startIndex);
+    }
 }
 
 async function shuffleAIPlaylist() {
@@ -6446,36 +6456,47 @@ async function shuffleAIPlaylist() {
     // Shuffle the songs
     const shuffled = [...songs].sort(() => Math.random() - 0.5);
 
-    // Set up queue
+    // Set up queue - use video_id from playlist if available
     queue = shuffled.map(song => ({
         title: song.title,
         artist: song.artist,
-        videoId: null,
-        artwork: '',
-        needsSearch: true,
+        videoId: song.video_id || null,
+        artwork: song.thumbnail_url || '',
+        needsSearch: !song.video_id,
     }));
 
     currentSongIndex = 0;
-    await playAISongBySearch(0);
-
     showToast('Shuffling playlist...');
+
+    // If song has video_id, play directly; otherwise search
+    if (queue[0].videoId) {
+        playSongFromQueue(0);
+    } else {
+        await playAISongBySearch(0);
+    }
 }
 
 async function playAISong(index) {
     if (!currentAIPlaylist || !currentAIPlaylist.songs) return;
     if (index >= currentAIPlaylist.songs.length) return;
 
-    // Set up queue
+    // Set up queue - use video_id from playlist if available
     queue = currentAIPlaylist.songs.map(song => ({
         title: song.title,
         artist: song.artist,
-        videoId: null,
-        artwork: '',
-        needsSearch: true,
+        videoId: song.video_id || null,
+        artwork: song.thumbnail_url || '',
+        needsSearch: !song.video_id,
     }));
 
     currentSongIndex = index;
-    await playAISongBySearch(index);
+
+    // If song has video_id, play directly; otherwise search
+    if (queue[index].videoId) {
+        playSongFromQueue(index);
+    } else {
+        await playAISongBySearch(index);
+    }
 }
 
 async function playAISongBySearch(index) {
