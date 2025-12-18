@@ -1,6 +1,7 @@
 // TLDR Music - Frontend Application
 
-const API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
+const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
+const CURATED_API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // localStorage keys
@@ -5561,7 +5562,7 @@ async function openCuratedPlaylist(type, id) {
 
     try {
         // Fetch from API
-        const response = await fetch(`${API_BASE}/api/curated/${type}/${key}`);
+        const response = await fetch(`${CURATED_API_BASE}/api/curated/${type}/${key}`);
 
         if (!response.ok) {
             if (response.status === 404) {

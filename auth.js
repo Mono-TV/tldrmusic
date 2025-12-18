@@ -6,7 +6,7 @@
 // Configuration
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
-    API_BASE: 'https://tldrmusic-api-701102808610.asia-south1.run.app'
+    API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'
 };
 
 // Storage keys for auth
