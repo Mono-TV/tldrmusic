@@ -2090,39 +2090,40 @@ body::before {
     overflow: hidden;
 }
 
-/* AI Playlist Detail View */
+/* AI Playlist Detail View - Uses chart-detail-view styles */
 .ai-playlist-detail-view {
-    padding: 0 0 120px 0;
+    padding: 2rem;
+    background:
+        radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.10) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(30, 30, 35, 0.9) 0%, rgba(18, 18, 22, 0.95) 100%);
+    border-radius: 16px;
+    margin: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    min-height: calc(100vh - 200px);
 }
 
 .ai-playlist-detail-header {
-    margin-bottom: 2rem;
-}
-
-.ai-playlist-cover {
-    width: 200px;
-    height: 200px;
-    border-radius: 12px;
-    flex-shrink: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 50%, #000) 100%);
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.ai-playlist-icon {
+.ai-playlist-detail-songs {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-.ai-playlist-icon svg {
-    width: 64px;
-    height: 64px;
-    color: rgba(255, 255, 255, 0.9);
+/* AI cover uses dynamic colors via inline style */
+.chart-detail-cover.ai-cover {
+    /* Background set via inline style */
+}
+
+.chart-song-duration {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
 }
 
 /* AI Generated Responsive */
@@ -2135,9 +2136,28 @@ body::before {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .ai-playlist-cover {
+    .ai-playlist-detail-view {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+
+    .ai-playlist-detail-view .chart-detail-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .ai-playlist-detail-view .chart-detail-cover {
         width: 160px;
         height: 160px;
+    }
+
+    .ai-playlist-detail-view .chart-detail-name {
+        font-size: 1.5rem;
+    }
+
+    .ai-playlist-detail-view .chart-detail-buttons {
+        justify-content: center;
     }
 }
 
@@ -2157,6 +2177,11 @@ body::before {
 
     .ai-card-meta {
         font-size: 0.7rem;
+    }
+
+    .ai-playlist-detail-view {
+        padding: 0.75rem;
+        margin: 0.25rem;
     }
 }
 

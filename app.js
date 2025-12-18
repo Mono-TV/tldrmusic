@@ -6188,6 +6188,9 @@ async function openAIPlaylist(presetKey) {
 }
 
 function showAIPlaylistDetailView(playlist, presetKey) {
+    // Save preset key for re-rendering
+    currentAIPresetKey = presetKey;
+
     // Hide all other views
     const homeView = document.getElementById('homeView');
     const mainContent = document.getElementById('mainContent');
@@ -6253,74 +6256,160 @@ function renderAIPlaylistDetailView(playlist, presetKey) {
 
     const icon = AI_PRESET_ICONS[presetKey] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
     const songCount = playlist.songs ? playlist.songs.length : 0;
+    const color = AI_PRESET_COLORS[presetKey] || '#1DB954';
 
+    // Render header in chart-detail style
     header.innerHTML = `
-        <button class="detail-back-btn" onclick="hideAIPlaylistDetailView()" title="Back to AI Playlists">
+        <button class="chart-detail-back" onclick="hideAIPlaylistDetailView()" title="Back to AI Playlists">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
         </button>
-        <div class="detail-playlist-cover ai-playlist-cover">
-            <div class="ai-playlist-icon">${icon}</div>
-        </div>
-        <div class="detail-info">
-            <span class="detail-type">AI Generated Playlist</span>
-            <h1 class="detail-title">${escapeHtml(playlist.name)}</h1>
-            <p class="detail-description">${escapeHtml(playlist.description || '')}</p>
-            <div class="detail-meta">
-                <span>${songCount} songs</span>
-                ${playlist.total_duration_formatted ? `<span>${playlist.total_duration_formatted}</span>` : ''}
+        <div class="chart-detail-hero">
+            <div class="chart-detail-cover ai-cover" style="background: linear-gradient(135deg, ${color} 0%, color-mix(in srgb, ${color} 50%, #000) 100%);">
+                <div class="chart-detail-cover-icon">
+                    ${icon}
+                    <span class="chart-detail-cover-badge">${songCount} SONGS</span>
+                </div>
             </div>
-        </div>
-        <div class="detail-actions">
-            <button class="detail-play-btn" onclick="playAIPlaylist(0)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                Play
-            </button>
-            <button class="detail-shuffle-btn" onclick="shuffleAIPlaylist()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="16 3 21 3 21 8"></polyline>
-                    <line x1="4" y1="20" x2="21" y2="3"></line>
-                    <polyline points="21 16 21 21 16 21"></polyline>
-                    <line x1="15" y1="15" x2="21" y2="21"></line>
-                    <line x1="4" y1="4" x2="9" y2="9"></line>
-                </svg>
-                Shuffle
-            </button>
+            <div class="chart-detail-info">
+                <span class="chart-detail-type">AI Generated Playlist</span>
+                <h1 class="chart-detail-name">${escapeHtml(playlist.name)}</h1>
+                <div class="chart-detail-meta">
+                    <span class="chart-detail-meta-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        ${escapeHtml(playlist.description || 'Smart playlist powered by AI')}
+                    </span>
+                    ${playlist.total_duration_formatted ? `
+                    <span class="chart-detail-meta-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        ${playlist.total_duration_formatted}
+                    </span>
+                    ` : ''}
+                </div>
+                <div class="chart-detail-buttons">
+                    <button class="chart-detail-btn primary" onclick="playAIPlaylist(0)" ${songCount === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play All
+                    </button>
+                    <button class="chart-detail-btn secondary" onclick="shuffleAIPlaylist()" ${songCount === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
+            </div>
         </div>
     `;
 
-    // Render songs
+    // Render songs in chart-detail style
     if (!playlist.songs || playlist.songs.length === 0) {
-        content.innerHTML = '<p class="no-songs">No songs in this playlist</p>';
+        content.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <p>No songs in this playlist</p>
+                <span>Try generating the playlist again</span>
+            </div>
+        `;
         return;
     }
 
     content.innerHTML = `
-        <div class="detail-song-list">
-            ${playlist.songs.map((song, index) => `
-                <div class="detail-song" onclick="playAISong(${index})">
-                    <span class="detail-song-num">${index + 1}</span>
-                    <div class="detail-song-artwork">
-                        <div class="placeholder"></div>
-                        <div class="detail-song-play-overlay">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
+        <div class="chart-detail-songs-header">
+            <span>#</span>
+            <span>Title</span>
+            <span></span>
+        </div>
+        ${playlist.songs.map((song, index) => {
+            const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+
+            return `
+                <div class="chart-song-item" data-index="${index}">
+                    <div class="chart-song-rank">
+                        <span class="chart-song-rank-number">${index + 1}</span>
+                    </div>
+                    <div class="chart-song-info">
+                        <div class="chart-song-artwork">
+                            <div class="chart-song-placeholder"></div>
+                        </div>
+                        <div class="chart-song-details">
+                            <span class="chart-song-title">${escapeHtml(song.title)}</span>
+                            <span class="chart-song-artist">${escapeHtml(song.artist)}</span>
                         </div>
                     </div>
-                    <div class="detail-song-info">
-                        <span class="detail-song-title">${escapeHtml(song.title)}</span>
-                        <span class="detail-song-artist">${escapeHtml(song.artist)}</span>
+                    <div class="chart-song-actions">
+                        <span class="chart-song-duration">${formatDuration(song.duration_seconds)}</span>
+                        <button class="chart-song-action-btn ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleAISongFavorite(${index})" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <span class="detail-song-duration">${formatDuration(song.duration_seconds)}</span>
                 </div>
-            `).join('')}
-        </div>
+            `;
+        }).join('')}
     `;
+
+    // Add click handlers for playing songs
+    content.querySelectorAll('.chart-song-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const index = parseInt(item.dataset.index);
+            playAISong(index);
+        });
+    });
 }
+
+// Toggle favorite for AI playlist song
+function toggleAISongFavorite(index) {
+    if (!currentAIPlaylist || !currentAIPlaylist.songs) return;
+
+    const song = currentAIPlaylist.songs[index];
+    if (!song) return;
+
+    const favoriteData = {
+        title: song.title,
+        artist: song.artist,
+        videoId: null, // Will be searched when played
+        artwork: '',
+        addedAt: new Date().toISOString()
+    };
+
+    const existingIndex = favorites.findIndex(f => f.title === song.title && f.artist === song.artist);
+
+    if (existingIndex >= 0) {
+        favorites.splice(existingIndex, 1);
+        showToast('Removed from favorites');
+    } else {
+        favorites.unshift(favoriteData);
+        showToast('Added to favorites');
+    }
+
+    saveFavorites();
+
+    // Re-render the detail view to update heart icons
+    renderAIPlaylistDetailView(currentAIPlaylist, currentAIPresetKey);
+}
+
+// Store current preset key for re-rendering
+let currentAIPresetKey = null;
 
 function formatDuration(seconds) {
     if (!seconds) return '';
