@@ -3737,7 +3737,7 @@ function hidePlaylistsView() {
 
     // Update sidebar active state back to current chart
     document.querySelectorAll('.sidebar-nav-item').forEach(btn => btn.classList.remove('active'));
-    const chartBtn = document.querySelector(`[data-chart="${currentChart}"]`);
+    const chartBtn = document.querySelector(`[data-chart="${currentChartMode}"]`);
     if (chartBtn) chartBtn.classList.add('active');
 }
 
