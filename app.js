@@ -775,20 +775,23 @@ function renderRegionalCharts() {
     // Show section
     if (regionalSection) regionalSection.style.display = 'block';
 
-    // Language configuration
+    // Language configuration with colors
     const languages = [
-        { key: 'hindi', name: 'Hindi' },
-        { key: 'punjabi', name: 'Punjabi' },
-        { key: 'tamil', name: 'Tamil' },
-        { key: 'telugu', name: 'Telugu' },
-        { key: 'bengali', name: 'Bengali' },
-        { key: 'marathi', name: 'Marathi' },
-        { key: 'kannada', name: 'Kannada' },
-        { key: 'malayalam', name: 'Malayalam' },
-        { key: 'bhojpuri', name: 'Bhojpuri' },
-        { key: 'haryanvi', name: 'Haryanvi' },
-        { key: 'gujarati', name: 'Gujarati' }
+        { key: 'hindi', name: 'Hindi', color: '#FF6B35' },
+        { key: 'punjabi', name: 'Punjabi', color: '#FFB833' },
+        { key: 'tamil', name: 'Tamil', color: '#C41E3A' },
+        { key: 'telugu', name: 'Telugu', color: '#E6B800' },
+        { key: 'bengali', name: 'Bengali', color: '#228B22' },
+        { key: 'marathi', name: 'Marathi', color: '#FF7F00' },
+        { key: 'kannada', name: 'Kannada', color: '#E31837' },
+        { key: 'malayalam', name: 'Malayalam', color: '#00A86B' },
+        { key: 'bhojpuri', name: 'Bhojpuri', color: '#FF8C00' },
+        { key: 'haryanvi', name: 'Haryanvi', color: '#2E8B57' },
+        { key: 'gujarati', name: 'Gujarati', color: '#DC143C' }
     ];
+
+    // Music note icon for regional buttons
+    const musicIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>`;
 
     // Filter to only languages that have data
     const availableLanguages = languages.filter(lang =>
@@ -802,9 +805,12 @@ function renderRegionalCharts() {
 
     // Render language selector buttons
     languageSelector.innerHTML = availableLanguages.map(lang => `
-        <button class="regional-lang-btn ${lang.key === currentRegionalLanguage ? 'active' : ''}"
-                data-lang="${lang.key}" onclick="selectRegionalLanguage('${lang.key}')">
-            ${lang.name}
+        <button class="platform-btn ${lang.key === currentRegionalLanguage ? 'active' : ''}"
+                data-lang="${lang.key}"
+                style="--platform-color: ${lang.color}"
+                onclick="selectRegionalLanguage('${lang.key}')">
+            <span class="platform-btn-logo">${musicIcon}</span>
+            <span class="platform-btn-name">${lang.name}</span>
         </button>
     `).join('');
 
@@ -823,7 +829,7 @@ function selectRegionalLanguage(langKey) {
     currentRegionalLanguage = langKey;
 
     // Update active button
-    document.querySelectorAll('.regional-lang-btn').forEach(btn => {
+    document.querySelectorAll('#regionalLanguageSelector .platform-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === langKey);
     });
 
