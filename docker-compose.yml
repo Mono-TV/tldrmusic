@@ -9,7 +9,7 @@ services:
     labels:
       # Traefik labels for ai-lumiolabs integration
       - "traefik.enable=true"
-      - "traefik.http.routers.tldrmusic.rule=Host(`tldrmusic.lumiolabs.in`)"
+      - "traefik.http.routers.tldrmusic.rule=Host(`music.lumiolabs.in`)"
       - "traefik.http.routers.tldrmusic.entrypoints=websecure"
       - "traefik.http.routers.tldrmusic.tls.certresolver=letsencrypt"
       - "traefik.http.services.tldrmusic.loadbalancer.server.port=8080"
