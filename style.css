@@ -5646,12 +5646,12 @@ body::before {
 /* Now Playing State */
 .detail-song.now-playing {
     background: rgba(212, 175, 55, 0.1);
-    border-left: 3px solid var(--accent-primary);
+    border-left: 3px solid var(--accent);
     padding-left: calc(0.75rem - 3px);
 }
 
 .detail-song.now-playing .detail-song-title {
-    color: var(--accent-primary);
+    color: var(--accent);
 }
 
 .detail-song.now-playing .detail-song-num {
@@ -5673,7 +5673,7 @@ body::before {
 
 .now-playing-eq span {
     width: 3px;
-    background: var(--accent-primary);
+    background: var(--accent);
     border-radius: 1px;
     animation: eq-bar 0.8s ease-in-out infinite;
 }
@@ -7729,12 +7729,12 @@ body::before {
 
 .chart-song-item.now-playing {
     background: rgba(212, 175, 55, 0.1);
-    border-left: 3px solid var(--accent-primary);
+    border-left: 3px solid var(--accent);
     padding-left: calc(1rem - 3px);
 }
 
 .chart-song-item.now-playing .chart-song-title {
-    color: var(--accent-primary);
+    color: var(--accent);
 }
 
 .chart-song-item.now-playing .chart-song-rank-number {
@@ -7756,7 +7756,7 @@ body::before {
 
 .chart-song-item .now-playing-eq span {
     width: 3px;
-    background: var(--accent-primary);
+    background: var(--accent);
     border-radius: 1px;
     animation: eq-bar 0.8s ease-in-out infinite;
 }
