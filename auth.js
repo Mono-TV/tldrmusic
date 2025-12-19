@@ -145,18 +145,20 @@ async function handleGoogleCallback(response) {
         // Sync data from cloud
         await syncFromCloud();
 
+        // Save pending action before closing modal (closeLoginModal clears it)
+        const actionToExecute = pendingPlayAction;
+
         // Close login modal
         closeLoginModal();
-
-        // Execute pending play action if any
-        if (pendingPlayAction) {
-            pendingPlayAction();
-            pendingPlayAction = null;
-        }
 
         // Update UI
         updateAuthUI();
         showToast(`Welcome, ${data.user.name}!`);
+
+        // Execute pending play action if any (after UI is ready)
+        if (actionToExecute) {
+            setTimeout(() => actionToExecute(), 100);
+        }
 
     } catch (error) {
         console.error('Login error:', error);
