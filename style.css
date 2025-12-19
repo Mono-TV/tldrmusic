@@ -5643,6 +5643,61 @@ body::before {
     opacity: 1;
 }
 
+/* Now Playing State */
+.detail-song.now-playing {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 3px solid var(--accent-primary);
+    padding-left: calc(0.75rem - 3px);
+}
+
+.detail-song.now-playing .detail-song-title {
+    color: var(--accent-primary);
+}
+
+.detail-song.now-playing .detail-song-num {
+    display: none;
+}
+
+.detail-song.now-playing .now-playing-eq {
+    display: flex;
+}
+
+.now-playing-eq {
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    width: 24px;
+    height: 16px;
+}
+
+.now-playing-eq span {
+    width: 3px;
+    background: var(--accent-primary);
+    border-radius: 1px;
+    animation: eq-bar 0.8s ease-in-out infinite;
+}
+
+.now-playing-eq span:nth-child(1) {
+    height: 60%;
+    animation-delay: 0s;
+}
+
+.now-playing-eq span:nth-child(2) {
+    height: 100%;
+    animation-delay: 0.2s;
+}
+
+.now-playing-eq span:nth-child(3) {
+    height: 40%;
+    animation-delay: 0.4s;
+}
+
+@keyframes eq-bar {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4); }
+}
+
 .detail-song-info {
     flex: 1;
     min-width: 0;
@@ -7670,6 +7725,55 @@ body::before {
 
 .chart-song-item:hover {
     background: var(--bg-elevated);
+}
+
+.chart-song-item.now-playing {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 3px solid var(--accent-primary);
+    padding-left: calc(1rem - 3px);
+}
+
+.chart-song-item.now-playing .chart-song-title {
+    color: var(--accent-primary);
+}
+
+.chart-song-item.now-playing .chart-song-rank-number {
+    display: none;
+}
+
+.chart-song-item.now-playing .now-playing-eq {
+    display: flex;
+}
+
+.chart-song-item .now-playing-eq {
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    width: 28px;
+    height: 16px;
+}
+
+.chart-song-item .now-playing-eq span {
+    width: 3px;
+    background: var(--accent-primary);
+    border-radius: 1px;
+    animation: eq-bar 0.8s ease-in-out infinite;
+}
+
+.chart-song-item .now-playing-eq span:nth-child(1) {
+    height: 60%;
+    animation-delay: 0s;
+}
+
+.chart-song-item .now-playing-eq span:nth-child(2) {
+    height: 100%;
+    animation-delay: 0.2s;
+}
+
+.chart-song-item .now-playing-eq span:nth-child(3) {
+    height: 40%;
+    animation-delay: 0.4s;
 }
 
 .chart-song-item.playing {

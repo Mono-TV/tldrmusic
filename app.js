@@ -38,6 +38,17 @@ let heroObserver = null;
 let currentChartMode = 'india';  // 'india' or 'global'
 let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
 
+// Helper to check if a song is currently playing
+function isCurrentlyPlaying(videoId) {
+    if (!videoId) return false;
+    return currentPlayingVideoId === videoId;
+}
+
+// Helper to generate now-playing equalizer HTML
+function getNowPlayingEqHtml() {
+    return '<div class="now-playing-eq"><span></span><span></span><span></span></div>';
+}
+
 // User data (persisted in localStorage)
 let favorites = [];           // Array of {title, artist, videoId, artwork, addedAt}
 let playHistory = [];         // Array of recently played songs
@@ -321,9 +332,12 @@ function renderSharedPlaylistDetail(playlist) {
 
     content.innerHTML = `
         <div class="detail-song-list">
-            ${playlist.songs.map((song, index) => `
-                <div class="detail-song" onclick="playSharedPlaylistFromIndex(${index})">
+            ${playlist.songs.map((song, index) => {
+                const isPlaying = isCurrentlyPlaying(song.videoId);
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playSharedPlaylistFromIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
+                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${song.artwork
                             ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
@@ -340,7 +354,7 @@ function renderSharedPlaylistDetail(playlist) {
                         <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
                     </div>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
 }
@@ -2909,9 +2923,12 @@ function showFavoritesDetail() {
 
     songsContainer.innerHTML = `
         <div class="detail-song-list">
-            ${favorites.map((fav, index) => `
-                <div class="detail-song" onclick="playFavoriteByIndex(${index})">
+            ${favorites.map((fav, index) => {
+                const isPlaying = isCurrentlyPlaying(fav.videoId);
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playFavoriteByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
+                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${fav.artwork
                             ? `<img src="${fav.artwork}" alt="${escapeHtml(fav.title)}">`
@@ -2934,7 +2951,7 @@ function showFavoritesDetail() {
                         </svg>
                     </button>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
 }
@@ -3132,9 +3149,12 @@ function showHistoryDetail() {
 
     songsContainer.innerHTML = `
         <div class="detail-song-list">
-            ${playHistory.map((item, index) => `
-                <div class="detail-song" onclick="playHistoryByIndex(${index})">
+            ${playHistory.map((item, index) => {
+                const isPlaying = isCurrentlyPlaying(item.videoId);
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playHistoryByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
+                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${item.artwork
                             ? `<img src="${item.artwork}" alt="${escapeHtml(item.title)}">`
@@ -3151,7 +3171,7 @@ function showHistoryDetail() {
                         <div class="detail-song-artist">${escapeHtml(item.artist)}</div>
                     </div>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
 }
@@ -3372,7 +3392,7 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
             const rank = song.rank || index + 1;
             const rankChange = song.rank_change || 0;
             const isNew = song.is_new || false;
-            const isPlaying = currentPlayingVideoId && song.youtube_video_id === currentPlayingVideoId;
+            const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
 
             let changeHtml = '';
             if (isNew) {
@@ -3388,9 +3408,10 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
             const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
 
             return `
-                <div class="chart-song-item ${isPlaying ? 'playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-artwork="${song.artwork_url || ''}">
+                <div class="chart-song-item ${isPlaying ? 'now-playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-artwork="${song.artwork_url || ''}">
                     <div class="chart-song-rank">
                         <span class="chart-song-rank-number">${rank}</span>
+                        ${getNowPlayingEqHtml()}
                         ${changeHtml}
                     </div>
                     <div class="chart-song-info">
@@ -4687,9 +4708,12 @@ function renderPlaylistDetail(playlistId) {
 
     content.innerHTML = `
         <div class="detail-song-list">
-            ${playlist.songs.map((song, index) => `
-                <div class="detail-song" onclick="playPlaylist('${playlist.id}', ${index})">
+            ${playlist.songs.map((song, index) => {
+                const isPlaying = isCurrentlyPlaying(song.videoId);
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playPlaylist('${playlist.id}', ${index})">
                     <span class="detail-song-num">${index + 1}</span>
+                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${song.artwork
                             ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
@@ -4712,7 +4736,7 @@ function renderPlaylistDetail(playlistId) {
                         </svg>
                     </button>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
 
@@ -5827,9 +5851,12 @@ function renderCuratedDetailView(playlist) {
 
     content.innerHTML = `
         <div class="detail-song-list">
-            ${playableSongs.map((song, index) => `
-                <div class="detail-song" onclick="playCuratedSong(${index})">
+            ${playableSongs.map((song, index) => {
+                const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playCuratedSong(${index})">
                     <span class="detail-song-num">${index + 1}</span>
+                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${song.artwork_url
                             ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}">`
@@ -5852,7 +5879,7 @@ function renderCuratedDetailView(playlist) {
                         </svg>
                     </button>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
         ${playlist.songs.length > playableSongs.length ? `
             <p class="detail-meta" style="text-align: center; margin-top: 1rem; color: var(--text-muted);">
@@ -6516,11 +6543,13 @@ function renderAIPlaylistDetailView(playlist, presetKey) {
         ${playlist.songs.map((song, index) => {
             const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
             const hasVideo = !!song.video_id;
+            const isPlaying = isCurrentlyPlaying(song.video_id);
 
             return `
-                <div class="chart-song-item${hasVideo ? '' : ' no-video'}" data-index="${index}">
+                <div class="chart-song-item${hasVideo ? '' : ' no-video'}${isPlaying ? ' now-playing' : ''}" data-index="${index}">
                     <div class="chart-song-rank">
                         <span class="chart-song-rank-number">${index + 1}</span>
+                        ${getNowPlayingEqHtml()}
                     </div>
                     <div class="chart-song-info">
                         <div class="chart-song-artwork">
