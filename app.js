@@ -354,12 +354,12 @@ function renderSharedPlaylistDetail(playlist) {
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${song.videoId || ''}" onclick="playSharedPlaylistFromIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
-                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${song.artwork
                             ? `<img src="${song.artwork}" alt="${escapeHtml(song.title)}">`
                             : '<div class="placeholder"></div>'
                         }
+                        ${getNowPlayingEqHtml()}
                         <div class="detail-song-play-overlay">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -2948,12 +2948,12 @@ function showFavoritesDetail() {
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${fav.videoId || ''}" onclick="playFavoriteByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
-                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${fav.artwork
                             ? `<img src="${fav.artwork}" alt="${escapeHtml(fav.title)}">`
                             : '<div class="placeholder"></div>'
                         }
+                        ${getNowPlayingEqHtml()}
                         <div class="detail-song-play-overlay">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -3174,12 +3174,12 @@ function showHistoryDetail() {
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${item.videoId || ''}" onclick="playHistoryByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
-                    ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
                         ${item.artwork
                             ? `<img src="${item.artwork}" alt="${escapeHtml(item.title)}">`
                             : '<div class="placeholder"></div>'
                         }
+                        ${getNowPlayingEqHtml()}
                         <div class="detail-song-play-overlay">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -3431,7 +3431,6 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
                 <div class="chart-song-item ${isPlaying ? 'now-playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-artwork="${song.artwork_url || ''}">
                     <div class="chart-song-rank">
                         <span class="chart-song-rank-number">${rank}</span>
-                        ${getNowPlayingEqHtml()}
                         ${changeHtml}
                     </div>
                     <div class="chart-song-info">
@@ -3439,6 +3438,7 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
                             ${song.artwork_url
                                 ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}">`
                                 : `<div class="chart-song-placeholder"></div>`}
+                            ${getNowPlayingEqHtml()}
                         </div>
                         <div class="chart-song-details">
                             <span class="chart-song-title">${escapeHtml(song.title)}</span>

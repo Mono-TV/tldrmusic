@@ -5654,21 +5654,28 @@ body::before {
     color: var(--accent);
 }
 
-.detail-song.now-playing .detail-song-num {
-    display: none;
-}
-
 .detail-song.now-playing .now-playing-eq {
     display: flex;
 }
 
+.detail-song-artwork {
+    position: relative;
+}
+
 .now-playing-eq {
     display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     align-items: flex-end;
     justify-content: center;
     gap: 2px;
     width: 24px;
-    height: 16px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    padding: 4px;
 }
 
 .now-playing-eq span {
@@ -7737,21 +7744,28 @@ body::before {
     color: var(--accent);
 }
 
-.chart-song-item.now-playing .chart-song-rank-number {
-    display: none;
-}
-
 .chart-song-item.now-playing .now-playing-eq {
     display: flex;
 }
 
 .chart-song-item .now-playing-eq {
     display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     align-items: flex-end;
     justify-content: center;
     gap: 2px;
     width: 28px;
-    height: 16px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.chart-song-artwork {
+    position: relative;
 }
 
 .chart-song-item .now-playing-eq span {
