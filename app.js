@@ -369,8 +369,25 @@ function shuffleSharedPlaylist() {
     const playlist = window.currentSharedPlaylist;
     if (!playlist || !playlist.songs || playlist.songs.length === 0) return;
 
-    const randomIndex = Math.floor(Math.random() * playlist.songs.length);
-    playSharedPlaylistFromIndex(randomIndex);
+    // Shuffle songs and set up queue
+    const shuffled = [...playlist.songs].sort(() => Math.random() - 0.5);
+
+    queue = shuffled.slice(1).map((s, i) => ({
+        id: Date.now() + i,
+        title: s.title,
+        artist: s.artist,
+        videoId: s.videoId,
+        artwork: s.artwork
+    }));
+    saveQueue();
+    renderQueuePanel();
+
+    // Play first shuffled song
+    const firstSong = shuffled[0];
+    if (firstSong && firstSong.videoId) {
+        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.videoId, firstSong.artwork);
+    }
+    showToast(`Shuffling "${playlist.name}"`);
 }
 
 function playSharedPlaylistFromIndex(index) {
@@ -378,12 +395,22 @@ function playSharedPlaylistFromIndex(index) {
     if (!playlist || !playlist.songs) return;
 
     const song = playlist.songs[index];
-    if (!song) return;
+    if (!song || !song.videoId) return;
 
-    // Play the song
-    if (song.videoId) {
-        playSong(song.videoId, song.title, song.artist, song.artwork);
-    }
+    // Set up queue with remaining songs
+    queue = playlist.songs.slice(index + 1).map((s, i) => ({
+        id: Date.now() + i,
+        title: s.title,
+        artist: s.artist,
+        videoId: s.videoId,
+        artwork: s.artwork
+    }));
+    saveQueue();
+    renderQueuePanel();
+
+    // Play the song using proper playback function
+    playRegionalSongDirect(song.title, song.artist, song.videoId, song.artwork);
+    showToast(`Playing "${playlist.name}"`);
 }
 
 async function saveSharedPlaylistToLibrary(playlistId) {
@@ -2920,6 +2947,17 @@ function playFavoriteByIndex(index) {
     if (index >= 0 && index < favorites.length) {
         const fav = favorites[index];
         if (fav.videoId) {
+            // Set up queue with remaining songs
+            queue = favorites.slice(index + 1).map((f, i) => ({
+                id: Date.now() + i,
+                title: f.title,
+                artist: f.artist,
+                videoId: f.videoId,
+                artwork: f.artwork
+            }));
+            saveQueue();
+            renderQueuePanel();
+
             playRegionalSongDirect(fav.title, fav.artist, fav.videoId, fav.artwork);
         }
     }
@@ -3117,6 +3155,17 @@ function playHistoryByIndex(index) {
     if (index >= 0 && index < playHistory.length) {
         const item = playHistory[index];
         if (item.videoId) {
+            // Set up queue with remaining songs
+            queue = playHistory.slice(index + 1).map((h, i) => ({
+                id: Date.now() + i,
+                title: h.title,
+                artist: h.artist,
+                videoId: h.videoId,
+                artwork: h.artwork
+            }));
+            saveQueue();
+            renderQueuePanel();
+
             playRegionalSongDirect(item.title, item.artist, item.videoId, item.artwork);
         }
     }
