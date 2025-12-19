@@ -6092,6 +6092,38 @@ async function renderAIGeneratedView() {
 
         // Render categories
         content.innerHTML = `
+            <!-- Featured: AI Curated Collection -->
+            <div class="ai-section ai-featured-section">
+                <div class="ai-section-header">
+                    <h3>Featured Collection</h3>
+                    <span class="ai-section-badge">NEW</span>
+                </div>
+                <div class="ai-featured-card" onclick="openAICuratedCollection()">
+                    <div class="ai-featured-gradient"></div>
+                    <div class="ai-featured-content">
+                        <div class="ai-featured-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <div class="ai-featured-info">
+                            <h4>AI Curated Collection</h4>
+                            <p>525 songs enriched with Gemini AI - featuring genre, mood, era and style metadata</p>
+                        </div>
+                        <div class="ai-featured-meta">
+                            <span class="ai-featured-count">525 songs</span>
+                            <span class="ai-featured-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Mood Playlists -->
             <div class="ai-section">
                 <div class="ai-section-header">
@@ -6242,6 +6274,27 @@ async function openAIPlaylist(presetKey) {
     } catch (error) {
         console.error('Error opening AI playlist:', error);
         showToast('Failed to load playlist. Please try again.');
+    }
+}
+
+// Open the special AI Curated Collection playlist
+async function openAICuratedCollection() {
+    showToast('Loading AI Curated Collection...');
+
+    try {
+        const response = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/AI%20Curated%20Collection`);
+
+        if (!response.ok) {
+            throw new Error('Failed to load AI Curated Collection');
+        }
+
+        const playlist = await response.json();
+        currentAIPlaylist = playlist;
+        showAIPlaylistDetailView(playlist, 'ai_curated_collection');
+
+    } catch (error) {
+        console.error('Error opening AI Curated Collection:', error);
+        showToast('Failed to load collection. Please try again.');
     }
 }
 
