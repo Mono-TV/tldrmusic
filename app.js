@@ -6533,6 +6533,53 @@ function formatDuration(seconds) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
+// Play a song from the queue by index (for AI playlists)
+function playSongFromQueue(index) {
+    if (!queue || !queue[index]) return;
+
+    const song = queue[index];
+    if (!song.videoId) {
+        showToast('No video available for this song');
+        return;
+    }
+
+    // Require authentication to play
+    if (!requireAuth(() => playSongFromQueue(index))) return;
+
+    currentSongIndex = index;
+    isRegionalSongPlaying = true;
+    currentPlayingVideoId = song.videoId;
+
+    // Track in history
+    addToHistory({ title: song.title, artist: song.artist, youtube_video_id: song.videoId, artwork_url: song.artwork });
+
+    // Update player bar UI
+    if (playerBarTitle) playerBarTitle.textContent = song.title;
+    if (playerBarArtist) playerBarArtist.textContent = song.artist;
+    if (playerBarArtwork && song.artwork) playerBarArtwork.src = song.artwork;
+
+    // Update favorite button state
+    updateFavoriteButtons();
+
+    // Apply artwork as gradient background
+    if (song.artwork && mainGradient) {
+        mainGradient.style.backgroundImage = `url(${song.artwork})`;
+        mainGradient.classList.add('active');
+    }
+
+    // Update player bar visibility
+    updatePlayerBarVisibility();
+
+    // Play on YouTube
+    if (player && playerReady) {
+        player.loadVideoById(song.videoId);
+    } else if (playerReady) {
+        createPlayerWithVideo(song.videoId);
+    } else {
+        setTimeout(() => playSongFromQueue(index), 100);
+    }
+}
+
 async function playAIPlaylist(startIndex = 0) {
     if (!currentAIPlaylist || !currentAIPlaylist.songs) return;
 
