@@ -2,7 +2,7 @@
 
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const CURATED_API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
-const AI_PLAYLIST_API_BASE = 'https://music-harvester-401132033262.asia-south1.run.app';
+const AI_PLAYLIST_API_BASE = 'https://harvester.lumiolabs.in';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // localStorage keys
