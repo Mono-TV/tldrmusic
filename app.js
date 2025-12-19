@@ -12,8 +12,13 @@ const STORAGE_KEYS = {
     SHUFFLE: 'tldr-shuffle',
     REPEAT: 'tldr-repeat',
     QUEUE: 'tldr-queue',
-    PLAYLISTS: 'tldr-playlists'
+    PLAYLISTS: 'tldr-playlists',
+    CHART_CACHE: 'tldr-chart-cache',
+    CHART_CACHE_TIME: 'tldr-chart-cache-time'
 };
+
+// Cache TTL: 30 minutes (in milliseconds)
+const CACHE_TTL = 30 * 60 * 1000;
 
 // State
 let chartData = null;
@@ -585,14 +590,52 @@ function renderSkeletons() {
     }
 }
 
-// Load chart data from API (with fallback to local JSON)
+// Check if cached data is still valid
+function isCacheValid() {
+    const cacheTime = localStorage.getItem(STORAGE_KEYS.CHART_CACHE_TIME);
+    if (!cacheTime) return false;
+    return (Date.now() - parseInt(cacheTime)) < CACHE_TTL;
+}
+
+// Load chart data from cache or API
 async function loadChartData() {
+    // Try cache first for instant load
+    if (isCacheValid()) {
+        try {
+            const cached = localStorage.getItem(STORAGE_KEYS.CHART_CACHE);
+            if (cached) {
+                chartData = JSON.parse(cached);
+                console.log('Loaded chart data from cache');
+                consolidateGlobalChart();
+                renderHero();
+                renderChart();
+                renderRegionalCharts();
+                updateMetadata();
+
+                // Refresh cache in background (don't await)
+                refreshChartCache();
+                return;
+            }
+        } catch (e) {
+            console.warn('Cache read failed:', e);
+        }
+    }
+
+    // No valid cache, fetch from API
     try {
-        // Try API first
         const response = await fetch(`${API_BASE}/chart/current`);
         if (!response.ok) throw new Error('API request failed');
         chartData = await response.json();
         console.log('Loaded chart data from API');
+
+        // Cache the data
+        try {
+            localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(chartData));
+            localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
+        } catch (e) {
+            console.warn('Cache write failed:', e);
+        }
+
         consolidateGlobalChart();
         renderHero();
         renderChart();
@@ -615,6 +658,20 @@ async function loadChartData() {
             console.error('Error loading chart:', localError);
             showError();
         }
+    }
+}
+
+// Refresh cache in background without blocking UI
+async function refreshChartCache() {
+    try {
+        const response = await fetch(`${API_BASE}/chart/current`);
+        if (!response.ok) return;
+        const freshData = await response.json();
+        localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
+        localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
+        console.log('Cache refreshed in background');
+    } catch (e) {
+        // Silent fail for background refresh
     }
 }
 
