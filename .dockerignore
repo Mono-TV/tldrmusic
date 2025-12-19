@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Development
+node_modules
+.env
+.env.*
+
+# Scraper (not needed for frontend)
+scraper/
+backend/
+
+# Tests
+tests/
+*.test.js
+
+# Data and cache
+data/
+*.log
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

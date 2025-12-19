@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  tldrmusic:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    labels:
+      # Traefik labels for ai-lumiolabs integration
+      - "traefik.enable=true"
+      - "traefik.http.routers.tldrmusic.rule=Host(`tldrmusic.lumiolabs.in`)"
+      - "traefik.http.routers.tldrmusic.entrypoints=websecure"
+      - "traefik.http.routers.tldrmusic.tls.certresolver=letsencrypt"
+      - "traefik.http.services.tldrmusic.loadbalancer.server.port=8080"

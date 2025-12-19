@@ -1,0 +1,27 @@
+{
+  "name": "tldrmusic",
+  "displayName": "TLDR Music",
+  "description": "India's music chart aggregator - Top 25 from 9 platforms",
+  "subdomain": "tldrmusic",
+  "type": "static",
+  "framework": "vanilla",
+  "port": 8080,
+  "healthCheck": "/health",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "resources": {
+    "memory": "256Mi",
+    "cpu": "1",
+    "minInstances": 0,
+    "maxInstances": 10
+  },
+  "env": [],
+  "domains": [
+    "tldrmusic.lumiolabs.in",
+    "tldrmusic.com"
+  ],
+  "repository": "https://github.com/Mono-TV/tldrmusic",
+  "owner": "mono@circuithouse.tech"
+}
