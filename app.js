@@ -49,6 +49,23 @@ function getNowPlayingEqHtml() {
     return '<div class="now-playing-eq"><span></span><span></span><span></span></div>';
 }
 
+// Update now-playing indicators across all visible song lists
+function updateNowPlayingIndicators() {
+    // Remove existing now-playing class from all items
+    document.querySelectorAll('.detail-song.now-playing, .chart-song-item.now-playing').forEach(el => {
+        el.classList.remove('now-playing');
+    });
+
+    if (!currentPlayingVideoId) return;
+
+    // Add now-playing class to matching items with data-video-id attribute
+    document.querySelectorAll('[data-video-id]').forEach(el => {
+        if (el.dataset.videoId === currentPlayingVideoId) {
+            el.classList.add('now-playing');
+        }
+    });
+}
+
 // User data (persisted in localStorage)
 let favorites = [];           // Array of {title, artist, videoId, artwork, addedAt}
 let playHistory = [];         // Array of recently played songs
@@ -335,7 +352,7 @@ function renderSharedPlaylistDetail(playlist) {
             ${playlist.songs.map((song, index) => {
                 const isPlaying = isCurrentlyPlaying(song.videoId);
                 return `
-                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playSharedPlaylistFromIndex(${index})">
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${song.videoId || ''}" onclick="playSharedPlaylistFromIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
                     ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
@@ -1261,6 +1278,9 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
 
     // Update card playing state (will use currentPlayingVideoId)
     updateCardPlayingState(true);
+
+    // Update now-playing indicators in song lists
+    updateNowPlayingIndicators();
 
     // Update player bar visibility - must come after setting isRegionalSongPlaying
     updatePlayerBarVisibility();
@@ -2926,7 +2946,7 @@ function showFavoritesDetail() {
             ${favorites.map((fav, index) => {
                 const isPlaying = isCurrentlyPlaying(fav.videoId);
                 return `
-                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playFavoriteByIndex(${index})">
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${fav.videoId || ''}" onclick="playFavoriteByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
                     ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
@@ -3152,7 +3172,7 @@ function showHistoryDetail() {
             ${playHistory.map((item, index) => {
                 const isPlaying = isCurrentlyPlaying(item.videoId);
                 return `
-                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playHistoryByIndex(${index})">
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${item.videoId || ''}" onclick="playHistoryByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
                     ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
@@ -4711,7 +4731,7 @@ function renderPlaylistDetail(playlistId) {
             ${playlist.songs.map((song, index) => {
                 const isPlaying = isCurrentlyPlaying(song.videoId);
                 return `
-                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playPlaylist('${playlist.id}', ${index})">
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${song.videoId || ''}" onclick="playPlaylist('${playlist.id}', ${index})">
                     <span class="detail-song-num">${index + 1}</span>
                     ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
@@ -5854,7 +5874,7 @@ function renderCuratedDetailView(playlist) {
             ${playableSongs.map((song, index) => {
                 const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
                 return `
-                <div class="detail-song${isPlaying ? ' now-playing' : ''}" onclick="playCuratedSong(${index})">
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${song.youtube_video_id || ''}" onclick="playCuratedSong(${index})">
                     <span class="detail-song-num">${index + 1}</span>
                     ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
@@ -6662,6 +6682,9 @@ function playSongFromQueue(index) {
 
     // Update player bar visibility
     updatePlayerBarVisibility();
+
+    // Update now-playing indicators in song lists
+    updateNowPlayingIndicators();
 
     // Play on YouTube
     if (player && playerReady) {
