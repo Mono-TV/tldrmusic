@@ -210,7 +210,10 @@ function showSharedPlaylistView(playlist) {
     if (mainContent) mainContent.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'none';
-    if (playlistDetailView) playlistDetailView.style.display = 'block';
+    if (playlistDetailView) {
+        playlistDetailView.style.display = 'block';
+        playlistDetailView.scrollTop = 0;
+    }
 
     // Render the playlist with shared mode flag
     renderSharedPlaylistDetail(playlist);
@@ -2847,6 +2850,7 @@ function showFavoritesDetail() {
     // Show favorites detail
     const detailView = document.getElementById('favoritesDetailView');
     detailView.style.display = 'block';
+    detailView.scrollTop = 0;
 
     // Render header
     const header = document.getElementById('favoritesDetailHeader');
@@ -3067,6 +3071,7 @@ function showHistoryDetail() {
     // Show history detail
     const detailView = document.getElementById('historyDetailView');
     detailView.style.display = 'block';
+    detailView.scrollTop = 0;
 
     // Render header
     const header = document.getElementById('historyDetailHeader');
@@ -3246,6 +3251,7 @@ function showChartDetail(chartType) {
     // Show chart detail view
     const detailView = document.getElementById('chartDetailView');
     detailView.style.display = 'block';
+    detailView.scrollTop = 0;
 
     // Get chart data based on type
     let detailData, chartName, chartCoverClass, chartIcon, chartMeta;
@@ -4508,7 +4514,10 @@ function showPlaylistDetail(playlistId) {
     if (homeView) homeView.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'none';
-    if (detailView) detailView.style.display = 'block';
+    if (detailView) {
+        detailView.style.display = 'block';
+        detailView.scrollTop = 0;
+    }
 
     renderPlaylistDetail(playlistId);
 }
@@ -5718,7 +5727,10 @@ function showCuratedDetailView(playlist) {
     if (historyDetailView) historyDetailView.style.display = 'none';
     if (chartDetailView) chartDetailView.style.display = 'none';
     if (discoverView) discoverView.style.display = 'none';
-    if (curatedDetailView) curatedDetailView.style.display = 'block';
+    if (curatedDetailView) {
+        curatedDetailView.style.display = 'block';
+        curatedDetailView.scrollTop = 0;
+    }
 
     // Render the detail view
     renderCuratedDetailView(playlist);
@@ -6376,7 +6388,10 @@ function showAIPlaylistDetailView(playlist, presetKey) {
     if (discoverView) discoverView.style.display = 'none';
     if (curatedDetailView) curatedDetailView.style.display = 'none';
     if (aiGeneratedView) aiGeneratedView.style.display = 'none';
-    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'block';
+    if (aiPlaylistDetailView) {
+        aiPlaylistDetailView.style.display = 'block';
+        aiPlaylistDetailView.scrollTop = 0;
+    }
 
     // Render the detail view
     renderAIPlaylistDetailView(playlist, presetKey);
