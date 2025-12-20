@@ -6266,10 +6266,10 @@ function playSearchResultFromList(index) {
     if (currentSongIndex === -1) currentSongIndex = 0;
 
     if (song.youtube_video_id) {
-        playSong(
-            song.youtube_video_id,
+        playRegionalSongDirect(
             song.title,
             song.artist,
+            song.youtube_video_id,
             song.artwork_url || `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg`
         );
     } else {
