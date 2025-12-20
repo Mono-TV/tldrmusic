@@ -27,7 +27,7 @@ def require_db():
     return Database.db
 
 # Frontend URL for redirects
-FRONTEND_URL = "https://mono-tv.github.io/tldrmusic"
+FRONTEND_URL = "https://music.lumiolabs.in"
 SITE_NAME = "TLDR Music"
 DEFAULT_IMAGE = f"{FRONTEND_URL}/og-image.png"
 
