@@ -5591,12 +5591,14 @@ function updateSidebarActiveState(mode) {
     const sidebarPlaylistsBtn = document.getElementById('sidebarPlaylistsBtn');
     const sidebarDiscoverBtn = document.getElementById('sidebarDiscoverBtn');
     const sidebarAIGeneratedBtn = document.getElementById('sidebarAIGeneratedBtn');
+    const sidebarSearchBtn = document.getElementById('sidebarSearchBtn');
 
     // Remove active from all nav items
     sidebarHomeBtn?.classList.remove('active');
     sidebarPlaylistsBtn?.classList.remove('active');
     sidebarDiscoverBtn?.classList.remove('active');
     sidebarAIGeneratedBtn?.classList.remove('active');
+    sidebarSearchBtn?.classList.remove('active');
 
     // Set active based on mode
     if (mode === 'home') {
@@ -5607,6 +5609,8 @@ function updateSidebarActiveState(mode) {
         sidebarDiscoverBtn?.classList.add('active');
     } else if (mode === 'ai-generated') {
         sidebarAIGeneratedBtn?.classList.add('active');
+    } else if (mode === 'search') {
+        sidebarSearchBtn?.classList.add('active');
     }
 }
 
@@ -5846,6 +5850,9 @@ function selectDropdownItem(items, index) {
 
 function showSearchView(initialQuery = '') {
     isSearchViewActive = true;
+
+    // Update sidebar active state
+    updateSidebarActiveState('search');
 
     // Hide all other views
     const homeView = document.getElementById('homeView');
