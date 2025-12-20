@@ -865,6 +865,15 @@ async function refreshChartCache() {
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
         console.log('Cache refreshed in background from harvester API');
+
+        // Update in-memory data and re-render regional if new data available
+        const hadRegional = chartData?.regional && Object.keys(chartData.regional).length > 0;
+        const hasRegional = freshData.regional && Object.keys(freshData.regional).length > 0;
+        if (!hadRegional && hasRegional) {
+            chartData = freshData;
+            renderRegionalCharts();
+            console.log('Regional charts updated with fresh data');
+        }
     } catch (e) {
         // Silent fail for background refresh
     }
