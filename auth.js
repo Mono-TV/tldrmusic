@@ -117,7 +117,7 @@ async function handleGoogleCallback(response) {
         };
 
         // Send to server
-        const res = await fetch(`${AUTH_CONFIG.API_BASE}/auth/google/login`, {
+        const res = await fetch(`${AUTH_CONFIG.API_BASE}/api/auth/google`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -202,7 +202,7 @@ function checkAuthState() {
  */
 async function verifyToken() {
     try {
-        const res = await fetchWithAuth('/user/profile');
+        const res = await fetchWithAuth('/api/me/library');
         if (!res.ok) {
             // Token expired, try refresh
             await refreshAccessToken();
@@ -225,7 +225,7 @@ async function refreshAccessToken() {
         throw new Error('No refresh token');
     }
 
-    const res = await fetch(`${AUTH_CONFIG.API_BASE}/auth/refresh`, {
+    const res = await fetch(`${AUTH_CONFIG.API_BASE}/api/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh_token: refreshToken })
@@ -383,7 +383,7 @@ async function syncFromCloud() {
             }
         };
 
-        const res = await fetchWithAuth('/user/sync', {
+        const res = await fetchWithAuth('/api/me/library/sync', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(localData)
@@ -441,26 +441,23 @@ async function syncToCloud(type) {
 
         switch (type) {
             case 'favorites':
-                endpoint = '/user/favorites';
+                endpoint = '/api/me/favorites';
                 body = { favorites: JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [] };
                 break;
             case 'history':
-                endpoint = '/user/history';
+                endpoint = '/api/me/history';
                 body = { history: JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [] };
                 break;
             case 'queue':
-                endpoint = '/user/queue';
-                body = { queue: JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [] };
-                break;
+                // Queue sync not available in new API - skip silently
+                console.log('Queue sync skipped (not available in API)');
+                return;
             case 'preferences':
-                endpoint = '/user/preferences';
-                body = {
-                    shuffle: localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true',
-                    repeat: localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off'
-                };
-                break;
+                // Preferences sync not available in new API - skip silently
+                console.log('Preferences sync skipped (not available in API)');
+                return;
             case 'playlists':
-                endpoint = '/user/playlists';
+                endpoint = '/api/me/playlists';
                 const localPlaylists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
                 body = { playlists: localPlaylists };
 
