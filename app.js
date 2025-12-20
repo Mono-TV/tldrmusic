@@ -1,6 +1,7 @@
 // TLDR Music - Frontend Application
 
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
+const CHART_API_BASE = 'https://music-harvester-401132033262.asia-south1.run.app/api';
 const CURATED_API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
 const AI_PLAYLIST_API_BASE = 'https://harvester.lumiolabs.in';
 const DATA_PATH = './current.json'; // Fallback for local development
@@ -772,12 +773,29 @@ async function loadChartData() {
         }
     }
 
-    // No valid cache, fetch from API
+    // No valid cache, fetch from harvester API
     try {
-        const response = await fetch(`${API_BASE}/chart/current`);
-        if (!response.ok) throw new Error('API request failed');
-        chartData = await response.json();
-        console.log('Loaded chart data from API');
+        // Fetch India and Global charts in parallel
+        const [indiaResponse, globalResponse] = await Promise.all([
+            fetch(`${CHART_API_BASE}/chart/current`),
+            fetch(`${CHART_API_BASE}/chart/current?chart_type=global`)
+        ]);
+
+        if (!indiaResponse.ok) throw new Error('India chart API request failed');
+
+        const indiaData = await indiaResponse.json();
+        const globalData = globalResponse.ok ? await globalResponse.json() : null;
+
+        // Build chartData in expected format
+        chartData = {
+            generated_at: indiaData.generated_at,
+            week: indiaData.week,
+            chart: indiaData.chart || [],
+            global_chart: globalData?.chart || [],
+            regional: {} // Regional data not available from current scraper
+        };
+
+        console.log('Loaded chart data from harvester API');
 
         // Cache the data
         try {
@@ -787,13 +805,12 @@ async function loadChartData() {
             console.warn('Cache write failed:', e);
         }
 
-        consolidateGlobalChart();
         renderHero();
         renderChart();
         renderRegionalCharts();
         updateMetadata();
     } catch (apiError) {
-        console.warn('API unavailable, trying local fallback:', apiError.message);
+        console.warn('Harvester API unavailable, trying local fallback:', apiError.message);
         try {
             // Fallback to local JSON file
             const response = await fetch(DATA_PATH);
@@ -815,12 +832,28 @@ async function loadChartData() {
 // Refresh cache in background without blocking UI
 async function refreshChartCache() {
     try {
-        const response = await fetch(`${API_BASE}/chart/current`);
-        if (!response.ok) return;
-        const freshData = await response.json();
+        // Fetch India and Global charts in parallel
+        const [indiaResponse, globalResponse] = await Promise.all([
+            fetch(`${CHART_API_BASE}/chart/current`),
+            fetch(`${CHART_API_BASE}/chart/current?chart_type=global`)
+        ]);
+
+        if (!indiaResponse.ok) return;
+
+        const indiaData = await indiaResponse.json();
+        const globalData = globalResponse.ok ? await globalResponse.json() : null;
+
+        const freshData = {
+            generated_at: indiaData.generated_at,
+            week: indiaData.week,
+            chart: indiaData.chart || [],
+            global_chart: globalData?.chart || [],
+            regional: {}
+        };
+
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
-        console.log('Cache refreshed in background');
+        console.log('Cache refreshed in background from harvester API');
     } catch (e) {
         // Silent fail for background refresh
     }
