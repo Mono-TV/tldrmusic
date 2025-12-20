@@ -11,6 +11,8 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from ...config import settings, Database
+from ...services.chart import ChartService
+from ...models import ChartRegion
 
 router = APIRouter(tags=["SEO"])
 
@@ -241,36 +243,32 @@ async def seo_user_profile(username: str):
 @router.get("/chart/india", response_class=HTMLResponse)
 async def seo_india_chart():
     """India Top 25 chart landing page"""
-    db = require_db()
-
-    # Get current chart
-    chart = await db.charts.find_one({"chart_type": "india"}, sort=[("week_start", -1)])
+    # Use ChartService (loads from files, no DB required)
+    chart = await ChartService.get_current_chart(region=ChartRegion.INDIA, with_rank_changes=False)
 
     description = "India's definitive Top 25 music chart. Aggregated weekly from Spotify, Apple Music, YouTube Music, JioSaavn, Gaana, and more."
 
     # Get #1 song image
     og_image = DEFAULT_IMAGE
-    songs = []
-    if chart and chart.get("songs"):
-        songs = chart["songs"][:5]
-        if songs[0].get("artwork_url"):
-            og_image = songs[0]["artwork_url"]
+    entries = chart.entries[:5] if chart and chart.entries else []
+    if entries and entries[0].artwork_url:
+        og_image = entries[0].artwork_url
 
     canonical_url = f"{FRONTEND_URL}/chart/india"
     redirect_url = f"{FRONTEND_URL}/?chart=india"
 
     # Schema.org ItemList
     item_list = []
-    for i, song in enumerate(songs):
+    for i, entry in enumerate(entries):
         item_list.append({
             "@type": "ListItem",
             "position": i + 1,
             "item": {
                 "@type": "MusicRecording",
-                "name": song.get("title", "Unknown"),
+                "name": entry.song_title or "Unknown",
                 "byArtist": {
                     "@type": "MusicGroup",
-                    "name": song.get("artist", "Unknown")
+                    "name": entry.song_artist or "Unknown"
                 }
             }
         })
@@ -299,34 +297,30 @@ async def seo_india_chart():
 @router.get("/chart/global", response_class=HTMLResponse)
 async def seo_global_chart():
     """Global Top 25 chart landing page"""
-    db = require_db()
-
-    # Get current global chart
-    chart = await db.charts.find_one({"chart_type": "global"}, sort=[("week_start", -1)])
+    # Use ChartService (loads from files, no DB required)
+    chart = await ChartService.get_current_chart(region=ChartRegion.GLOBAL, with_rank_changes=False)
 
     description = "Global Top 25 music chart. Aggregated from Spotify Global, Billboard Hot 100, and Apple Music Worldwide."
 
     og_image = DEFAULT_IMAGE
-    songs = []
-    if chart and chart.get("songs"):
-        songs = chart["songs"][:5]
-        if songs[0].get("artwork_url"):
-            og_image = songs[0]["artwork_url"]
+    entries = chart.entries[:5] if chart and chart.entries else []
+    if entries and entries[0].artwork_url:
+        og_image = entries[0].artwork_url
 
     canonical_url = f"{FRONTEND_URL}/chart/global"
     redirect_url = f"{FRONTEND_URL}/?chart=global"
 
     item_list = []
-    for i, song in enumerate(songs):
+    for i, entry in enumerate(entries):
         item_list.append({
             "@type": "ListItem",
             "position": i + 1,
             "item": {
                 "@type": "MusicRecording",
-                "name": song.get("title", "Unknown"),
+                "name": entry.song_title or "Unknown",
                 "byArtist": {
                     "@type": "MusicGroup",
-                    "name": song.get("artist", "Unknown")
+                    "name": entry.song_artist or "Unknown"
                 }
             }
         })
@@ -508,8 +502,6 @@ async def seo_artist(artist_id: str):
 @router.get("/sitemap.xml", response_class=PlainTextResponse)
 async def sitemap():
     """Dynamic sitemap.xml"""
-    db = require_db()
-
     urls = []
 
     # Static pages
@@ -530,26 +522,30 @@ async def sitemap():
     <priority>{priority}</priority>
   </url>""")
 
-    # Public playlists
-    playlists = await db.playlists.find(
-        {"is_public": True},
-        {"_id": 1, "updated_at": 1}
-    ).limit(500).to_list(500)
+    # Public playlists (optional, skip if DB not available)
+    if Database.db is not None:
+        try:
+            playlists = await Database.db.playlists.find(
+                {"is_public": True},
+                {"_id": 1, "updated_at": 1}
+            ).limit(500).to_list(500)
 
-    for playlist in playlists:
-        lastmod = ""
-        if playlist.get("updated_at"):
-            lastmod = f"\n    <lastmod>{playlist['updated_at'].strftime('%Y-%m-%d')}</lastmod>"
-        urls.append(f"""  <url>
+            for playlist in playlists:
+                lastmod = ""
+                if playlist.get("updated_at"):
+                    lastmod = f"\n    <lastmod>{playlist['updated_at'].strftime('%Y-%m-%d')}</lastmod>"
+                urls.append(f"""  <url>
     <loc>{FRONTEND_URL}/p/{playlist['_id']}</loc>{lastmod}
     <priority>0.5</priority>
   </url>""")
+        except Exception:
+            pass  # Skip playlists if DB error
 
-    # Songs from current chart
-    chart = await db.charts.find_one({"chart_type": "india"}, sort=[("week_start", -1)])
-    if chart and chart.get("songs"):
-        for song in chart["songs"][:25]:
-            video_id = song.get("youtube_video_id")
+    # Songs from current chart (using ChartService, no DB required)
+    chart = await ChartService.get_current_chart(region=ChartRegion.INDIA, with_rank_changes=False)
+    if chart and chart.entries:
+        for entry in chart.entries[:25]:
+            video_id = entry.youtube_video_id
             if video_id:
                 urls.append(f"""  <url>
     <loc>{FRONTEND_URL}/s/{video_id}</loc>
