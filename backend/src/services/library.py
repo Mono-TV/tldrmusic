@@ -617,6 +617,7 @@ class LibraryService:
             description = playlist_data.get("description", "")
             songs = playlist_data.get("songs", [])
             is_public = playlist_data.get("is_public", False)
+            custom_artwork = playlist_data.get("custom_artwork") or playlist_data.get("artwork_url")
             created_at = playlist_data.get("created_at")
             updated_at = playlist_data.get("updated_at")
 
@@ -658,19 +659,22 @@ class LibraryService:
             if existing:
                 # Update existing playlist
                 server_id = existing.get("id", str(existing.get("_id")))
+                update_doc = {
+                    "name": name,
+                    "description": description,
+                    "song_ids": song_ids,
+                    "song_snapshots": song_snapshots,
+                    "total_tracks": len(song_ids),
+                    "visibility": "public" if is_public else "private",
+                    "updated_at": updated_at,
+                }
+                # Only update custom_artwork if provided
+                if custom_artwork:
+                    update_doc["custom_artwork"] = custom_artwork
+
                 await Database.playlists().update_one(
                     {"_id": existing["_id"]},
-                    {
-                        "$set": {
-                            "name": name,
-                            "description": description,
-                            "song_ids": song_ids,
-                            "song_snapshots": song_snapshots,
-                            "total_tracks": len(song_ids),
-                            "visibility": "public" if is_public else "private",
-                            "updated_at": updated_at,
-                        }
-                    }
+                    {"$set": update_doc}
                 )
             else:
                 # Create new playlist with server-generated ID
@@ -688,10 +692,14 @@ class LibraryService:
                     "created_at": created_at,
                     "updated_at": updated_at,
                 }
+                # Add custom_artwork if provided
+                if custom_artwork:
+                    playlist_doc["custom_artwork"] = custom_artwork
+
                 await Database.playlists().insert_one(playlist_doc)
 
-            # Get first song artwork as cover
-            artwork_url = song_snapshots[0].get("artwork_url") if song_snapshots else None
+            # Use custom artwork if available, otherwise first song artwork
+            artwork_url = custom_artwork or (song_snapshots[0].get("artwork_url") if song_snapshots else None)
 
             synced_playlists.append(PlaylistSummary(
                 id=server_id,
@@ -703,3 +711,55 @@ class LibraryService:
             ))
 
         return synced_playlists
+
+    # ============== Preferences ==============
+
+    @classmethod
+    async def get_preferences(cls, user_id: str) -> dict:
+        """Get user preferences from MongoDB"""
+        doc = await Database.db()["user_preferences"].find_one({"user_id": user_id})
+        if not doc:
+            return {"shuffle": False, "repeat": "off"}
+        return {
+            "shuffle": doc.get("shuffle", False),
+            "repeat": doc.get("repeat", "off")
+        }
+
+    @classmethod
+    async def save_preferences(cls, user_id: str, shuffle: bool = False, repeat: str = "off"):
+        """Save user preferences to MongoDB"""
+        await Database.db()["user_preferences"].update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "user_id": user_id,
+                "shuffle": shuffle,
+                "repeat": repeat,
+                "updated_at": datetime.utcnow()
+            }},
+            upsert=True
+        )
+
+    # ============== Recent Searches ==============
+
+    @classmethod
+    async def get_recent_searches(cls, user_id: str) -> list:
+        """Get user's recent searches from MongoDB"""
+        doc = await Database.db()["recent_searches"].find_one({"user_id": user_id})
+        if not doc:
+            return []
+        return doc.get("searches", [])
+
+    @classmethod
+    async def save_recent_searches(cls, user_id: str, searches: list):
+        """Save user's recent searches to MongoDB"""
+        # Limit to 10 most recent
+        searches = searches[:10] if searches else []
+        await Database.db()["recent_searches"].update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "user_id": user_id,
+                "searches": searches,
+                "updated_at": datetime.utcnow()
+            }},
+            upsert=True
+        )

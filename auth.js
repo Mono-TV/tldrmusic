@@ -392,14 +392,30 @@ async function syncFromCloud() {
             const merged = await res.json();
 
             // Update localStorage with merged data
-            localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(merged.merged_favorites));
-            localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(merged.merged_history));
-            localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(merged.merged_queue));
+            if (merged.merged_favorites) {
+                localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(merged.merged_favorites));
+            }
+            if (merged.merged_history) {
+                localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(merged.merged_history));
+            }
+            if (merged.merged_queue) {
+                localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(merged.merged_queue));
+            }
             if (merged.merged_playlists) {
                 localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(merged.merged_playlists));
             }
-            localStorage.setItem(STORAGE_KEYS.SHUFFLE, merged.preferences.shuffle);
-            localStorage.setItem(STORAGE_KEYS.REPEAT, merged.preferences.repeat);
+            if (merged.preferences) {
+                localStorage.setItem(STORAGE_KEYS.SHUFFLE, merged.preferences.shuffle);
+                localStorage.setItem(STORAGE_KEYS.REPEAT, merged.preferences.repeat);
+            }
+            if (merged.recent_searches) {
+                localStorage.setItem(STORAGE_KEYS.RECENT_SEARCHES, JSON.stringify(merged.recent_searches));
+                // Update global recentSearches array
+                if (typeof recentSearches !== 'undefined') {
+                    recentSearches.length = 0;
+                    merged.recent_searches.forEach(s => recentSearches.push(s));
+                }
+            }
 
             // Reload user data into app state
             if (typeof loadUserData === 'function') {
@@ -416,12 +432,16 @@ async function syncFromCloud() {
             if (typeof renderPlaylistPanel === 'function') {
                 renderPlaylistPanel();
             }
+            if (typeof renderRecentSearches === 'function') {
+                renderRecentSearches();
+            }
 
             console.log('Synced from cloud:', {
-                favorites: merged.merged_favorites.length,
-                history: merged.merged_history.length,
-                queue: merged.merged_queue.length,
-                playlists: merged.merged_playlists ? merged.merged_playlists.length : 0
+                favorites: merged.merged_favorites?.length || 0,
+                history: merged.merged_history?.length || 0,
+                queue: merged.merged_queue?.length || 0,
+                playlists: merged.merged_playlists?.length || 0,
+                recent_searches: merged.recent_searches?.length || 0
             });
         }
     } catch (error) {
@@ -448,13 +468,23 @@ async function syncToCloud(type) {
                 body = { history: JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [] };
                 break;
             case 'queue':
-                // Queue sync not available in new API - skip silently
-                console.log('Queue sync skipped (not available in API)');
-                return;
+                endpoint = '/api/me/queue';
+                const localQueue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [];
+                body = { queue: localQueue };
+                break;
             case 'preferences':
-                // Preferences sync not available in new API - skip silently
-                console.log('Preferences sync skipped (not available in API)');
-                return;
+                endpoint = '/api/me/preferences';
+                body = {
+                    shuffle: localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true',
+                    repeat: localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off'
+                };
+                break;
+            case 'recent_searches':
+                endpoint = '/api/me/recent-searches';
+                body = {
+                    searches: JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT_SEARCHES) || '[]')
+                };
+                break;
             case 'playlists':
                 endpoint = '/api/me/playlists';
                 const localPlaylists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
@@ -549,6 +579,7 @@ const debouncedSyncHistory = debounce(() => syncToCloud('history'), 1000);
 const debouncedSyncQueue = debounce(() => syncToCloud('queue'), 1000);
 const debouncedSyncPreferences = debounce(() => syncToCloud('preferences'), 1000);
 const debouncedSyncPlaylists = debounce(() => syncToCloud('playlists'), 1000);
+const debouncedSyncRecentSearches = debounce(() => syncToCloud('recent_searches'), 1000);
 
 // ============================================================
 // LOGIN MODAL

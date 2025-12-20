@@ -64,9 +64,8 @@ async def sync_library(
     # Convert playlists to frontend format with songs array
     merged_playlists = []
     for playlist in library.playlists:
-        # Get song snapshots for this playlist
-        song_snapshots = []
-        cursor = Database.playlists().find_one({"id": playlist.id})
+        # Get full playlist doc from DB for additional fields
+        doc = await Database.playlists().find_one({"id": playlist.id})
 
         playlist_dict = {
             "id": playlist.id,
@@ -76,15 +75,13 @@ async def sync_library(
             "songs": [],  # Will be populated from song_snapshots
             "song_count": playlist.total_tracks,
             "cover_urls": [playlist.artwork_url] if playlist.artwork_url else [],
-            "artwork_url": playlist.artwork_url,
+            "artwork_url": doc.get("custom_artwork") or playlist.artwork_url if doc else playlist.artwork_url,
+            "custom_artwork": doc.get("custom_artwork") if doc else None,
             "created_at": playlist.created_at.timestamp() * 1000 if playlist.created_at else None,
             "updated_at": playlist.updated_at.timestamp() * 1000 if playlist.updated_at else None,
         }
-        merged_playlists.append(playlist_dict)
 
-    # Get song snapshots for playlists from DB
-    for i, playlist in enumerate(library.playlists):
-        doc = await Database.playlists().find_one({"id": playlist.id})
+        # Add song snapshots
         if doc and doc.get("song_snapshots"):
             songs = []
             for snap in doc.get("song_snapshots", []):
@@ -94,8 +91,10 @@ async def sync_library(
                     "artist": snap.get("artist", ""),
                     "artwork": snap.get("artwork_url", ""),
                 })
-            merged_playlists[i]["songs"] = songs
-            merged_playlists[i]["song_count"] = len(songs)
+            playlist_dict["songs"] = songs
+            playlist_dict["song_count"] = len(songs)
+
+        merged_playlists.append(playlist_dict)
 
     # Convert favorites to frontend format
     merged_favorites = []
@@ -132,15 +131,17 @@ async def sync_library(
                 "artwork": entry.song_snapshot.artwork_url,
             })
 
+    # Get preferences and recent searches from DB
+    preferences = await LibraryService.get_preferences(user.id)
+    recent_searches = await LibraryService.get_recent_searches(user.id)
+
     return {
         "merged_favorites": merged_favorites,
         "merged_history": merged_history,
         "merged_queue": merged_queue,
         "merged_playlists": merged_playlists,
-        "preferences": {
-            "shuffle": False,
-            "repeat": "off",
-        }
+        "preferences": preferences,
+        "recent_searches": recent_searches,
     }
 
 
@@ -417,3 +418,54 @@ async def remove_song_from_playlist(
     """
     await LibraryService.remove_song_from_playlist(playlist_id, song_id, user.id)
     return {"message": "Song removed from playlist"}
+
+
+# ============== Preferences ==============
+
+@router.get("/preferences")
+async def get_preferences(user: User = Depends(get_current_user_required)):
+    """
+    Get user preferences (shuffle, repeat mode)
+    """
+    prefs = await LibraryService.get_preferences(user.id)
+    return prefs
+
+
+@router.put("/preferences")
+async def save_preferences(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Save user preferences
+    """
+    await LibraryService.save_preferences(
+        user.id,
+        shuffle=data.get("shuffle", False),
+        repeat=data.get("repeat", "off")
+    )
+    return {"message": "Preferences saved"}
+
+
+# ============== Recent Searches ==============
+
+@router.get("/recent-searches")
+async def get_recent_searches(user: User = Depends(get_current_user_required)):
+    """
+    Get user's recent searches
+    """
+    searches = await LibraryService.get_recent_searches(user.id)
+    return {"searches": searches}
+
+
+@router.put("/recent-searches")
+async def save_recent_searches(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Save user's recent searches
+    """
+    searches = data.get("searches", [])
+    await LibraryService.save_recent_searches(user.id, searches)
+    return {"message": "Recent searches saved", "count": len(searches)}

@@ -15,7 +15,8 @@ const STORAGE_KEYS = {
     QUEUE: 'tldr-queue',
     PLAYLISTS: 'tldr-playlists',
     CHART_CACHE: 'tldr-chart-cache',
-    CHART_CACHE_TIME: 'tldr-chart-cache-time'
+    CHART_CACHE_TIME: 'tldr-chart-cache-time',
+    RECENT_SEARCHES: 'tldr-recent-searches'
 };
 
 // Cache TTL: 30 minutes (in milliseconds)
@@ -96,7 +97,7 @@ let searchDebounceTimer = null;
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_API_BASE = 'https://harvester.lumiolabs.in/api/tldr';
 const MAX_RECENT_SEARCHES = 10;
-let recentSearches = JSON.parse(localStorage.getItem('tldr-recent-searches') || '[]');
+let recentSearches = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT_SEARCHES) || '[]');
 let currentSearchQuery = '';
 let isSearchViewActive = false;
 window.currentSearchResults = [];
@@ -6124,20 +6125,35 @@ function addToRecentSearches(query) {
     // Limit size
     recentSearches = recentSearches.slice(0, MAX_RECENT_SEARCHES);
 
-    // Save
-    localStorage.setItem('tldr-recent-searches', JSON.stringify(recentSearches));
+    // Save locally
+    localStorage.setItem(STORAGE_KEYS.RECENT_SEARCHES, JSON.stringify(recentSearches));
+
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncRecentSearches === 'function') {
+        debouncedSyncRecentSearches();
+    }
 }
 
 function removeRecentSearch(query) {
     recentSearches = recentSearches.filter(q => q !== query);
-    localStorage.setItem('tldr-recent-searches', JSON.stringify(recentSearches));
+    localStorage.setItem(STORAGE_KEYS.RECENT_SEARCHES, JSON.stringify(recentSearches));
     renderRecentSearches();
+
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncRecentSearches === 'function') {
+        debouncedSyncRecentSearches();
+    }
 }
 
 function clearAllRecentSearches() {
     recentSearches = [];
-    localStorage.removeItem('tldr-recent-searches');
+    localStorage.removeItem(STORAGE_KEYS.RECENT_SEARCHES);
     renderRecentSearches();
+
+    // Sync to cloud if authenticated
+    if (typeof debouncedSyncRecentSearches === 'function') {
+        debouncedSyncRecentSearches();
+    }
 }
 
 function performSearchFromRecent(query) {
