@@ -26,7 +26,7 @@ let realtimeSyncInterval = null;
 let lastSyncTimestamp = 0;
 let isSyncing = false;
 let hasMultipleSessions = false;
-const REALTIME_SYNC_INTERVAL = 10000; // 10 seconds
+const REALTIME_SYNC_INTERVAL = 2000; // 2 seconds
 const SESSION_CHECK_INTERVAL = 60000; // Check for multiple sessions every 60 seconds
 
 // Generate a unique session ID for this browser tab (persists in sessionStorage)
@@ -625,7 +625,7 @@ const debouncedSyncRecentSearches = debounce(() => syncToCloud('recent_searches'
 function startRealtimeSync() {
     if (!isAuthenticated) return;
 
-    console.log('Initializing real-time sync system (10s interval)');
+    console.log('Initializing real-time sync system (2s interval)');
     lastSyncTimestamp = Date.now();
 
     // Add visibility change listener - sync when tab becomes visible
