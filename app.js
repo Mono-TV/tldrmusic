@@ -21,6 +21,17 @@ const STORAGE_KEYS = {
 // Cache TTL: 30 minutes (in milliseconds)
 const CACHE_TTL = 30 * 60 * 1000;
 
+// Get artwork URL with YouTube thumbnail fallback
+// Harvester API uses image_url, legacy API uses artwork_url
+function getArtworkUrl(song) {
+    if (song.image_url) return song.image_url;
+    if (song.artwork_url) return song.artwork_url;
+    if (song.youtube_video_id) {
+        return `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg`;
+    }
+    return '';
+}
+
 // State
 let chartData = null;
 let currentSongIndex = -1;
@@ -224,7 +235,7 @@ async function loadSongFromUrl(videoId) {
                 song.title,
                 song.artist,
                 song.youtube_video_id,
-                song.artwork_url,
+                getArtworkUrl(song),
                 song.score
             );
             return;
@@ -238,7 +249,7 @@ async function loadSongFromUrl(videoId) {
                 songData.title,
                 songData.artist,
                 videoId,
-                songData.artwork_url || songData.artwork,
+                getArtworkUrl(songData) || songData.artwork,
                 songData.score
             );
         } else {
@@ -942,16 +953,17 @@ function renderHero() {
 
     // Hero artwork
     const heroArtwork = document.getElementById('heroArtwork');
-    if (heroArtwork && song.artwork_url) {
-        heroArtwork.src = song.artwork_url;
+    const artworkUrl = getArtworkUrl(song);
+    if (heroArtwork && artworkUrl) {
+        heroArtwork.src = artworkUrl;
         heroArtwork.alt = `${song.title} album art`;
         heroArtwork.style.display = 'block';
     }
 
     // Hero background from album artwork
     const heroBg = document.getElementById('heroBg');
-    if (heroBg && song.artwork_url) {
-        heroBg.style.backgroundImage = `url(${song.artwork_url})`;
+    if (heroBg && artworkUrl) {
+        heroBg.style.backgroundImage = `url(${artworkUrl})`;
     }
 
     // YouTube views
@@ -1104,9 +1116,9 @@ function createRegionalSongCard(song, index) {
     card.dataset.title = song.title;
     card.dataset.artist = song.artist;
     card.dataset.videoId = song.youtube_video_id || '';
-    card.dataset.artwork = song.artwork_url || '';
-
-    const artworkUrl = song.artwork_url || findSongInMainChart(song.title, song.artist)?.artwork_url || '';
+    const foundSong = findSongInMainChart(song.title, song.artist);
+    const artworkUrl = getArtworkUrl(song) || (foundSong ? getArtworkUrl(foundSong) : '');
+    card.dataset.artwork = artworkUrl;
     const rank = index + 1;
 
     const placeholderSvg = `
@@ -1268,12 +1280,11 @@ function renderGlobalPlatformSongs(platformKey) {
 function createGlobalPlatformSongCard(song, index) {
     const card = document.createElement('div');
     card.className = 'song-card';
+    const artworkUrl = getArtworkUrl(song);
     card.dataset.title = song.title;
     card.dataset.artist = song.artist;
     card.dataset.videoId = song.youtube_video_id || '';
-    card.dataset.artwork = song.artwork_url || '';
-
-    const artworkUrl = song.artwork_url || '';
+    card.dataset.artwork = artworkUrl;
     const rank = song.platformRank;
 
     const placeholderSvg = `
@@ -1502,7 +1513,8 @@ function createSongElement(song, index, chartMode = 'india') {
     el.dataset.videoId = song.youtube_video_id || '';
     el.dataset.title = song.title;
     el.dataset.artist = song.artist;
-    el.dataset.artwork = song.artwork_url || '';
+    const artworkUrl = getArtworkUrl(song);
+    el.dataset.artwork = artworkUrl;
 
     // Format views
     const viewsText = song.youtube_views ? formatViews(song.youtube_views) : '';
@@ -1520,8 +1532,8 @@ function createSongElement(song, index, chartMode = 'india') {
 
     el.innerHTML = `
         <div class="song-card-artwork">
-            ${song.artwork_url
-                ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}" loading="lazy">`
+            ${artworkUrl
+                ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
                 : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
             <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
             <div class="song-card-play">
@@ -1712,15 +1724,16 @@ function renderGlobalHero() {
     if (heroRatingIcon3) heroRatingIcon3.style.display = 'inline';
 
     const heroArtwork = document.getElementById('heroArtwork');
-    if (heroArtwork && song.artwork_url) {
-        heroArtwork.src = song.artwork_url;
+    const artworkUrl = getArtworkUrl(song);
+    if (heroArtwork && artworkUrl) {
+        heroArtwork.src = artworkUrl;
         heroArtwork.alt = `${song.title} album art`;
         heroArtwork.style.display = 'block';
     }
 
     const heroBg = document.getElementById('heroBg');
-    if (heroBg && song.artwork_url) {
-        heroBg.style.backgroundImage = `url(${song.artwork_url})`;
+    if (heroBg && artworkUrl) {
+        heroBg.style.backgroundImage = `url(${artworkUrl})`;
     }
 
     const viewsStat = document.getElementById('heroViewsStat');
@@ -1776,18 +1789,19 @@ function updateNowPlaying(index) {
     currentSongIndex = index;
 
     // Update player bar info
+    const artworkUrl = getArtworkUrl(song);
     if (playerBarTitle) playerBarTitle.textContent = song.title;
     if (playerBarArtist) playerBarArtist.textContent = song.artist;
-    if (playerBarArtwork && song.artwork_url) {
-        playerBarArtwork.src = song.artwork_url;
+    if (playerBarArtwork && artworkUrl) {
+        playerBarArtwork.src = artworkUrl;
     }
 
     // Update player bar visibility based on hero visibility
     updatePlayerBarVisibility();
 
     // Apply artwork as gradient background
-    if (song.artwork_url && mainGradient) {
-        mainGradient.style.backgroundImage = `url(${song.artwork_url})`;
+    if (artworkUrl && mainGradient) {
+        mainGradient.style.backgroundImage = `url(${artworkUrl})`;
         mainGradient.classList.add('active');
     }
 
@@ -1835,21 +1849,22 @@ function updateHeroWithSong(song, index) {
     if (heroRankNum) heroRankNum.textContent = index + 1;
 
     // Update artwork
-    if (heroArtwork && song.artwork_url) {
-        heroArtwork.src = song.artwork_url;
+    const artworkUrl = getArtworkUrl(song);
+    if (heroArtwork && artworkUrl) {
+        heroArtwork.src = artworkUrl;
         heroArtwork.alt = `${song.title} album art`;
         heroArtwork.style.display = 'block';
     }
 
     // Update hero background
-    if (heroBg && song.artwork_url) {
-        heroBg.style.backgroundImage = `url(${song.artwork_url})`;
+    if (heroBg && artworkUrl) {
+        heroBg.style.backgroundImage = `url(${artworkUrl})`;
     }
 
     // Update header background
     const headerBg = document.getElementById('headerBg');
-    if (headerBg && song.artwork_url) {
-        headerBg.style.backgroundImage = `url(${song.artwork_url})`;
+    if (headerBg && artworkUrl) {
+        headerBg.style.backgroundImage = `url(${artworkUrl})`;
         headerBg.classList.add('active');
     }
 
@@ -2279,7 +2294,7 @@ function setupEventListeners() {
             // Play from global chart
             const song = chartData?.global_chart?.[0];
             if (song && song.youtube_video_id) {
-                playRegionalSongDirect(song.title, song.artist, song.youtube_video_id, song.artwork_url, song.score);
+                playRegionalSongDirect(song.title, song.artist, song.youtube_video_id, getArtworkUrl(song), song.score);
             }
         } else {
             // Play from India chart
@@ -2951,7 +2966,7 @@ function toggleFavorite(song = null) {
             title: song.title,
             artist: song.artist,
             videoId: song.youtube_video_id || song.videoId,
-            artwork: song.artwork_url || song.artwork,
+            artwork: getArtworkUrl(song) || song.artwork,
             addedAt: Date.now()
         });
         showToast('Added to favorites');
@@ -3189,7 +3204,7 @@ function addToHistory(song) {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id || song.videoId,
-        artwork: song.artwork_url || song.artwork,
+        artwork: getArtworkUrl(song) || song.artwork,
         playedAt: Date.now()
     };
 
@@ -3536,6 +3551,7 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
             const rankChange = song.rank_change || 0;
             const isNew = song.is_new || false;
             const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+            const artworkUrl = getArtworkUrl(song);
 
             let changeHtml = '';
             if (isNew) {
@@ -3551,15 +3567,15 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
             const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
 
             return `
-                <div class="chart-song-item ${isPlaying ? 'now-playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-artwork="${song.artwork_url || ''}">
+                <div class="chart-song-item ${isPlaying ? 'now-playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" data-title="${escapeHtml(song.title)}" data-artist="${escapeHtml(song.artist)}" data-artwork="${artworkUrl}">
                     <div class="chart-song-rank">
                         <span class="chart-song-rank-number">${rank}</span>
                         ${changeHtml}
                     </div>
                     <div class="chart-song-info">
                         <div class="chart-song-artwork">
-                            ${song.artwork_url
-                                ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}">`
+                            ${artworkUrl
+                                ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}">`
                                 : `<div class="chart-song-placeholder"></div>`}
                             ${getNowPlayingEqHtml()}
                         </div>
@@ -3627,7 +3643,7 @@ function playChartDetailFromIndex(startIndex) {
                 title: song.title,
                 artist: song.artist,
                 videoId: song.youtube_video_id,
-                artwork: song.artwork_url
+                artwork: getArtworkUrl(song)
             });
         }
     }
@@ -3635,7 +3651,7 @@ function playChartDetailFromIndex(startIndex) {
     // Play first song
     const firstSong = currentChartDetailData[startIndex];
     if (firstSong && firstSong.youtube_video_id) {
-        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.youtube_video_id, firstSong.artwork_url);
+        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.youtube_video_id, getArtworkUrl(firstSong));
     }
 
     updateQueueBadge();
@@ -3655,7 +3671,7 @@ function shuffleChartDetail() {
                 title: song.title,
                 artist: song.artist,
                 videoId: song.youtube_video_id,
-                artwork: song.artwork_url
+                artwork: getArtworkUrl(song)
             });
         }
     });
@@ -3684,7 +3700,7 @@ function toggleChartSongFavorite(index) {
             title: song.title,
             artist: song.artist,
             videoId: song.youtube_video_id,
-            artwork: song.artwork_url,
+            artwork: getArtworkUrl(song),
             addedAt: Date.now()
         });
         showToast('Added to favorites');
@@ -3737,7 +3753,7 @@ function addChartSongToQueue(index) {
             title: song.title,
             artist: song.artist,
             videoId: song.youtube_video_id,
-            artwork: song.artwork_url
+            artwork: getArtworkUrl(song)
         });
         updateQueueBadge();
         showToast(`Added "${song.title}" to queue`);
@@ -3755,7 +3771,7 @@ function addToQueue(song, playNext = false) {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id || song.videoId,
-        artwork: song.artwork_url || song.artwork,
+        artwork: getArtworkUrl(song) || song.artwork,
         id: Date.now()
     };
 
@@ -3994,7 +4010,7 @@ function addToPlaylist(playlistId, song) {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id || song.videoId,
-        artwork: song.artwork_url || song.artwork,
+        artwork: getArtworkUrl(song) || song.artwork,
         added_at: Date.now()
     });
     playlist.song_count = playlist.songs.length;
@@ -5996,13 +6012,14 @@ function renderCuratedDetailView(playlist) {
         <div class="detail-song-list">
             ${playableSongs.map((song, index) => {
                 const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+                const artworkUrl = getArtworkUrl(song);
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${song.youtube_video_id || ''}" onclick="playCuratedSong(${index})">
                     <span class="detail-song-num">${index + 1}</span>
                     ${getNowPlayingEqHtml()}
                     <div class="detail-song-artwork">
-                        ${song.artwork_url
-                            ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}">`
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}">`
                             : '<div class="placeholder"></div>'
                         }
                         <div class="detail-song-play-overlay">
@@ -6015,7 +6032,7 @@ function renderCuratedDetailView(playlist) {
                         <span class="detail-song-title">${escapeHtml(song.title)}</span>
                         <span class="detail-song-artist">${escapeHtml(song.artist)}</span>
                     </div>
-                    <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${song.artwork_url || ''}'})" title="Add to playlist">
+                    <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl}'})" title="Add to playlist">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -6118,7 +6135,7 @@ function playCuratedPlaylist(startIndex = 0) {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id,
-        artwork: song.artwork_url || '',
+        artwork: getArtworkUrl(song),
     }));
 
     // Play starting from specified index
@@ -6144,7 +6161,7 @@ function shuffleCuratedPlaylist() {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id,
-        artwork: song.artwork_url || '',
+        artwork: getArtworkUrl(song),
     }));
 
     // Play first song
@@ -6165,7 +6182,7 @@ function playCuratedSong(index) {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id,
-        artwork: song.artwork_url || '',
+        artwork: getArtworkUrl(song),
     }));
 
     currentSongIndex = index;
@@ -6939,7 +6956,7 @@ async function playAISongBySearch(index) {
             if (results.songs && results.songs.length > 0) {
                 const found = results.songs[0];
                 song.videoId = found.youtube_video_id || found.video_id;
-                song.artwork = found.artwork_url || '';
+                song.artwork = getArtworkUrl(found);
 
                 // Update queue
                 queue[index] = song;
