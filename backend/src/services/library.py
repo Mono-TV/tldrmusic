@@ -339,12 +339,10 @@ class LibraryService:
                 summary = PlaylistSummary(
                     id=playlist_id,
                     name=doc.get("name", "Untitled"),
-                    description=doc.get("description"),
-                    cover_image=cover_image,
+                    owner_name="You",
+                    artwork_url=cover_image,
                     total_tracks=len(song_ids),
                     visibility=PlaylistVisibility(doc.get("visibility", "private")),
-                    created_at=doc.get("created_at", datetime.utcnow()),
-                    updated_at=doc.get("updated_at", datetime.utcnow()),
                 )
                 playlists.append(summary)
             except Exception as e:
@@ -661,19 +659,16 @@ class LibraryService:
                 }
                 await Database.playlists().insert_one(playlist_doc)
 
-            # Build cover URLs from song snapshots
-            cover_urls = [s.get("artwork_url") for s in song_snapshots[:4] if s.get("artwork_url")]
+            # Get first song artwork as cover
+            artwork_url = song_snapshots[0].get("artwork_url") if song_snapshots else None
 
             synced_playlists.append(PlaylistSummary(
                 id=server_id,
                 name=name,
-                description=description,
+                owner_name="You",
+                artwork_url=artwork_url,
                 total_tracks=len(song_ids),
-                cover_urls=cover_urls,
                 visibility=PlaylistVisibility.PUBLIC if is_public else PlaylistVisibility.PRIVATE,
-                is_owner=True,
-                created_at=created_at,
-                updated_at=updated_at,
             ))
 
         return synced_playlists
