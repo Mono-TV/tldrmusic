@@ -14,6 +14,16 @@ from ...config import settings, Database
 
 router = APIRouter(tags=["SEO"])
 
+
+def require_db():
+    """Get database connection or raise 503 if not available"""
+    if Database.db is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Database not available"
+        )
+    return Database.db
+
 # Frontend URL for redirects
 FRONTEND_URL = "https://mono-tv.github.io/tldrmusic"
 SITE_NAME = "TLDR Music"
@@ -124,7 +134,7 @@ def generate_seo_html(
 @router.get("/p/{playlist_id}", response_class=HTMLResponse)
 async def seo_playlist(playlist_id: str):
     """SEO-friendly playlist page"""
-    db = Database.db
+    db = require_db()
 
     # Fetch playlist
     playlist = await db.playlists.find_one({"_id": playlist_id})
@@ -186,7 +196,7 @@ async def seo_playlist(playlist_id: str):
 @router.get("/u/{username}", response_class=HTMLResponse)
 async def seo_user_profile(username: str):
     """SEO-friendly user profile page"""
-    db = Database.db
+    db = require_db()
 
     # Find user by username
     user = await db.users.find_one({"username": username})
@@ -231,7 +241,7 @@ async def seo_user_profile(username: str):
 @router.get("/chart/india", response_class=HTMLResponse)
 async def seo_india_chart():
     """India Top 25 chart landing page"""
-    db = Database.db
+    db = require_db()
 
     # Get current chart
     chart = await db.charts.find_one({"chart_type": "india"}, sort=[("week_start", -1)])
@@ -289,7 +299,7 @@ async def seo_india_chart():
 @router.get("/chart/global", response_class=HTMLResponse)
 async def seo_global_chart():
     """Global Top 25 chart landing page"""
-    db = Database.db
+    db = require_db()
 
     # Get current global chart
     chart = await db.charts.find_one({"chart_type": "global"}, sort=[("week_start", -1)])
@@ -392,7 +402,7 @@ async def seo_regional_chart(language: str):
 @router.get("/s/{song_id}", response_class=HTMLResponse)
 async def seo_song(song_id: str):
     """SEO-friendly song page"""
-    db = Database.db
+    db = require_db()
 
     # Fetch song from songs collection or from charts
     song = await db.songs.find_one({"_id": song_id})
@@ -455,7 +465,7 @@ async def seo_song(song_id: str):
 @router.get("/a/{artist_id}", response_class=HTMLResponse)
 async def seo_artist(artist_id: str):
     """SEO-friendly artist page"""
-    db = Database.db
+    db = require_db()
 
     artist = await db.artists.find_one({"_id": artist_id})
 
@@ -498,7 +508,7 @@ async def seo_artist(artist_id: str):
 @router.get("/sitemap.xml", response_class=PlainTextResponse)
 async def sitemap():
     """Dynamic sitemap.xml"""
-    db = Database.db
+    db = require_db()
 
     urls = []
 
