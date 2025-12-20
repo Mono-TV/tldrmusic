@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     # API
     API_PREFIX: str = "/api"  # Unified API (no version prefix)
-    CORS_ORIGINS: List[str] = ["http://localhost:8000", "http://localhost:3000", "http://localhost:8002", "http://127.0.0.1:8002", "https://mono-tv.github.io", "https://tldrmusic.com"]
+    CORS_ORIGINS: List[str] = ["http://localhost:8000", "http://localhost:3000", "http://localhost:8002", "http://127.0.0.1:8002", "https://mono-tv.github.io", "https://tldrmusic.com", "https://music.lumiolabs.in"]
 
     # MongoDB
     MONGODB_URL: str = "mongodb://localhost:27017"
