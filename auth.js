@@ -21,6 +21,24 @@ let currentUser = null;
 let isAuthenticated = false;
 let pendingPlayAction = null;
 
+// Real-time sync state
+let realtimeSyncInterval = null;
+let lastSyncTimestamp = 0;
+let isSyncing = false;
+let hasMultipleSessions = false;
+const REALTIME_SYNC_INTERVAL = 30000; // 30 seconds
+const SESSION_CHECK_INTERVAL = 60000; // Check for multiple sessions every 60 seconds
+
+// Generate a unique session ID for this browser tab (persists in sessionStorage)
+function getSessionId() {
+    let sessionId = sessionStorage.getItem('tldr-session-id');
+    if (!sessionId) {
+        sessionId = 'sess_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+        sessionStorage.setItem('tldr-session-id', sessionId);
+    }
+    return sessionId;
+}
+
 // ============================================================
 // TEST MODE (for development/testing)
 // ============================================================
@@ -144,6 +162,9 @@ async function handleGoogleCallback(response) {
         // Sync data from cloud
         await syncFromCloud();
 
+        // Start real-time sync system
+        startRealtimeSync();
+
         // Save pending action before closing modal (closeLoginModal clears it)
         const actionToExecute = pendingPlayAction;
 
@@ -181,18 +202,26 @@ function checkAuthState() {
     const token = localStorage.getItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
     const userJson = localStorage.getItem(AUTH_STORAGE_KEYS.USER);
 
+    console.log('checkAuthState: token exists:', !!token, 'userJson exists:', !!userJson);
+
     if (token && userJson) {
         try {
             currentUser = JSON.parse(userJson);
             isAuthenticated = true;
+            console.log('checkAuthState: User authenticated, starting real-time sync');
             updateAuthUI();
 
             // Verify token is still valid (async)
             verifyToken();
+
+            // Start real-time sync system
+            startRealtimeSync();
         } catch (e) {
             console.error('Error parsing stored user:', e);
             logout();
         }
+    } else {
+        console.log('checkAuthState: Not authenticated');
     }
 }
 
@@ -282,6 +311,9 @@ async function fetchWithAuth(endpoint, options = {}) {
  * Logout user
  */
 function logout() {
+    // Stop real-time sync
+    stopRealtimeSync();
+
     localStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
@@ -580,6 +612,428 @@ const debouncedSyncQueue = debounce(() => syncToCloud('queue'), 1000);
 const debouncedSyncPreferences = debounce(() => syncToCloud('preferences'), 1000);
 const debouncedSyncPlaylists = debounce(() => syncToCloud('playlists'), 1000);
 const debouncedSyncRecentSearches = debounce(() => syncToCloud('recent_searches'), 1000);
+
+// ============================================================
+// REAL-TIME SYNC (Background polling - only when multiple sessions)
+// ============================================================
+
+/**
+ * Start real-time sync system
+ * - Syncs on tab visibility change (when user comes back to tab)
+ * - Polls every 30 seconds only if user has multiple active sessions
+ */
+function startRealtimeSync() {
+    if (!isAuthenticated) return;
+
+    console.log('Initializing real-time sync system');
+    lastSyncTimestamp = Date.now();
+
+    // Add visibility change listener - sync when tab becomes visible
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Add storage event listener - sync when another tab in same browser makes changes
+    window.addEventListener('storage', handleStorageChange);
+
+    // Check for multiple sessions and start polling if needed
+    checkMultipleSessions();
+
+    // Periodically check for multiple sessions
+    setInterval(checkMultipleSessions, SESSION_CHECK_INTERVAL);
+}
+
+/**
+ * Handle visibility change - sync when tab becomes visible
+ */
+function handleVisibilityChange() {
+    if (document.visibilityState === 'visible' && isAuthenticated) {
+        // Only sync if it's been more than 5 seconds since last sync
+        if (Date.now() - lastSyncTimestamp > 5000) {
+            console.log('Tab became visible - syncing from cloud');
+            pullFromCloud();
+        }
+    }
+}
+
+/**
+ * Handle storage changes from other tabs
+ */
+function handleStorageChange(event) {
+    // If a cloud-synced key changed in another tab, update our state
+    const syncKeys = [
+        STORAGE_KEYS.FAVORITES,
+        STORAGE_KEYS.HISTORY,
+        STORAGE_KEYS.PLAYLISTS,
+        STORAGE_KEYS.QUEUE,
+        STORAGE_KEYS.SHUFFLE,
+        STORAGE_KEYS.REPEAT,
+        STORAGE_KEYS.RECENT_SEARCHES
+    ];
+
+    if (syncKeys.includes(event.key) && event.newValue !== event.oldValue) {
+        console.log(`Storage changed in another tab: ${event.key}`);
+        // Reload the data into memory
+        if (typeof loadUserData === 'function') {
+            loadUserData();
+        }
+        // Re-render affected UI
+        if (event.key === STORAGE_KEYS.FAVORITES && typeof renderFavoritesSection === 'function') {
+            renderFavoritesSection();
+        }
+        if (event.key === STORAGE_KEYS.PLAYLISTS && typeof renderPlaylistPanel === 'function') {
+            renderPlaylistPanel();
+        }
+    }
+}
+
+/**
+ * Check if user has multiple active sessions
+ * If yes, enable background polling
+ */
+async function checkMultipleSessions() {
+    if (!isAuthenticated) return;
+
+    try {
+        const res = await fetchWithAuth('/api/me/session/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: getSessionId() })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            const hadMultipleSessions = hasMultipleSessions;
+            hasMultipleSessions = data.multiple_sessions;
+
+            console.log(`Session check: ${data.active_sessions} active session(s), multiple=${hasMultipleSessions}`);
+
+            if (hasMultipleSessions && !hadMultipleSessions) {
+                // Just detected multiple sessions - start polling
+                console.log('Multiple sessions detected - enabling real-time sync polling');
+                startPolling();
+                showToast('Syncing across devices enabled');
+            } else if (!hasMultipleSessions && hadMultipleSessions) {
+                // No more multiple sessions - stop polling
+                console.log('Single session detected - disabling real-time sync polling');
+                stopPolling();
+            }
+        }
+    } catch (error) {
+        // Silently fail - session ping is optional
+        console.debug('Session ping failed:', error);
+    }
+}
+
+/**
+ * Start background polling (only when multiple sessions detected)
+ */
+function startPolling() {
+    if (realtimeSyncInterval) {
+        clearInterval(realtimeSyncInterval);
+    }
+
+    realtimeSyncInterval = setInterval(() => {
+        if (isAuthenticated && !isSyncing && hasMultipleSessions) {
+            pullFromCloud();
+        }
+    }, REALTIME_SYNC_INTERVAL);
+}
+
+/**
+ * Stop background polling
+ */
+function stopPolling() {
+    if (realtimeSyncInterval) {
+        clearInterval(realtimeSyncInterval);
+        realtimeSyncInterval = null;
+    }
+}
+
+/**
+ * Stop real-time sync system completely
+ */
+function stopRealtimeSync() {
+    stopPolling();
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    window.removeEventListener('storage', handleStorageChange);
+    hasMultipleSessions = false;
+    console.log('Stopped real-time sync');
+}
+
+/**
+ * Pull data from cloud and update local state
+ * This is the "receive" side of real-time sync
+ */
+async function pullFromCloud() {
+    if (!isAuthenticated || isSyncing) return;
+
+    isSyncing = true;
+    updateSyncIndicator('syncing');
+
+    try {
+        const res = await fetchWithAuth('/api/me/library/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}) // Send empty object for pull-only
+        });
+
+        if (res.ok) {
+            const serverData = await res.json();
+            let hasChanges = false;
+
+            // Compare and update favorites
+            if (serverData.merged_favorites) {
+                const localFavorites = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES) || '[]');
+                if (!arraysEqual(localFavorites, serverData.merged_favorites, 'videoId')) {
+                    localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(serverData.merged_favorites));
+                    if (typeof favorites !== 'undefined') {
+                        favorites.length = 0;
+                        serverData.merged_favorites.forEach(f => favorites.push(f));
+                    }
+                    if (typeof renderFavoritesSection === 'function') {
+                        renderFavoritesSection();
+                    }
+                    if (typeof updateFavoriteButtons === 'function') {
+                        updateFavoriteButtons();
+                    }
+                    hasChanges = true;
+                }
+            }
+
+            // Compare and update history
+            if (serverData.merged_history) {
+                const localHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]');
+                if (!arraysEqual(localHistory, serverData.merged_history, 'videoId')) {
+                    localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(serverData.merged_history));
+                    if (typeof playHistory !== 'undefined') {
+                        playHistory.length = 0;
+                        serverData.merged_history.forEach(h => playHistory.push(h));
+                    }
+                    if (typeof renderHistorySection === 'function') {
+                        renderHistorySection();
+                    }
+                    hasChanges = true;
+                }
+            }
+
+            // Compare and update queue
+            if (serverData.merged_queue) {
+                const localQueue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE) || '[]');
+                if (!arraysEqual(localQueue, serverData.merged_queue, 'videoId')) {
+                    localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(serverData.merged_queue));
+                    if (typeof queue !== 'undefined') {
+                        queue.length = 0;
+                        serverData.merged_queue.forEach(q => queue.push(q));
+                    }
+                    if (typeof renderQueuePanel === 'function') {
+                        renderQueuePanel();
+                    }
+                    hasChanges = true;
+                }
+            }
+
+            // Compare and update playlists
+            if (serverData.merged_playlists) {
+                const localPlaylists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS) || '[]');
+                if (!playlistsEqual(localPlaylists, serverData.merged_playlists)) {
+                    localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(serverData.merged_playlists));
+                    if (typeof playlists !== 'undefined') {
+                        playlists.length = 0;
+                        serverData.merged_playlists.forEach(p => playlists.push(p));
+                    }
+                    if (typeof renderPlaylistPanel === 'function') {
+                        renderPlaylistPanel();
+                    }
+                    // Re-render playlist detail if currently viewing one
+                    if (typeof currentPlaylistId !== 'undefined' && currentPlaylistId) {
+                        if (typeof renderPlaylistDetail === 'function') {
+                            renderPlaylistDetail(currentPlaylistId);
+                        }
+                    }
+                    hasChanges = true;
+                }
+            }
+
+            // Update preferences
+            if (serverData.preferences) {
+                const localShuffle = localStorage.getItem(STORAGE_KEYS.SHUFFLE) === 'true';
+                const localRepeat = localStorage.getItem(STORAGE_KEYS.REPEAT) || 'off';
+
+                if (serverData.preferences.shuffle !== localShuffle || serverData.preferences.repeat !== localRepeat) {
+                    localStorage.setItem(STORAGE_KEYS.SHUFFLE, serverData.preferences.shuffle);
+                    localStorage.setItem(STORAGE_KEYS.REPEAT, serverData.preferences.repeat);
+                    if (typeof shuffleEnabled !== 'undefined') {
+                        shuffleEnabled = serverData.preferences.shuffle;
+                    }
+                    if (typeof repeatMode !== 'undefined') {
+                        repeatMode = serverData.preferences.repeat;
+                    }
+                    if (typeof updatePlaybackUI === 'function') {
+                        updatePlaybackUI();
+                    }
+                    hasChanges = true;
+                }
+            }
+
+            // Update recent searches
+            if (serverData.recent_searches) {
+                const localSearches = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT_SEARCHES) || '[]');
+                if (JSON.stringify(localSearches) !== JSON.stringify(serverData.recent_searches)) {
+                    localStorage.setItem(STORAGE_KEYS.RECENT_SEARCHES, JSON.stringify(serverData.recent_searches));
+                    if (typeof recentSearches !== 'undefined') {
+                        recentSearches.length = 0;
+                        serverData.recent_searches.forEach(s => recentSearches.push(s));
+                    }
+                    if (typeof renderRecentSearches === 'function') {
+                        renderRecentSearches();
+                    }
+                    hasChanges = true;
+                }
+            }
+
+            lastSyncTimestamp = Date.now();
+            updateSyncIndicator(hasChanges ? 'updated' : 'synced');
+
+            if (hasChanges) {
+                console.log('Real-time sync: Updated with changes from cloud');
+            }
+        }
+    } catch (error) {
+        console.error('Real-time sync error:', error);
+        updateSyncIndicator('error');
+    } finally {
+        isSyncing = false;
+    }
+}
+
+/**
+ * Compare two arrays for equality by a key
+ */
+function arraysEqual(arr1, arr2, key) {
+    if (!arr1 || !arr2) return arr1 === arr2;
+    if (arr1.length !== arr2.length) return false;
+
+    const ids1 = arr1.map(item => item[key] || item.id).sort();
+    const ids2 = arr2.map(item => item[key] || item.id).sort();
+
+    return JSON.stringify(ids1) === JSON.stringify(ids2);
+}
+
+/**
+ * Compare playlists for equality (by id and song count)
+ */
+function playlistsEqual(local, server) {
+    if (!local || !server) return local === server;
+    if (local.length !== server.length) return false;
+
+    // Create maps for comparison
+    const localMap = new Map(local.map(p => [p.id, p]));
+
+    for (const serverPlaylist of server) {
+        const localPlaylist = localMap.get(serverPlaylist.id);
+        if (!localPlaylist) return false;
+
+        // Compare basic properties
+        if (localPlaylist.name !== serverPlaylist.name) return false;
+        if ((localPlaylist.songs?.length || 0) !== (serverPlaylist.songs?.length || serverPlaylist.song_count || 0)) return false;
+        if (localPlaylist.is_public !== serverPlaylist.is_public) return false;
+    }
+
+    return true;
+}
+
+/**
+ * Update sync indicator in UI
+ */
+function updateSyncIndicator(status) {
+    let indicator = document.getElementById('syncIndicator');
+
+    // Create indicator if it doesn't exist
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'syncIndicator';
+        indicator.className = 'sync-indicator';
+        document.body.appendChild(indicator);
+    }
+
+    // Update status
+    indicator.className = `sync-indicator ${status}`;
+
+    switch (status) {
+        case 'syncing':
+            indicator.innerHTML = `
+                <svg class="sync-icon spinning" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                    <path d="M16 21h5v-5"></path>
+                </svg>
+            `;
+            indicator.title = 'Syncing...';
+            break;
+        case 'synced':
+            indicator.innerHTML = `
+                <svg class="sync-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            `;
+            indicator.title = 'Synced';
+            // Hide after 2 seconds
+            setTimeout(() => {
+                if (indicator.classList.contains('synced')) {
+                    indicator.classList.add('hidden');
+                }
+            }, 2000);
+            break;
+        case 'updated':
+            indicator.innerHTML = `
+                <svg class="sync-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            `;
+            indicator.title = 'Updated from cloud';
+            // Hide after 3 seconds
+            setTimeout(() => {
+                if (indicator.classList.contains('updated')) {
+                    indicator.classList.add('hidden');
+                }
+            }, 3000);
+            break;
+        case 'error':
+            indicator.innerHTML = `
+                <svg class="sync-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            `;
+            indicator.title = 'Sync error';
+            // Hide after 5 seconds
+            setTimeout(() => {
+                if (indicator.classList.contains('error')) {
+                    indicator.classList.add('hidden');
+                }
+            }, 5000);
+            break;
+    }
+
+    // Remove hidden class to show
+    indicator.classList.remove('hidden');
+}
+
+/**
+ * Force an immediate sync from cloud
+ */
+function forceSync() {
+    if (!isAuthenticated) {
+        showToast('Please sign in to sync');
+        return;
+    }
+
+    pullFromCloud();
+    showToast('Syncing...');
+}
 
 // ============================================================
 // LOGIN MODAL

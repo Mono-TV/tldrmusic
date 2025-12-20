@@ -3052,6 +3052,55 @@ body::before {
     opacity: 1;
 }
 
+/* ===== SYNC INDICATOR ===== */
+.sync-indicator {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+.sync-indicator.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sync-indicator .sync-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.sync-indicator.syncing {
+    color: var(--accent);
+}
+
+.sync-indicator.syncing .sync-icon.spinning {
+    animation: spin 1s linear infinite;
+}
+
+.sync-indicator.synced,
+.sync-indicator.updated {
+    color: #22c55e;
+}
+
+.sync-indicator.error {
+    color: #ef4444;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1100px) {
     .main {

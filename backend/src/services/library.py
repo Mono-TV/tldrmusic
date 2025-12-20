@@ -2,7 +2,7 @@
 Library Service - User favorites, history, playlists
 """
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 from bson import ObjectId
 
@@ -163,6 +163,38 @@ class LibraryService:
         })
         return doc is not None
 
+    @classmethod
+    async def sync_favorites(cls, user_id: str, favorites: list):
+        """Sync favorites from client - replace server favorites with client data"""
+        # Clear existing favorites
+        await Database.favorites().delete_many({"user_id": user_id})
+
+        # Insert new favorites
+        if favorites:
+            docs = []
+            for item in favorites:
+                video_id = item.get("videoId") or item.get("video_id") or item.get("song_id", "")
+                if not video_id:
+                    continue
+
+                doc = {
+                    "id": str(uuid.uuid4()),
+                    "user_id": user_id,
+                    "song_id": video_id,
+                    "added_at": datetime.fromtimestamp(item.get("addedAt", 0) / 1000) if item.get("addedAt") else datetime.utcnow(),
+                    "song_snapshot": {
+                        "id": video_id,
+                        "title": item.get("title", ""),
+                        "artist": item.get("artist", ""),
+                        "artwork_url": item.get("artwork") or item.get("artwork_url", ""),
+                        "youtube_video_id": video_id,
+                    }
+                }
+                docs.append(doc)
+
+            if docs:
+                await Database.favorites().insert_many(docs)
+
     # ============== History ==============
 
     @classmethod
@@ -245,10 +277,11 @@ class LibraryService:
                     "completed": item.get("completed", False),
                     "source": item.get("source", "chart"),
                     "song_snapshot": {
+                        "id": item.get("videoId") or item.get("video_id", ""),
                         "title": item.get("title", ""),
                         "artist": item.get("artist", ""),
                         "artwork_url": item.get("artwork") or item.get("artwork_url", ""),
-                        "video_id": item.get("videoId") or item.get("video_id", ""),
+                        "youtube_video_id": item.get("videoId") or item.get("video_id", ""),
                     }
                 }
                 docs.append(doc)
@@ -270,20 +303,23 @@ class LibraryService:
             try:
                 # Ensure song_snapshot exists
                 snapshot_data = item.get("song_snapshot", {})
+                video_id = item.get("videoId") or item.get("song_id", "")
                 if not snapshot_data:
                     snapshot_data = {
+                        "id": video_id,
                         "title": item.get("title", ""),
                         "artist": item.get("artist", ""),
                         "artwork_url": item.get("artwork") or item.get("artwork_url", ""),
-                        "video_id": item.get("videoId") or item.get("song_id", ""),
+                        "youtube_video_id": video_id,
                     }
 
                 from ..models import SongSnapshot
                 snapshot = SongSnapshot(
+                    id=snapshot_data.get("id") or snapshot_data.get("youtube_video_id", ""),
                     title=snapshot_data.get("title", ""),
                     artist=snapshot_data.get("artist", ""),
                     artwork_url=snapshot_data.get("artwork_url", ""),
-                    video_id=snapshot_data.get("video_id", ""),
+                    youtube_video_id=snapshot_data.get("youtube_video_id") or snapshot_data.get("video_id", ""),
                 )
 
                 queue.append(QueueEntry(
@@ -309,16 +345,18 @@ class LibraryService:
             else:
                 item_dict = item
 
+            video_id = item_dict.get("videoId") or item_dict.get("video_id") or item_dict.get("song_snapshot", {}).get("youtube_video_id") or item_dict.get("song_snapshot", {}).get("video_id", "")
             items.append({
                 "id": item_dict.get("id", str(uuid.uuid4())),
                 "song_id": item_dict.get("song_id") or item_dict.get("videoId", ""),
                 "added_at": item_dict.get("added_at", datetime.utcnow()),
                 "source": item_dict.get("source", "unknown"),
                 "song_snapshot": {
+                    "id": video_id,
                     "title": item_dict.get("title") or item_dict.get("song_snapshot", {}).get("title", ""),
                     "artist": item_dict.get("artist") or item_dict.get("song_snapshot", {}).get("artist", ""),
                     "artwork_url": item_dict.get("artwork") or item_dict.get("artwork_url") or item_dict.get("song_snapshot", {}).get("artwork_url", ""),
-                    "video_id": item_dict.get("videoId") or item_dict.get("video_id") or item_dict.get("song_snapshot", {}).get("video_id", ""),
+                    "youtube_video_id": video_id,
                 }
             })
 
@@ -424,8 +462,11 @@ class LibraryService:
         user_id: str
     ) -> Optional[Playlist]:
         """Get playlist by ID from MongoDB"""
-        # Try finding by id field first, then by _id
+        # Try finding by id, client_id, or _id
         doc = await Database.playlists().find_one({"id": playlist_id})
+
+        if not doc:
+            doc = await Database.playlists().find_one({"client_id": playlist_id})
 
         if not doc:
             try:
@@ -495,9 +536,16 @@ class LibraryService:
         data: PlaylistUpdate
     ) -> Optional[Playlist]:
         """Update playlist in MongoDB"""
-        # Find playlist first
+        # Find playlist first - check id, client_id, and _id
+        query_conditions = [
+            {"id": playlist_id},
+            {"client_id": playlist_id},
+        ]
+        if ObjectId.is_valid(playlist_id):
+            query_conditions.append({"_id": ObjectId(playlist_id)})
+
         doc = await Database.playlists().find_one({
-            "$or": [{"id": playlist_id}, {"_id": ObjectId(playlist_id) if ObjectId.is_valid(playlist_id) else None}],
+            "$or": query_conditions,
             "user_id": user_id
         })
 
@@ -528,8 +576,16 @@ class LibraryService:
     @classmethod
     async def delete_playlist(cls, playlist_id: str, user_id: str) -> bool:
         """Delete playlist from MongoDB"""
+        # Check id, client_id, and _id to handle all ID formats
+        query_conditions = [
+            {"id": playlist_id},
+            {"client_id": playlist_id},  # Also check client_id for synced playlists
+        ]
+        if ObjectId.is_valid(playlist_id):
+            query_conditions.append({"_id": ObjectId(playlist_id)})
+
         result = await Database.playlists().delete_one({
-            "$or": [{"id": playlist_id}, {"_id": ObjectId(playlist_id) if ObjectId.is_valid(playlist_id) else None}],
+            "$or": query_conditions,
             "user_id": user_id
         })
         return result.deleted_count > 0
@@ -547,10 +603,18 @@ class LibraryService:
         if not song:
             return False
 
+        # Build query conditions for id, client_id, and _id
+        query_conditions = [
+            {"id": playlist_id},
+            {"client_id": playlist_id},
+        ]
+        if ObjectId.is_valid(playlist_id):
+            query_conditions.append({"_id": ObjectId(playlist_id)})
+
         # Find and update playlist
         result = await Database.playlists().update_one(
             {
-                "$or": [{"id": playlist_id}, {"_id": ObjectId(playlist_id) if ObjectId.is_valid(playlist_id) else None}],
+                "$or": query_conditions,
                 "user_id": user_id
             },
             {
@@ -562,7 +626,7 @@ class LibraryService:
         # Update total_tracks
         if result.modified_count > 0:
             doc = await Database.playlists().find_one({
-                "$or": [{"id": playlist_id}, {"_id": ObjectId(playlist_id) if ObjectId.is_valid(playlist_id) else None}]
+                "$or": query_conditions
             })
             if doc:
                 await Database.playlists().update_one(
@@ -580,9 +644,17 @@ class LibraryService:
         user_id: str
     ):
         """Remove song from playlist"""
+        # Build query conditions for id, client_id, and _id
+        query_conditions = [
+            {"id": playlist_id},
+            {"client_id": playlist_id},
+        ]
+        if ObjectId.is_valid(playlist_id):
+            query_conditions.append({"_id": ObjectId(playlist_id)})
+
         result = await Database.playlists().update_one(
             {
-                "$or": [{"id": playlist_id}, {"_id": ObjectId(playlist_id) if ObjectId.is_valid(playlist_id) else None}],
+                "$or": query_conditions,
                 "user_id": user_id
             },
             {
@@ -594,7 +666,7 @@ class LibraryService:
         # Update total_tracks
         if result.modified_count > 0:
             doc = await Database.playlists().find_one({
-                "$or": [{"id": playlist_id}, {"_id": ObjectId(playlist_id) if ObjectId.is_valid(playlist_id) else None}]
+                "$or": query_conditions
             })
             if doc:
                 await Database.playlists().update_one(
@@ -606,10 +678,27 @@ class LibraryService:
     async def sync_playlists(cls, user_id: str, playlists: list) -> List[PlaylistSummary]:
         """
         Sync playlists from client to server.
-        Creates new playlists, updates existing ones, and returns the synced list.
+        Creates new playlists, updates existing ones, deletes removed ones.
         """
         synced_playlists = []
         now = datetime.utcnow()
+
+        # Get all client playlist IDs (both client-generated and server IDs)
+        client_ids = set()
+        for p in playlists:
+            pid = p.get("id", "")
+            if pid:
+                client_ids.add(pid)
+
+        # Delete playlists on server that are not in client's list
+        # This handles the case where user deleted a playlist
+        server_playlists = Database.playlists().find({"user_id": user_id})
+        async for doc in server_playlists:
+            server_id = doc.get("id", str(doc.get("_id")))
+            client_id = doc.get("client_id", "")
+            # If neither server_id nor client_id is in the client's list, delete it
+            if server_id not in client_ids and client_id not in client_ids:
+                await Database.playlists().delete_one({"_id": doc["_id"]})
 
         for playlist_data in playlists:
             client_id = playlist_data.get("id", "")
@@ -617,7 +706,19 @@ class LibraryService:
             description = playlist_data.get("description", "")
             songs = playlist_data.get("songs", [])
             is_public = playlist_data.get("is_public", False)
-            custom_artwork = playlist_data.get("custom_artwork") or playlist_data.get("artwork_url")
+
+            # custom_artwork can be a boolean flag or the actual URL
+            # artwork_url is always the actual URL
+            artwork_url_value = playlist_data.get("artwork_url")
+            custom_artwork_flag = playlist_data.get("custom_artwork")
+
+            # Only use artwork_url if it's a valid string URL
+            custom_artwork = None
+            if isinstance(artwork_url_value, str) and artwork_url_value:
+                custom_artwork = artwork_url_value
+            elif isinstance(custom_artwork_flag, str) and custom_artwork_flag:
+                custom_artwork = custom_artwork_flag
+
             created_at = playlist_data.get("created_at")
             updated_at = playlist_data.get("updated_at")
 
@@ -717,7 +818,7 @@ class LibraryService:
     @classmethod
     async def get_preferences(cls, user_id: str) -> dict:
         """Get user preferences from MongoDB"""
-        doc = await Database.db()["user_preferences"].find_one({"user_id": user_id})
+        doc = await Database.db["user_preferences"].find_one({"user_id": user_id})
         if not doc:
             return {"shuffle": False, "repeat": "off"}
         return {
@@ -728,7 +829,7 @@ class LibraryService:
     @classmethod
     async def save_preferences(cls, user_id: str, shuffle: bool = False, repeat: str = "off"):
         """Save user preferences to MongoDB"""
-        await Database.db()["user_preferences"].update_one(
+        await Database.db["user_preferences"].update_one(
             {"user_id": user_id},
             {"$set": {
                 "user_id": user_id,
@@ -744,7 +845,7 @@ class LibraryService:
     @classmethod
     async def get_recent_searches(cls, user_id: str) -> list:
         """Get user's recent searches from MongoDB"""
-        doc = await Database.db()["recent_searches"].find_one({"user_id": user_id})
+        doc = await Database.db["recent_searches"].find_one({"user_id": user_id})
         if not doc:
             return []
         return doc.get("searches", [])
@@ -754,7 +855,7 @@ class LibraryService:
         """Save user's recent searches to MongoDB"""
         # Limit to 10 most recent
         searches = searches[:10] if searches else []
-        await Database.db()["recent_searches"].update_one(
+        await Database.db["recent_searches"].update_one(
             {"user_id": user_id},
             {"$set": {
                 "user_id": user_id,
@@ -763,3 +864,50 @@ class LibraryService:
             }},
             upsert=True
         )
+
+    # ============== Session Management ==============
+
+    @classmethod
+    async def ping_session(cls, user_id: str, session_id: str = None) -> dict:
+        """
+        Ping session to track active sessions.
+        Returns info about active sessions for this user.
+        """
+        import uuid as uuid_module
+
+        now = datetime.utcnow()
+        session_timeout = 120  # 2 minutes - sessions older than this are considered inactive
+
+        # Use client-provided session ID or generate one
+        if not session_id:
+            session_id = f"server_{uuid_module.uuid4().hex[:16]}"
+
+        # Update this session's last ping time
+        await Database.db["active_sessions"].update_one(
+            {"user_id": user_id, "session_id": session_id},
+            {"$set": {
+                "user_id": user_id,
+                "session_id": session_id,
+                "last_ping": now
+            }},
+            upsert=True
+        )
+
+        # Clean up old sessions (older than 2 minutes)
+        cutoff = now - timedelta(seconds=session_timeout)
+        await Database.db["active_sessions"].delete_many({
+            "user_id": user_id,
+            "last_ping": {"$lt": cutoff}
+        })
+
+        # Count active sessions for this user
+        count = await Database.db["active_sessions"].count_documents({
+            "user_id": user_id,
+            "last_ping": {"$gte": cutoff}
+        })
+
+        return {
+            "multiple_sessions": count > 1,
+            "active_sessions": count,
+            "session_id": session_id
+        }

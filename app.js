@@ -7708,11 +7708,8 @@ function searchAndPlayOnYouTube(title, artist) {
     const searchQuery = encodeURIComponent(`${title} ${artist}`);
 
     // Update player bar to show the song info
-    updatePlayerBar({
-        title: title,
-        artist: artist,
-        artwork: ''
-    });
+    if (playerBarTitle) playerBarTitle.textContent = title;
+    if (playerBarArtist) playerBarArtist.textContent = artist;
 
     // Open YouTube Music search in new tab
     window.open(`https://music.youtube.com/search?q=${searchQuery}`, '_blank');

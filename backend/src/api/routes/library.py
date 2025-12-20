@@ -65,7 +65,28 @@ async def sync_library(
     merged_playlists = []
     for playlist in library.playlists:
         # Get full playlist doc from DB for additional fields
+        # Try multiple ID formats (id, client_id, _id)
         doc = await Database.playlists().find_one({"id": playlist.id})
+        if not doc:
+            doc = await Database.playlists().find_one({"client_id": playlist.id})
+        if not doc:
+            try:
+                from bson import ObjectId
+                if ObjectId.is_valid(playlist.id):
+                    doc = await Database.playlists().find_one({"_id": ObjectId(playlist.id)})
+            except:
+                pass
+
+        # Get artwork URL - custom_artwork is a boolean flag, artwork_url is the actual URL
+        artwork_url = None
+        if doc:
+            # Check for custom artwork URL in the document
+            if doc.get("artwork_url") and isinstance(doc.get("artwork_url"), str):
+                artwork_url = doc.get("artwork_url")
+            elif playlist.artwork_url:
+                artwork_url = playlist.artwork_url
+        else:
+            artwork_url = playlist.artwork_url
 
         playlist_dict = {
             "id": playlist.id,
@@ -74,14 +95,14 @@ async def sync_library(
             "is_public": playlist.visibility == PlaylistVisibility.PUBLIC,
             "songs": [],  # Will be populated from song_snapshots
             "song_count": playlist.total_tracks,
-            "cover_urls": [playlist.artwork_url] if playlist.artwork_url else [],
-            "artwork_url": doc.get("custom_artwork") or playlist.artwork_url if doc else playlist.artwork_url,
-            "custom_artwork": doc.get("custom_artwork") if doc else None,
+            "cover_urls": [artwork_url] if artwork_url else [],
+            "artwork_url": artwork_url,
+            "custom_artwork": bool(doc.get("custom_artwork")) if doc else False,
             "created_at": playlist.created_at.timestamp() * 1000 if playlist.created_at else None,
             "updated_at": playlist.updated_at.timestamp() * 1000 if playlist.updated_at else None,
         }
 
-        # Add song snapshots
+        # Add song snapshots from DB doc
         if doc and doc.get("song_snapshots"):
             songs = []
             for snap in doc.get("song_snapshots", []):
@@ -93,6 +114,10 @@ async def sync_library(
                 })
             playlist_dict["songs"] = songs
             playlist_dict["song_count"] = len(songs)
+        # Fallback: if no song_snapshots but we have song_ids, include them
+        elif doc and doc.get("song_ids"):
+            playlist_dict["song_ids"] = doc.get("song_ids", [])
+            playlist_dict["song_count"] = len(doc.get("song_ids", []))
 
         merged_playlists.append(playlist_dict)
 
@@ -101,7 +126,7 @@ async def sync_library(
     for fav in library.favorites:
         if fav.song_snapshot:
             merged_favorites.append({
-                "videoId": fav.song_snapshot.video_id,
+                "videoId": fav.song_snapshot.youtube_video_id or fav.song_snapshot.id,
                 "title": fav.song_snapshot.title,
                 "artist": fav.song_snapshot.artist,
                 "artwork": fav.song_snapshot.artwork_url,
@@ -113,7 +138,7 @@ async def sync_library(
     for entry in library.history:
         if entry.song_snapshot:
             merged_history.append({
-                "videoId": entry.song_snapshot.video_id,
+                "videoId": entry.song_snapshot.youtube_video_id or entry.song_snapshot.id,
                 "title": entry.song_snapshot.title,
                 "artist": entry.song_snapshot.artist,
                 "artwork": entry.song_snapshot.artwork_url,
@@ -125,7 +150,7 @@ async def sync_library(
     for entry in library.queue:
         if entry.song_snapshot:
             merged_queue.append({
-                "videoId": entry.song_snapshot.video_id,
+                "videoId": entry.song_snapshot.youtube_video_id or entry.song_snapshot.id,
                 "title": entry.song_snapshot.title,
                 "artist": entry.song_snapshot.artist,
                 "artwork": entry.song_snapshot.artwork_url,
@@ -202,6 +227,20 @@ async def check_favorite(
     """
     is_favorite = await LibraryService.is_favorite(user.id, song_id)
     return {"is_favorite": is_favorite}
+
+
+@router.put("/favorites")
+async def sync_favorites(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Sync/replace favorites from client.
+    Accepts { favorites: [...] } and syncs to server.
+    """
+    favorites_data = data.get("favorites", [])
+    await LibraryService.sync_favorites(user.id, favorites_data)
+    return {"message": "Favorites synced", "count": len(favorites_data)}
 
 
 # ============== History ==============
@@ -469,3 +508,22 @@ async def save_recent_searches(
     searches = data.get("searches", [])
     await LibraryService.save_recent_searches(user.id, searches)
     return {"message": "Recent searches saved", "count": len(searches)}
+
+
+# ============== Session Management ==============
+
+@router.post("/session/ping")
+async def session_ping(
+    user: User = Depends(get_current_user_required),
+    data: Optional[dict] = None
+):
+    """
+    Ping session to track active sessions.
+    Returns whether user has multiple active sessions.
+    Used to enable real-time sync only when needed.
+    """
+    session_id = None
+    if data and isinstance(data, dict):
+        session_id = data.get("session_id")
+    result = await LibraryService.ping_session(user.id, session_id)
+    return result
