@@ -121,8 +121,7 @@ async function handleGoogleCallback(response) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                google_token: response.credential,
-                local_data: localData
+                id_token: response.credential
             })
         });
 
