@@ -5707,14 +5707,15 @@ async function performQuickSearch(query) {
     if (!query) return;
 
     try {
+        // Use /search endpoint instead of /suggest for full artwork data
         const response = await fetch(
-            `${SEARCH_API_BASE}/suggest?q=${encodeURIComponent(query)}&limit=5`
+            `${SEARCH_API_BASE}/search?q=${encodeURIComponent(query)}&limit=5`
         );
 
         if (!response.ok) throw new Error('Search failed');
 
         const data = await response.json();
-        renderSearchDropdown(data.suggestions || []);
+        renderSearchDropdown(data.songs || []);
         showSearchDropdown();
 
     } catch (error) {
@@ -5739,21 +5740,27 @@ function renderSearchDropdown(suggestions) {
         return;
     }
 
-    content.innerHTML = suggestions.map((song, index) => `
-        <div class="search-dropdown-item"
-             data-index="${index}"
-             onclick="playSearchResult(${index})">
-            <div class="search-dropdown-item-artwork">
-                ${song.artwork_url
-                    ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}" loading="lazy">`
-                    : '<div class="placeholder"></div>'}
+    content.innerHTML = suggestions.map((song, index) => {
+        // Get artwork URL with YouTube thumbnail fallback
+        const artworkUrl = song.artwork_url ||
+            (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/mqdefault.jpg` : '');
+
+        return `
+            <div class="search-dropdown-item"
+                 data-index="${index}"
+                 onclick="playSearchResult(${index})">
+                <div class="search-dropdown-item-artwork">
+                    ${artworkUrl
+                        ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                        : '<div class="placeholder"></div>'}
+                </div>
+                <div class="search-dropdown-item-info">
+                    <div class="search-dropdown-item-title">${escapeHtml(song.title)}</div>
+                    <div class="search-dropdown-item-artist">${escapeHtml(song.artist)}</div>
+                </div>
             </div>
-            <div class="search-dropdown-item-info">
-                <div class="search-dropdown-item-title">${escapeHtml(song.title)}</div>
-                <div class="search-dropdown-item-artist">${escapeHtml(song.artist)}</div>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     // Store suggestions for playback
     window.currentDropdownSuggestions = suggestions;
