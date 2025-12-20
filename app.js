@@ -4136,6 +4136,7 @@ function updatePlaylistCount() {
 function showPlaylistsView() {
     isPlaylistPanelVisible = true;
     isHomeViewVisible = false;
+    isSearchViewActive = false;
 
     // Hide main content (charts, regional) and home view
     const homeView = document.getElementById('homeView');
@@ -4143,11 +4144,17 @@ function showPlaylistsView() {
     const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const playlistDetailView = document.getElementById('playlistDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const searchView = document.getElementById('searchView');
 
     if (homeView) homeView.style.display = 'none';
     if (mainContent) mainContent.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
     if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'block';
 
     // Update sidebar active state
@@ -5850,6 +5857,8 @@ function selectDropdownItem(items, index) {
 
 function showSearchView(initialQuery = '') {
     isSearchViewActive = true;
+    isHomeViewVisible = false;
+    isPlaylistPanelVisible = false;
 
     // Update sidebar active state
     updateSidebarActiveState('search');
@@ -5907,9 +5916,6 @@ function showSearchView(initialQuery = '') {
     } else {
         renderSearchEmptyState();
     }
-
-    // Update sidebar state
-    updateSidebarActiveState(null);
 
     // Close sidebar on mobile
     const sidebar = document.getElementById('sidebar');
@@ -6273,6 +6279,7 @@ let isHomeViewVisible = true;
 function showHomeView() {
     isHomeViewVisible = true;
     isPlaylistPanelVisible = false;
+    isSearchViewActive = false;
 
     // Show home view with chart content
     const homeView = document.getElementById('homeView');
@@ -6285,6 +6292,9 @@ function showHomeView() {
     const chartDetailView = document.getElementById('chartDetailView');
     const discoverView = document.getElementById('discoverView');
     const curatedDetailView = document.getElementById('curatedDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const searchView = document.getElementById('searchView');
 
     if (homeView) homeView.style.display = 'block';
     if (mainContent) mainContent.style.display = 'block';
@@ -6296,6 +6306,9 @@ function showHomeView() {
     if (chartDetailView) chartDetailView.style.display = 'none';
     if (discoverView) discoverView.style.display = 'none';
     if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
 
     // Update sidebar active state
     updateSidebarActiveState('home');
@@ -6418,6 +6431,7 @@ const MOOD_ICONS = {
 function showDiscoverView() {
     isHomeViewVisible = false;
     isPlaylistPanelVisible = false;
+    isSearchViewActive = false;
 
     // Hide all other views
     const homeView = document.getElementById('homeView');
@@ -6430,6 +6444,9 @@ function showDiscoverView() {
     const chartDetailView = document.getElementById('chartDetailView');
     const discoverView = document.getElementById('discoverView');
     const curatedDetailView = document.getElementById('curatedDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const searchView = document.getElementById('searchView');
 
     if (homeView) homeView.style.display = 'none';
     if (mainContent) mainContent.style.display = 'none';
@@ -6440,6 +6457,9 @@ function showDiscoverView() {
     if (historyDetailView) historyDetailView.style.display = 'none';
     if (chartDetailView) chartDetailView.style.display = 'none';
     if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
     if (discoverView) discoverView.style.display = 'block';
 
     // Update sidebar active state
@@ -6955,6 +6975,7 @@ const AI_PRESET_COLORS = {
 function showAIGeneratedView() {
     isHomeViewVisible = false;
     isPlaylistPanelVisible = false;
+    isSearchViewActive = false;
 
     // Hide all other views
     const homeView = document.getElementById('homeView');
@@ -6969,6 +6990,7 @@ function showAIGeneratedView() {
     const curatedDetailView = document.getElementById('curatedDetailView');
     const aiGeneratedView = document.getElementById('aiGeneratedView');
     const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const searchView = document.getElementById('searchView');
 
     if (homeView) homeView.style.display = 'none';
     if (mainContent) mainContent.style.display = 'none';
@@ -6981,6 +7003,7 @@ function showAIGeneratedView() {
     if (discoverView) discoverView.style.display = 'none';
     if (curatedDetailView) curatedDetailView.style.display = 'none';
     if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
     if (aiGeneratedView) aiGeneratedView.style.display = 'block';
 
     // Update sidebar active state
