@@ -803,7 +803,7 @@ async function loadChartData() {
             week: indiaData.week,
             chart: indiaData.chart || [],
             global_chart: globalData?.chart || [],
-            regional: {} // Regional data not available from current scraper
+            regional: indiaData.regional || {}
         };
 
         console.log('Loaded chart data from harvester API');
@@ -859,7 +859,7 @@ async function refreshChartCache() {
             week: indiaData.week,
             chart: indiaData.chart || [],
             global_chart: globalData?.chart || [],
-            regional: {}
+            regional: indiaData.regional || {}
         };
 
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
