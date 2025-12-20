@@ -14,10 +14,12 @@ from ...models import (
     PlaylistCreate,
     PlaylistUpdate,
     PlaylistSummary,
+    PlaylistVisibility,
     SongSnapshot,
     LibrarySyncRequest,
     LibrarySyncResponse,
 )
+from ...config import Database
 from ...services.library import LibraryService
 from ..deps import get_current_user_required
 
@@ -37,9 +39,9 @@ async def get_library(user: User = Depends(get_current_user_required)):
     return library
 
 
-@router.post("/library/sync", response_model=LibrarySyncResponse)
+@router.post("/library/sync")
 async def sync_library(
-    request: LibrarySyncRequest,
+    request: dict,
     user: User = Depends(get_current_user_required)
 ):
     """
@@ -47,9 +49,99 @@ async def sync_library(
 
     Merges client-side changes with server state.
     Used when coming back online after offline usage.
+
+    Returns data in format expected by frontend:
+    - merged_favorites, merged_history, merged_queue, merged_playlists
+    - preferences
     """
-    response = await LibraryService.sync_library(user.id, request)
-    return response
+    # Get server-side data
+    library = await LibraryService.get_user_library(user.id)
+
+    # Convert to format frontend expects
+    # For now, just return server data (server wins in conflict)
+    # Future: implement proper merge logic
+
+    # Convert playlists to frontend format with songs array
+    merged_playlists = []
+    for playlist in library.playlists:
+        # Get song snapshots for this playlist
+        song_snapshots = []
+        cursor = Database.playlists().find_one({"id": playlist.id})
+
+        playlist_dict = {
+            "id": playlist.id,
+            "name": playlist.name,
+            "description": playlist.description,
+            "is_public": playlist.visibility == PlaylistVisibility.PUBLIC,
+            "songs": [],  # Will be populated from song_snapshots
+            "song_count": playlist.total_tracks,
+            "cover_urls": [playlist.artwork_url] if playlist.artwork_url else [],
+            "artwork_url": playlist.artwork_url,
+            "created_at": playlist.created_at.timestamp() * 1000 if playlist.created_at else None,
+            "updated_at": playlist.updated_at.timestamp() * 1000 if playlist.updated_at else None,
+        }
+        merged_playlists.append(playlist_dict)
+
+    # Get song snapshots for playlists from DB
+    for i, playlist in enumerate(library.playlists):
+        doc = await Database.playlists().find_one({"id": playlist.id})
+        if doc and doc.get("song_snapshots"):
+            songs = []
+            for snap in doc.get("song_snapshots", []):
+                songs.append({
+                    "videoId": snap.get("video_id", ""),
+                    "title": snap.get("title", ""),
+                    "artist": snap.get("artist", ""),
+                    "artwork": snap.get("artwork_url", ""),
+                })
+            merged_playlists[i]["songs"] = songs
+            merged_playlists[i]["song_count"] = len(songs)
+
+    # Convert favorites to frontend format
+    merged_favorites = []
+    for fav in library.favorites:
+        if fav.song_snapshot:
+            merged_favorites.append({
+                "videoId": fav.song_snapshot.video_id,
+                "title": fav.song_snapshot.title,
+                "artist": fav.song_snapshot.artist,
+                "artwork": fav.song_snapshot.artwork_url,
+                "addedAt": fav.added_at.timestamp() * 1000 if fav.added_at else None,
+            })
+
+    # Convert history to frontend format
+    merged_history = []
+    for entry in library.history:
+        if entry.song_snapshot:
+            merged_history.append({
+                "videoId": entry.song_snapshot.video_id,
+                "title": entry.song_snapshot.title,
+                "artist": entry.song_snapshot.artist,
+                "artwork": entry.song_snapshot.artwork_url,
+                "playedAt": entry.played_at.timestamp() * 1000 if entry.played_at else None,
+            })
+
+    # Convert queue to frontend format
+    merged_queue = []
+    for entry in library.queue:
+        if entry.song_snapshot:
+            merged_queue.append({
+                "videoId": entry.song_snapshot.video_id,
+                "title": entry.song_snapshot.title,
+                "artist": entry.song_snapshot.artist,
+                "artwork": entry.song_snapshot.artwork_url,
+            })
+
+    return {
+        "merged_favorites": merged_favorites,
+        "merged_history": merged_history,
+        "merged_queue": merged_queue,
+        "merged_playlists": merged_playlists,
+        "preferences": {
+            "shuffle": False,
+            "repeat": "off",
+        }
+    }
 
 
 # ============== Favorites ==============

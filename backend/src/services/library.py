@@ -37,13 +37,44 @@ class LibraryService:
         favorites = await cls.get_favorites(user_id, limit=100)
         history = await cls.get_history(user_id, limit=50)
         queue = await cls.get_queue(user_id)
+        playlists = await cls.get_user_playlists_full(user_id)
 
         return UserLibrary(
             user_id=user_id,
             favorites=favorites,
             history=history,
             queue=queue,
+            playlists=playlists,
         )
+
+    @classmethod
+    async def get_user_playlists_full(cls, user_id: str) -> List[Playlist]:
+        """Get user's playlists with full details from MongoDB"""
+        cursor = Database.playlists().find(
+            {"user_id": user_id}
+        ).sort("created_at", -1)
+
+        playlists = []
+        async for doc in cursor:
+            try:
+                playlist_id = str(doc.get("_id")) if "_id" in doc and "id" not in doc else doc.get("id", str(doc.get("_id")))
+
+                playlists.append(Playlist(
+                    id=playlist_id,
+                    user_id=user_id,
+                    name=doc.get("name", "Untitled"),
+                    description=doc.get("description"),
+                    artwork_url=doc.get("cover_image") or doc.get("artwork_url"),
+                    visibility=PlaylistVisibility(doc.get("visibility", "private")),
+                    song_ids=doc.get("song_ids", []),
+                    total_tracks=len(doc.get("song_ids", [])),
+                    created_at=doc.get("created_at", datetime.utcnow()),
+                    updated_at=doc.get("updated_at", datetime.utcnow()),
+                ))
+            except Exception:
+                continue
+
+        return playlists
 
     @classmethod
     async def sync_library(
