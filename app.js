@@ -1584,8 +1584,12 @@ function createSongElement(song, index, chartMode = 'india') {
         </div>
         <div class="song-card-actions">
             <button class="song-add-playlist" title="Add to playlist">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 5v14M5 12h14"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 12H3"></path>
+                    <path d="M16 6H3"></path>
+                    <path d="M16 18H3"></path>
+                    <path d="M18 9v6"></path>
+                    <path d="M21 12h-6"></path>
                 </svg>
             </button>
         </div>
@@ -6034,9 +6038,12 @@ function renderSearchResults(songs, total) {
                     <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
                 </div>
                 <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal('${song.youtube_video_id || ''}', '${escapeHtml(song.title).replace(/'/g, "\\'")}', '${escapeHtml(song.artist).replace(/'/g, "\\'")}', '${artworkUrl.replace(/'/g, "\\'")}')" title="Add to playlist">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 12H3"></path>
+                        <path d="M16 6H3"></path>
+                        <path d="M16 18H3"></path>
+                        <path d="M18 9v6"></path>
+                        <path d="M21 12h-6"></path>
                     </svg>
                 </button>
             </div>
@@ -6727,9 +6734,12 @@ function renderCuratedDetailView(playlist) {
                         <span class="detail-song-artist">${escapeHtml(song.artist)}</span>
                     </div>
                     <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl}'})" title="Add to playlist">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 12H3"></path>
+                            <path d="M16 6H3"></path>
+                            <path d="M16 18H3"></path>
+                            <path d="M18 9v6"></path>
+                            <path d="M21 12h-6"></path>
                         </svg>
                     </button>
                 </div>
