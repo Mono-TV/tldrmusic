@@ -11,6 +11,7 @@ from .rank_history import router as rank_history_router
 from .regional import router as regional_router
 from .global_chart import router as global_router
 from .curated import router as curated_router
+from .seo import router as seo_router
 
 __all__ = [
     "auth_router",
@@ -24,4 +25,5 @@ __all__ = [
     "regional_router",
     "global_router",
     "curated_router",
+    "seo_router",
 ]

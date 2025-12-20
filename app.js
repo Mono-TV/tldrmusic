@@ -179,6 +179,96 @@ function handleUrlParameters() {
         loadUserProfile(username);
         return;
     }
+
+    // Handle ?song={id} - play a specific song
+    const songId = urlParams.get('song');
+    if (songId) {
+        loadSongFromUrl(songId);
+        return;
+    }
+
+    // Handle ?artist={id} - show artist (future feature)
+    const artistId = urlParams.get('artist');
+    if (artistId) {
+        // TODO: Implement artist detail view
+        console.log('Artist view not yet implemented:', artistId);
+        return;
+    }
+
+    // Handle ?chart={type} - switch to specific chart
+    const chartType = urlParams.get('chart');
+    if (chartType) {
+        handleChartUrlParam(chartType);
+        return;
+    }
+}
+
+// Load and play a song from URL parameter
+async function loadSongFromUrl(videoId) {
+    try {
+        // Try to find song in chart data first
+        let song = null;
+
+        if (chartData && chartData.chart) {
+            song = chartData.chart.find(s => s.youtube_video_id === videoId);
+        }
+
+        if (!song && chartData && chartData.global_chart) {
+            song = chartData.global_chart.find(s => s.youtube_video_id === videoId);
+        }
+
+        // If found in charts, play it
+        if (song) {
+            playRegionalSongDirect(
+                song.title,
+                song.artist,
+                song.youtube_video_id,
+                song.artwork_url,
+                song.score
+            );
+            return;
+        }
+
+        // Try to fetch from API
+        const response = await fetch(`${API_BASE}/songs/${videoId}`);
+        if (response.ok) {
+            const songData = await response.json();
+            playRegionalSongDirect(
+                songData.title,
+                songData.artist,
+                videoId,
+                songData.artwork_url || songData.artwork,
+                songData.score
+            );
+        } else {
+            // Just try to play the video ID directly
+            playRegionalSongDirect('Unknown Song', 'Unknown Artist', videoId, null, null);
+        }
+    } catch (error) {
+        console.error('Error loading song from URL:', error);
+        showToast('Could not load song');
+    }
+
+    // Clear URL param after loading
+    history.replaceState(null, '', window.location.pathname);
+}
+
+// Handle chart URL parameter
+function handleChartUrlParam(chartType) {
+    const supportedCharts = ['india', 'global', 'hindi', 'punjabi', 'tamil', 'telugu', 'kannada', 'malayalam', 'bengali', 'marathi', 'gujarati'];
+
+    if (chartType === 'india' || chartType === 'global') {
+        // Switch to main chart mode
+        selectHomeChart(chartType);
+        // Show the chart detail view
+        showChartDetail(chartType);
+    } else if (supportedCharts.includes(chartType.toLowerCase())) {
+        // Regional chart - select the language
+        selectRegionalLanguage(chartType.toLowerCase());
+    }
+
+    // Clear URL param after handling
+    history.replaceState(null, '', window.location.pathname);
 }
 
 async function loadSharedPlaylist(playlistId) {

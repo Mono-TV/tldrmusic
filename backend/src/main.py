@@ -21,6 +21,7 @@ from .api import (
     regional_router,
     global_router,
     curated_router,
+    seo_router,
 )
 
 # Configure logging
@@ -109,6 +110,9 @@ app.include_router(rank_history_router, prefix=settings.API_PREFIX)
 app.include_router(regional_router, prefix=settings.API_PREFIX)
 app.include_router(global_router, prefix=settings.API_PREFIX)
 app.include_router(curated_router, prefix=settings.API_PREFIX)
+
+# SEO routes (at root level, no /api prefix)
+app.include_router(seo_router)
 
 
 # Root redirect

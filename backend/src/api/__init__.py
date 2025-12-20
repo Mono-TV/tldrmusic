@@ -13,6 +13,7 @@ from .routes import (
     regional_router,
     global_router,
     curated_router,
+    seo_router,
 )
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     "regional_router",
     "global_router",
     "curated_router",
+    "seo_router",
 ]
