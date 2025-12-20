@@ -240,6 +240,22 @@ async def create_playlist(
     return playlist
 
 
+@router.put("/playlists")
+async def sync_playlists(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Sync/replace playlists from client.
+
+    Accepts { playlists: [...] } and syncs to server.
+    Returns the synced playlists with server-assigned IDs.
+    """
+    playlists_data = data.get("playlists", [])
+    synced = await LibraryService.sync_playlists(user.id, playlists_data)
+    return {"playlists": synced, "count": len(synced)}
+
+
 @router.get("/playlists/{playlist_id}", response_model=Playlist)
 async def get_playlist(
     playlist_id: str,

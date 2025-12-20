@@ -572,3 +572,108 @@ class LibraryService:
                     {"_id": doc["_id"]},
                     {"$set": {"total_tracks": len(doc.get("song_ids", []))}}
                 )
+
+    @classmethod
+    async def sync_playlists(cls, user_id: str, playlists: list) -> List[PlaylistSummary]:
+        """
+        Sync playlists from client to server.
+        Creates new playlists, updates existing ones, and returns the synced list.
+        """
+        synced_playlists = []
+        now = datetime.utcnow()
+
+        for playlist_data in playlists:
+            client_id = playlist_data.get("id", "")
+            name = playlist_data.get("name", "Untitled")
+            description = playlist_data.get("description", "")
+            songs = playlist_data.get("songs", [])
+            is_public = playlist_data.get("is_public", False)
+            created_at = playlist_data.get("created_at")
+            updated_at = playlist_data.get("updated_at")
+
+            # Convert timestamps from milliseconds if needed
+            if isinstance(created_at, (int, float)):
+                created_at = datetime.fromtimestamp(created_at / 1000)
+            elif not created_at:
+                created_at = now
+
+            if isinstance(updated_at, (int, float)):
+                updated_at = datetime.fromtimestamp(updated_at / 1000)
+            elif not updated_at:
+                updated_at = now
+
+            # Build song_ids list and song snapshots
+            song_ids = []
+            song_snapshots = []
+            for song in songs:
+                video_id = song.get("videoId") or song.get("video_id", "")
+                if video_id:
+                    song_ids.append(video_id)
+                    song_snapshots.append({
+                        "video_id": video_id,
+                        "title": song.get("title", ""),
+                        "artist": song.get("artist", ""),
+                        "artwork_url": song.get("artwork") or song.get("artwork_url", ""),
+                        "added_at": song.get("added_at", now)
+                    })
+
+            # Check if playlist with this client ID already exists for this user
+            existing = await Database.playlists().find_one({
+                "user_id": user_id,
+                "$or": [
+                    {"id": client_id},
+                    {"client_id": client_id}
+                ]
+            })
+
+            if existing:
+                # Update existing playlist
+                server_id = existing.get("id", str(existing.get("_id")))
+                await Database.playlists().update_one(
+                    {"_id": existing["_id"]},
+                    {
+                        "$set": {
+                            "name": name,
+                            "description": description,
+                            "song_ids": song_ids,
+                            "song_snapshots": song_snapshots,
+                            "total_tracks": len(song_ids),
+                            "visibility": "public" if is_public else "private",
+                            "updated_at": updated_at,
+                        }
+                    }
+                )
+            else:
+                # Create new playlist with server-generated ID
+                server_id = str(uuid.uuid4())
+                playlist_doc = {
+                    "id": server_id,
+                    "client_id": client_id,  # Keep track of client ID for future syncs
+                    "user_id": user_id,
+                    "name": name,
+                    "description": description,
+                    "song_ids": song_ids,
+                    "song_snapshots": song_snapshots,
+                    "total_tracks": len(song_ids),
+                    "visibility": "public" if is_public else "private",
+                    "created_at": created_at,
+                    "updated_at": updated_at,
+                }
+                await Database.playlists().insert_one(playlist_doc)
+
+            # Build cover URLs from song snapshots
+            cover_urls = [s.get("artwork_url") for s in song_snapshots[:4] if s.get("artwork_url")]
+
+            synced_playlists.append(PlaylistSummary(
+                id=server_id,
+                name=name,
+                description=description,
+                total_tracks=len(song_ids),
+                cover_urls=cover_urls,
+                visibility=PlaylistVisibility.PUBLIC if is_public else PlaylistVisibility.PRIVATE,
+                is_owner=True,
+                created_at=created_at,
+                updated_at=updated_at,
+            ))
+
+        return synced_playlists
