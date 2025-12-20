@@ -91,6 +91,16 @@ let currentPlaylistId = null; // Currently viewing/playing playlist
 let currentContextPlaylistId = null; // For context menu
 let isPlaylistPanelVisible = false;
 
+// Search state
+let searchDebounceTimer = null;
+const SEARCH_DEBOUNCE_MS = 300;
+const SEARCH_API_BASE = 'https://harvester.lumiolabs.in/api/tldr';
+const MAX_RECENT_SEARCHES = 10;
+let recentSearches = JSON.parse(localStorage.getItem('tldr-recent-searches') || '[]');
+let currentSearchQuery = '';
+let isSearchViewActive = false;
+window.currentSearchResults = [];
+
 // DOM Elements
 const chartList = document.getElementById('chartList');
 const chartDate = document.getElementById('chartDate');
@@ -161,6 +171,7 @@ async function init() {
     checkAuthState();   // Check if user is already logged in
     loadUserData();
     initSidebar();      // Initialize sidebar
+    initSearch();       // Initialize search functionality
     renderSkeletons(); // Show skeletons immediately
     await loadChartData();
     setupEventListeners();
@@ -5596,6 +5607,646 @@ function updateSidebarActiveState(mode) {
         sidebarDiscoverBtn?.classList.add('active');
     } else if (mode === 'ai-generated') {
         sidebarAIGeneratedBtn?.classList.add('active');
+    }
+}
+
+// ============================================================
+// SEARCH FUNCTIONS
+// ============================================================
+
+function initSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const searchClearBtn = document.getElementById('searchClearBtn');
+    const searchDropdown = document.getElementById('searchDropdown');
+    const searchSeeAll = document.getElementById('searchSeeAll');
+    const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+
+    if (!searchInput) return;
+
+    // Input handler with debounce
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        handleSearchInput(query);
+    });
+
+    // Focus handler - show dropdown if there's a query
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim()) {
+            showSearchDropdown();
+        }
+    });
+
+    // Clear button
+    searchClearBtn?.addEventListener('click', () => {
+        searchInput.value = '';
+        hideSearchDropdown();
+        currentSearchQuery = '';
+        searchInput.focus();
+    });
+
+    // See all results
+    searchSeeAll?.addEventListener('click', () => {
+        showSearchView(currentSearchQuery);
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-container')) {
+            hideSearchDropdown();
+        }
+    });
+
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', handleSearchKeydown);
+
+    // Mobile search button
+    mobileSearchBtn?.addEventListener('click', () => {
+        showSearchView('');
+    });
+
+    // Search view input handlers
+    const searchViewInput = document.getElementById('searchViewInput');
+    const searchViewClearBtn = document.getElementById('searchViewClearBtn');
+    const clearSearchHistory = document.getElementById('clearSearchHistory');
+
+    searchViewInput?.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        handleSearchViewInput(query);
+    });
+
+    searchViewClearBtn?.addEventListener('click', () => {
+        searchViewInput.value = '';
+        renderSearchEmptyState();
+    });
+
+    clearSearchHistory?.addEventListener('click', () => {
+        clearAllRecentSearches();
+    });
+}
+
+function handleSearchInput(query) {
+    currentSearchQuery = query;
+
+    // Clear previous timer
+    if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+    }
+
+    if (!query) {
+        hideSearchDropdown();
+        return;
+    }
+
+    // Debounce API call
+    searchDebounceTimer = setTimeout(() => {
+        performQuickSearch(query);
+    }, SEARCH_DEBOUNCE_MS);
+}
+
+async function performQuickSearch(query) {
+    if (!query) return;
+
+    try {
+        const response = await fetch(
+            `${SEARCH_API_BASE}/suggest?q=${encodeURIComponent(query)}&limit=5`
+        );
+
+        if (!response.ok) throw new Error('Search failed');
+
+        const data = await response.json();
+        renderSearchDropdown(data.suggestions || []);
+        showSearchDropdown();
+
+    } catch (error) {
+        console.error('Quick search error:', error);
+        renderSearchDropdownError();
+    }
+}
+
+function renderSearchDropdown(suggestions) {
+    const content = document.getElementById('searchDropdownContent');
+    const seeAllBtn = document.getElementById('searchSeeAll');
+
+    if (!content) return;
+
+    if (suggestions.length === 0) {
+        content.innerHTML = `
+            <div class="search-dropdown-empty">
+                <p>No results found</p>
+            </div>
+        `;
+        if (seeAllBtn) seeAllBtn.style.display = 'none';
+        return;
+    }
+
+    content.innerHTML = suggestions.map((song, index) => `
+        <div class="search-dropdown-item"
+             data-index="${index}"
+             onclick="playSearchResult(${index})">
+            <div class="search-dropdown-item-artwork">
+                ${song.artwork_url
+                    ? `<img src="${song.artwork_url}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                    : '<div class="placeholder"></div>'}
+            </div>
+            <div class="search-dropdown-item-info">
+                <div class="search-dropdown-item-title">${escapeHtml(song.title)}</div>
+                <div class="search-dropdown-item-artist">${escapeHtml(song.artist)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Store suggestions for playback
+    window.currentDropdownSuggestions = suggestions;
+
+    if (seeAllBtn) seeAllBtn.style.display = 'flex';
+}
+
+function renderSearchDropdownError() {
+    const content = document.getElementById('searchDropdownContent');
+    if (!content) return;
+
+    content.innerHTML = `
+        <div class="search-dropdown-empty">
+            <p>Search failed. Try again.</p>
+        </div>
+    `;
+}
+
+function showSearchDropdown() {
+    const dropdown = document.getElementById('searchDropdown');
+    dropdown?.classList.add('visible');
+}
+
+function hideSearchDropdown() {
+    const dropdown = document.getElementById('searchDropdown');
+    dropdown?.classList.remove('visible');
+}
+
+function handleSearchKeydown(e) {
+    const dropdown = document.getElementById('searchDropdown');
+    if (!dropdown?.classList.contains('visible')) {
+        if (e.key === 'Enter' && currentSearchQuery) {
+            showSearchView(currentSearchQuery);
+        }
+        return;
+    }
+
+    const items = dropdown?.querySelectorAll('.search-dropdown-item');
+    if (!items?.length) return;
+
+    const currentIndex = Array.from(items).findIndex(item =>
+        item.classList.contains('selected')
+    );
+
+    switch(e.key) {
+        case 'ArrowDown':
+            e.preventDefault();
+            const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+            selectDropdownItem(items, nextIndex);
+            break;
+
+        case 'ArrowUp':
+            e.preventDefault();
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+            selectDropdownItem(items, prevIndex);
+            break;
+
+        case 'Enter':
+            e.preventDefault();
+            if (currentIndex >= 0) {
+                items[currentIndex].click();
+            } else {
+                showSearchView(currentSearchQuery);
+            }
+            break;
+
+        case 'Escape':
+            hideSearchDropdown();
+            document.getElementById('searchInput')?.blur();
+            break;
+    }
+}
+
+function selectDropdownItem(items, index) {
+    items.forEach((item, i) => {
+        item.classList.toggle('selected', i === index);
+    });
+}
+
+// ============================================================
+// SEARCH VIEW (Full Page)
+// ============================================================
+
+function showSearchView(initialQuery = '') {
+    isSearchViewActive = true;
+
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
+    const mainContent = document.getElementById('mainContent');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+
+    // Show search view
+    const searchView = document.getElementById('searchView');
+    if (searchView) {
+        searchView.style.display = 'block';
+        searchView.scrollTop = 0;
+    }
+
+    // Set initial query and focus
+    const searchViewInput = document.getElementById('searchViewInput');
+    if (searchViewInput) {
+        searchViewInput.value = initialQuery;
+        setTimeout(() => searchViewInput.focus(), 100);
+    }
+
+    // Hide header dropdown
+    hideSearchDropdown();
+
+    // Clear header search input
+    const headerSearchInput = document.getElementById('searchInput');
+    if (headerSearchInput) headerSearchInput.value = '';
+
+    if (initialQuery) {
+        performFullSearch(initialQuery);
+    } else {
+        renderSearchEmptyState();
+    }
+
+    // Update sidebar state
+    updateSidebarActiveState(null);
+
+    // Close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    sidebar?.classList.remove('open');
+}
+
+function closeSearchView() {
+    isSearchViewActive = false;
+
+    const searchView = document.getElementById('searchView');
+    if (searchView) searchView.style.display = 'none';
+
+    // Return to home view
+    showHomeView();
+}
+
+function handleSearchViewInput(query) {
+    if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+    }
+
+    if (!query) {
+        renderSearchEmptyState();
+        return;
+    }
+
+    searchDebounceTimer = setTimeout(() => {
+        performFullSearch(query);
+    }, SEARCH_DEBOUNCE_MS);
+}
+
+async function performFullSearch(query) {
+    if (!query) {
+        renderSearchEmptyState();
+        return;
+    }
+
+    // Show loading
+    const resultsSection = document.getElementById('searchResults');
+    const emptyState = document.getElementById('searchEmptyState');
+    const loading = document.getElementById('searchLoading');
+    const resultsList = document.getElementById('searchResultsList');
+    const noResults = document.getElementById('searchNoResults');
+
+    if (emptyState) emptyState.style.display = 'none';
+    if (resultsSection) resultsSection.style.display = 'block';
+    if (loading) loading.style.display = 'flex';
+    if (resultsList) resultsList.innerHTML = '';
+    if (noResults) noResults.style.display = 'none';
+
+    try {
+        const response = await fetch(
+            `${SEARCH_API_BASE}/search?q=${encodeURIComponent(query)}&limit=50`
+        );
+
+        if (!response.ok) throw new Error('Search failed');
+
+        const data = await response.json();
+
+        // Save to recent searches
+        addToRecentSearches(query);
+
+        renderSearchResults(data.songs || [], data.total || 0);
+
+    } catch (error) {
+        console.error('Full search error:', error);
+        renderSearchError();
+    } finally {
+        if (loading) loading.style.display = 'none';
+    }
+}
+
+function renderSearchResults(songs, total) {
+    const countEl = document.getElementById('searchResultsCount');
+    const listEl = document.getElementById('searchResultsList');
+    const noResults = document.getElementById('searchNoResults');
+
+    if (countEl) {
+        countEl.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+    }
+
+    if (!listEl) return;
+
+    if (songs.length === 0) {
+        listEl.innerHTML = '';
+        if (noResults) noResults.style.display = 'flex';
+        return;
+    }
+
+    if (noResults) noResults.style.display = 'none';
+
+    listEl.innerHTML = songs.map((song, index) => {
+        const artworkUrl = song.artwork_url ||
+                          (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg` : '');
+        const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+
+        return `
+            <div class="detail-song search-result-item${isPlaying ? ' now-playing' : ''}"
+                 data-video-id="${song.youtube_video_id || ''}"
+                 onclick="playSearchResultFromList(${index})">
+                <span class="detail-song-num">${index + 1}</span>
+                <div class="detail-song-artwork">
+                    ${artworkUrl
+                        ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                        : '<div class="placeholder"></div>'
+                    }
+                    ${getNowPlayingEqHtml()}
+                    <div class="detail-song-play-overlay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div class="detail-song-info">
+                    <div class="detail-song-title">${escapeHtml(song.title)}</div>
+                    <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
+                </div>
+                <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal('${song.youtube_video_id || ''}', '${escapeHtml(song.title).replace(/'/g, "\\'")}', '${escapeHtml(song.artist).replace(/'/g, "\\'")}', '${artworkUrl.replace(/'/g, "\\'")}')" title="Add to playlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        `;
+    }).join('');
+
+    // Store results for playback
+    window.currentSearchResults = songs;
+}
+
+function renderSearchError() {
+    const listEl = document.getElementById('searchResultsList');
+    if (listEl) {
+        listEl.innerHTML = `
+            <div class="search-no-results">
+                <h3>Search failed</h3>
+                <p>Please try again</p>
+            </div>
+        `;
+    }
+}
+
+// ============================================================
+// SEARCH EMPTY STATE
+// ============================================================
+
+function renderSearchEmptyState() {
+    const emptyState = document.getElementById('searchEmptyState');
+    const resultsSection = document.getElementById('searchResults');
+
+    if (resultsSection) resultsSection.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'block';
+
+    renderRecentSearches();
+    renderTrendingSongs();
+    renderBrowseMoods();
+}
+
+function renderRecentSearches() {
+    const section = document.getElementById('recentSearchesSection');
+    const list = document.getElementById('recentSearchesList');
+
+    if (!list) return;
+
+    if (recentSearches.length === 0) {
+        if (section) section.style.display = 'none';
+        return;
+    }
+
+    if (section) section.style.display = 'block';
+
+    list.innerHTML = recentSearches.map(query => `
+        <div class="recent-search-item" onclick="performSearchFromRecent('${escapeHtml(query).replace(/'/g, "\\'")}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>${escapeHtml(query)}</span>
+            <span class="recent-search-remove" onclick="event.stopPropagation(); removeRecentSearch('${escapeHtml(query).replace(/'/g, "\\'")}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </span>
+        </div>
+    `).join('');
+}
+
+function addToRecentSearches(query) {
+    if (!query) return;
+
+    // Remove if exists (to move to front)
+    recentSearches = recentSearches.filter(q => q.toLowerCase() !== query.toLowerCase());
+
+    // Add to front
+    recentSearches.unshift(query);
+
+    // Limit size
+    recentSearches = recentSearches.slice(0, MAX_RECENT_SEARCHES);
+
+    // Save
+    localStorage.setItem('tldr-recent-searches', JSON.stringify(recentSearches));
+}
+
+function removeRecentSearch(query) {
+    recentSearches = recentSearches.filter(q => q !== query);
+    localStorage.setItem('tldr-recent-searches', JSON.stringify(recentSearches));
+    renderRecentSearches();
+}
+
+function clearAllRecentSearches() {
+    recentSearches = [];
+    localStorage.removeItem('tldr-recent-searches');
+    renderRecentSearches();
+}
+
+function performSearchFromRecent(query) {
+    const input = document.getElementById('searchViewInput');
+    if (input) input.value = query;
+    performFullSearch(query);
+}
+
+function renderTrendingSongs() {
+    const grid = document.getElementById('trendingSongsGrid');
+    if (!grid || !chartData?.chart) return;
+
+    // Use top 6 songs from current chart
+    const trendingSongs = chartData.chart.slice(0, 6);
+
+    grid.innerHTML = trendingSongs.map((song, index) => {
+        const artworkUrl = getArtworkUrl(song);
+        const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+
+        return `
+            <div class="detail-song${isPlaying ? ' now-playing' : ''}"
+                 data-video-id="${song.youtube_video_id || ''}"
+                 onclick="playFromChart(${index})">
+                <span class="detail-song-num">${index + 1}</span>
+                <div class="detail-song-artwork">
+                    ${artworkUrl
+                        ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                        : '<div class="placeholder"></div>'
+                    }
+                    ${getNowPlayingEqHtml()}
+                    <div class="detail-song-play-overlay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div class="detail-song-info">
+                    <div class="detail-song-title">${escapeHtml(song.title)}</div>
+                    <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderBrowseMoods() {
+    const grid = document.getElementById('browseMoodsGrid');
+    if (!grid) return;
+
+    const moods = [
+        { id: 'chill', name: 'Chill', color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+        { id: 'workout', name: 'Workout', color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+        { id: 'party', name: 'Party', color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+        { id: 'romance', name: 'Romance', color: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+        { id: 'focus', name: 'Focus', color: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+        { id: 'sad', name: 'Sad', color: 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)' }
+    ];
+
+    grid.innerHTML = moods.map(mood => `
+        <div class="mood-browse-card"
+             style="background: ${mood.color}"
+             onclick="openMoodPlaylist('${mood.id}')">
+            <h4>${mood.name}</h4>
+        </div>
+    `).join('');
+}
+
+function openMoodPlaylist(moodId) {
+    // Navigate to Discover view
+    if (typeof showDiscoverView === 'function') {
+        showDiscoverView();
+    }
+}
+
+// ============================================================
+// SEARCH PLAYBACK
+// ============================================================
+
+function playSearchResult(index) {
+    const suggestions = window.currentDropdownSuggestions;
+    if (!suggestions || !suggestions[index]) return;
+
+    const song = suggestions[index];
+
+    // Add to recent searches
+    addToRecentSearches(currentSearchQuery);
+
+    // Hide dropdown
+    hideSearchDropdown();
+
+    // Clear header input
+    const headerInput = document.getElementById('searchInput');
+    if (headerInput) headerInput.value = '';
+
+    // Play the song
+    if (song.youtube_video_id) {
+        playSong(
+            song.youtube_video_id,
+            song.title,
+            song.artist,
+            song.artwork_url || `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg`
+        );
+    } else {
+        // Search for video ID if not available
+        searchAndPlayOnYouTube(song.title, song.artist);
+    }
+}
+
+function playSearchResultFromList(index) {
+    const songs = window.currentSearchResults;
+    if (!songs || !songs[index]) return;
+
+    const song = songs[index];
+
+    // Build queue from search results
+    const queueData = songs.map(s => ({
+        title: s.title,
+        artist: s.artist,
+        videoId: s.youtube_video_id,
+        artwork: s.artwork_url || (s.youtube_video_id ? `https://i.ytimg.com/vi/${s.youtube_video_id}/maxresdefault.jpg` : '')
+    })).filter(s => s.videoId);
+
+    // Set queue and play
+    queue = queueData;
+    currentSongIndex = queueData.findIndex(s => s.videoId === song.youtube_video_id);
+    if (currentSongIndex === -1) currentSongIndex = 0;
+
+    if (song.youtube_video_id) {
+        playSong(
+            song.youtube_video_id,
+            song.title,
+            song.artist,
+            song.artwork_url || `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg`
+        );
+    } else {
+        searchAndPlayOnYouTube(song.title, song.artist);
     }
 }
 
