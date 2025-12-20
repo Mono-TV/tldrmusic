@@ -56,8 +56,10 @@ class User(BaseModel):
 
     # Profile
     display_name: Optional[str] = None
+    name: Optional[str] = None  # Alias for display_name (for frontend compatibility)
     username: Optional[str] = None  # Unique handle
     avatar_url: Optional[str] = None
+    picture: Optional[str] = None  # Alias for avatar_url (Google OAuth)
     bio: Optional[str] = None
 
     # Contact

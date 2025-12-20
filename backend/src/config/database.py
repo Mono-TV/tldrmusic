@@ -3,6 +3,7 @@ Database Connection and Collections
 """
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from pymongo import IndexModel, ASCENDING, DESCENDING, TEXT
+from pymongo.errors import OperationFailure
 from typing import Optional
 import logging
 
@@ -33,18 +34,28 @@ class Database:
     @classmethod
     async def disconnect(cls):
         """Disconnect from MongoDB"""
-        if cls.client:
+        if cls.client is not None:
             cls.client.close()
             logger.info("Disconnected from MongoDB")
 
     @classmethod
     async def _create_indexes(cls):
         """Create database indexes for optimal query performance"""
-        if not cls.db:
+        if cls.db is None:
             return
 
-        # Songs collection indexes
-        await cls.db.songs.create_indexes([
+        async def safe_create_indexes(collection, indexes, collection_name):
+            """Create indexes, skipping index conflicts"""
+            try:
+                await collection.create_indexes(indexes)
+            except OperationFailure as e:
+                if e.code in (85, 86):  # IndexOptionsConflict, IndexKeySpecsConflict
+                    logger.warning(f"Index conflict in {collection_name}, using existing indexes")
+                else:
+                    raise
+
+        # Songs collection indexes (skip text index - may conflict with existing)
+        await safe_create_indexes(cls.db.songs, [
             IndexModel([("title_normalized", ASCENDING)]),
             IndexModel([("artist_ids", ASCENDING)]),
             IndexModel([("album_id", ASCENDING)]),
@@ -55,10 +66,10 @@ class Database:
             IndexModel([
                 ("title_normalized", TEXT),
             ], name="song_text_search"),
-        ])
+        ], "songs")
 
         # Artists collection indexes
-        await cls.db.artists.create_indexes([
+        await safe_create_indexes(cls.db.artists, [
             IndexModel([("name_normalized", ASCENDING)]),
             IndexModel([("genres", ASCENDING)]),
             IndexModel([("languages", ASCENDING)]),
@@ -67,49 +78,54 @@ class Database:
             IndexModel([
                 ("name_normalized", TEXT),
             ], name="artist_text_search"),
-        ])
+        ], "artists")
 
         # Albums collection indexes
-        await cls.db.albums.create_indexes([
+        await safe_create_indexes(cls.db.albums, [
             IndexModel([("title_normalized", ASCENDING)]),
             IndexModel([("artist_ids", ASCENDING)]),
             IndexModel([("release_date", DESCENDING)]),
             IndexModel([("type", ASCENDING)]),
-        ])
+        ], "albums")
 
         # Charts collection indexes
-        await cls.db.charts.create_indexes([
+        await safe_create_indexes(cls.db.charts, [
             IndexModel([("region", ASCENDING), ("week", DESCENDING)]),
             IndexModel([("language", ASCENDING), ("week", DESCENDING)]),
             IndexModel([("generated_at", DESCENDING)]),
-        ])
+        ], "charts")
 
         # Users collection indexes
-        await cls.db.users.create_indexes([
+        await safe_create_indexes(cls.db.users, [
             IndexModel([("phone", ASCENDING)], unique=True, sparse=True),
             IndexModel([("email", ASCENDING)], unique=True, sparse=True),
             IndexModel([("username", ASCENDING)], unique=True, sparse=True),
             IndexModel([("created_at", DESCENDING)]),
-        ])
+        ], "users")
 
         # Playlists collection indexes
-        await cls.db.playlists.create_indexes([
+        await safe_create_indexes(cls.db.playlists, [
             IndexModel([("user_id", ASCENDING)]),
             IndexModel([("visibility", ASCENDING)]),
             IndexModel([("play_count", DESCENDING)]),
             IndexModel([("created_at", DESCENDING)]),
-        ])
+        ], "playlists")
 
         # User library (favorites, history) indexes
-        await cls.db.favorites.create_indexes([
+        await safe_create_indexes(cls.db.favorites, [
             IndexModel([("user_id", ASCENDING), ("song_id", ASCENDING)], unique=True),
             IndexModel([("user_id", ASCENDING), ("added_at", DESCENDING)]),
-        ])
+        ], "favorites")
 
-        await cls.db.history.create_indexes([
+        await safe_create_indexes(cls.db.history, [
             IndexModel([("user_id", ASCENDING), ("played_at", DESCENDING)]),
             IndexModel([("user_id", ASCENDING), ("song_id", ASCENDING)]),
-        ])
+        ], "history")
+
+        # Queue indexes (one queue per user)
+        await safe_create_indexes(cls.db.queue, [
+            IndexModel([("user_id", ASCENDING)], unique=True),
+        ], "queue")
 
         logger.info("Database indexes created")
 
@@ -145,6 +161,10 @@ class Database:
     @classmethod
     def history(cls):
         return cls.db.history
+
+    @classmethod
+    def queue(cls):
+        return cls.db.queue
 
     @classmethod
     def sessions(cls):

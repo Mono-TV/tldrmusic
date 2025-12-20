@@ -29,6 +29,51 @@ logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
+def _doc_to_user(doc: dict) -> User:
+    """Convert MongoDB document to User model, handling _id -> id conversion"""
+    if doc is None:
+        return None
+    # Handle _id -> id conversion for legacy documents
+    if "_id" in doc and "id" not in doc:
+        doc["id"] = str(doc["_id"])
+    # Remove _id to avoid Pydantic errors
+    doc.pop("_id", None)
+
+    # Handle name/display_name - use name if display_name not set
+    if doc.get("name") and not doc.get("display_name"):
+        doc["display_name"] = doc["name"]
+
+    # Handle picture/avatar_url - use picture if avatar_url not set
+    if doc.get("picture") and not doc.get("avatar_url"):
+        doc["avatar_url"] = doc["picture"]
+
+    # Remove fields not in User model (embedded arrays from old format)
+    doc.pop("favorites", None)
+    doc.pop("history", None)
+    doc.pop("queue", None)
+    doc.pop("google_id", None)
+    doc.pop("last_login", None)
+
+    return User(**doc)
+
+
+async def _find_user_by_id(user_id: str) -> Optional[dict]:
+    """Find user by id, checking both 'id' field and '_id' for legacy support"""
+    from bson import ObjectId
+
+    # First try the 'id' field
+    user_doc = await Database.users().find_one({"id": user_id})
+    if user_doc:
+        return user_doc
+
+    # Fall back to checking _id (for legacy documents)
+    try:
+        user_doc = await Database.users().find_one({"_id": ObjectId(user_id)})
+        return user_doc
+    except:
+        return None
+
+
 class AuthService:
     """
     Handles user authentication via Phone OTP and Google OAuth
@@ -146,7 +191,7 @@ class AuthService:
         user_doc = await Database.users().find_one({"phone": phone})
 
         if user_doc:
-            return User(**user_doc)
+            return _doc_to_user(user_doc)
 
         # Create new user
         import uuid
@@ -249,12 +294,16 @@ class AuthService:
         })
 
         if user_doc:
-            user = User(**user_doc)
-            # Update last seen
-            await Database.users().update_one(
-                {"id": user.id},
-                {"$set": {"last_seen_at": datetime.utcnow()}}
-            )
+            user = _doc_to_user(user_doc)
+            # Update last seen (use $or for legacy support)
+            from bson import ObjectId
+            try:
+                await Database.users().update_one(
+                    {"$or": [{"id": user.id}, {"_id": ObjectId(user.id)}]},
+                    {"$set": {"last_seen_at": datetime.utcnow()}}
+                )
+            except:
+                pass
             return user
 
         # Try to find by email (maybe user registered with phone first)
@@ -262,7 +311,7 @@ class AuthService:
 
         if user_doc:
             # Link Google account to existing user
-            user = User(**user_doc)
+            user = _doc_to_user(user_doc)
             google_account = LinkedAccount(
                 provider=AuthProvider.GOOGLE,
                 provider_user_id=google_user_id,
@@ -272,10 +321,14 @@ class AuthService:
             user.email_verified = email_verified
             user.updated_at = datetime.utcnow()
 
-            await Database.users().update_one(
-                {"id": user.id},
-                {"$set": user.model_dump()}
-            )
+            from bson import ObjectId
+            try:
+                await Database.users().update_one(
+                    {"$or": [{"id": user.id}, {"_id": ObjectId(user.id)}]},
+                    {"$set": user.model_dump()}
+                )
+            except:
+                pass
             logger.info(f"Linked Google account to existing user: {user.id}")
             return user
 
@@ -319,17 +372,21 @@ class AuthService:
             raise ValueError("Invalid or expired refresh token")
 
         # Get user
-        user_doc = await Database.users().find_one({"id": user_id})
+        user_doc = await _find_user_by_id(user_id)
         if not user_doc:
             raise ValueError("User not found")
 
-        user = User(**user_doc)
+        user = _doc_to_user(user_doc)
 
-        # Update last seen
-        await Database.users().update_one(
-            {"id": user.id},
-            {"$set": {"last_seen_at": datetime.utcnow()}}
-        )
+        # Update last seen (use $or for legacy support)
+        from bson import ObjectId
+        try:
+            await Database.users().update_one(
+                {"$or": [{"id": user.id}, {"_id": ObjectId(user.id)}]},
+                {"$set": {"last_seen_at": datetime.utcnow()}}
+            )
+        except:
+            pass
 
         return AuthService.create_auth_response(user)
 
@@ -343,8 +400,8 @@ class AuthService:
         if not user_id:
             return None
 
-        user_doc = await Database.users().find_one({"id": user_id})
+        user_doc = await _find_user_by_id(user_id)
         if not user_doc:
             return None
 
-        return User(**user_doc)
+        return _doc_to_user(user_doc)

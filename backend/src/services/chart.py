@@ -4,10 +4,14 @@ Chart Service - Business logic for charts
 from typing import List, Optional
 import json
 from pathlib import Path
+from datetime import datetime
+import logging
 
 from ..models import Chart, ChartSummary, ChartRegion, ChartEntry, ChartMovement, MovementDirection
 from ..config import Database
 from .rank_history import rank_history
+
+logger = logging.getLogger(__name__)
 
 
 class ChartService:
@@ -28,10 +32,16 @@ class ChartService:
         """
         Get the current (latest) chart for a region
 
-        For development, loads from JSON files.
-        In production, queries MongoDB.
+        Queries MongoDB for production, falls back to files for development.
         """
-        # Development mode - load from files
+        # Try MongoDB first
+        chart = await cls._load_chart_from_mongodb(region, language)
+        if chart:
+            if with_rank_changes:
+                return cls._enrich_with_rank_changes(chart)
+            return chart
+
+        # Fallback to files for development
         charts = await cls._load_charts_from_files()
 
         for chart in charts:
@@ -47,6 +57,176 @@ class ChartService:
                     return chart
 
         return None
+
+    @classmethod
+    async def _load_chart_from_mongodb(
+        cls,
+        region: ChartRegion,
+        language: Optional[str] = None
+    ) -> Optional[Chart]:
+        """Load chart from MongoDB"""
+        if Database.db is None:
+            return None
+
+        try:
+            # Get the most recent chart document
+            chart_doc = await Database.charts().find_one(
+                {},
+                sort=[("week", -1)]
+            )
+
+            if not chart_doc:
+                return None
+
+            week = chart_doc.get("week", "")
+            generated_at = chart_doc.get("generated_at")
+            if isinstance(generated_at, str):
+                try:
+                    generated_at = datetime.fromisoformat(generated_at.replace("Z", "+00:00"))
+                except:
+                    generated_at = datetime.utcnow()
+            elif generated_at is None:
+                generated_at = datetime.utcnow()
+
+            if region == ChartRegion.INDIA:
+                # Main India chart
+                chart_songs = chart_doc.get("chart", [])
+                entries = cls._convert_songs_to_entries(chart_songs)
+
+                return Chart(
+                    id=f"india-{week}",
+                    name="India Top 25",
+                    description="India's definitive music chart, aggregated from 9 major platforms",
+                    region=ChartRegion.INDIA,
+                    language=None,
+                    week=week,
+                    generated_at=generated_at,
+                    entries=entries,
+                    total_songs=len(entries),
+                )
+
+            elif region == ChartRegion.GLOBAL:
+                # Global chart
+                global_songs = chart_doc.get("global_chart", [])
+                entries = cls._convert_songs_to_entries(global_songs)
+
+                return Chart(
+                    id=f"global-{week}",
+                    name="Global Top 25",
+                    description="Global music chart aggregated from Spotify, Billboard, and Apple Music",
+                    region=ChartRegion.GLOBAL,
+                    language=None,
+                    week=week,
+                    generated_at=generated_at,
+                    entries=entries,
+                    total_songs=len(entries),
+                )
+
+            elif region == ChartRegion.REGIONAL and language:
+                # Regional chart
+                regional_data = chart_doc.get("regional", {})
+
+                # Map language codes to keys
+                lang_key_map = {
+                    "hi": "hindi",
+                    "ta": "tamil",
+                    "te": "telugu",
+                    "pa": "punjabi",
+                    "bh": "bhojpuri",
+                    "hr": "haryanvi",
+                    "bn": "bengali",
+                    "mr": "marathi",
+                    "kn": "kannada",
+                    "ml": "malayalam",
+                    "gu": "gujarati",
+                }
+                lang_key = lang_key_map.get(language, language)
+
+                region_chart = regional_data.get(lang_key, {})
+                if not region_chart:
+                    return None
+
+                regional_songs = region_chart.get("songs", [])
+                entries = cls._convert_songs_to_entries(regional_songs)
+
+                region_name = region_chart.get("name", lang_key.title())
+
+                return Chart(
+                    id=f"regional-{lang_key}-{week}",
+                    name=f"{region_name} Top 10",
+                    description=f"Top {region_name} songs this week",
+                    region=ChartRegion.REGIONAL,
+                    language=language,
+                    week=week,
+                    generated_at=generated_at,
+                    entries=entries,
+                    total_songs=len(entries),
+                )
+
+        except Exception as e:
+            logger.error(f"Error loading chart from MongoDB: {e}")
+            return None
+
+        return None
+
+    @classmethod
+    def _convert_songs_to_entries(cls, songs: list) -> List[ChartEntry]:
+        """Convert MongoDB song documents to ChartEntry objects"""
+        entries = []
+        for song in songs:
+            try:
+                # Determine movement direction
+                is_new = song.get("is_new", False)
+                rank_change = song.get("rank_change", 0)
+                previous_rank = song.get("previous_rank")
+
+                if is_new:
+                    direction = MovementDirection.NEW
+                    positions = 0
+                elif rank_change and rank_change > 0:
+                    direction = MovementDirection.UP
+                    positions = abs(rank_change)
+                elif rank_change and rank_change < 0:
+                    direction = MovementDirection.DOWN
+                    positions = abs(rank_change)
+                else:
+                    direction = MovementDirection.SAME
+                    positions = 0
+
+                movement = ChartMovement(
+                    direction=direction,
+                    positions=positions,
+                    previous_rank=previous_rank,
+                    weeks_on_chart=1,
+                    peak_rank=song.get("rank", 1)
+                )
+
+                entry = ChartEntry(
+                    rank=song.get("rank", 0),
+                    song_id=song.get("youtube_video_id", ""),
+                    score=song.get("score", 0.0),
+                    platforms_count=song.get("platforms_count", 0),
+                    platform_ranks=song.get("platform_ranks", []),
+                    movement=movement,
+                    youtube_views=song.get("youtube_views"),
+                    song_title=song.get("title", ""),
+                    song_artist=song.get("artist", ""),
+                    artwork_url=song.get("artwork_url", ""),
+                    youtube_video_id=song.get("youtube_video_id", ""),
+                    rank_change=rank_change,
+                    previous_rank=previous_rank,
+                    is_new=is_new,
+                    youtube_likes=song.get("youtube_likes"),
+                    youtube_duration=song.get("youtube_duration"),
+                    lyrics_plain=song.get("lyrics_plain"),
+                    lyrics_synced=song.get("lyrics_synced"),
+                )
+                entries.append(entry)
+            except Exception as e:
+                logger.warning(f"Error converting song to entry: {e}")
+                continue
+
+        return entries
 
     @classmethod
     def _enrich_with_rank_changes(cls, chart: Chart) -> Chart:
@@ -163,9 +343,78 @@ class ChartService:
         limit: int = 10
     ) -> List[ChartSummary]:
         """List available charts"""
+        result = []
+
+        # Try loading from MongoDB first
+        if Database.db is not None:
+            try:
+                # Query available weeks from MongoDB
+                cursor = Database.charts().find(
+                    {},
+                    {"week": 1, "chart": 1, "global_chart": 1, "regional": 1}
+                ).sort("week", -1).limit(limit)
+
+                async for chart_doc in cursor:
+                    week = chart_doc.get("week", "")
+
+                    # Add India chart summary
+                    if not region or region == ChartRegion.INDIA:
+                        chart_songs = chart_doc.get("chart", [])
+                        if chart_songs:
+                            result.append(ChartSummary(
+                                id=f"india-{week}",
+                                name="India Top 25",
+                                region=ChartRegion.INDIA,
+                                week=week,
+                                total_entries=len(chart_songs),
+                                top_song_title=chart_songs[0].get("title") if chart_songs else None,
+                                top_song_artist=chart_songs[0].get("artist") if chart_songs else None,
+                            ))
+
+                    # Add Global chart summary
+                    if not region or region == ChartRegion.GLOBAL:
+                        global_songs = chart_doc.get("global_chart", [])
+                        if global_songs:
+                            result.append(ChartSummary(
+                                id=f"global-{week}",
+                                name="Global Top 25",
+                                region=ChartRegion.GLOBAL,
+                                week=week,
+                                total_entries=len(global_songs),
+                                top_song_title=global_songs[0].get("title") if global_songs else None,
+                                top_song_artist=global_songs[0].get("artist") if global_songs else None,
+                            ))
+
+                    # Add Regional chart summaries
+                    if not region or region == ChartRegion.REGIONAL:
+                        regional_data = chart_doc.get("regional", {})
+                        for lang_key, region_chart in regional_data.items():
+                            if language and lang_key != language:
+                                continue
+                            regional_songs = region_chart.get("songs", [])
+                            region_name = region_chart.get("name", lang_key.title())
+                            if regional_songs:
+                                result.append(ChartSummary(
+                                    id=f"regional-{lang_key}-{week}",
+                                    name=f"{region_name} Top 10",
+                                    region=ChartRegion.REGIONAL,
+                                    week=week,
+                                    total_entries=len(regional_songs),
+                                    top_song_title=regional_songs[0].get("title") if regional_songs else None,
+                                    top_song_artist=regional_songs[0].get("artist") if regional_songs else None,
+                                ))
+
+                    if len(result) >= limit:
+                        break
+
+                if result:
+                    return result[:limit]
+            except Exception as e:
+                logger.error(f"Error listing charts from MongoDB: {e}")
+
+        # Fallback to files
         charts = await cls._load_charts_from_files()
 
-        result = []
         for chart in charts:
             if region and chart.region != region:
                 continue

@@ -150,6 +150,21 @@ async def add_to_history(
     return {"message": "Added to history"}
 
 
+@router.put("/history")
+async def sync_history(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Sync/replace listening history from client
+
+    Accepts { history: [...] } and replaces server history.
+    """
+    history_items = data.get("history", [])
+    await LibraryService.sync_history(user.id, history_items)
+    return {"message": "History synced", "count": len(history_items)}
+
+
 @router.delete("/history")
 async def clear_history(user: User = Depends(get_current_user_required)):
     """
@@ -157,6 +172,49 @@ async def clear_history(user: User = Depends(get_current_user_required)):
     """
     await LibraryService.clear_history(user.id)
     return {"message": "History cleared"}
+
+
+# ============== Queue ==============
+
+@router.get("/queue", response_model=List[QueueEntry])
+async def get_queue(user: User = Depends(get_current_user_required)):
+    """
+    Get user's current queue
+
+    Returns the saved queue for cross-device resume.
+    """
+    queue = await LibraryService.get_queue(user.id)
+    return queue
+
+
+@router.put("/queue")
+async def save_queue(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Save/sync queue to cloud
+
+    Accepts { queue: [...], currentIndex: N } and saves for cross-device resume.
+    """
+    queue_items = data.get("queue", [])
+    current_index = data.get("currentIndex", 0)
+
+    # Add current index to first item for storage
+    if queue_items:
+        queue_items[0]["current_index"] = current_index
+
+    await LibraryService.save_queue(user.id, queue_items)
+    return {"message": "Queue saved", "count": len(queue_items)}
+
+
+@router.delete("/queue")
+async def clear_queue(user: User = Depends(get_current_user_required)):
+    """
+    Clear queue
+    """
+    await LibraryService.clear_queue(user.id)
+    return {"message": "Queue cleared"}
 
 
 # ============== Playlists ==============
