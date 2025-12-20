@@ -567,7 +567,7 @@ async function saveSharedPlaylistToLibrary(playlistId) {
     }
 
     try {
-        const response = await fetchWithAuth(`/playlists/${playlistId}/follow`, {
+        const response = await fetchWithAuth(`/api/me/playlists/${playlistId}/follow`, {
             method: 'POST'
         });
 
@@ -3976,7 +3976,7 @@ async function deletePlaylist(playlistId) {
     // Delete from server first if authenticated
     if (typeof isAuthenticated !== 'undefined' && isAuthenticated) {
         try {
-            const response = await fetchWithAuth(`/playlists/${playlistId}`, {
+            const response = await fetchWithAuth(`/api/me/playlists/${playlistId}`, {
                 method: 'DELETE'
             });
             if (!response.ok) {
@@ -5093,12 +5093,12 @@ async function togglePlaylistVisibility(playlistId) {
     const newVisibility = !playlist.is_public;
 
     try {
-        const response = await fetchWithAuth(`/playlists/${playlistId}/publish`, {
-            method: 'PUT',
+        const response = await fetchWithAuth(`/api/me/playlists/${playlistId}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ is_public: newVisibility })
+            body: JSON.stringify({ visibility: newVisibility ? 'public' : 'private' })
         });
 
         if (!response.ok) {
