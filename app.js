@@ -1386,6 +1386,372 @@ function playDiscoverIndiaSong(song, index) {
     showToast(`Playing ${currentDiscoverGenre} playlist`);
 }
 
+// ============================================================
+// ARTIST PAGE
+// ============================================================
+
+let currentArtistData = null;
+let currentArtistSongs = [];
+
+// Navigate to artist page
+function showArtistPage(artistName) {
+    if (!artistName) return;
+
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
+    const mainContent = document.getElementById('mainContent');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const searchView = document.getElementById('searchView');
+    const discoverView = document.getElementById('discoverView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+
+    // Show artist detail view
+    const artistView = document.getElementById('artistDetailView');
+    if (artistView) {
+        artistView.style.display = 'block';
+        artistView.scrollTop = 0;
+    }
+
+    // Load artist data
+    loadArtistData(artistName);
+}
+
+// Hide artist page
+function hideArtistPage() {
+    const artistView = document.getElementById('artistDetailView');
+    if (artistView) artistView.style.display = 'none';
+
+    // Show home view
+    showHomeView();
+}
+
+// Load artist data from search API
+async function loadArtistData(artistName) {
+    const header = document.getElementById('artistDetailHeader');
+    const content = document.getElementById('artistDetailContent');
+
+    if (!header || !content) return;
+
+    // Show loading state
+    header.innerHTML = `
+        <button class="detail-back-btn" onclick="hideArtistPage()" title="Back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="detail-hero">
+            <div class="artist-cover skeleton-box"></div>
+            <div class="detail-info">
+                <span class="detail-type">Artist</span>
+                <h1 class="detail-name">${escapeHtml(artistName)}</h1>
+                <p class="detail-meta">Loading songs...</p>
+            </div>
+        </div>
+    `;
+
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${Array(10).fill().map(() => `
+                <div class="detail-song skeleton">
+                    <div class="skeleton-box" style="width: 24px; height: 24px;"></div>
+                    <div class="detail-song-artwork skeleton-box"></div>
+                    <div class="detail-song-info">
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text short"></div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    try {
+        // Search for songs by this artist
+        const response = await fetch(`${INDIA_CATALOG_API.replace('/india', '/tldr')}/search?q=${encodeURIComponent(artistName)}&limit=50`);
+
+        if (!response.ok) throw new Error('Failed to load artist songs');
+
+        const data = await response.json();
+        const songs = data.songs || [];
+
+        // Filter songs that actually match this artist
+        currentArtistSongs = songs.filter(song => {
+            const songArtist = (song.artist || '').toLowerCase();
+            const searchArtist = artistName.toLowerCase();
+            return songArtist.includes(searchArtist) || searchArtist.includes(songArtist);
+        });
+
+        // Get first song's artwork for artist image
+        const artistImage = currentArtistSongs[0]?.artwork_url || currentArtistSongs[0]?.image_url || '';
+
+        // Store artist data
+        currentArtistData = {
+            name: artistName,
+            image: artistImage,
+            songCount: currentArtistSongs.length,
+            totalInCatalog: data.total || currentArtistSongs.length
+        };
+
+        // Render artist page
+        renderArtistPage();
+
+    } catch (error) {
+        console.error('Error loading artist data:', error);
+        content.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <p>Failed to load artist</p>
+                <button class="btn-secondary" onclick="loadArtistData('${escapeHtml(artistName).replace(/'/g, "\\'")}')">Try Again</button>
+            </div>
+        `;
+    }
+}
+
+// Render artist page with data
+function renderArtistPage() {
+    if (!currentArtistData) return;
+
+    const header = document.getElementById('artistDetailHeader');
+    const content = document.getElementById('artistDetailContent');
+
+    if (!header || !content) return;
+
+    // Render header
+    header.innerHTML = `
+        <button class="detail-back-btn" onclick="hideArtistPage()" title="Back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="detail-hero">
+            <div class="artist-cover ${currentArtistData.image ? '' : 'no-image'}">
+                ${currentArtistData.image
+                    ? `<img src="${currentArtistData.image}" alt="${escapeHtml(currentArtistData.name)}" crossorigin="anonymous">`
+                    : `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                       </svg>`
+                }
+            </div>
+            <div class="detail-info">
+                <span class="detail-type">Artist</span>
+                <h1 class="detail-name">${escapeHtml(currentArtistData.name)}</h1>
+                <p class="detail-meta">${currentArtistSongs.length} songs${currentArtistData.totalInCatalog > currentArtistSongs.length ? ` • ${currentArtistData.totalInCatalog.toLocaleString()} in catalog` : ''}</p>
+                <div class="detail-buttons">
+                    <button class="btn-primary" onclick="playAllArtistSongs()" ${currentArtistSongs.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play
+                    </button>
+                    <button class="btn-secondary" onclick="shuffleArtistSongs()" ${currentArtistSongs.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Render songs
+    if (currentArtistSongs.length === 0) {
+        content.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <p>No songs found</p>
+                <span>We couldn't find songs by this artist</span>
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${currentArtistSongs.map((song, index) => {
+                const videoId = song.youtube_video_id || '';
+                const isPlaying = isCurrentlyPlaying(videoId);
+                const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+                const artworkUrl = song.artwork_url || song.image_url || '';
+
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${videoId}" onclick="playArtistSongByIndex(${index})">
+                    <span class="detail-song-num">${index + 1}</span>
+                    ${getNowPlayingEqHtml()}
+                    <div class="detail-song-artwork">
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}">`
+                            : '<div class="placeholder"></div>'
+                        }
+                        <div class="detail-song-play-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="detail-song-info">
+                        <div class="detail-song-title">${escapeHtml(song.title)}</div>
+                        <div class="detail-song-artist">${escapeHtml(song.album || song.genre || '')}</div>
+                    </div>
+                    <div class="detail-song-actions">
+                        <button class="detail-song-action ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleFavorite({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'}); renderArtistPage();" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${videoId}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `}).join('')}
+        </div>
+    `;
+
+    // Apply gradient based on artist image
+    applyArtistGradient();
+}
+
+// Apply gradient to artist page
+function applyArtistGradient() {
+    const artistView = document.getElementById('artistDetailView');
+    const coverImg = artistView?.querySelector('.artist-cover img');
+
+    if (!artistView) return;
+
+    if (coverImg && coverImg.complete && coverImg.naturalWidth > 0) {
+        extractArtistColor(coverImg, artistView);
+    } else if (coverImg) {
+        coverImg.onload = () => extractArtistColor(coverImg, artistView);
+        coverImg.onerror = () => {
+            artistView.style.background = 'linear-gradient(180deg, rgba(147, 51, 234, 0.3) 0%, var(--bg-primary) 300px)';
+        };
+    } else {
+        // Default purple gradient for artists without image
+        artistView.style.background = 'linear-gradient(180deg, rgba(147, 51, 234, 0.3) 0%, var(--bg-primary) 300px)';
+    }
+}
+
+// Extract dominant color from artist image
+function extractArtistColor(img, container) {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 50;
+        canvas.height = 50;
+        ctx.drawImage(img, 0, 0, 50, 50);
+
+        const imageData = ctx.getImageData(0, 0, 50, 50).data;
+        let r = 0, g = 0, b = 0, count = 0;
+
+        for (let i = 0; i < imageData.length; i += 16) {
+            r += imageData[i];
+            g += imageData[i + 1];
+            b += imageData[i + 2];
+            count++;
+        }
+
+        r = Math.floor(r / count);
+        g = Math.floor(g / count);
+        b = Math.floor(b / count);
+
+        container.style.background = `linear-gradient(180deg, rgba(${r}, ${g}, ${b}, 0.4) 0%, var(--bg-primary) 300px)`;
+    } catch (e) {
+        container.style.background = 'linear-gradient(180deg, rgba(147, 51, 234, 0.3) 0%, var(--bg-primary) 300px)';
+    }
+}
+
+// Play song from artist page
+function playArtistSongByIndex(index) {
+    if (index < 0 || index >= currentArtistSongs.length) return;
+
+    const song = currentArtistSongs[index];
+    const videoId = song.youtube_video_id || '';
+    const title = song.title || '';
+    const artist = song.artist || '';
+    const artwork = song.artwork_url || song.image_url || '';
+
+    if (videoId) {
+        playRegionalSongDirect(title, artist, videoId, artwork);
+    } else {
+        searchAndPlaySong({ title, artist, artwork_url: artwork });
+    }
+
+    // Add remaining songs to queue
+    const remainingSongs = currentArtistSongs.slice(index + 1);
+    queue.length = 0;
+    remainingSongs.forEach(s => {
+        addToQueue({
+            title: s.title || '',
+            artist: s.artist || '',
+            videoId: s.youtube_video_id || '',
+            artwork: s.artwork_url || s.image_url || ''
+        });
+    });
+
+    showToast(`Playing from ${currentArtistData?.name || 'Artist'}`);
+}
+
+// Play all artist songs
+function playAllArtistSongs() {
+    if (currentArtistSongs.length === 0) return;
+    playArtistSongByIndex(0);
+}
+
+// Shuffle artist songs
+function shuffleArtistSongs() {
+    if (currentArtistSongs.length === 0) return;
+
+    // Shuffle the songs array
+    const shuffled = [...currentArtistSongs].sort(() => Math.random() - 0.5);
+    currentArtistSongs = shuffled;
+
+    // Play first song
+    playArtistSongByIndex(0);
+    showToast(`Shuffling ${currentArtistData?.name || 'Artist'}`);
+}
+
 // Current selected global platform
 let currentGlobalPlatform = 'spotify_global';
 
@@ -3850,7 +4216,7 @@ function renderChartDetail(chartData, chartName, chartCoverClass, chartIcon, cha
                         </div>
                         <div class="chart-song-details">
                             <span class="chart-song-title">${escapeHtml(song.title)}</span>
-                            <span class="chart-song-artist">${escapeHtml(song.artist)}</span>
+                            <span class="chart-song-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(song.artist).replace(/'/g, "\\'")}')">${escapeHtml(song.artist)}</span>
                         </div>
                     </div>
                     <div class="chart-song-actions">
@@ -7833,7 +8199,7 @@ function renderAIPlaylistDetailView(playlist, presetKey) {
                         </div>
                         <div class="chart-song-details">
                             <span class="chart-song-title">${escapeHtml(song.title)}</span>
-                            <span class="chart-song-artist">${escapeHtml(song.artist)}</span>
+                            <span class="chart-song-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(song.artist).replace(/'/g, "\\'")}')">${escapeHtml(song.artist)}</span>
                         </div>
                     </div>
                     <div class="chart-song-actions">
