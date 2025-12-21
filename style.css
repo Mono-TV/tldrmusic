@@ -1832,6 +1832,19 @@ body::before {
     color: rgba(255, 255, 255, 0.9);
 }
 
+.curated-icon.featured-emoji {
+    font-size: 64px;
+    line-height: 1;
+}
+
+.discover-card.featured-card {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+}
+
+.discover-card.featured-card:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.3) 0%, rgba(147, 51, 234, 0.3) 100%);
+}
+
 .curated-detail-info {
     flex: 1;
 }

@@ -6699,10 +6699,99 @@ function showDiscoverView() {
 }
 
 function renderDiscoverPlaylists() {
+    renderFeaturedPlaylists();
     renderMoodPlaylists();
     renderLanguagePlaylists();
     renderArtistPlaylists();
     renderEraPlaylists();
+}
+
+// Featured Collection - India Catalog Genres
+const FEATURED_PLAYLISTS = [
+    { id: 'featured-indian-pop', name: 'Indian Pop', genre: 'Indian Pop', songCount: 8500, icon: '🎵' },
+    { id: 'featured-bollywood', name: 'Bollywood', genre: 'Bollywood', songCount: 12000, icon: '🎬' },
+    { id: 'featured-pop', name: 'Pop', genre: 'Pop', songCount: 6200, icon: '🎤' },
+    { id: 'featured-hiphop', name: 'Hip-Hop', genre: 'Hip-Hop/Rap', songCount: 4800, icon: '🎧' },
+    { id: 'featured-electronic', name: 'Electronic', genre: 'Electronic', songCount: 3500, icon: '🎹' },
+    { id: 'featured-rock', name: 'Rock', genre: 'Rock', songCount: 2800, icon: '🎸' },
+    { id: 'featured-punjabi', name: 'Punjabi', genre: 'Punjabi', songCount: 5200, icon: '💫' },
+    { id: 'featured-tamil', name: 'Tamil', genre: 'Tamil', songCount: 4800, icon: '🎶' },
+    { id: 'featured-telugu', name: 'Telugu', genre: 'Telugu', songCount: 3900, icon: '🎼' },
+    { id: 'featured-discover', name: 'Discover', genre: 'Discover', songCount: 76000, icon: '✨' }
+];
+
+function renderFeaturedPlaylists() {
+    const grid = document.getElementById('featuredPlaylistsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = FEATURED_PLAYLISTS.map(playlist => `
+        <div class="discover-card featured-card" data-genre="${playlist.genre}" onclick="openFeaturedPlaylist('${playlist.genre}')">
+            <div class="discover-card-bg"></div>
+            <div class="discover-card-content">
+                <div class="discover-card-icon">${playlist.icon}</div>
+                <h4 class="discover-card-title">${playlist.name}</h4>
+                <span class="discover-card-meta">${playlist.songCount.toLocaleString()}+ songs</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function openFeaturedPlaylist(genreKey) {
+    // Show loading state
+    showToast('Loading playlist...');
+
+    try {
+        let url;
+        if (genreKey === 'Discover') {
+            url = `${INDIA_CATALOG_API}/playlist/discover?limit=50`;
+        } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
+            const langCode = genreKey === 'Punjabi' ? 'pa' : genreKey === 'Tamil' ? 'ta' : 'te';
+            url = `${INDIA_CATALOG_API}/playlist/language/${langCode}?limit=50&shuffle=true`;
+        } else {
+            url = `${INDIA_CATALOG_API}/playlist/genre/${encodeURIComponent(genreKey)}?limit=50`;
+        }
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to load playlist');
+
+        const data = await response.json();
+        const songs = (data.songs || []).map(song => ({
+            youtube_video_id: song.youtube_video_id || song.video_id,
+            title: song.title,
+            artist: song.artist,
+            artwork_url: song.artwork_url || song.artwork
+        }));
+
+        if (songs.length === 0) {
+            showToast('No songs found');
+            return;
+        }
+
+        // Get playlist metadata from FEATURED_PLAYLISTS
+        const playlistMeta = FEATURED_PLAYLISTS.find(p => p.genre === genreKey) || {
+            name: genreKey,
+            songCount: songs.length
+        };
+
+        // Create playlist object in expected format
+        const playlist = {
+            type: 'featured',
+            name: playlistMeta.name,
+            genre: genreKey,
+            total: playlistMeta.songCount || data.total || songs.length,
+            songs: songs
+        };
+
+        currentCuratedPlaylist = playlist;
+        currentCuratedType = 'featured';
+
+        // Display the curated detail view
+        showCuratedDetailView(playlist);
+
+    } catch (error) {
+        console.error('Error loading featured playlist:', error);
+        showToast('Failed to load playlist');
+    }
 }
 
 function renderMoodPlaylists() {
@@ -6868,7 +6957,7 @@ function renderCuratedDetailView(playlist) {
     if (!header || !content) return;
 
     // Get icon based on type
-    const icon = getCuratedPlaylistIcon(playlist.type, playlist.mood || playlist.language || playlist.era);
+    const icon = getCuratedPlaylistIcon(playlist.type, playlist.mood || playlist.language || playlist.era || playlist.genre);
 
     // Get type label
     const typeLabel = playlist.type.charAt(0).toUpperCase() + playlist.type.slice(1);
@@ -6977,15 +7066,24 @@ function getCuratedPlaylistIcon(type, key) {
         return `<div class="curated-icon">${MOOD_ICONS[key]}</div>`;
     }
 
+    // Featured playlist icons (emoji-based)
+    if (type === 'featured') {
+        const featuredPlaylist = FEATURED_PLAYLISTS.find(p => p.genre === key);
+        if (featuredPlaylist) {
+            return `<div class="curated-icon featured-emoji">${featuredPlaylist.icon}</div>`;
+        }
+    }
+
     // Default icons by type
     const defaultIcons = {
         mood: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
         language: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
         artist: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
         era: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        featured: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
     };
 
-    return `<div class="curated-icon">${defaultIcons[type] || defaultIcons.mood}</div>`;
+    return `<div class="curated-icon">${defaultIcons[type] || defaultIcons.featured}</div>`;
 }
 
 function applyCuratedGradient(playlist) {
@@ -7031,6 +7129,19 @@ function applyCuratedGradient(playlist) {
         'retro': '#795548',
     };
 
+    const featuredColors = {
+        'Indian Pop': '#FF6B6B',
+        'Bollywood': '#E91E63',
+        'Pop': '#2196F3',
+        'Hip-Hop/Rap': '#9C27B0',
+        'Electronic': '#00BCD4',
+        'Rock': '#FF5722',
+        'Punjabi': '#FF9800',
+        'Tamil': '#E91E63',
+        'Telugu': '#673AB7',
+        'Discover': '#1DB954',
+    };
+
     let color = '#1DB954'; // Default green
 
     if (playlist.type === 'mood' && moodColors[playlist.mood]) {
@@ -7041,6 +7152,8 @@ function applyCuratedGradient(playlist) {
         color = eraColors[playlist.era];
     } else if (playlist.type === 'artist') {
         color = '#E91E63'; // Pink for artists
+    } else if (playlist.type === 'featured' && featuredColors[playlist.genre]) {
+        color = featuredColors[playlist.genre];
     }
 
     mainGradient.style.background = `linear-gradient(180deg, ${color}40 0%, var(--bg-primary) 40%)`;
