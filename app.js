@@ -51,6 +51,23 @@ let heroObserver = null;
 let currentChartMode = 'india';  // 'india' or 'global'
 let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
 
+// India Catalog (Discover India) state
+const INDIA_CATALOG_API = 'https://music-harvester-401132033262.asia-south1.run.app/api/india';
+let currentDiscoverGenre = 'Indian Pop';
+let discoverIndiaSongs = [];
+const DISCOVER_GENRES = [
+    { key: 'Indian Pop', label: 'Indian Pop' },
+    { key: 'Bollywood', label: 'Bollywood' },
+    { key: 'Pop', label: 'Pop' },
+    { key: 'Hip-Hop/Rap', label: 'Hip-Hop' },
+    { key: 'Electronic', label: 'Electronic' },
+    { key: 'Rock', label: 'Rock' },
+    { key: 'Punjabi', label: 'Punjabi' },
+    { key: 'Tamil', label: 'Tamil' },
+    { key: 'Telugu', label: 'Telugu' },
+    { key: 'Discover', label: 'Discover' }
+];
+
 // Helper to check if a song is currently playing
 function isCurrentlyPlaying(videoId) {
     if (!videoId) return false;
@@ -175,6 +192,7 @@ async function init() {
     initSearch();       // Initialize search functionality
     renderSkeletons(); // Show skeletons immediately
     await loadChartData();
+    initDiscoverIndia(); // Initialize Discover India section
     setupEventListeners();
     initializePlaybackUI();
     updateAuthUI();     // Update auth button in header
@@ -1182,6 +1200,190 @@ function createRegionalSongCard(song, index) {
     });
 
     return card;
+}
+
+// ============================================================
+// DISCOVER INDIA (India Catalog Playlists)
+// ============================================================
+
+// Initialize Discover India section
+function initDiscoverIndia() {
+    const genreSelector = document.getElementById('discoverIndiaGenreSelector');
+    if (!genreSelector) return;
+
+    // Render genre buttons
+    genreSelector.innerHTML = DISCOVER_GENRES.map(genre => `
+        <button class="platform-btn ${genre.key === currentDiscoverGenre ? 'active' : ''}"
+                data-genre="${genre.key}"
+                onclick="selectDiscoverGenre('${genre.key}')">
+            ${genre.label}
+        </button>
+    `).join('');
+
+    // Load initial genre
+    loadDiscoverIndiaSongs(currentDiscoverGenre);
+}
+
+// Select a genre in Discover India
+function selectDiscoverGenre(genreKey) {
+    currentDiscoverGenre = genreKey;
+
+    // Update active button
+    document.querySelectorAll('#discoverIndiaGenreSelector .platform-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.genre === genreKey);
+    });
+
+    // Load songs for this genre
+    loadDiscoverIndiaSongs(genreKey);
+}
+
+// Load songs from India Catalog API
+async function loadDiscoverIndiaSongs(genreKey) {
+    const grid = document.getElementById('discoverIndiaGrid');
+    if (!grid) return;
+
+    // Show loading skeleton
+    grid.innerHTML = Array(10).fill().map(() => `
+        <div class="song-card skeleton">
+            <div class="song-card-artwork skeleton-box"></div>
+            <div class="song-card-info">
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text short"></div>
+            </div>
+        </div>
+    `).join('');
+
+    try {
+        let url;
+        if (genreKey === 'Discover') {
+            // Random discovery playlist
+            url = `${INDIA_CATALOG_API}/playlist/discover?limit=10`;
+        } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
+            // Language-based playlist
+            const langCode = genreKey === 'Punjabi' ? 'pa' : genreKey === 'Tamil' ? 'ta' : 'te';
+            url = `${INDIA_CATALOG_API}/playlist/language/${langCode}?limit=10&shuffle=true`;
+        } else {
+            // Genre-based playlist
+            url = `${INDIA_CATALOG_API}/playlist/genre/${encodeURIComponent(genreKey)}?limit=10`;
+        }
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const data = await response.json();
+        discoverIndiaSongs = data.songs || [];
+
+        renderDiscoverIndiaSongs();
+    } catch (error) {
+        console.error('Error loading Discover India songs:', error);
+        grid.innerHTML = `<div class="error-message">Failed to load songs. <button onclick="loadDiscoverIndiaSongs('${genreKey}')">Retry</button></div>`;
+    }
+}
+
+// Render Discover India songs grid
+function renderDiscoverIndiaSongs() {
+    const grid = document.getElementById('discoverIndiaGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    discoverIndiaSongs.slice(0, 10).forEach((song, index) => {
+        const card = createDiscoverIndiaSongCard(song, index);
+        grid.appendChild(card);
+    });
+}
+
+// Create a song card for Discover India
+function createDiscoverIndiaSongCard(song, index) {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+
+    // Extract data from India Catalog format
+    const title = song.title || song.name || '';
+    const artist = song.artist || song.artist_name || '';
+    const artworkUrl = song.artwork_url || song.image_url || '';
+    const videoId = song.youtube_video_id || '';
+
+    card.dataset.title = title;
+    card.dataset.artist = artist;
+    card.dataset.videoId = videoId;
+    card.dataset.artwork = artworkUrl;
+
+    const rank = index + 1;
+    const placeholderSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+        </svg>
+    `;
+
+    card.innerHTML = `
+        <div class="song-card-artwork">
+            ${artworkUrl
+                ? `<img src="${artworkUrl}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.style.display='none'">`
+                : `<div class="song-card-artwork-placeholder">${placeholderSvg}</div>`}
+            <span class="song-card-rank ${rank <= 3 ? 'top-3' : ''}">#${rank}</span>
+            <div class="song-card-play">
+                <div class="song-card-play-btn">
+                    <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                    </svg>
+                    <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </div>
+            </div>
+            <div class="song-card-equalizer">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="song-card-info">
+            <div class="song-card-title">${escapeHtml(title)}</div>
+            <div class="song-card-artist">${escapeHtml(artist)}</div>
+        </div>
+    `;
+
+    // Click handler - play the song
+    card.addEventListener('click', () => {
+        playDiscoverIndiaSong(song, index);
+    });
+
+    return card;
+}
+
+// Play a song from Discover India
+function playDiscoverIndiaSong(song, index) {
+    const title = song.title || song.name || '';
+    const artist = song.artist || song.artist_name || '';
+    const artworkUrl = song.artwork_url || song.image_url || '';
+    const videoId = song.youtube_video_id || '';
+
+    if (videoId) {
+        // Play directly with YouTube video ID
+        playRegionalSongDirect(title, artist, videoId, artworkUrl);
+    } else {
+        // Search for the song on YouTube
+        searchAndPlaySong({ title, artist, artwork_url: artworkUrl });
+    }
+
+    // Add remaining songs to queue
+    const remainingSongs = discoverIndiaSongs.slice(index + 1);
+    remainingSongs.forEach(s => {
+        const sTitle = s.title || s.name || '';
+        const sArtist = s.artist || s.artist_name || '';
+        const sArtwork = s.artwork_url || s.image_url || '';
+        const sVideoId = s.youtube_video_id || '';
+
+        addToQueue({
+            title: sTitle,
+            artist: sArtist,
+            videoId: sVideoId,
+            artwork: sArtwork
+        });
+    });
+
+    showToast(`Playing ${currentDiscoverGenre} playlist`);
 }
 
 // Current selected global platform
