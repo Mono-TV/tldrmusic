@@ -5811,6 +5811,50 @@ body::before {
     color: #f87171;
 }
 
+.detail-song-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+}
+
+.detail-song-action {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    opacity: 0;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-song:hover .detail-song-action {
+    opacity: 1;
+}
+
+.detail-song-action:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.detail-song-action.liked {
+    color: var(--accent);
+    opacity: 1;
+}
+
+.detail-song-action.liked:hover {
+    background: rgba(29, 185, 84, 0.1);
+}
+
+.detail-song-action.remove:hover {
+    background: rgba(248, 113, 113, 0.1);
+    color: #f87171;
+}
+
 .detail-empty {
     display: flex;
     flex-direction: column;

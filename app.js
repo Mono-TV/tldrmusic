@@ -3310,6 +3310,7 @@ function showFavoritesDetail() {
         <div class="detail-song-list">
             ${favorites.map((fav, index) => {
                 const isPlaying = isCurrentlyPlaying(fav.videoId);
+                const artworkUrl = fav.artwork || '';
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${fav.videoId || ''}" onclick="playFavoriteByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
@@ -3329,12 +3330,29 @@ function showFavoritesDetail() {
                         <div class="detail-song-title">${escapeHtml(fav.title)}</div>
                         <div class="detail-song-artist">${escapeHtml(fav.artist)}</div>
                     </div>
-                    <button class="detail-song-remove" onclick="event.stopPropagation(); removeFavoriteByIndex(${index})" title="Remove from favorites">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
+                    <div class="detail-song-actions">
+                        <button class="detail-song-action" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${fav.videoId || ''}', title: '${escapeHtml(fav.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(fav.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(fav.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(fav.artist).replace(/'/g, "\\'")}', videoId: '${fav.videoId || ''}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action remove" onclick="event.stopPropagation(); removeFavoriteByIndex(${index})" title="Remove from favorites">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             `}).join('')}
         </div>
@@ -3536,6 +3554,8 @@ function showHistoryDetail() {
         <div class="detail-song-list">
             ${playHistory.map((item, index) => {
                 const isPlaying = isCurrentlyPlaying(item.videoId);
+                const isFavorite = favorites.some(f => f.title === item.title && f.artist === item.artist);
+                const artworkUrl = item.artwork || '';
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${item.videoId || ''}" onclick="playHistoryByIndex(${index})">
                     <span class="detail-song-num">${index + 1}</span>
@@ -3554,6 +3574,28 @@ function showHistoryDetail() {
                     <div class="detail-song-info">
                         <div class="detail-song-title">${escapeHtml(item.title)}</div>
                         <div class="detail-song-artist">${escapeHtml(item.artist)}</div>
+                    </div>
+                    <div class="detail-song-actions">
+                        <button class="detail-song-action ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleFavorite({title: '${escapeHtml(item.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(item.artist).replace(/'/g, "\\'")}', videoId: '${item.videoId || ''}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'}); showHistoryDetail();" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${item.videoId || ''}', title: '${escapeHtml(item.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(item.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(item.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(item.artist).replace(/'/g, "\\'")}', videoId: '${item.videoId || ''}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             `}).join('')}
@@ -5112,6 +5154,8 @@ function renderPlaylistDetail(playlistId) {
         <div class="detail-song-list">
             ${playlist.songs.map((song, index) => {
                 const isPlaying = isCurrentlyPlaying(song.videoId);
+                const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+                const artworkUrl = song.artwork || '';
                 return `
                 <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${song.videoId || ''}" onclick="playPlaylist('${playlist.id}', ${index})">
                     <span class="detail-song-num">${index + 1}</span>
@@ -5131,12 +5175,34 @@ function renderPlaylistDetail(playlistId) {
                         <div class="detail-song-title">${escapeHtml(song.title)}</div>
                         <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
                     </div>
-                    <button class="detail-song-remove" onclick="event.stopPropagation(); removeFromPlaylist('${playlist.id}', ${index})" title="Remove from playlist">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
+                    <div class="detail-song-actions">
+                        <button class="detail-song-action ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleFavorite({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${song.videoId || ''}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'}); renderPlaylistDetail('${playlist.id}');" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.videoId || ''}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${song.videoId || ''}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action remove" onclick="event.stopPropagation(); removeFromPlaylist('${playlist.id}', ${index})" title="Remove from playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             `}).join('')}
         </div>
