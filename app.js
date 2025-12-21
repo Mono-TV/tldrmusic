@@ -1340,7 +1340,7 @@ function createDiscoverIndiaSongCard(song, index) {
         </div>
         <div class="song-card-info">
             <div class="song-card-title">${escapeHtml(title)}</div>
-            <div class="song-card-artist">${escapeHtml(artist)}</div>
+            <div class="song-card-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(artist).replace(/'/g, "\\'")}')">${escapeHtml(artist)}</div>
         </div>
     `;
 
@@ -7479,7 +7479,7 @@ function renderCuratedDetailView(playlist) {
                     </div>
                     <div class="detail-song-info">
                         <span class="detail-song-title">${escapeHtml(song.title)}</span>
-                        <span class="detail-song-artist">${escapeHtml(song.artist)}</span>
+                        <span class="detail-song-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(song.artist).replace(/'/g, "\\'")}')">${escapeHtml(song.artist)}</span>
                     </div>
                     <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl}'})" title="Add to playlist">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
