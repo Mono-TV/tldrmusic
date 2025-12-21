@@ -1392,6 +1392,7 @@ function playDiscoverIndiaSong(song, index) {
 
 let currentArtistData = null;
 let currentArtistSongs = [];
+let currentArtistAlbums = [];
 
 // Navigate to artist page
 function showArtistPage(artistName) {
@@ -1497,6 +1498,25 @@ async function loadArtistData(artistName) {
             return songArtist.includes(searchArtist) || searchArtist.includes(songArtist);
         });
 
+        // Extract unique albums from songs
+        const albumMap = new Map();
+        currentArtistSongs.forEach(song => {
+            const albumName = song.album || song.album_name;
+            if (albumName && albumName.trim()) {
+                if (!albumMap.has(albumName)) {
+                    albumMap.set(albumName, {
+                        name: albumName,
+                        artwork: song.artwork_url || song.image_url || '',
+                        songs: []
+                    });
+                }
+                albumMap.get(albumName).songs.push(song);
+            }
+        });
+        currentArtistAlbums = Array.from(albumMap.values())
+            .filter(album => album.songs.length > 0)
+            .sort((a, b) => b.songs.length - a.songs.length); // Sort by song count
+
         // Get first song's artwork for artist image
         const artistImage = currentArtistSongs[0]?.artwork_url || currentArtistSongs[0]?.image_url || '';
 
@@ -1595,8 +1615,47 @@ function renderArtistPage() {
         return;
     }
 
+    // Build albums section HTML
+    let albumsHtml = '';
+    if (currentArtistAlbums.length > 0) {
+        albumsHtml = `
+            <div class="artist-albums-section">
+                <h3 class="artist-section-title">Albums</h3>
+                <div class="artist-albums-grid">
+                    ${currentArtistAlbums.map((album, index) => `
+                        <div class="artist-album-card" onclick="playArtistAlbum(${index})">
+                            <div class="artist-album-artwork">
+                                ${album.artwork
+                                    ? `<img src="${album.artwork}" alt="${escapeHtml(album.name)}" loading="lazy">`
+                                    : `<div class="artist-album-placeholder">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                       </div>`
+                                }
+                                <div class="artist-album-play-overlay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="artist-album-info">
+                                <div class="artist-album-name">${escapeHtml(album.name)}</div>
+                                <div class="artist-album-meta">${album.songs.length} song${album.songs.length !== 1 ? 's' : ''}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     content.innerHTML = `
-        <div class="detail-song-list">
+        ${albumsHtml}
+        <div class="artist-songs-section">
+            ${currentArtistAlbums.length > 0 ? '<h3 class="artist-section-title">Songs</h3>' : ''}
+            <div class="detail-song-list">
             ${currentArtistSongs.map((song, index) => {
                 const videoId = song.youtube_video_id || '';
                 const isPlaying = isCurrentlyPlaying(videoId);
@@ -1646,11 +1705,46 @@ function renderArtistPage() {
                     </div>
                 </div>
             `}).join('')}
+            </div>
         </div>
     `;
 
     // Apply gradient based on artist image
     applyArtistGradient();
+}
+
+// Play album from artist page
+function playArtistAlbum(albumIndex) {
+    if (albumIndex < 0 || albumIndex >= currentArtistAlbums.length) return;
+
+    const album = currentArtistAlbums[albumIndex];
+    if (!album.songs || album.songs.length === 0) return;
+
+    // Play first song
+    const firstSong = album.songs[0];
+    const videoId = firstSong.youtube_video_id || '';
+    const title = firstSong.title || '';
+    const artist = firstSong.artist || '';
+    const artwork = firstSong.artwork_url || firstSong.image_url || '';
+
+    if (videoId) {
+        playRegionalSongDirect(title, artist, videoId, artwork);
+    } else {
+        searchAndPlaySong({ title, artist, artwork_url: artwork });
+    }
+
+    // Add remaining album songs to queue
+    queue.length = 0;
+    album.songs.slice(1).forEach(s => {
+        addToQueue({
+            title: s.title || '',
+            artist: s.artist || '',
+            videoId: s.youtube_video_id || '',
+            artwork: s.artwork_url || s.image_url || ''
+        });
+    });
+
+    showToast(`Playing ${album.name}`);
 }
 
 // Apply gradient to artist page
