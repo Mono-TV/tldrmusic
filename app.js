@@ -6338,14 +6338,14 @@ function initSidebar() {
 function updateSidebarActiveState(mode) {
     const sidebarHomeBtn = document.getElementById('sidebarHomeBtn');
     const sidebarPlaylistsBtn = document.getElementById('sidebarPlaylistsBtn');
-    const sidebarDiscoverBtn = document.getElementById('sidebarDiscoverBtn');
+    const sidebarChartsBtn = document.getElementById('sidebarChartsBtn');
     const sidebarAIGeneratedBtn = document.getElementById('sidebarAIGeneratedBtn');
     const sidebarSearchBtn = document.getElementById('sidebarSearchBtn');
 
     // Remove active from all nav items
     sidebarHomeBtn?.classList.remove('active');
     sidebarPlaylistsBtn?.classList.remove('active');
-    sidebarDiscoverBtn?.classList.remove('active');
+    sidebarChartsBtn?.classList.remove('active');
     sidebarAIGeneratedBtn?.classList.remove('active');
     sidebarSearchBtn?.classList.remove('active');
 
@@ -6354,8 +6354,8 @@ function updateSidebarActiveState(mode) {
         sidebarHomeBtn?.classList.add('active');
     } else if (mode === 'playlists') {
         sidebarPlaylistsBtn?.classList.add('active');
-    } else if (mode === 'discover') {
-        sidebarDiscoverBtn?.classList.add('active');
+    } else if (mode === 'charts') {
+        sidebarChartsBtn?.classList.add('active');
     } else if (mode === 'ai-generated') {
         sidebarAIGeneratedBtn?.classList.add('active');
     } else if (mode === 'search') {
@@ -7172,6 +7172,417 @@ const CURATED_PLAYLISTS = {
         { id: 'era-retro', name: 'Retro Classics', era: 'retro', songCount: 3000 }
     ]
 };
+
+// ============================================================
+// CHARTS VIEW
+// ============================================================
+
+// Charts API base URL (using existing music-harvester for now)
+const CHARTS_API_BASE = 'https://music-harvester-401132033262.asia-south1.run.app/api';
+
+// Chart definitions
+const MAIN_CHARTS = [
+    {
+        id: 'india-top-25',
+        name: 'India Top 25',
+        description: 'Most popular songs in India this week',
+        endpoint: '/chart/current',
+        icon: '🇮🇳',
+        gradient: ['#FF9933', '#138808'],
+        region: 'india'
+    },
+    {
+        id: 'global-top-25',
+        name: 'Global Top 25',
+        description: 'Trending worldwide this week',
+        endpoint: '/chart/global/current',
+        icon: '🌍',
+        gradient: ['#667eea', '#764ba2'],
+        region: 'global'
+    }
+];
+
+const PLATFORM_CHARTS = [
+    {
+        id: 'spotify',
+        name: 'Spotify India',
+        icon: '<svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>',
+        color: '#1DB954',
+        platform: 'spotify'
+    },
+    {
+        id: 'apple-music',
+        name: 'Apple Music India',
+        icon: '<svg viewBox="0 0 24 24" fill="#FA243C"><path d="M23.994 6.124c0-.738-.065-1.47-.24-2.19a4.93 4.93 0 00-.784-1.72 3.896 3.896 0 00-1.435-1.14 5.036 5.036 0 00-1.79-.48c-.36-.039-.72-.06-1.083-.06H5.34c-.364 0-.724.021-1.083.06a5.036 5.036 0 00-1.79.48 3.896 3.896 0 00-1.435 1.14 4.93 4.93 0 00-.784 1.72 8.95 8.95 0 00-.24 2.19v11.752c0 .738.065 1.47.24 2.19.156.646.423 1.23.784 1.72.362.49.851.89 1.435 1.14.542.24 1.14.4 1.79.48.36.04.72.06 1.083.06h13.314c.364 0 .724-.02 1.083-.06a5.03 5.03 0 001.79-.48c.584-.25 1.073-.65 1.435-1.14.361-.49.628-1.074.784-1.72.175-.72.24-1.452.24-2.19V6.124zm-6.643 8.594l-.01 4.706c0 .31-.04.618-.126.916a2.341 2.341 0 01-.388.786 1.8 1.8 0 01-.678.553c-.282.14-.59.212-.926.212-.336 0-.644-.072-.926-.212a1.8 1.8 0 01-.678-.553 2.341 2.341 0 01-.388-.786 3.083 3.083 0 01-.126-.916c0-.337.043-.652.126-.945.084-.294.21-.555.388-.782.178-.226.4-.41.678-.55.282-.14.59-.212.926-.212.19 0 .372.028.548.076V9.844l-4.708 1.06v6.322c0 .31-.04.618-.126.916a2.339 2.339 0 01-.388.786 1.8 1.8 0 01-.678.553c-.282.14-.59.212-.926.212-.336 0-.644-.072-.926-.212a1.8 1.8 0 01-.678-.553 2.339 2.339 0 01-.388-.786 3.08 3.08 0 01-.126-.916c0-.337.043-.652.126-.945.084-.294.21-.555.388-.782.178-.226.4-.41.678-.55.282-.14.59-.212.926-.212.19 0 .372.028.548.076V9.316c0-.219.024-.409.07-.574a.96.96 0 01.226-.41.813.813 0 01.384-.24c.157-.05.34-.06.548-.022l5.5 1.235c.316.07.546.21.69.42.144.21.216.465.216.765z"/></svg>',
+        color: '#FA243C',
+        platform: 'apple_music'
+    },
+    {
+        id: 'youtube-music',
+        name: 'YouTube Music India',
+        icon: '<svg viewBox="0 0 24 24" fill="#FF0000"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z"/></svg>',
+        color: '#FF0000',
+        platform: 'youtube_music'
+    },
+    {
+        id: 'billboard',
+        name: 'Billboard India',
+        icon: '<svg viewBox="0 0 24 24" fill="#000000"><rect x="2" y="4" width="20" height="16" rx="2" fill="#000"/><text x="12" y="14" font-size="6" font-weight="bold" fill="#fff" text-anchor="middle">BB</text></svg>',
+        color: '#000000',
+        platform: 'billboard'
+    }
+];
+
+// Current charts data cache
+let chartsCache = {};
+let currentChartDetail = null;
+
+function showChartsView() {
+    isHomeViewVisible = false;
+    isPlaylistPanelVisible = false;
+    isSearchViewActive = false;
+
+    // Hide all other views
+    const homeView = document.getElementById('homeView');
+    const mainContent = document.getElementById('mainContent');
+    const heroSection = document.getElementById('heroSection');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const chartsView = document.getElementById('chartsView');
+    const chartsDetailView = document.getElementById('chartsDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const searchView = document.getElementById('searchView');
+    const artistDetailView = document.getElementById('artistDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (chartsDetailView) chartsDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
+    if (artistDetailView) artistDetailView.style.display = 'none';
+    if (chartsView) chartsView.style.display = 'block';
+
+    // Update sidebar active state
+    updateSidebarActiveState('charts');
+
+    // Close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    sidebar?.classList.remove('open');
+
+    // Render charts
+    renderChartsView();
+}
+
+function renderChartsView() {
+    renderMainCharts();
+    renderPlatformCharts();
+}
+
+function renderMainCharts() {
+    const grid = document.getElementById('mainChartsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = MAIN_CHARTS.map(chart => `
+        <div class="chart-card main-chart-card" onclick="openChartFromChartsView('${chart.id}')"
+             style="background: linear-gradient(135deg, ${chart.gradient[0]} 0%, ${chart.gradient[1]} 100%);">
+            <div class="main-chart-content">
+                <span class="main-chart-icon">${chart.icon}</span>
+                <div class="main-chart-info">
+                    <h4>${chart.name}</h4>
+                    <p>${chart.description}</p>
+                </div>
+                <div class="main-chart-play">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderPlatformCharts() {
+    const grid = document.getElementById('platformChartsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = PLATFORM_CHARTS.map(chart => `
+        <div class="chart-card platform-chart-card" onclick="openPlatformChart('${chart.id}')">
+            <div class="platform-chart-header">
+                <div class="platform-chart-icon" style="background: ${chart.color};">
+                    ${chart.icon}
+                </div>
+                <div class="platform-chart-name">${chart.name}</div>
+            </div>
+            <div class="platform-chart-meta">Top 50 songs</div>
+        </div>
+    `).join('');
+}
+
+async function openChartFromChartsView(chartId) {
+    const chart = MAIN_CHARTS.find(c => c.id === chartId);
+    if (!chart) return;
+
+    showToast('Loading chart...');
+
+    try {
+        // Check cache first
+        if (chartsCache[chartId] && (Date.now() - chartsCache[chartId].timestamp < 5 * 60 * 1000)) {
+            renderChartDetailFromChartsView(chart, chartsCache[chartId].data);
+            return;
+        }
+
+        const response = await fetch(`${CHARTS_API_BASE}${chart.endpoint}`);
+        if (!response.ok) throw new Error('Failed to load chart');
+
+        const data = await response.json();
+
+        // Cache the data
+        chartsCache[chartId] = {
+            data: data,
+            timestamp: Date.now()
+        };
+
+        renderChartDetailFromChartsView(chart, data);
+
+    } catch (error) {
+        console.error('Error loading chart:', error);
+        showToast('Failed to load chart. Please try again.');
+    }
+}
+
+async function openPlatformChart(platformId) {
+    const platform = PLATFORM_CHARTS.find(p => p.id === platformId);
+    if (!platform) return;
+
+    showToast(`${platform.name} chart coming soon!`);
+    // TODO: Implement platform-specific chart view when conductor API is ready
+}
+
+function renderChartDetailFromChartsView(chartMeta, chartData) {
+    const chartsView = document.getElementById('chartsView');
+    const chartsDetailView = document.getElementById('chartsDetailView');
+    const header = document.getElementById('chartsDetailHeader');
+    const content = document.getElementById('chartsDetailContent');
+
+    if (!header || !content) return;
+
+    // Hide charts view, show detail view with slide animation
+    if (chartsView) chartsView.style.display = 'none';
+    if (chartsDetailView) {
+        chartsDetailView.style.display = 'flex';
+        setTimeout(() => chartsDetailView.classList.add('visible'), 10);
+    }
+
+    currentChartDetail = { meta: chartMeta, data: chartData };
+
+    // Render header
+    header.innerHTML = `
+        <button class="detail-back-btn" onclick="hideChartsDetailView()" title="Back to Charts">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="detail-hero">
+            <div class="charts-detail-cover" style="background: linear-gradient(135deg, ${chartMeta.gradient[0]}, ${chartMeta.gradient[1]})">
+                <div class="charts-detail-cover-icon">
+                    <span class="charts-detail-cover-emoji">${chartMeta.icon}</span>
+                    <span class="charts-detail-cover-text">${chartMeta.region}</span>
+                </div>
+            </div>
+            <div class="detail-info">
+                <span class="detail-type">Chart</span>
+                <h1 class="detail-name">${chartMeta.name}</h1>
+                <p class="detail-meta">${chartData.total_songs || chartData.chart?.length || 0} songs • Week ${chartData.week || ''}</p>
+                <div class="detail-buttons">
+                    <button class="btn-primary" onclick="playChartFromDetail()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play
+                    </button>
+                    <button class="btn-secondary" onclick="shuffleChartFromDetail()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Render songs
+    const songs = chartData.chart || [];
+    if (songs.length === 0) {
+        content.innerHTML = `
+            <div class="detail-empty">
+                <p>No songs in this chart</p>
+            </div>
+        `;
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="detail-song-list">
+            ${songs.map((song, index) => {
+                const videoId = song.youtube_video_id || '';
+                const artworkUrl = song.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
+                const isPlaying = isCurrentlyPlaying(videoId);
+                const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+                const rankChange = song.rank_change || 0;
+                const isNew = song.is_new;
+
+                return `
+                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${videoId}" onclick="playChartSongFromDetail(${index})">
+                    <div class="chart-song-rank-container">
+                        <span class="detail-song-num ${song.rank <= 3 ? 'top-3' : ''}">${song.rank}</span>
+                        ${isNew ? '<span class="rank-badge new">NEW</span>' :
+                          rankChange > 0 ? `<span class="rank-badge up">+${rankChange}</span>` :
+                          rankChange < 0 ? `<span class="rank-badge down">${rankChange}</span>` : ''}
+                    </div>
+                    ${getNowPlayingEqHtml()}
+                    <div class="detail-song-artwork">
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" onerror="this.src='https://i.ytimg.com/vi/${videoId}/mqdefault.jpg'">`
+                            : '<div class="placeholder"></div>'
+                        }
+                        <div class="detail-song-play-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="detail-song-info">
+                        <span class="detail-song-title">${escapeHtml(song.title)}</span>
+                        <span class="detail-song-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(song.artist).replace(/'/g, "\\'")}')">${escapeHtml(song.artist)}</span>
+                    </div>
+                    <div class="detail-song-actions">
+                        <button class="detail-song-action ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleFavorite({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${videoId}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                        <button class="detail-song-action" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `}).join('')}
+        </div>
+    `;
+
+    // Apply gradient
+    const detailView = document.getElementById('chartsDetailView');
+    if (detailView) {
+        detailView.style.background = `linear-gradient(180deg, ${chartMeta.gradient[0]}33 0%, var(--bg-primary) 300px)`;
+    }
+}
+
+function hideChartsDetailView() {
+    const chartsView = document.getElementById('chartsView');
+    const chartsDetailView = document.getElementById('chartsDetailView');
+
+    if (chartsDetailView) {
+        chartsDetailView.classList.remove('visible');
+        setTimeout(() => {
+            chartsDetailView.style.display = 'none';
+        }, 300);
+    }
+    if (chartsView) chartsView.style.display = 'block';
+
+    currentChartDetail = null;
+}
+
+function playChartFromDetail() {
+    if (!currentChartDetail?.data?.chart?.length) return;
+    playChartSongFromDetail(0);
+}
+
+function shuffleChartFromDetail() {
+    if (!currentChartDetail?.data?.chart?.length) return;
+    const songs = [...currentChartDetail.data.chart];
+    const shuffled = songs.sort(() => Math.random() - 0.5);
+
+    const firstSong = shuffled[0];
+    const videoId = firstSong.youtube_video_id || '';
+    const artworkUrl = firstSong.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
+
+    if (videoId) {
+        playRegionalSongDirect(firstSong.title, firstSong.artist, videoId, artworkUrl);
+    }
+
+    // Add rest to queue
+    queue.length = 0;
+    shuffled.slice(1).forEach(song => {
+        const vid = song.youtube_video_id || '';
+        const art = song.artwork_url || (vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '');
+        addToQueue({
+            title: song.title,
+            artist: song.artist,
+            videoId: vid,
+            artwork: art
+        });
+    });
+
+    showToast(`Shuffling ${currentChartDetail.meta.name}`);
+}
+
+function playChartSongFromDetail(index) {
+    if (!currentChartDetail?.data?.chart) return;
+
+    const songs = currentChartDetail.data.chart;
+    if (index < 0 || index >= songs.length) return;
+
+    const song = songs[index];
+    const videoId = song.youtube_video_id || '';
+    const artworkUrl = song.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
+
+    if (videoId) {
+        playRegionalSongDirect(song.title, song.artist, videoId, artworkUrl);
+    }
+
+    // Add remaining songs to queue
+    queue.length = 0;
+    songs.slice(index + 1).forEach(s => {
+        const vid = s.youtube_video_id || '';
+        const art = s.artwork_url || (vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '');
+        addToQueue({
+            title: s.title,
+            artist: s.artist,
+            videoId: vid,
+            artwork: art
+        });
+    });
+
+    showToast(`Playing from ${currentChartDetail.meta.name}`);
+}
 
 // Mood icons SVG
 const MOOD_ICONS = {

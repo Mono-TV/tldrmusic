@@ -83,14 +83,15 @@
                         </span>
                         <span class="sidebar-nav-text">Home</span>
                     </button>
-                    <button class="sidebar-nav-item" id="sidebarDiscoverBtn" onclick="showDiscoverView()">
+                    <button class="sidebar-nav-item" id="sidebarChartsBtn" onclick="showChartsView()">
                         <span class="sidebar-nav-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
                             </svg>
                         </span>
-                        <span class="sidebar-nav-text">Discover</span>
+                        <span class="sidebar-nav-text">Charts</span>
                     </button>
                     <button class="sidebar-nav-item" id="sidebarAIGeneratedBtn" onclick="showAIGeneratedView()">
                         <span class="sidebar-nav-icon">
@@ -556,75 +557,38 @@
                 </div>
             </section>
 
-            <!-- Discover View -->
-            <section class="discover-view" id="discoverView" style="display: none;">
-                <div class="discover-header">
-                    <h2>Discover</h2>
-                    <p class="discover-subtitle">Curated playlists from 76,000+ songs</p>
+            <!-- Charts View -->
+            <section class="charts-view" id="chartsView" style="display: none;">
+                <div class="charts-header">
+                    <h2>Charts</h2>
+                    <p class="charts-subtitle">Multi-platform aggregated rankings updated weekly</p>
                 </div>
 
-                <!-- Featured Collection (India Catalog Genres) -->
-                <div class="discover-section">
-                    <div class="discover-section-header">
-                        <h3>Featured Collection</h3>
-                        <span class="discover-section-count" id="featuredPlaylistsCount">10</span>
+                <!-- Main Charts -->
+                <div class="charts-section">
+                    <div class="charts-section-header">
+                        <h3>Top Charts</h3>
                     </div>
-                    <div class="discover-grid featured-grid" id="featuredPlaylistsGrid">
-                        <!-- Featured cards will be rendered by JS -->
-                    </div>
-                </div>
-
-                <!-- Mood Playlists -->
-                <div class="discover-section">
-                    <div class="discover-section-header">
-                        <h3>Moods & Vibes</h3>
-                        <span class="discover-section-count" id="moodPlaylistsCount">11</span>
-                    </div>
-                    <div class="discover-grid mood-grid" id="moodPlaylistsGrid">
-                        <!-- Mood cards will be rendered by JS -->
+                    <div class="charts-grid main-charts-grid" id="mainChartsGrid">
+                        <!-- Main chart cards (India, Global) will be rendered by JS -->
                     </div>
                 </div>
 
-                <!-- Language Playlists -->
-                <div class="discover-section">
-                    <div class="discover-section-header">
-                        <h3>By Language</h3>
-                        <span class="discover-section-count" id="languagePlaylistsCount">12</span>
+                <!-- Platform Charts -->
+                <div class="charts-section">
+                    <div class="charts-section-header">
+                        <h3>By Platform</h3>
                     </div>
-                    <div class="discover-grid language-grid" id="languagePlaylistsGrid">
-                        <!-- Language cards will be rendered by JS -->
-                    </div>
-                </div>
-
-                <!-- Artist Spotlights -->
-                <div class="discover-section">
-                    <div class="discover-section-header">
-                        <h3>Artist Spotlights</h3>
-                        <span class="discover-section-count" id="artistPlaylistsCount">20</span>
-                    </div>
-                    <div class="discover-scroll-container">
-                        <div class="discover-scroll" id="artistPlaylistsScroll">
-                            <!-- Artist cards will be rendered by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Decades / Era -->
-                <div class="discover-section">
-                    <div class="discover-section-header">
-                        <h3>By Era</h3>
-                        <span class="discover-section-count" id="eraPlaylistsCount">6</span>
-                    </div>
-                    <div class="discover-grid era-grid" id="eraPlaylistsGrid">
-                        <!-- Era cards will be rendered by JS -->
+                    <div class="charts-grid platform-charts-grid" id="platformChartsGrid">
+                        <!-- Platform chart cards will be rendered by JS -->
                     </div>
                 </div>
             </section>
 
-            <!-- Curated Playlist Detail View -->
-            <section class="curated-detail-view" id="curatedDetailView" style="display: none;">
-                <div class="curated-detail-header" id="curatedDetailHeader"></div>
-                <div class="curated-detail-songs" id="curatedDetailSongs"></div>
+            <!-- Charts Detail View (for viewing full chart) -->
+            <section class="charts-detail-view" id="chartsDetailView" style="display: none;">
+                <div class="charts-detail-header" id="chartsDetailHeader"></div>
+                <div class="charts-detail-content" id="chartsDetailContent"></div>
             </section>
 
             <!-- AI Generated View -->
