@@ -1062,6 +1062,15 @@ function renderHero() {
     const heroRatingIcon1 = document.getElementById('heroRatingIcon');
     if (heroRatingIcon1) heroRatingIcon1.style.display = 'inline';
 
+    // Show rank badge for chart songs
+    const heroRank = document.querySelector('.hero-rank');
+    if (heroRank) heroRank.style.display = '';
+
+    // Show rating stat for chart songs
+    const heroScore = document.getElementById('heroScore');
+    const heroRatingStat = heroScore?.closest('.stat');
+    if (heroRatingStat) heroRatingStat.style.display = '';
+
     // Hero artwork
     const heroArtwork = document.getElementById('heroArtwork');
     const artworkUrl = getArtworkUrl(song);
@@ -2200,13 +2209,26 @@ function updateHeroForDirectPlay(title, artist, artworkUrl, score) {
     const heroBg = document.getElementById('heroBg');
     const heroLabel = document.querySelector('.hero-label');
     const playHeroBtn = document.getElementById('playHeroBtn');
+    const heroRank = document.querySelector('.hero-rank');
+    const heroRatingStat = heroScore?.closest('.stat');
 
     // Update song info
     if (heroTitle) heroTitle.textContent = title;
     if (heroArtist) heroArtist.textContent = artist;
-    if (heroScore) heroScore.textContent = score ? score.toFixed(2) : '-';
-    const heroRatingIcon2 = document.getElementById('heroRatingIcon');
-    if (heroRatingIcon2) heroRatingIcon2.style.display = score ? 'inline' : 'none';
+
+    // Hide rank badge for direct play (no chart rank)
+    if (heroRank) heroRank.style.display = 'none';
+
+    // Show/hide rating section based on whether score exists
+    if (score) {
+        if (heroScore) heroScore.textContent = score.toFixed(2);
+        if (heroRatingStat) heroRatingStat.style.display = '';
+        const heroRatingIcon2 = document.getElementById('heroRatingIcon');
+        if (heroRatingIcon2) heroRatingIcon2.style.display = 'inline';
+    } else {
+        // Hide the entire rating stat when no score
+        if (heroRatingStat) heroRatingStat.style.display = 'none';
+    }
 
     // Update artwork
     if (heroArtwork && artworkUrl) {
@@ -2489,6 +2511,15 @@ function renderGlobalHero() {
     const heroRatingIcon3 = document.getElementById('heroRatingIcon');
     if (heroRatingIcon3) heroRatingIcon3.style.display = 'inline';
 
+    // Show rank badge for chart songs
+    const heroRank = document.querySelector('.hero-rank');
+    if (heroRank) heroRank.style.display = '';
+
+    // Show rating stat for chart songs
+    const heroScoreEl = document.getElementById('heroScore');
+    const heroRatingStat = heroScoreEl?.closest('.stat');
+    if (heroRatingStat) heroRatingStat.style.display = '';
+
     const heroArtwork = document.getElementById('heroArtwork');
     const artworkUrl = getArtworkUrl(song);
     if (heroArtwork && artworkUrl) {
@@ -2597,6 +2628,7 @@ function updateHeroWithSong(song, index) {
     const heroArtwork = document.getElementById('heroArtwork');
     const heroBg = document.getElementById('heroBg');
     const heroRankNum = document.querySelector('.rank-num');
+    const heroRank = document.querySelector('.hero-rank');
     const viewsStat = document.getElementById('heroViewsStat');
     const viewsEl = document.getElementById('heroViews');
     const playHeroBtn = document.getElementById('playHeroBtn');
@@ -2611,8 +2643,13 @@ function updateHeroWithSong(song, index) {
     const heroRatingIcon4 = document.getElementById('heroRatingIcon');
     if (heroRatingIcon4) heroRatingIcon4.style.display = 'inline';
 
-    // Update rank number
+    // Show rank badge and update rank number for chart songs
+    if (heroRank) heroRank.style.display = '';
     if (heroRankNum) heroRankNum.textContent = index + 1;
+
+    // Show rating stat for chart songs
+    const heroRatingStat = heroScore?.closest('.stat');
+    if (heroRatingStat) heroRatingStat.style.display = '';
 
     // Update artwork
     const artworkUrl = getArtworkUrl(song);
