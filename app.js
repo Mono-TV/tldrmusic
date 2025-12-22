@@ -1,52 +1,10 @@
 // TLDR Music - Frontend Application
 
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
-const MUSIC_CONDUCTOR_API = 'https://music-conductor-401132033262.asia-south1.run.app';
+const CHART_API_BASE = 'https://music-harvester-401132033262.asia-south1.run.app/api';
+const CURATED_API_BASE = 'https://tldrmusic-api-701102808610.asia-south1.run.app';
+const AI_PLAYLIST_API_BASE = 'https://harvester.lumiolabs.in';
 const DATA_PATH = './current.json'; // Fallback for local development
-
-// Map Music Conductor song format to our internal format
-function mapConductorSong(song, index) {
-    return {
-        title: song.title,
-        artist: song.artist || song.artist_name,
-        youtube_video_id: song.youtube_id || song.youtube_video_id,
-        artwork_url: song.artwork_url || (song.youtube_id ? `https://i.ytimg.com/vi/${song.youtube_id}/maxresdefault.jpg` : ''),
-        rank: song.rank || index + 1,
-        rank_change: 0,
-        is_new: false,
-        score: song.score,
-        platforms_count: song.platforms_count,
-        platform_ranks: song.platform_ranks,
-        isrc: song.isrc,
-        song_id: song.song_id
-    };
-}
-
-// Map Music Conductor playlist track to our format
-function mapConductorPlaylistTrack(track) {
-    return {
-        title: track.title,
-        artist: track.artist,
-        youtube_video_id: track.youtube_id,
-        artwork_url: track.artwork_url || (track.youtube_id ? `https://i.ytimg.com/vi/${track.youtube_id}/maxresdefault.jpg` : ''),
-        duration_ms: track.duration_ms
-    };
-}
-
-// Map Music Conductor search result to our format
-function mapConductorSearchResult(song) {
-    return {
-        title: song.title,
-        artist: song.artist_name || song.artist,
-        youtube_video_id: song.youtube_video_id,
-        artwork_url: song.artwork_url || (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg` : ''),
-        duration_seconds: song.duration_seconds,
-        language: song.language,
-        genres: song.genres,
-        isrc: song.isrc,
-        id: song.id
-    };
-}
 
 // localStorage keys
 const STORAGE_KEYS = {
@@ -94,6 +52,7 @@ let currentChartMode = 'india';  // 'india' or 'global'
 let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
 
 // India Catalog (Discover India) state
+const INDIA_CATALOG_API = 'https://music-harvester-401132033262.asia-south1.run.app/api/india';
 let currentDiscoverGenre = 'Indian Pop';
 let discoverIndiaSongs = [];
 const DISCOVER_GENRES = [
@@ -153,6 +112,7 @@ let isPlaylistPanelVisible = false;
 // Search state
 let searchDebounceTimer = null;
 const SEARCH_DEBOUNCE_MS = 300;
+const SEARCH_API_BASE = 'https://harvester.lumiolabs.in/api/tldr';
 const MAX_RECENT_SEARCHES = 10;
 let recentSearches = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT_SEARCHES) || '[]');
 let currentSearchQuery = '';
@@ -854,12 +814,12 @@ async function loadChartData() {
         }
     }
 
-    // No valid cache, fetch from Music Conductor API
+    // No valid cache, fetch from harvester API
     try {
         // Fetch India and Global charts in parallel
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`),
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global&limit=25`)
+            fetch(`${CHART_API_BASE}/chart/current`),
+            fetch(`${CHART_API_BASE}/chart/current?chart_type=global`)
         ]);
 
         if (!indiaResponse.ok) throw new Error('India chart API request failed');
@@ -867,20 +827,16 @@ async function loadChartData() {
         const indiaData = await indiaResponse.json();
         const globalData = globalResponse.ok ? await globalResponse.json() : null;
 
-        // Map Music Conductor format to our internal format
-        const indiaChart = (indiaData.songs || []).map(mapConductorSong);
-        const globalChart = globalData ? (globalData.songs || []).map(mapConductorSong) : [];
-
         // Build chartData in expected format
         chartData = {
             generated_at: indiaData.generated_at,
             week: indiaData.week,
-            chart: indiaChart,
-            global_chart: globalChart,
-            regional: {} // Regional charts not available in Music Conductor yet
+            chart: indiaData.chart || [],
+            global_chart: globalData?.chart || [],
+            regional: indiaData.regional || {}
         };
 
-        console.log('Loaded chart data from Music Conductor API');
+        console.log('Loaded chart data from harvester API');
 
         // Cache the data
         try {
@@ -917,10 +873,10 @@ async function loadChartData() {
 // Refresh cache in background without blocking UI
 async function refreshChartCache() {
     try {
-        // Fetch India and Global charts in parallel from Music Conductor
+        // Fetch India and Global charts in parallel
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`),
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global&limit=25`)
+            fetch(`${CHART_API_BASE}/chart/current`),
+            fetch(`${CHART_API_BASE}/chart/current?chart_type=global`)
         ]);
 
         if (!indiaResponse.ok) return;
@@ -928,16 +884,12 @@ async function refreshChartCache() {
         const indiaData = await indiaResponse.json();
         const globalData = globalResponse.ok ? await globalResponse.json() : null;
 
-        // Map to internal format
-        const indiaChart = (indiaData.songs || []).map(mapConductorSong);
-        const globalChart = globalData ? (globalData.songs || []).map(mapConductorSong) : [];
-
         const freshData = {
             generated_at: indiaData.generated_at,
             week: indiaData.week,
-            chart: indiaChart,
-            global_chart: globalChart,
-            regional: {} // Regional charts not available in Music Conductor yet
+            chart: indiaData.chart || [],
+            global_chart: globalData?.chart || [],
+            regional: indiaData.regional || {}
         };
 
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
@@ -1304,23 +1256,22 @@ async function loadDiscoverIndiaSongs(genreKey) {
     try {
         let url;
         if (genreKey === 'Discover') {
-            // Random discovery playlist - search with Hindi language
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=hi&has_youtube=true&per_page=10`;
+            // Random discovery playlist
+            url = `${INDIA_CATALOG_API}/playlist/discover?limit=10`;
         } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
             // Language-based playlist
             const langCode = genreKey === 'Punjabi' ? 'pa' : genreKey === 'Tamil' ? 'ta' : 'te';
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=${langCode}&has_youtube=true&per_page=10`;
+            url = `${INDIA_CATALOG_API}/playlist/language/${langCode}?limit=10&shuffle=true`;
         } else {
             // Genre-based playlist
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?genre=${encodeURIComponent(genreKey)}&has_youtube=true&per_page=10`;
+            url = `${INDIA_CATALOG_API}/playlist/genre/${encodeURIComponent(genreKey)}?limit=10`;
         }
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch');
 
         const data = await response.json();
-        // Map to internal format
-        discoverIndiaSongs = (data.songs || []).map(mapConductorSearchResult);
+        discoverIndiaSongs = data.songs || [];
 
         renderDiscoverIndiaSongs();
     } catch (error) {
@@ -1532,13 +1483,13 @@ async function loadArtistData(artistName) {
     `;
 
     try {
-        // Search for songs by this artist using Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(artistName)}&has_youtube=true&per_page=50`);
+        // Search for songs by this artist
+        const response = await fetch(`${INDIA_CATALOG_API.replace('/india', '/tldr')}/search?q=${encodeURIComponent(artistName)}&limit=50`);
 
         if (!response.ok) throw new Error('Failed to load artist songs');
 
         const data = await response.json();
-        const songs = (data.songs || []).map(mapConductorSearchResult);
+        const songs = data.songs || [];
 
         // Filter songs that actually match this artist
         currentArtistSongs = songs.filter(song => {
@@ -6509,16 +6460,15 @@ async function performQuickSearch(query) {
     if (!query) return;
 
     try {
-        // Use Music Conductor search API
+        // Use /search endpoint instead of /suggest for full artwork data
         const response = await fetch(
-            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=5`
+            `${SEARCH_API_BASE}/search?q=${encodeURIComponent(query)}&limit=5`
         );
 
         if (!response.ok) throw new Error('Search failed');
 
         const data = await response.json();
-        const mappedSongs = (data.songs || []).map(mapConductorSearchResult);
-        renderSearchDropdown(mappedSongs);
+        renderSearchDropdown(data.songs || []);
         showSearchDropdown();
 
     } catch (error) {
@@ -6759,20 +6709,18 @@ async function performFullSearch(query) {
     if (noResults) noResults.style.display = 'none';
 
     try {
-        // Use Music Conductor search API
         const response = await fetch(
-            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=50`
+            `${SEARCH_API_BASE}/search?q=${encodeURIComponent(query)}&limit=50`
         );
 
         if (!response.ok) throw new Error('Search failed');
 
         const data = await response.json();
-        const mappedSongs = (data.songs || []).map(mapConductorSearchResult);
 
         // Save to recent searches
         addToRecentSearches(query);
 
-        renderSearchResults(mappedSongs, data.found || mappedSongs.length);
+        renderSearchResults(data.songs || [], data.total || 0);
 
     } catch (error) {
         console.error('Full search error:', error);
@@ -7233,13 +7181,16 @@ const CURATED_PLAYLISTS = {
 // CHARTS VIEW
 // ============================================================
 
+// Charts API base URL (using existing music-harvester for now)
+const CHARTS_API_BASE = 'https://music-harvester-401132033262.asia-south1.run.app/api';
+
 // Chart definitions
 const MAIN_CHARTS = [
     {
         id: 'india-top-25',
         name: 'India Top 25',
         description: 'Most popular songs in India this week',
-        endpoint: '/api/charts/aggregated?region=india&limit=25',
+        endpoint: '/chart/current',
         icon: '🇮🇳',
         gradient: ['#FF9933', '#138808'],
         region: 'india'
@@ -7248,7 +7199,7 @@ const MAIN_CHARTS = [
         id: 'global-top-25',
         name: 'Global Top 25',
         description: 'Trending worldwide this week',
-        endpoint: '/api/charts/aggregated?region=global&limit=25',
+        endpoint: '/chart/global/current',
         icon: '🌍',
         gradient: ['#667eea', '#764ba2'],
         region: 'global'
@@ -7395,17 +7346,10 @@ async function openChartFromChartsView(chartId) {
             return;
         }
 
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}${chart.endpoint}`);
+        const response = await fetch(`${CHARTS_API_BASE}${chart.endpoint}`);
         if (!response.ok) throw new Error('Failed to load chart');
 
-        const rawData = await response.json();
-
-        // Map to internal format
-        const data = {
-            chart: rawData.songs ? rawData.songs.map(mapConductorSong) : [],
-            week: rawData.week,
-            generated_at: rawData.generated_at
-        };
+        const data = await response.json();
 
         // Cache the data
         chartsCache[chartId] = {
@@ -7769,13 +7713,12 @@ async function openFeaturedPlaylist(genreKey) {
     try {
         let url;
         if (genreKey === 'Discover') {
-            // Random discovery playlist - search with Hindi language
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=hi&has_youtube=true&per_page=50`;
+            url = `${INDIA_CATALOG_API}/playlist/discover?limit=50`;
         } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
             const langCode = genreKey === 'Punjabi' ? 'pa' : genreKey === 'Tamil' ? 'ta' : 'te';
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=${langCode}&has_youtube=true&per_page=50`;
+            url = `${INDIA_CATALOG_API}/playlist/language/${langCode}?limit=50&shuffle=true`;
         } else {
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?genre=${encodeURIComponent(genreKey)}&has_youtube=true&per_page=50`;
+            url = `${INDIA_CATALOG_API}/playlist/genre/${encodeURIComponent(genreKey)}?limit=50`;
         }
 
         const response = await fetch(url);
@@ -7783,10 +7726,10 @@ async function openFeaturedPlaylist(genreKey) {
 
         const data = await response.json();
         const songs = (data.songs || []).map(song => ({
-            youtube_video_id: song.youtube_video_id,
+            youtube_video_id: song.youtube_video_id || song.video_id,
             title: song.title,
-            artist: song.artist_name || song.artist,
-            artwork_url: song.artwork_url || (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg` : '')
+            artist: song.artist,
+            artwork_url: song.artwork_url || song.artwork
         }));
 
         if (songs.length === 0) {
@@ -7899,55 +7842,18 @@ async function openCuratedPlaylist(type, id) {
     // Show loading state
     showToast('Loading playlist...');
 
-    // Map old curated types to Music Conductor playlist slugs
-    const slugMap = {
-        mood: {
-            'chill': 'chill-vibes',
-            'workout': 'workout-energy',
-            'party': 'party-mode',
-            'focus': 'focus-study'
-        },
-        language: {
-            'hindi': 'hindi-hits',
-            'english': 'english-hits',
-            'tamil': 'tamil-hits',
-            'telugu': 'telugu-hits',
-            'punjabi': 'punjabi-hits',
-            'spanish': 'spanish-hits',
-            'korean': 'korean-hits',
-            'japanese': 'japanese-hits'
-        }
-    };
-
     try {
-        // Check if we can map to Music Conductor playlist
-        const slug = slugMap[type]?.[key];
-
-        if (!slug) {
-            // Artist and era playlists not available in new API
-            throw new Error(`${type} playlists are not available yet`);
-        }
-
-        // Fetch from Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${slug}`);
+        // Fetch from API
+        const response = await fetch(`${CURATED_API_BASE}/api/curated/${type}/${key}`);
 
         if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Curated playlists API not deployed yet');
+            }
             throw new Error(`Failed to load playlist: ${response.status}`);
         }
 
         const playlist = await response.json();
-
-        // Convert tracks to songs format for compatibility
-        if (playlist.tracks) {
-            playlist.songs = playlist.tracks.map(track => ({
-                title: track.title,
-                artist: track.artist,
-                video_id: track.youtube_id,
-                thumbnail_url: track.artwork_url || (track.youtube_id ? `https://i.ytimg.com/vi/${track.youtube_id}/maxresdefault.jpg` : ''),
-                duration_seconds: track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0
-            }));
-        }
-
         currentCuratedPlaylist = playlist;
         currentCuratedType = type;
 
@@ -8427,102 +8333,118 @@ async function renderAIGeneratedView() {
     if (!content) return;
 
     // Show loading state
-    content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading curated playlists...</p></div>';
+    content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading AI playlists...</p></div>';
 
     try {
-        // Fetch playlists from Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`);
-        if (!response.ok) throw new Error('Failed to load playlists');
+        // Fetch presets from API
+        const response = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/presets`);
+        if (!response.ok) throw new Error('Failed to load presets');
 
         const data = await response.json();
-        const allPlaylists = data.playlists || [];
+        aiPlaylistPresets = data.presets || [];
 
-        // Convert to preset format for compatibility
-        aiPlaylistPresets = allPlaylists.map(p => ({
-            key: p.slug,
-            name: p.name,
-            description: p.description || `${p.type} playlist`,
-            type: p.type,
-            artwork: p.artwork
-        }));
-
-        // Categorize by type from API
-        const categories = {
-            moods: allPlaylists.filter(p => p.type === 'mood'),
-            genres: allPlaylists.filter(p => p.type === 'genre'),
-            languages: allPlaylists.filter(p => p.type === 'language'),
-            combos: [], // Not used in new API
-            eras: [] // Not used in new API
-        };
+        // Categorize presets
+        const categories = categorizePresets(aiPlaylistPresets);
 
         // Render categories
         content.innerHTML = `
+            <!-- Featured: AI Curated Collection -->
+            <div class="ai-section ai-featured-section">
+                <div class="ai-section-header">
+                    <h3>Featured Collection</h3>
+                    <span class="ai-section-badge">NEW</span>
+                </div>
+                <div class="ai-featured-card" onclick="openAICuratedCollection()">
+                    <div class="ai-featured-gradient"></div>
+                    <div class="ai-featured-content">
+                        <div class="ai-featured-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <div class="ai-featured-info">
+                            <h4>AI Curated Collection</h4>
+                            <p>525 songs enriched with Gemini AI - featuring genre, mood, era and style metadata</p>
+                        </div>
+                        <div class="ai-featured-meta">
+                            <span class="ai-featured-count">525 songs</span>
+                            <span class="ai-featured-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Mood Playlists -->
-            ${categories.moods.length > 0 ? `
             <div class="ai-section">
                 <div class="ai-section-header">
                     <h3>Moods & Vibes</h3>
                     <span class="ai-section-count">${categories.moods.length}</span>
                 </div>
                 <div class="ai-grid">
-                    ${categories.moods.map(playlist => renderCuratedPlaylistCard(playlist)).join('')}
+                    ${categories.moods.map(preset => renderAIPresetCard(preset)).join('')}
                 </div>
             </div>
-            ` : ''}
 
             <!-- Genre Playlists -->
-            ${categories.genres.length > 0 ? `
             <div class="ai-section">
                 <div class="ai-section-header">
                     <h3>By Genre</h3>
                     <span class="ai-section-count">${categories.genres.length}</span>
                 </div>
                 <div class="ai-grid">
-                    ${categories.genres.map(playlist => renderCuratedPlaylistCard(playlist)).join('')}
+                    ${categories.genres.map(preset => renderAIPresetCard(preset)).join('')}
                 </div>
             </div>
-            ` : ''}
+
+            <!-- Combo Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>Smart Mixes</h3>
+                    <span class="ai-section-count">${categories.combos.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.combos.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
+
+            <!-- Era Playlists -->
+            <div class="ai-section">
+                <div class="ai-section-header">
+                    <h3>By Era</h3>
+                    <span class="ai-section-count">${categories.eras.length}</span>
+                </div>
+                <div class="ai-grid">
+                    ${categories.eras.map(preset => renderAIPresetCard(preset)).join('')}
+                </div>
+            </div>
 
             <!-- Language Playlists -->
-            ${categories.languages.length > 0 ? `
             <div class="ai-section">
                 <div class="ai-section-header">
                     <h3>By Language</h3>
                     <span class="ai-section-count">${categories.languages.length}</span>
                 </div>
                 <div class="ai-grid">
-                    ${categories.languages.map(playlist => renderCuratedPlaylistCard(playlist)).join('')}
+                    ${categories.languages.map(preset => renderAIPresetCard(preset)).join('')}
                 </div>
             </div>
-            ` : ''}
         `;
 
     } catch (error) {
-        console.error('Error loading curated playlists:', error);
+        console.error('Error loading AI playlists:', error);
         content.innerHTML = `
             <div class="ai-error">
-                <p>Failed to load curated playlists</p>
+                <p>Failed to load AI playlists</p>
                 <button onclick="renderAIGeneratedView()">Try Again</button>
             </div>
         `;
     }
-}
-
-// Render a curated playlist card (for Music Conductor API format)
-function renderCuratedPlaylistCard(playlist) {
-    const color = playlist.artwork?.color || AI_PRESET_COLORS[playlist.slug] || '#1DB954';
-    const icon = AI_PRESET_ICONS[playlist.slug] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
-
-    return `
-        <div class="ai-card" onclick="openMusicConductorPlaylist('${playlist.slug}')" style="--card-color: ${color}">
-            <div class="ai-card-bg"></div>
-            <div class="ai-card-content">
-                <div class="ai-card-icon">${icon}</div>
-                <h4 class="ai-card-title">${escapeHtml(playlist.name)}</h4>
-                <span class="ai-card-meta">${escapeHtml(playlist.description || playlist.type + ' playlist')}</span>
-            </div>
-        </div>
-    `;
 }
 
 function categorizePresets(presets) {
@@ -8572,42 +8494,64 @@ function renderAIPresetCard(preset) {
     `;
 }
 
-// Open a Music Conductor curated playlist
-async function openMusicConductorPlaylist(slug) {
-    showToast('Loading playlist...');
+async function openAIPlaylist(presetKey) {
+    showToast('Generating playlist...');
 
     try {
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${encodeURIComponent(slug)}`);
+        // First try to get existing playlist
+        const preset = aiPlaylistPresets.find(p => p.key === presetKey);
+        const playlistName = preset ? preset.name : presetKey;
 
-        if (!response.ok) {
-            throw new Error('Failed to load playlist');
-        }
+        let playlist;
 
-        const playlist = await response.json();
+        // Try to fetch existing playlist first
+        const existingResponse = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/${encodeURIComponent(playlistName)}`);
 
-        // Convert tracks to songs format for compatibility
-        if (playlist.tracks) {
-            playlist.songs = playlist.tracks.map(track => ({
-                title: track.title,
-                artist: track.artist,
-                video_id: track.youtube_id,
-                thumbnail_url: track.artwork_url || (track.youtube_id ? `https://i.ytimg.com/vi/${track.youtube_id}/maxresdefault.jpg` : ''),
-                duration_seconds: track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0
-            }));
+        if (existingResponse.ok) {
+            playlist = await existingResponse.json();
+        } else {
+            // Generate new playlist
+            const generateResponse = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/generate/${presetKey}?size=50`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+
+            if (!generateResponse.ok) {
+                throw new Error('Failed to generate playlist');
+            }
+
+            playlist = await generateResponse.json();
         }
 
         currentAIPlaylist = playlist;
-        showAIPlaylistDetailView(playlist, slug);
+        showAIPlaylistDetailView(playlist, presetKey);
 
     } catch (error) {
-        console.error('Error opening curated playlist:', error);
+        console.error('Error opening AI playlist:', error);
         showToast('Failed to load playlist. Please try again.');
     }
 }
 
-// Legacy function for backward compatibility
-async function openAIPlaylist(presetKey) {
-    return openMusicConductorPlaylist(presetKey);
+// Open the special AI Curated Collection playlist
+async function openAICuratedCollection() {
+    showToast('Loading AI Curated Collection...');
+
+    try {
+        const response = await fetch(`${AI_PLAYLIST_API_BASE}/api/playlists/AI%20Curated%20Collection`);
+
+        if (!response.ok) {
+            throw new Error('Failed to load AI Curated Collection');
+        }
+
+        const playlist = await response.json();
+        currentAIPlaylist = playlist;
+        showAIPlaylistDetailView(playlist, 'ai_curated_collection');
+
+    } catch (error) {
+        console.error('Error opening AI Curated Collection:', error);
+        showToast('Failed to load collection. Please try again.');
+    }
 }
 
 function showAIPlaylistDetailView(playlist, presetKey) {
@@ -8984,9 +8928,9 @@ async function playAISongBySearch(index) {
     showToast(`Searching for "${song.title}"...`);
 
     try {
-        // First try searching Music Conductor API (has YouTube IDs)
+        // First try searching Music Harvester catalog (has video IDs)
         const catalogQuery = `${song.title} ${song.artist}`;
-        const catalogResponse = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(catalogQuery)}&has_youtube=true&per_page=5`);
+        const catalogResponse = await fetch(`${AI_PLAYLIST_API_BASE}/api/catalog/songs?q=${encodeURIComponent(catalogQuery)}&per_page=5`);
 
         if (catalogResponse.ok) {
             const catalogData = await catalogResponse.json();
@@ -8997,9 +8941,10 @@ async function playAISongBySearch(index) {
                     song.title.toLowerCase().includes(s.title.toLowerCase().substring(0, 10))
                 ) || catalogData.songs[0];
 
-                if (matchedSong.youtube_video_id) {
-                    song.videoId = matchedSong.youtube_video_id;
-                    song.artwork = matchedSong.artwork_url || `https://i.ytimg.com/vi/${matchedSong.youtube_video_id}/maxresdefault.jpg`;
+                if (matchedSong.platforms?.youtube_music?.video_id) {
+                    song.videoId = matchedSong.platforms.youtube_music.video_id;
+                    song.artwork = matchedSong.platforms.youtube_music.thumbnails?.[1]?.url ||
+                                   matchedSong.platforms.youtube_music.thumbnails?.[0]?.url || '';
 
                     // Update queue
                     queue[index] = song;
@@ -9012,7 +8957,7 @@ async function playAISongBySearch(index) {
         }
 
         // Fallback: Try TLDR Music API search
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(catalogQuery)}&has_youtube=true&per_page=1`);
+        const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(catalogQuery)}&limit=1`);
 
         if (response.ok) {
             const results = await response.json();
