@@ -1,12 +1,15 @@
 // TLDR Music - Frontend Application
 
+// API Configuration (Dual-API Architecture)
+// - Music Harvester: Charts, Search, Discover, Playlists catalog
+// - TLDR Music API: User auth, Library (favorites, history, queue, user playlists)
+const MUSIC_HARVESTER_API = 'https://music-harvester-401132033262.asia-south1.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
-const MUSIC_CONDUCTOR_API = 'https://music-conductor-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
-// Get valid artwork URL from Music Conductor data
-// Handles {country-code} placeholder URLs by falling back to YouTube thumbnail
-function getConductorArtwork(artworkUrl, youtubeId) {
+// Get valid artwork URL from Music Harvester data
+// Handles placeholder URLs by falling back to YouTube thumbnail
+function getHarvesterArtwork(artworkUrl, youtubeId) {
     // Check if artwork URL is valid (not a placeholder)
     if (artworkUrl && !artworkUrl.includes('{country-code}') && artworkUrl.startsWith('http')) {
         return artworkUrl;
@@ -18,46 +21,52 @@ function getConductorArtwork(artworkUrl, youtubeId) {
     return '';
 }
 
-// Map Music Conductor song format to our internal format
-function mapConductorSong(song, index) {
+// Map Music Harvester chart song to our internal format
+function mapHarvesterSong(song, index) {
     const youtubeId = song.youtube_id || song.youtube_video_id;
     return {
         title: song.title,
         artist: song.artist || song.artist_name,
         youtube_video_id: youtubeId,
-        artwork_url: getConductorArtwork(song.artwork_url, youtubeId),
+        artwork_url: getHarvesterArtwork(song.artwork_url, youtubeId),
         rank: song.rank || index + 1,
-        rank_change: 0,
-        is_new: false,
+        rank_change: song.rank_change || 0,
+        is_new: song.is_new || false,
         score: song.score,
         platforms_count: song.platforms_count,
-        platform_ranks: song.platform_ranks,
+        platform_positions: song.platform_positions,
+        duration_ms: song.duration_ms,
+        genre: song.genre,
+        lyrics: song.lyrics,
         isrc: song.isrc,
         song_id: song.song_id
     };
 }
 
-// Map Music Conductor playlist track to our format
-function mapConductorPlaylistTrack(track) {
+// Map Music Harvester playlist track to our format
+function mapHarvesterPlaylistTrack(track) {
     return {
         title: track.title,
         artist: track.artist,
-        youtube_video_id: track.youtube_id,
-        artwork_url: getConductorArtwork(track.artwork_url, track.youtube_id),
+        youtube_video_id: track.youtube_id || track.youtube_video_id,
+        artwork_url: getHarvesterArtwork(track.artwork_url, track.youtube_id || track.youtube_video_id),
         duration_ms: track.duration_ms
     };
 }
 
-// Map Music Conductor search result to our format
-function mapConductorSearchResult(song) {
+// Map Music Harvester search result to our format
+function mapHarvesterSearchResult(song) {
     return {
         title: song.title,
         artist: song.artist_name || song.artist,
         youtube_video_id: song.youtube_video_id,
-        artwork_url: getConductorArtwork(song.artwork_url, song.youtube_video_id),
+        artwork_url: getHarvesterArtwork(song.artwork_url, song.youtube_video_id),
         duration_seconds: song.duration_seconds,
         language: song.language,
-        genres: song.genres,
+        genre: song.genre,
+        mood: song.mood,
+        album: song.album,
+        year: song.year,
         isrc: song.isrc,
         id: song.id
     };
@@ -83,9 +92,9 @@ const CACHE_TTL = 30 * 60 * 1000;
 // Harvester API uses image_url, legacy API uses artwork_url
 function getArtworkUrl(song) {
     if (song.image_url) return song.image_url;
-    // Use getConductorArtwork to handle {country-code} placeholder URLs
+    // Use getHarvesterArtwork to handle {country-code} placeholder URLs
     if (song.artwork_url || song.youtube_video_id) {
-        return getConductorArtwork(song.artwork_url, song.youtube_video_id);
+        return getHarvesterArtwork(song.artwork_url, song.youtube_video_id);
     }
     return '';
 }
@@ -871,10 +880,10 @@ async function loadChartData() {
 
     // No valid cache, fetch from APIs
     try {
-        // Fetch India from Music Conductor, Global from old API (Music Conductor only has India)
+        // Fetch both charts from Music Harvester API
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`),
-            fetch(`${API_BASE}/global/current`)  // Global chart from old API
+            fetch(`${MUSIC_HARVESTER_API}/api/chart/current?region=india`),
+            fetch(`${MUSIC_HARVESTER_API}/api/chart/global/current`)
         ]);
 
         if (!indiaResponse.ok) throw new Error('India chart API request failed');
@@ -882,10 +891,9 @@ async function loadChartData() {
         const indiaData = await indiaResponse.json();
         const globalData = globalResponse.ok ? await globalResponse.json() : null;
 
-        // Map Music Conductor format to our internal format
-        const indiaChart = (indiaData.songs || []).map(mapConductorSong);
-        // Global chart from old API already in correct format
-        const globalChart = globalData ? (globalData.chart || globalData.global_chart || []) : [];
+        // Map Music Harvester format to our internal format
+        const indiaChart = (indiaData.songs || indiaData.chart || []).map(mapHarvesterSong);
+        const globalChart = globalData ? (globalData.songs || globalData.chart || []).map(mapHarvesterSong) : [];
 
         // Build chartData in expected format
         chartData = {
@@ -893,10 +901,10 @@ async function loadChartData() {
             week: indiaData.week,
             chart: indiaChart,
             global_chart: globalChart,
-            regional: {} // Regional charts not available in Music Conductor yet
+            regional: {} // Regional charts loaded separately
         };
 
-        console.log('Loaded chart data from Music Conductor API');
+        console.log('Loaded chart data from Music Harvester API');
 
         // Cache the data
         try {
@@ -933,10 +941,10 @@ async function loadChartData() {
 // Refresh cache in background without blocking UI
 async function refreshChartCache() {
     try {
-        // Fetch India from Music Conductor, Global from old API
+        // Fetch both charts from Music Harvester API
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`),
-            fetch(`${API_BASE}/global/current`)  // Global chart from old API
+            fetch(`${MUSIC_HARVESTER_API}/api/chart/current?region=india`),
+            fetch(`${MUSIC_HARVESTER_API}/api/chart/global/current`)
         ]);
 
         if (!indiaResponse.ok) return;
@@ -945,21 +953,20 @@ async function refreshChartCache() {
         const globalData = globalResponse.ok ? await globalResponse.json() : null;
 
         // Map to internal format
-        const indiaChart = (indiaData.songs || []).map(mapConductorSong);
-        // Global chart from old API already in correct format
-        const globalChart = globalData ? (globalData.chart || globalData.global_chart || []) : [];
+        const indiaChart = (indiaData.songs || indiaData.chart || []).map(mapHarvesterSong);
+        const globalChart = globalData ? (globalData.songs || globalData.chart || []).map(mapHarvesterSong) : [];
 
         const freshData = {
             generated_at: indiaData.generated_at,
             week: indiaData.week,
             chart: indiaChart,
             global_chart: globalChart,
-            regional: {} // Regional charts not available in Music Conductor yet
+            regional: {} // Regional charts loaded separately
         };
 
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
-        console.log('Cache refreshed in background from harvester API');
+        console.log('Cache refreshed in background from Music Harvester API');
 
         // Update in-memory data and re-render regional if new data available
         const hadRegional = chartData?.regional && Object.keys(chartData.regional).length > 0;
@@ -1321,23 +1328,23 @@ async function loadDiscoverIndiaSongs(genreKey) {
     try {
         let url;
         if (genreKey === 'Discover') {
-            // Random discovery playlist - search with Hindi language
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=hi&has_youtube=true&per_page=10`;
+            // Random discovery playlist
+            url = `${MUSIC_HARVESTER_API}/api/india/playlist/discover?limit=10`;
         } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
             // Language-based playlist
-            const langCode = genreKey === 'Punjabi' ? 'pa' : genreKey === 'Tamil' ? 'ta' : 'te';
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=${langCode}&has_youtube=true&per_page=10`;
+            const langCode = genreKey.toLowerCase();
+            url = `${MUSIC_HARVESTER_API}/api/india/playlist/language/${langCode}`;
         } else {
             // Genre-based playlist
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?genre=${encodeURIComponent(genreKey)}&has_youtube=true&per_page=10`;
+            url = `${MUSIC_HARVESTER_API}/api/india/playlist/genre/${encodeURIComponent(genreKey.toLowerCase())}`;
         }
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch');
 
         const data = await response.json();
-        // Map to internal format
-        discoverIndiaSongs = (data.songs || []).map(mapConductorSearchResult);
+        // Map to internal format - playlist tracks
+        discoverIndiaSongs = (data.tracks || data.songs || []).slice(0, 10).map(mapHarvesterPlaylistTrack);
 
         renderDiscoverIndiaSongs();
     } catch (error) {
@@ -1549,20 +1556,17 @@ async function loadArtistData(artistName) {
     `;
 
     try {
-        // Search for songs by this artist using Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(artistName)}&has_youtube=true&per_page=50`);
+        // Get artist playlist from Music Harvester API
+        const response = await fetch(`${MUSIC_HARVESTER_API}/api/india/playlist/artist/${encodeURIComponent(artistName)}`);
 
         if (!response.ok) throw new Error('Failed to load artist songs');
 
         const data = await response.json();
-        const songs = (data.songs || []).map(mapConductorSearchResult);
+        // Artist playlist returns tracks directly
+        const songs = (data.tracks || data.songs || []).map(mapHarvesterPlaylistTrack);
 
-        // Filter songs that actually match this artist
-        currentArtistSongs = songs.filter(song => {
-            const songArtist = (song.artist || '').toLowerCase();
-            const searchArtist = artistName.toLowerCase();
-            return songArtist.includes(searchArtist) || searchArtist.includes(songArtist);
-        });
+        // All songs from artist playlist should match the artist
+        currentArtistSongs = songs;
 
         // Extract unique albums from songs
         const albumMap = new Map();
@@ -6405,14 +6409,14 @@ function updateSidebarActiveState(mode) {
     const sidebarHomeBtn = document.getElementById('sidebarHomeBtn');
     const sidebarPlaylistsBtn = document.getElementById('sidebarPlaylistsBtn');
     const sidebarChartsBtn = document.getElementById('sidebarChartsBtn');
-    const sidebarAIGeneratedBtn = document.getElementById('sidebarAIGeneratedBtn');
+    const sidebarDiscoverBtn = document.getElementById('sidebarDiscoverBtn');
     const sidebarSearchBtn = document.getElementById('sidebarSearchBtn');
 
     // Remove active from all nav items
     sidebarHomeBtn?.classList.remove('active');
     sidebarPlaylistsBtn?.classList.remove('active');
     sidebarChartsBtn?.classList.remove('active');
-    sidebarAIGeneratedBtn?.classList.remove('active');
+    sidebarDiscoverBtn?.classList.remove('active');
     sidebarSearchBtn?.classList.remove('active');
 
     // Set active based on mode
@@ -6422,8 +6426,8 @@ function updateSidebarActiveState(mode) {
         sidebarPlaylistsBtn?.classList.add('active');
     } else if (mode === 'charts') {
         sidebarChartsBtn?.classList.add('active');
-    } else if (mode === 'ai-generated') {
-        sidebarAIGeneratedBtn?.classList.add('active');
+    } else if (mode === 'discover') {
+        sidebarDiscoverBtn?.classList.add('active');
     } else if (mode === 'search') {
         sidebarSearchBtn?.classList.add('active');
     }
@@ -6526,15 +6530,15 @@ async function performQuickSearch(query) {
     if (!query) return;
 
     try {
-        // Use Music Conductor search API
+        // Use Music Harvester search API
         const response = await fetch(
-            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=5`
+            `${MUSIC_HARVESTER_API}/api/tldr/search?q=${encodeURIComponent(query)}&limit=5`
         );
 
         if (!response.ok) throw new Error('Search failed');
 
         const data = await response.json();
-        const mappedSongs = (data.songs || []).map(mapConductorSearchResult);
+        const mappedSongs = (data.songs || data.results || []).map(mapHarvesterSearchResult);
         renderSearchDropdown(mappedSongs);
         showSearchDropdown();
 
@@ -6776,20 +6780,20 @@ async function performFullSearch(query) {
     if (noResults) noResults.style.display = 'none';
 
     try {
-        // Use Music Conductor search API
+        // Use Music Harvester search API
         const response = await fetch(
-            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=50`
+            `${MUSIC_HARVESTER_API}/api/tldr/search?q=${encodeURIComponent(query)}&limit=50`
         );
 
         if (!response.ok) throw new Error('Search failed');
 
         const data = await response.json();
-        const mappedSongs = (data.songs || []).map(mapConductorSearchResult);
+        const mappedSongs = (data.songs || data.results || []).map(mapHarvesterSearchResult);
 
         // Save to recent searches
         addToRecentSearches(query);
 
-        renderSearchResults(mappedSongs, data.found || mappedSongs.length);
+        renderSearchResults(mappedSongs, data.found || data.total || mappedSongs.length);
 
     } catch (error) {
         console.error('Full search error:', error);
@@ -7415,24 +7419,24 @@ async function openChartFromChartsView(chartId) {
         let response, rawData, data;
 
         if (chart.region === 'global') {
-            // Global chart from old API (Music Conductor only has India)
-            response = await fetch(`${API_BASE}/global/current`);
+            // Global chart from Music Harvester API
+            response = await fetch(`${MUSIC_HARVESTER_API}/api/chart/global/current`);
             if (!response.ok) throw new Error('Failed to load chart');
             rawData = await response.json();
-            // Old API format - already in correct format
+            // Map Music Harvester format
             data = {
-                chart: rawData.chart || rawData.global_chart || [],
+                chart: (rawData.songs || rawData.chart || []).map(mapHarvesterSong),
                 week: rawData.week,
                 generated_at: rawData.generated_at
             };
         } else {
-            // India chart from Music Conductor
-            response = await fetch(`${MUSIC_CONDUCTOR_API}${chart.endpoint}`);
+            // India chart from Music Harvester API
+            response = await fetch(`${MUSIC_HARVESTER_API}/api/chart/current?region=india`);
             if (!response.ok) throw new Error('Failed to load chart');
             rawData = await response.json();
-            // Map Music Conductor format
+            // Map Music Harvester format
             data = {
-                chart: rawData.songs ? rawData.songs.map(mapConductorSong) : [],
+                chart: (rawData.songs || rawData.chart || []).map(mapHarvesterSong),
                 week: rawData.week,
                 generated_at: rawData.generated_at
             };
@@ -7800,24 +7804,25 @@ async function openFeaturedPlaylist(genreKey) {
     try {
         let url;
         if (genreKey === 'Discover') {
-            // Random discovery playlist - search with Hindi language
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=hi&has_youtube=true&per_page=50`;
+            // Random discovery playlist
+            url = `${MUSIC_HARVESTER_API}/api/india/playlist/discover?limit=50`;
         } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
-            const langCode = genreKey === 'Punjabi' ? 'pa' : genreKey === 'Tamil' ? 'ta' : 'te';
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?language=${langCode}&has_youtube=true&per_page=50`;
+            const langCode = genreKey.toLowerCase();
+            url = `${MUSIC_HARVESTER_API}/api/india/playlist/language/${langCode}`;
         } else {
-            url = `${MUSIC_CONDUCTOR_API}/api/search/songs?genre=${encodeURIComponent(genreKey)}&has_youtube=true&per_page=50`;
+            url = `${MUSIC_HARVESTER_API}/api/india/playlist/genre/${encodeURIComponent(genreKey.toLowerCase())}`;
         }
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load playlist');
 
         const data = await response.json();
-        const songs = (data.songs || []).map(song => ({
-            youtube_video_id: song.youtube_video_id,
+        const tracks = data.tracks || data.songs || [];
+        const songs = tracks.map(song => ({
+            youtube_video_id: song.youtube_video_id || song.youtube_id,
             title: song.title,
             artist: song.artist_name || song.artist,
-            artwork_url: song.artwork_url || (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg` : '')
+            artwork_url: getHarvesterArtwork(song.artwork_url, song.youtube_video_id || song.youtube_id)
         }));
 
         if (songs.length === 0) {
@@ -7959,8 +7964,8 @@ async function openCuratedPlaylist(type, id) {
             throw new Error(`${type} playlists are not available yet`);
         }
 
-        // Fetch from Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${slug}`);
+        // Fetch from Music Harvester API
+        const response = await fetch(`${MUSIC_HARVESTER_API}/api/playlists/${slug}`);
 
         if (!response.ok) {
             throw new Error(`Failed to load playlist: ${response.status}`);
@@ -7973,8 +7978,8 @@ async function openCuratedPlaylist(type, id) {
             playlist.songs = playlist.tracks.map(track => ({
                 title: track.title,
                 artist: track.artist,
-                video_id: track.youtube_id,
-                thumbnail_url: getConductorArtwork(track.artwork_url, track.youtube_id),
+                video_id: track.youtube_id || track.youtube_video_id,
+                thumbnail_url: getHarvesterArtwork(track.artwork_url, track.youtube_id || track.youtube_video_id),
                 duration_seconds: track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0
             }));
         }
@@ -8461,8 +8466,8 @@ async function renderAIGeneratedView() {
     content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading curated playlists...</p></div>';
 
     try {
-        // Fetch playlists from Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`);
+        // Fetch playlists from Music Harvester API
+        const response = await fetch(`${MUSIC_HARVESTER_API}/api/playlists`);
         if (!response.ok) throw new Error('Failed to load playlists');
 
         const data = await response.json();
@@ -8608,7 +8613,7 @@ async function openMusicConductorPlaylist(slug) {
     showToast('Loading playlist...');
 
     try {
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${encodeURIComponent(slug)}`);
+        const response = await fetch(`${MUSIC_HARVESTER_API}/api/playlists/${encodeURIComponent(slug)}`);
 
         if (!response.ok) {
             throw new Error('Failed to load playlist');
@@ -8621,8 +8626,8 @@ async function openMusicConductorPlaylist(slug) {
             playlist.songs = playlist.tracks.map(track => ({
                 title: track.title,
                 artist: track.artist,
-                video_id: track.youtube_id,
-                thumbnail_url: getConductorArtwork(track.artwork_url, track.youtube_id),
+                video_id: track.youtube_id || track.youtube_video_id,
+                thumbnail_url: getHarvesterArtwork(track.artwork_url, track.youtube_id || track.youtube_video_id),
                 duration_seconds: track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0
             }));
         }
@@ -8717,7 +8722,7 @@ function renderAIPlaylistDetailView(playlist, presetKey) {
 
     // Render header in chart-detail style
     header.innerHTML = `
-        <button class="chart-detail-back" onclick="hideAIPlaylistDetailView()" title="Back to AI Playlists">
+        <button class="chart-detail-back" onclick="hideAIPlaylistDetailView()" title="Back to Discover">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -9015,22 +9020,23 @@ async function playAISongBySearch(index) {
     showToast(`Searching for "${song.title}"...`);
 
     try {
-        // First try searching Music Conductor API (has YouTube IDs)
+        // Search Music Harvester API (has YouTube IDs)
         const catalogQuery = `${song.title} ${song.artist}`;
-        const catalogResponse = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(catalogQuery)}&has_youtube=true&per_page=5`);
+        const catalogResponse = await fetch(`${MUSIC_HARVESTER_API}/api/tldr/search?q=${encodeURIComponent(catalogQuery)}&limit=5`);
 
         if (catalogResponse.ok) {
             const catalogData = await catalogResponse.json();
-            if (catalogData.songs && catalogData.songs.length > 0) {
+            const songs = catalogData.songs || catalogData.results || [];
+            if (songs.length > 0) {
                 // Find best match by comparing titles
-                const matchedSong = catalogData.songs.find(s =>
+                const matchedSong = songs.find(s =>
                     s.title.toLowerCase().includes(song.title.toLowerCase().substring(0, 10)) ||
                     song.title.toLowerCase().includes(s.title.toLowerCase().substring(0, 10))
-                ) || catalogData.songs[0];
+                ) || songs[0];
 
                 if (matchedSong.youtube_video_id) {
                     song.videoId = matchedSong.youtube_video_id;
-                    song.artwork = getConductorArtwork(matchedSong.artwork_url, matchedSong.youtube_video_id);
+                    song.artwork = getHarvesterArtwork(matchedSong.artwork_url, matchedSong.youtube_video_id);
 
                     // Update queue
                     queue[index] = song;
@@ -9042,8 +9048,8 @@ async function playAISongBySearch(index) {
             }
         }
 
-        // Fallback: Try TLDR Music API search
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(catalogQuery)}&has_youtube=true&per_page=1`);
+        // Fallback: Try exact lookup
+        const response = await fetch(`${MUSIC_HARVESTER_API}/api/tldr/lookup?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`);
 
         if (response.ok) {
             const results = await response.json();

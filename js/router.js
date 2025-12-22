@@ -28,10 +28,10 @@
         '/library/playlist.html': 'playlist',
         '/search/': 'search',
         '/search/index.html': 'search',
-        '/ai/': 'ai',
-        '/ai/index.html': 'ai',
-        '/ai/playlist': 'ai-playlist',
-        '/ai/playlist.html': 'ai-playlist'
+        '/discover/': 'discover',
+        '/discover/index.html': 'discover',
+        '/discover/playlist': 'discover-playlist',
+        '/discover/playlist.html': 'discover-playlist'
     };
 
     // Regional chart routes
@@ -202,14 +202,14 @@
                 if (typeof showSearchView === 'function') showSearchView();
                 break;
 
-            case 'ai':
+            case 'discover':
                 if (typeof showAIGeneratedView === 'function') showAIGeneratedView();
                 break;
 
-            case 'ai-playlist':
-                const aiPlaylistId = new URLSearchParams(window.location.search).get('id');
-                if (aiPlaylistId && typeof showAIPlaylistDetailView === 'function') {
-                    showAIPlaylistDetailView(aiPlaylistId);
+            case 'discover-playlist':
+                const discoverPlaylistId = new URLSearchParams(window.location.search).get('id');
+                if (discoverPlaylistId && typeof showAIPlaylistDetailView === 'function') {
+                    showAIPlaylistDetailView(discoverPlaylistId);
                 } else if (typeof showAIGeneratedView === 'function') {
                     showAIGeneratedView();
                 }
@@ -245,8 +245,8 @@
             activeId = 'sidebarPlaylistsBtn';
         } else if (route === 'search') {
             activeId = 'sidebarSearchBtn';
-        } else if (route.startsWith('ai')) {
-            activeId = 'sidebarAIGeneratedBtn';
+        } else if (route.startsWith('discover')) {
+            activeId = 'sidebarDiscoverBtn';
         }
 
         // Add active class

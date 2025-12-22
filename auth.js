@@ -1,12 +1,16 @@
 /**
  * TLDR Music - Authentication Module
  * Handles Google Sign-In and cloud sync
+ *
+ * API Architecture:
+ * - Auth & Library endpoints use TLDR Music API (this file)
+ * - Charts, Search, Discover use Music Harvester API (see app.js)
  */
 
 // Configuration
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
-    API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'
+    API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'  // User auth & library
 };
 
 // Storage keys for auth
