@@ -10,6 +10,40 @@ TLDR Music scrapes weekly music charts from Billboard, YouTube Music, Gaana, Jio
 
 ## Architecture
 
+### Dual-API Architecture
+
+The frontend uses two separate APIs:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    TLDR Music Frontend                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Music Harvester API                 TLDR Music API         │
+│  (Charts, Search, Discover)          (Auth, Library)        │
+│  ┌─────────────────────┐             ┌──────────────────┐   │
+│  │ • India Top 25      │             │ • Google OAuth   │   │
+│  │ • Global Top 25     │             │ • Favorites      │   │
+│  │ • Regional Charts   │             │ • History        │   │
+│  │ • Search            │             │ • Queue          │   │
+│  │ • Discover Playlists│             │ • User Playlists │   │
+│  └─────────────────────┘             │ • Preferences    │   │
+│                                      └──────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Music Harvester API**: `https://music-harvester-401132033262.asia-south1.run.app`
+- Charts (`/api/chart/current`, `/api/chart/global/current`)
+- Search (`/api/tldr/search`, `/api/tldr/suggest`)
+- Discover/Playlists catalog (`/api/playlists`, `/api/india/playlist/*`)
+
+**TLDR Music API**: `https://tldrmusic-api-401132033262.asia-south1.run.app`
+- User Authentication (Google OAuth, JWT tokens)
+- User Library (favorites, history, queue, user playlists)
+- User preferences and recent searches
+
+### Data Flow
+
 ```
 Scraper (Python + Playwright)
     |
@@ -38,6 +72,26 @@ tldrmusic/
 ├── auth.js                       # Authentication (JWT, login/logout, profile)
 ├── style.css                     # All styles
 ├── about.html                    # About page
+│
+├── charts/                       # Charts page
+│   ├── index.html                # Charts overview
+│   ├── india.html                # India chart detail
+│   └── global.html               # Global chart detail
+│
+├── discover/                     # Discover page (formerly AI Playlists)
+│   └── index.html                # Discover playlists by mood, genre, language, artist
+│
+├── library/                      # User library page
+│   └── index.html                # Playlists, favorites, history
+│
+├── search/                       # Search page
+│   └── index.html                # Full search view
+│
+├── js/
+│   └── router.js                 # Page router for multi-page navigation
+│
+├── docs/
+│   └── MUSIC_HARVESTER_MIGRATION.md  # API migration documentation
 │
 ├── scraper/
 │   ├── run_job.py                # Cloud Run Job entry point (production)
@@ -138,56 +192,71 @@ tldrmusic/
 - **Platform Charts** (Global): Platform selector (Spotify, Billboard, Apple Music) with grid of top 10 songs
 - **Logo Navigation**: Clicking TLDRMusic logo returns to home
 
+### Discover Page
+
+The Discover page (`/discover/`) provides curated playlists from India's 68,000+ track catalog:
+- **By Mood**: Chill, Workout, Party, Focus, Romantic
+- **By Genre**: Bollywood, Pop, Hip-Hop, Electronic, Rock, Classical, Lo-Fi
+- **By Language**: Hindi, Punjabi, Tamil, Telugu, Bengali, etc.
+- **By Artist**: Popular artists grid with search
+- **Discovery Mix**: Random tracks for exploration
+
 ### UI Components
 
-- **Sidebar Navigation**: Home and Playlists (simplified navigation)
+- **Sidebar Navigation**: Home, Charts, Discover, Search, Library (Playlists)
 - **Chart Selector**: Card-based toggle for India/Global charts on home page
 - **Detail Views**: Full-page views for playlists, favorites, history, full charts
 - **Profile Panel**: User settings, logout
 - **Modals**: Create playlist, add to playlist, share, export
 - **Max Content Width**: 1400px for optimal readability
 
-## Backend API
+## Backend APIs
+
+### Music Harvester API (Charts, Search, Discover)
+
+**Base URL**: `https://music-harvester-401132033262.asia-south1.run.app`
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/chart/current?region=india` | GET | India Top 25 chart |
+| `/api/chart/global/current` | GET | Global Top 25 chart |
+| `/api/chart/regional` | GET | List of regional charts |
+| `/api/chart/regional/{region}` | GET | Regional chart by language |
+| `/api/tldr/search?q={query}&limit=50` | GET | Full search |
+| `/api/tldr/suggest?q={query}&limit=10` | GET | Autocomplete suggestions |
+| `/api/playlists?page=1&per_page=50` | GET | All curated playlists |
+| `/api/playlists/{name}` | GET | Get specific playlist |
+| `/api/india/playlist/artist/{artist}` | GET | Artist playlist |
+| `/api/india/playlist/genre/{genre}` | GET | Genre playlist |
+| `/api/india/playlist/language/{language}` | GET | Language playlist |
+| `/api/india/playlist/discover?limit=50` | GET | Random discovery tracks |
+
+### TLDR Music API (Auth, Library)
 
 **Base URL**: `https://tldrmusic-api-401132033262.asia-south1.run.app`
 
-### Public Endpoints
+#### Auth Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/chart/current` | GET | Current India Top 25 chart |
-| `/global/current` | GET | Current Global Top 25 chart |
-| `/regional/{language}` | GET | Regional chart by language |
-| `/rank-history/{song_id}` | GET | Rank history for a song |
-| `/search?q={query}` | GET | Search songs |
-| `/songs/{song_id}` | GET | Song details |
-| `/artists/{artist_id}` | GET | Artist details |
-| `/docs` | GET | API documentation |
+| `/api/auth/google` | POST | Google OAuth login |
+| `/api/auth/refresh` | POST | Refresh access token |
 
-### Auth Endpoints
+#### Library Endpoints (Require Auth)
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/auth/google` | POST | Google OAuth login |
-| `/auth/refresh` | POST | Refresh access token |
-| `/auth/logout` | POST | Logout (invalidate refresh token) |
-
-### Protected Endpoints (Require Auth)
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/library/favorites` | GET/POST/DELETE | Manage favorites |
-| `/library/history` | GET/POST | Manage listening history |
-| `/library/playlists` | GET/POST | List/create playlists |
-| `/library/playlists/{id}` | GET/PUT/DELETE | Manage specific playlist |
-| `/library/playlists/{id}/songs` | POST/DELETE | Add/remove songs |
-| `/library/playlists/{id}/share` | POST | Generate share link |
-
-### Admin Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/admin/upload` | POST | Upload new chart (requires API key) |
+| `/api/me/library` | GET | Get full user library |
+| `/api/me/library/sync` | POST | Sync library changes |
+| `/api/me/favorites` | GET/POST/PUT/DELETE | Manage favorites |
+| `/api/me/history` | GET/POST/PUT/DELETE | Manage listening history |
+| `/api/me/queue` | GET/PUT/DELETE | Manage playback queue |
+| `/api/me/playlists` | GET/POST/PUT | List/create/sync playlists |
+| `/api/me/playlists/{id}` | GET/PATCH/DELETE | Manage specific playlist |
+| `/api/me/playlists/{id}/songs/{song_id}` | POST/DELETE | Add/remove songs |
+| `/api/me/preferences` | GET/PUT | User preferences (shuffle, repeat) |
+| `/api/me/recent-searches` | GET/PUT | Recent search history |
+| `/api/me/session/ping` | POST | Session detection for multi-device |
 
 ## Scraper System
 
@@ -419,3 +488,18 @@ playSong(song, source);
 playFromChart(chartData, startIndex);
 playFromPlaylist(playlistId, startIndex);
 ```
+
+## API Migration Reference
+
+The frontend was migrated to use Music Harvester API for charts, search, and discover functionality while keeping TLDR Music API for authentication and user library.
+
+**Migration Documentation**: See `docs/MUSIC_HARVESTER_MIGRATION.md` for:
+- Complete endpoint mapping (old → new)
+- Response format examples
+- Migration phases and status
+
+**Key Changes**:
+- Charts: `/api/chart/current` and `/api/chart/global/current`
+- Search: `/api/tldr/search` and `/api/tldr/suggest`
+- Discover: `/api/playlists/*` and `/api/india/playlist/*`
+- "AI Playlists" renamed to "Discover" throughout the UI
