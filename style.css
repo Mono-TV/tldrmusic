@@ -9021,6 +9021,10 @@ body::before {
     margin-left: auto;
     width: 48px;
     height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
     background: var(--accent);
     border-radius: 50%;
     display: flex;
@@ -9136,18 +9140,6 @@ body::before {
 #chartsDetailHeader {
     padding: 1.5rem 2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.charts-detail-hero {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-end;
-}
-
-/* Override detail-hero spacing in charts view for tighter layout */
-#chartsDetailHeader .detail-hero {
-    padding-bottom: 1.25rem;
-    margin-bottom: 0;
 }
 
 .charts-detail-back {

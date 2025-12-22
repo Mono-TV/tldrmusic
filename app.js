@@ -7385,33 +7385,45 @@ function renderChartDetailFromChartsView(chartMeta, chartData) {
     }
 
     currentChartDetail = { meta: chartMeta, data: chartData };
+    const songs = chartData.chart || [];
+    const coverClass = chartMeta.region === 'india' ? 'india-gradient' : 'global-gradient';
 
-    // Render header
+    // Render header using chart-detail template
     header.innerHTML = `
-        <button class="detail-back-btn" onclick="hideChartsDetailView()" title="Back to Charts">
+        <button class="chart-detail-back" onclick="hideChartsDetailView()" title="Back to Charts">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
         </button>
-        <div class="detail-hero">
-            <div class="charts-detail-cover" style="background: linear-gradient(135deg, ${chartMeta.gradient[0]}, ${chartMeta.gradient[1]})">
-                <div class="charts-detail-cover-icon">
-                    <span class="charts-detail-cover-emoji">${chartMeta.icon}</span>
-                    <span class="charts-detail-cover-text">${chartMeta.region}</span>
+        <div class="chart-detail-hero">
+            <div class="chart-detail-cover ${coverClass}">
+                <div class="chart-detail-cover-icon">
+                    ${chartMeta.icon}
+                    <span class="chart-detail-cover-badge">TOP ${songs.length}</span>
                 </div>
             </div>
-            <div class="detail-info">
-                <span class="detail-type">Chart</span>
-                <h1 class="detail-name">${chartMeta.name}</h1>
-                <p class="detail-meta">${chartData.total_songs || chartData.chart?.length || 0} songs • Week ${chartData.week || ''}</p>
-                <div class="detail-buttons">
-                    <button class="btn-primary" onclick="playChartFromDetail()">
+            <div class="chart-detail-info">
+                <span class="chart-detail-type">Chart</span>
+                <h1 class="chart-detail-name">${chartMeta.name}</h1>
+                <div class="chart-detail-meta">
+                    <span class="chart-detail-meta-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Week ${chartData.week || ''} • ${songs.length} songs
+                    </span>
+                </div>
+                <div class="chart-detail-buttons">
+                    <button class="chart-detail-btn primary" onclick="playChartFromDetail()" ${songs.length === 0 ? 'disabled' : ''}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
-                        Play
+                        Play All
                     </button>
-                    <button class="btn-secondary" onclick="shuffleChartFromDetail()">
+                    <button class="chart-detail-btn secondary" onclick="shuffleChartFromDetail()" ${songs.length === 0 ? 'disabled' : ''}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="16 3 21 3 21 8"></polyline>
                             <line x1="4" y1="20" x2="21" y2="3"></line>
@@ -7426,59 +7438,75 @@ function renderChartDetailFromChartsView(chartMeta, chartData) {
         </div>
     `;
 
-    // Render songs
-    const songs = chartData.chart || [];
+    // Render songs using chart-song template
     if (songs.length === 0) {
         content.innerHTML = `
             <div class="detail-empty">
-                <p>No songs in this chart</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <p>No chart data available</p>
+                <span>Check back later</span>
             </div>
         `;
         return;
     }
 
     content.innerHTML = `
-        <div class="detail-song-list">
-            ${songs.map((song, index) => {
-                const videoId = song.youtube_video_id || '';
-                const artworkUrl = song.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
-                const isPlaying = isCurrentlyPlaying(videoId);
-                const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
-                const rankChange = song.rank_change || 0;
-                const isNew = song.is_new;
+        <div class="chart-detail-songs-header">
+            <span>#</span>
+            <span>Title</span>
+            <span></span>
+        </div>
+        ${songs.map((song, index) => {
+            const rank = song.rank || index + 1;
+            const rankChange = song.rank_change || 0;
+            const isNew = song.is_new || false;
+            const videoId = song.youtube_video_id || '';
+            const isPlaying = isCurrentlyPlaying(videoId);
+            const artworkUrl = song.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
 
-                return `
-                <div class="detail-song${isPlaying ? ' now-playing' : ''}" data-video-id="${videoId}" onclick="playChartSongFromDetail(${index})">
-                    <div class="chart-song-rank-container">
-                        <span class="detail-song-num ${song.rank <= 3 ? 'top-3' : ''}">${song.rank}</span>
-                        ${isNew ? '<span class="rank-badge new">NEW</span>' :
-                          rankChange > 0 ? `<span class="rank-badge up">+${rankChange}</span>` :
-                          rankChange < 0 ? `<span class="rank-badge down">${rankChange}</span>` : ''}
+            let changeHtml = '';
+            if (isNew) {
+                changeHtml = '<span class="chart-song-change new">NEW</span>';
+            } else if (rankChange > 0) {
+                changeHtml = `<span class="chart-song-change up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>${rankChange}</span>`;
+            } else if (rankChange < 0) {
+                changeHtml = `<span class="chart-song-change down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>${Math.abs(rankChange)}</span>`;
+            } else {
+                changeHtml = '<span class="chart-song-change same">—</span>';
+            }
+
+            const isFavorite = favorites.some(f => f.title === song.title && f.artist === song.artist);
+
+            return `
+                <div class="chart-song-item ${isPlaying ? 'now-playing' : ''}" data-index="${index}" data-video-id="${videoId}" onclick="playChartSongFromDetail(${index})">
+                    <div class="chart-song-rank">
+                        <span class="chart-song-rank-number">${rank}</span>
+                        ${changeHtml}
                     </div>
-                    ${getNowPlayingEqHtml()}
-                    <div class="detail-song-artwork">
-                        ${artworkUrl
-                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" onerror="this.src='https://i.ytimg.com/vi/${videoId}/mqdefault.jpg'">`
-                            : '<div class="placeholder"></div>'
-                        }
-                        <div class="detail-song-play-overlay">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
+                    <div class="chart-song-info">
+                        <div class="chart-song-artwork">
+                            ${artworkUrl
+                                ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}">`
+                                : `<div class="chart-song-placeholder"></div>`}
+                            ${getNowPlayingEqHtml()}
+                        </div>
+                        <div class="chart-song-details">
+                            <span class="chart-song-title">${escapeHtml(song.title)}</span>
+                            <span class="chart-song-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(song.artist).replace(/'/g, "\\'")}')">${escapeHtml(song.artist)}</span>
                         </div>
                     </div>
-                    <div class="detail-song-info">
-                        <span class="detail-song-title">${escapeHtml(song.title)}</span>
-                        <span class="detail-song-artist clickable" onclick="event.stopPropagation(); showArtistPage('${escapeHtml(song.artist).replace(/'/g, "\\'")}')">${escapeHtml(song.artist)}</span>
-                    </div>
-                    <div class="detail-song-actions">
-                        <button class="detail-song-action ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleFavorite({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                    <div class="chart-song-actions">
+                        <button class="chart-song-action-btn ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleFavorite({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                             </svg>
                         </button>
-                        <button class="detail-song-action" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${videoId}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button class="chart-song-action-btn" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${videoId}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'});" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M11 12H3"></path>
                                 <path d="M16 6H3"></path>
                                 <path d="M16 18H3"></path>
@@ -7486,7 +7514,7 @@ function renderChartDetailFromChartsView(chartMeta, chartData) {
                                 <path d="M21 12h-6"></path>
                             </svg>
                         </button>
-                        <button class="detail-song-action" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
+                        <button class="chart-song-action-btn" onclick="event.stopPropagation(); addToQueue({title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', videoId: '${videoId}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to queue">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -7494,8 +7522,8 @@ function renderChartDetailFromChartsView(chartMeta, chartData) {
                         </button>
                     </div>
                 </div>
-            `}).join('')}
-        </div>
+            `;
+        }).join('')}
     `;
 
     // Apply gradient background
