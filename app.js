@@ -3793,7 +3793,7 @@ function showFavoritesDetail() {
     // Render header
     const header = document.getElementById('favoritesDetailHeader');
     header.innerHTML = `
-        <button class="detail-back-btn" onclick="showPlaylistsView()" title="Back to Library">
+        <button class="detail-back-btn" onclick="navigate('/library')" title="Back to Library">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -4035,7 +4035,7 @@ function showHistoryDetail() {
     // Render header
     const header = document.getElementById('historyDetailHeader');
     header.innerHTML = `
-        <button class="detail-back-btn" onclick="showPlaylistsView()" title="Back to Library">
+        <button class="detail-back-btn" onclick="navigate('/library')" title="Back to Library">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -5107,7 +5107,7 @@ function renderPlaylistsView() {
         const songCount = playlist.song_count ?? playlist.songs?.length ?? 0;
 
         return `
-            <div class="playlist-grid-card" data-id="${playlist.id}" onclick="showPlaylistDetail('${playlist.id}')">
+            <div class="playlist-grid-card" data-id="${playlist.id}" onclick="navigate('/library/playlist/${playlist.id}')">
                 <div class="playlist-grid-artwork ${isMulti ? 'multi' : ''}">
                     ${artworkHtml}
                 </div>
@@ -5323,7 +5323,7 @@ function renderRecentlyPlayedPlaylists() {
             || '';
 
         return `
-            <div class="recently-played-card" onclick="showPlaylistDetail('${playlist.id}')">
+            <div class="recently-played-card" onclick="navigate('/library/playlist/${playlist.id}')">
                 <div class="recently-played-artwork">
                     ${artwork
                         ? `<img src="${artwork}" alt="${escapeHtml(playlist.name)}">`
