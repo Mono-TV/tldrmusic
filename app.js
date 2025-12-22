@@ -3156,7 +3156,7 @@ function playNext() {
     // Check queue first
     const queuedSong = playFromQueue();
     if (queuedSong) {
-        playRegionalSongDirect(queuedSong.title, queuedSong.artist, queuedSong.videoId, queuedSong.artwork);
+        playRegionalSongDirect(queuedSong.title, queuedSong.artist, queuedSong.videoId, queuedSong.artwork, queuedSong.score);
         return;
     }
 
@@ -4460,7 +4460,8 @@ function playChartDetailFromIndex(startIndex) {
                 title: song.title,
                 artist: song.artist,
                 videoId: song.youtube_video_id,
-                artwork: getArtworkUrl(song)
+                artwork: getArtworkUrl(song),
+                score: song.score
             });
         }
     }
@@ -4468,7 +4469,7 @@ function playChartDetailFromIndex(startIndex) {
     // Play first song
     const firstSong = currentChartDetailData[startIndex];
     if (firstSong && firstSong.youtube_video_id) {
-        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.youtube_video_id, getArtworkUrl(firstSong));
+        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.youtube_video_id, getArtworkUrl(firstSong), firstSong.score);
     }
 
     updateQueueBadge();
@@ -4488,7 +4489,8 @@ function shuffleChartDetail() {
                 title: song.title,
                 artist: song.artist,
                 videoId: song.youtube_video_id,
-                artwork: getArtworkUrl(song)
+                artwork: getArtworkUrl(song),
+                score: song.score
             });
         }
     });
@@ -4496,7 +4498,7 @@ function shuffleChartDetail() {
     // Play first song from queue
     const first = queue.shift();
     if (first && first.videoId) {
-        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
+        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork, first.score);
     }
 
     updateQueueBadge();
@@ -4652,9 +4654,31 @@ function toggleQueue() {
         panel?.classList.add('visible');
         btn?.classList.add('active');
         renderQueuePanel();
+
+        // Close queue panel when clicking outside
+        setTimeout(() => {
+            document.addEventListener('click', closeQueueOnOutsideClick);
+        }, 0);
     } else {
         panel?.classList.remove('visible');
         btn?.classList.remove('active');
+        document.removeEventListener('click', closeQueueOnOutsideClick);
+    }
+}
+
+function closeQueueOnOutsideClick(e) {
+    const panel = document.getElementById('queuePanel');
+    const btn = document.getElementById('queueToggleBtn');
+
+    // Check if click is outside queue panel and not on the toggle button
+    const isClickInsidePanel = panel?.contains(e.target);
+    const isClickOnToggleBtn = btn?.contains(e.target);
+
+    if (!isClickInsidePanel && !isClickOnToggleBtn) {
+        isQueueVisible = false;
+        panel?.classList.remove('visible');
+        btn?.classList.remove('active');
+        document.removeEventListener('click', closeQueueOnOutsideClick);
     }
 }
 
@@ -8946,6 +8970,9 @@ function playSongFromQueue(index) {
         mainGradient.style.backgroundImage = `url(${song.artwork})`;
         mainGradient.classList.add('active');
     }
+
+    // Update hero/spotlight section
+    updateHeroForDirectPlay(song.title, song.artist, song.artwork, song.score);
 
     // Update player bar visibility
     updatePlayerBarVisibility();
