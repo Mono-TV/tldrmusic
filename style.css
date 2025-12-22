@@ -9144,6 +9144,12 @@ body::before {
     align-items: flex-end;
 }
 
+/* Override detail-hero spacing in charts view for tighter layout */
+#chartsDetailHeader .detail-hero {
+    padding-bottom: 1.25rem;
+    margin-bottom: 0;
+}
+
 .charts-detail-back {
     background: transparent;
     border: none;
@@ -9291,7 +9297,7 @@ body::before {
 #chartsDetailContent {
     flex: 1;
     overflow-y: auto;
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem;
     padding-bottom: 140px;
 }
 
