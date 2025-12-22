@@ -19,23 +19,23 @@ The frontend uses two separate APIs:
 │                    TLDR Music Frontend                      │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Music Harvester API                 TLDR Music API         │
+│  Music Conductor API                 TLDR Music API         │
 │  (Charts, Search, Discover)          (Auth, Library)        │
 │  ┌─────────────────────┐             ┌──────────────────┐   │
 │  │ • India Top 25      │             │ • Google OAuth   │   │
 │  │ • Global Top 25     │             │ • Favorites      │   │
-│  │ • Regional Charts   │             │ • History        │   │
-│  │ • Search            │             │ • Queue          │   │
-│  │ • Discover Playlists│             │ • User Playlists │   │
+│  │ • Search            │             │ • History        │   │
+│  │ • Discover Playlists│             │ • Queue          │   │
+│  │ • Curated Playlists │             │ • User Playlists │   │
 │  └─────────────────────┘             │ • Preferences    │   │
 │                                      └──────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Music Harvester API**: `https://music-harvester-401132033262.asia-south1.run.app`
-- Charts (`/api/chart/current`, `/api/chart/global/current`)
-- Search (`/api/tldr/search`, `/api/tldr/suggest`)
-- Discover/Playlists catalog (`/api/playlists`, `/api/india/playlist/*`)
+**Music Conductor API**: `https://music-conductor-401132033262.asia-south1.run.app`
+- Charts (`/api/charts/aggregated?region=india`, `/api/charts/aggregated?region=global`)
+- Search (`/api/search/songs`, `/api/search/suggest`)
+- Playlists (`/api/playlists`, `/api/playlists/{slug}`)
 
 **TLDR Music API**: `https://tldrmusic-api-401132033262.asia-south1.run.app`
 - User Authentication (Google OAuth, JWT tokens)
@@ -212,24 +212,27 @@ The Discover page (`/discover/`) provides curated playlists from India's 68,000+
 
 ## Backend APIs
 
-### Music Harvester API (Charts, Search, Discover)
+### Music Conductor API (Charts, Search, Discover)
 
-**Base URL**: `https://music-harvester-401132033262.asia-south1.run.app`
+**Base URL**: `https://music-conductor-401132033262.asia-south1.run.app`
+**Swagger Docs**: `https://music-conductor-401132033262.asia-south1.run.app/docs`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/chart/current?region=india` | GET | India Top 25 chart |
-| `/api/chart/global/current` | GET | Global Top 25 chart |
-| `/api/chart/regional` | GET | List of regional charts |
-| `/api/chart/regional/{region}` | GET | Regional chart by language |
-| `/api/tldr/search?q={query}&limit=50` | GET | Full search |
-| `/api/tldr/suggest?q={query}&limit=10` | GET | Autocomplete suggestions |
-| `/api/playlists?page=1&per_page=50` | GET | All curated playlists |
-| `/api/playlists/{name}` | GET | Get specific playlist |
-| `/api/india/playlist/artist/{artist}` | GET | Artist playlist |
-| `/api/india/playlist/genre/{genre}` | GET | Genre playlist |
-| `/api/india/playlist/language/{language}` | GET | Language playlist |
-| `/api/india/playlist/discover?limit=50` | GET | Random discovery tracks |
+| `/api/charts/aggregated?region=india&limit=25` | GET | India Top 25 chart |
+| `/api/charts/aggregated?region=global&limit=25` | GET | Global Top 25 chart |
+| `/api/charts/multi-platform?region=india` | GET | Songs on 2+ platforms |
+| `/api/charts/source/{platform}?region=india` | GET | Single platform chart |
+| `/api/search/songs?q={query}&has_youtube=true&per_page=50` | GET | Full search |
+| `/api/search/suggest?q={query}&limit=10` | GET | Autocomplete suggestions |
+| `/api/search/facets` | GET | Available filter values |
+| `/api/playlists` | GET | All curated playlists (22 total) |
+| `/api/playlists/{slug}` | GET | Get specific playlist by slug |
+
+**Available Playlist Slugs:**
+- **Language**: `hindi-hits`, `english-hits`, `tamil-hits`, `telugu-hits`, `punjabi-hits`, `spanish-hits`, `korean-hits`, `japanese-hits`
+- **Genre**: `hip-hop-rap`, `pop-hits`, `rock-classics`, `electronic-dance`, `rnb-soul`, `latin-vibes`, `jazz-classics`, `classical-music`, `world-music`, `alternative-indie`
+- **Mood**: `chill-vibes`, `workout-energy`, `party-mode`, `focus-study`
 
 ### TLDR Music API (Auth, Library)
 

@@ -1,9 +1,9 @@
 // TLDR Music - Frontend Application
 
 // API Configuration (Dual-API Architecture)
-// - Music Harvester: Charts, Search, Discover, Playlists catalog
+// - Music Conductor: Charts, Search, Discover, Playlists catalog
 // - TLDR Music API: User auth, Library (favorites, history, queue, user playlists)
-const MUSIC_HARVESTER_API = 'https://music-harvester-401132033262.asia-south1.run.app';
+const MUSIC_CONDUCTOR_API = 'https://music-conductor-401132033262.asia-south1.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
@@ -880,10 +880,10 @@ async function loadChartData() {
 
     // No valid cache, fetch from APIs
     try {
-        // Fetch both charts from Music Harvester API
+        // Fetch both charts from Music Conductor API
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_HARVESTER_API}/api/chart/current?region=india`),
-            fetch(`${MUSIC_HARVESTER_API}/api/chart/global/current`)
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`),
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global&limit=25`)
         ]);
 
         if (!indiaResponse.ok) throw new Error('India chart API request failed');
@@ -891,7 +891,7 @@ async function loadChartData() {
         const indiaData = await indiaResponse.json();
         const globalData = globalResponse.ok ? await globalResponse.json() : null;
 
-        // Map Music Harvester format to our internal format
+        // Map Music Conductor format to our internal format
         const indiaChart = (indiaData.songs || indiaData.chart || []).map(mapHarvesterSong);
         const globalChart = globalData ? (globalData.songs || globalData.chart || []).map(mapHarvesterSong) : [];
 
@@ -904,7 +904,7 @@ async function loadChartData() {
             regional: {} // Regional charts loaded separately
         };
 
-        console.log('Loaded chart data from Music Harvester API');
+        console.log('Loaded chart data from Music Conductor API');
 
         // Cache the data
         try {
@@ -919,7 +919,7 @@ async function loadChartData() {
         renderRegionalCharts();
         updateMetadata();
     } catch (apiError) {
-        console.warn('Harvester API unavailable, trying local fallback:', apiError.message);
+        console.warn('Conductor API unavailable, trying local fallback:', apiError.message);
         try {
             // Fallback to local JSON file
             const response = await fetch(DATA_PATH);
@@ -941,10 +941,10 @@ async function loadChartData() {
 // Refresh cache in background without blocking UI
 async function refreshChartCache() {
     try {
-        // Fetch both charts from Music Harvester API
+        // Fetch both charts from Music Conductor API
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_HARVESTER_API}/api/chart/current?region=india`),
-            fetch(`${MUSIC_HARVESTER_API}/api/chart/global/current`)
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`),
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global&limit=25`)
         ]);
 
         if (!indiaResponse.ok) return;
@@ -966,7 +966,7 @@ async function refreshChartCache() {
 
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE, JSON.stringify(freshData));
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
-        console.log('Cache refreshed in background from Music Harvester API');
+        console.log('Cache refreshed in background from Music Conductor API');
 
         // Update in-memory data and re-render regional if new data available
         const hadRegional = chartData?.regional && Object.keys(chartData.regional).length > 0;
@@ -1326,18 +1326,22 @@ async function loadDiscoverIndiaSongs(genreKey) {
     `).join('');
 
     try {
-        let url;
-        if (genreKey === 'Discover') {
-            // Random discovery playlist
-            url = `${MUSIC_HARVESTER_API}/api/india/playlist/discover?limit=10`;
-        } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
-            // Language-based playlist
-            const langCode = genreKey.toLowerCase();
-            url = `${MUSIC_HARVESTER_API}/api/india/playlist/language/${langCode}`;
-        } else {
-            // Genre-based playlist
-            url = `${MUSIC_HARVESTER_API}/api/india/playlist/genre/${encodeURIComponent(genreKey.toLowerCase())}`;
-        }
+        // Map Discover India genres to Music Conductor playlist slugs
+        const DISCOVER_SLUG_MAP = {
+            'Indian Pop': 'pop-hits',
+            'Bollywood': 'hindi-hits',
+            'Pop': 'pop-hits',
+            'Hip-Hop/Rap': 'hip-hop-rap',
+            'Electronic': 'electronic-dance',
+            'Rock': 'rock-classics',
+            'Punjabi': 'punjabi-hits',
+            'Tamil': 'tamil-hits',
+            'Telugu': 'telugu-hits',
+            'Discover': 'chill-vibes'  // Default to chill for discovery
+        };
+
+        const slug = DISCOVER_SLUG_MAP[genreKey] || 'pop-hits';
+        const url = `${MUSIC_CONDUCTOR_API}/api/playlists/${slug}`;
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch');
@@ -1556,14 +1560,19 @@ async function loadArtistData(artistName) {
     `;
 
     try {
-        // Get artist playlist from Music Harvester API
-        const response = await fetch(`${MUSIC_HARVESTER_API}/api/india/playlist/artist/${encodeURIComponent(artistName)}`);
+        // Get artist songs via search (artist playlist not available in Conductor API)
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(artistName)}&has_youtube=true&per_page=50`);
 
         if (!response.ok) throw new Error('Failed to load artist songs');
 
         const data = await response.json();
-        // Artist playlist returns tracks directly
-        const songs = (data.tracks || data.songs || []).map(mapHarvesterPlaylistTrack);
+        // Filter search results to songs that match the artist name
+        const songs = (data.songs || [])
+            .filter(song => {
+                const songArtist = (song.artist_name || song.artist || '').toLowerCase();
+                return songArtist.includes(artistName.toLowerCase()) || artistName.toLowerCase().includes(songArtist);
+            })
+            .map(mapHarvesterSearchResult);
 
         // All songs from artist playlist should match the artist
         currentArtistSongs = songs;
@@ -6530,9 +6539,9 @@ async function performQuickSearch(query) {
     if (!query) return;
 
     try {
-        // Use Music Harvester search API
+        // Use Music Conductor search API
         const response = await fetch(
-            `${MUSIC_HARVESTER_API}/api/tldr/search?q=${encodeURIComponent(query)}&limit=5`
+            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=5`
         );
 
         if (!response.ok) throw new Error('Search failed');
@@ -6780,9 +6789,9 @@ async function performFullSearch(query) {
     if (noResults) noResults.style.display = 'none';
 
     try {
-        // Use Music Harvester search API
+        // Use Music Conductor search API
         const response = await fetch(
-            `${MUSIC_HARVESTER_API}/api/tldr/search?q=${encodeURIComponent(query)}&limit=50`
+            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=50`
         );
 
         if (!response.ok) throw new Error('Search failed');
@@ -7419,22 +7428,22 @@ async function openChartFromChartsView(chartId) {
         let response, rawData, data;
 
         if (chart.region === 'global') {
-            // Global chart from Music Harvester API
-            response = await fetch(`${MUSIC_HARVESTER_API}/api/chart/global/current`);
+            // Global chart from Music Conductor API
+            response = await fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global&limit=25`);
             if (!response.ok) throw new Error('Failed to load chart');
             rawData = await response.json();
-            // Map Music Harvester format
+            // Map Music Conductor format
             data = {
                 chart: (rawData.songs || rawData.chart || []).map(mapHarvesterSong),
                 week: rawData.week,
                 generated_at: rawData.generated_at
             };
         } else {
-            // India chart from Music Harvester API
-            response = await fetch(`${MUSIC_HARVESTER_API}/api/chart/current?region=india`);
+            // India chart from Music Conductor API
+            response = await fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india&limit=25`);
             if (!response.ok) throw new Error('Failed to load chart');
             rawData = await response.json();
-            // Map Music Harvester format
+            // Map Music Conductor format
             data = {
                 chart: (rawData.songs || rawData.chart || []).map(mapHarvesterSong),
                 week: rawData.week,
@@ -7802,16 +7811,22 @@ async function openFeaturedPlaylist(genreKey) {
     showToast('Loading playlist...');
 
     try {
-        let url;
-        if (genreKey === 'Discover') {
-            // Random discovery playlist
-            url = `${MUSIC_HARVESTER_API}/api/india/playlist/discover?limit=50`;
-        } else if (['Punjabi', 'Tamil', 'Telugu'].includes(genreKey)) {
-            const langCode = genreKey.toLowerCase();
-            url = `${MUSIC_HARVESTER_API}/api/india/playlist/language/${langCode}`;
-        } else {
-            url = `${MUSIC_HARVESTER_API}/api/india/playlist/genre/${encodeURIComponent(genreKey.toLowerCase())}`;
-        }
+        // Map featured playlist genres to Music Conductor playlist slugs
+        const FEATURED_SLUG_MAP = {
+            'Indian Pop': 'pop-hits',
+            'Bollywood': 'hindi-hits',
+            'Pop': 'pop-hits',
+            'Hip-Hop/Rap': 'hip-hop-rap',
+            'Electronic': 'electronic-dance',
+            'Rock': 'rock-classics',
+            'Punjabi': 'punjabi-hits',
+            'Tamil': 'tamil-hits',
+            'Telugu': 'telugu-hits',
+            'Discover': 'chill-vibes'
+        };
+
+        const slug = FEATURED_SLUG_MAP[genreKey] || 'pop-hits';
+        const url = `${MUSIC_CONDUCTOR_API}/api/playlists/${slug}`;
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load playlist');
@@ -7964,8 +7979,8 @@ async function openCuratedPlaylist(type, id) {
             throw new Error(`${type} playlists are not available yet`);
         }
 
-        // Fetch from Music Harvester API
-        const response = await fetch(`${MUSIC_HARVESTER_API}/api/playlists/${slug}`);
+        // Fetch from Music Conductor API
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${slug}`);
 
         if (!response.ok) {
             throw new Error(`Failed to load playlist: ${response.status}`);
@@ -8466,8 +8481,8 @@ async function renderAIGeneratedView() {
     content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading curated playlists...</p></div>';
 
     try {
-        // Fetch playlists from Music Harvester API
-        const response = await fetch(`${MUSIC_HARVESTER_API}/api/playlists`);
+        // Fetch playlists from Music Conductor API
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`);
         if (!response.ok) throw new Error('Failed to load playlists');
 
         const data = await response.json();
@@ -8613,7 +8628,7 @@ async function openMusicConductorPlaylist(slug) {
     showToast('Loading playlist...');
 
     try {
-        const response = await fetch(`${MUSIC_HARVESTER_API}/api/playlists/${encodeURIComponent(slug)}`);
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${encodeURIComponent(slug)}`);
 
         if (!response.ok) {
             throw new Error('Failed to load playlist');
@@ -9020,9 +9035,9 @@ async function playAISongBySearch(index) {
     showToast(`Searching for "${song.title}"...`);
 
     try {
-        // Search Music Harvester API (has YouTube IDs)
+        // Search Music Conductor API (has YouTube IDs)
         const catalogQuery = `${song.title} ${song.artist}`;
-        const catalogResponse = await fetch(`${MUSIC_HARVESTER_API}/api/tldr/search?q=${encodeURIComponent(catalogQuery)}&limit=5`);
+        const catalogResponse = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(catalogQuery)}&has_youtube=true&per_page=5`);
 
         if (catalogResponse.ok) {
             const catalogData = await catalogResponse.json();
@@ -9048,8 +9063,8 @@ async function playAISongBySearch(index) {
             }
         }
 
-        // Fallback: Try exact lookup
-        const response = await fetch(`${MUSIC_HARVESTER_API}/api/tldr/lookup?title=${encodeURIComponent(song.title)}&artist=${encodeURIComponent(song.artist)}`);
+        // Fallback: Try more specific search
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(song.title)}&has_youtube=true&per_page=10`);
 
         if (response.ok) {
             const results = await response.json();
