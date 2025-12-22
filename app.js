@@ -7055,6 +7055,8 @@ function showHomeView() {
     const aiGeneratedView = document.getElementById('aiGeneratedView');
     const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
     const searchView = document.getElementById('searchView');
+    const chartsView = document.getElementById('chartsView');
+    const chartsDetailView = document.getElementById('chartsDetailView');
 
     if (homeView) homeView.style.display = 'block';
     if (mainContent) mainContent.style.display = 'block';
@@ -7069,6 +7071,8 @@ function showHomeView() {
     if (aiGeneratedView) aiGeneratedView.style.display = 'none';
     if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
     if (searchView) searchView.style.display = 'none';
+    if (chartsView) chartsView.style.display = 'none';
+    if (chartsDetailView) chartsDetailView.style.display = 'none';
 
     // Update sidebar active state
     updateSidebarActiveState('home');
@@ -7377,12 +7381,9 @@ function renderChartDetailFromChartsView(chartMeta, chartData) {
 
     if (!header || !content) return;
 
-    // Hide charts view, show detail view with slide animation
+    // Hide charts view, show detail view
     if (chartsView) chartsView.style.display = 'none';
-    if (chartsDetailView) {
-        chartsDetailView.style.display = 'flex';
-        setTimeout(() => chartsDetailView.classList.add('visible'), 10);
-    }
+    if (chartsDetailView) chartsDetailView.style.display = 'block';
 
     currentChartDetail = { meta: chartMeta, data: chartData };
     const songs = chartData.chart || [];
@@ -7537,12 +7538,7 @@ function hideChartsDetailView() {
     const chartsView = document.getElementById('chartsView');
     const chartsDetailView = document.getElementById('chartsDetailView');
 
-    if (chartsDetailView) {
-        chartsDetailView.classList.remove('visible');
-        setTimeout(() => {
-            chartsDetailView.style.display = 'none';
-        }, 300);
-    }
+    if (chartsDetailView) chartsDetailView.style.display = 'none';
     if (chartsView) chartsView.style.display = 'block';
 
     currentChartDetail = null;
