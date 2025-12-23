@@ -5103,6 +5103,8 @@ function showPlaylistsView() {
     const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
     const chartsView = document.getElementById('chartsView');
     const chartsDetailView = document.getElementById('chartsDetailView');
     const discoverView = document.getElementById('discoverView');
@@ -5113,6 +5115,8 @@ function showPlaylistsView() {
     if (mainContent) mainContent.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
     if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
     if (chartsView) chartsView.style.display = 'none';
     if (chartsDetailView) chartsDetailView.style.display = 'none';
     if (discoverView) discoverView.style.display = 'none';
