@@ -562,8 +562,8 @@ body::before {
 
 .hero-artwork-wrapper .hero-rank {
     position: absolute;
-    bottom: -10px;
-    right: -10px;
+    bottom: 12px;
+    right: 12px;
     background: var(--bg-card);
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
