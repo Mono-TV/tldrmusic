@@ -606,49 +606,13 @@ function playSharedPlaylist() {
 function shuffleSharedPlaylist() {
     const playlist = window.currentSharedPlaylist;
     if (!playlist || !playlist.songs || playlist.songs.length === 0) return;
-
-    // Shuffle songs and set up queue
-    const shuffled = [...playlist.songs].sort(() => Math.random() - 0.5);
-
-    queue = shuffled.slice(1).map((s, i) => ({
-        id: Date.now() + i,
-        title: s.title,
-        artist: s.artist,
-        videoId: s.videoId,
-        artwork: s.artwork
-    }));
-    saveQueue();
-    renderQueuePanel();
-
-    // Play first shuffled song
-    const firstSong = shuffled[0];
-    if (firstSong && firstSong.videoId) {
-        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.videoId, firstSong.artwork);
-    }
-    showToast(`Shuffling "${playlist.name}"`);
+    shuffleAndPlay(playlist.songs, `"${playlist.name}"`);
 }
 
 function playSharedPlaylistFromIndex(index) {
     const playlist = window.currentSharedPlaylist;
     if (!playlist || !playlist.songs) return;
-
-    const song = playlist.songs[index];
-    if (!song || !song.videoId) return;
-
-    // Set up queue with remaining songs
-    queue = playlist.songs.slice(index + 1).map((s, i) => ({
-        id: Date.now() + i,
-        title: s.title,
-        artist: s.artist,
-        videoId: s.videoId,
-        artwork: s.artwork
-    }));
-    saveQueue();
-    renderQueuePanel();
-
-    // Play the song using proper playback function
-    playRegionalSongDirect(song.title, song.artist, song.videoId, song.artwork);
-    showToast(`Playing "${playlist.name}"`);
+    playFromIndex(playlist.songs, index, `"${playlist.name}"`);
 }
 
 async function saveSharedPlaylistToLibrary(playlistId) {
@@ -2002,15 +1966,10 @@ function playAllArtistSongs() {
 
 // Shuffle artist songs
 function shuffleArtistSongs() {
-    if (currentArtistSongs.length === 0) return;
+    if (!currentArtistSongs || currentArtistSongs.length === 0) return;
 
-    // Shuffle the songs array
-    const shuffled = [...currentArtistSongs].sort(() => Math.random() - 0.5);
-    currentArtistSongs = shuffled;
-
-    // Play first song
-    playArtistSongByIndex(0);
-    showToast(`Shuffling ${currentArtistData?.name || 'Artist'}`);
+    // Use common shuffle function with artist name in toast
+    shuffleAndPlay(currentArtistSongs, `songs from ${currentArtistData?.name || 'Artist'}`);
 }
 
 // Current selected global platform
@@ -4088,21 +4047,54 @@ function playAllFavorites() {
     showToast(`Playing ${favorites.length} songs`);
 }
 
-function shuffleFavorites() {
-    if (favorites.length === 0) return;
+/**
+ * Common shuffle and play function - shuffles songs, queues them, and plays first
+ * @param {Array} songs - Array of song objects with title, artist, videoId, artwork
+ * @param {string} sourceName - Name to show in toast (e.g., "favorites", "history")
+ */
+// Helper to normalize song artwork from various field names
+function getSongArtwork(song) {
+    // Check for direct artwork fields first
+    if (song.artwork) return song.artwork;
+    if (song.image_url) return song.image_url;
+
+    // For harvester songs, use proper artwork handling
+    const artworkUrl = song.artwork_url;
+    const videoId = song.videoId || song.youtube_video_id || song.video_id;
+
+    if (artworkUrl && !artworkUrl.includes('{country-code}') && artworkUrl.startsWith('http')) {
+        return artworkUrl;
+    }
+    if (song.thumbnail_url) return song.thumbnail_url;
+    if (videoId) {
+        return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+    }
+    return '';
+}
+
+// Helper to normalize song video ID from various field names
+function getSongVideoId(song) {
+    return song.videoId || song.youtube_video_id || song.video_id || null;
+}
+
+function shuffleAndPlay(songs, sourceName = 'songs') {
+    if (!songs || songs.length === 0) return;
 
     // Create shuffled copy
-    const shuffled = [...favorites].sort(() => Math.random() - 0.5);
+    const shuffled = [...songs].sort(() => Math.random() - 0.5);
 
-    // Clear queue and add shuffled favorites
+    // Clear queue and add shuffled songs
     queue.length = 0;
-    shuffled.forEach(fav => {
-        queue.push({
-            title: fav.title,
-            artist: fav.artist,
-            videoId: fav.videoId,
-            artwork: fav.artwork
-        });
+    shuffled.forEach(song => {
+        const videoId = getSongVideoId(song);
+        if (videoId) {
+            queue.push({
+                title: song.title,
+                artist: song.artist,
+                videoId: videoId,
+                artwork: getSongArtwork(song)
+            });
+        }
     });
 
     // Play first song
@@ -4111,8 +4103,53 @@ function shuffleFavorites() {
         playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
     }
 
+    saveQueue();
     updateQueueBadge();
-    showToast(`Shuffling ${favorites.length} songs`);
+    showToast(`Shuffling ${queue.length + 1} ${sourceName}`);
+}
+
+function shuffleFavorites() {
+    shuffleAndPlay(favorites, 'favorites');
+}
+
+/**
+ * Common play from index function - queues remaining songs and plays from startIndex
+ * @param {Array} songs - Array of song objects
+ * @param {number} startIndex - Index to start playing from
+ * @param {string} sourceName - Name to show in toast (e.g., "playlist name")
+ */
+function playFromIndex(songs, startIndex, sourceName = '') {
+    if (!songs || songs.length === 0) return;
+    if (startIndex < 0 || startIndex >= songs.length) return;
+
+    // Queue remaining songs after startIndex
+    queue.length = 0;
+    for (let i = startIndex + 1; i < songs.length; i++) {
+        const song = songs[i];
+        const videoId = getSongVideoId(song);
+        if (videoId) {
+            queue.push({
+                title: song.title,
+                artist: song.artist,
+                videoId: videoId,
+                artwork: getSongArtwork(song)
+            });
+        }
+    }
+
+    saveQueue();
+    updateQueueBadge();
+
+    // Play the song at startIndex
+    const firstSong = songs[startIndex];
+    const videoId = getSongVideoId(firstSong);
+    if (firstSong && videoId) {
+        playRegionalSongDirect(firstSong.title, firstSong.artist, videoId, getSongArtwork(firstSong));
+    }
+
+    if (sourceName) {
+        showToast(`Playing ${sourceName}`);
+    }
 }
 
 // ============================================================
@@ -4325,30 +4362,7 @@ function playAllHistory() {
 }
 
 function shuffleHistory() {
-    if (playHistory.length === 0) return;
-
-    // Create shuffled copy
-    const shuffled = [...playHistory].sort(() => Math.random() - 0.5);
-
-    // Clear queue and add shuffled history
-    queue.length = 0;
-    shuffled.forEach(item => {
-        queue.push({
-            title: item.title,
-            artist: item.artist,
-            videoId: item.videoId,
-            artwork: item.artwork
-        });
-    });
-
-    // Play first song
-    const first = queue.shift();
-    if (first && first.videoId) {
-        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork);
-    }
-
-    updateQueueBadge();
-    showToast(`Shuffling ${playHistory.length} songs`);
+    shuffleAndPlay(playHistory, 'songs from history');
 }
 
 // ============================================================
@@ -4588,117 +4602,60 @@ function playChartDetailAll() {
 
 function playChartDetailFromIndex(startIndex) {
     if (!currentChartDetailData || currentChartDetailData.length === 0) return;
-
-    // Clear queue and add all songs from startIndex
-    queue.length = 0;
-    for (let i = startIndex + 1; i < currentChartDetailData.length; i++) {
-        const song = currentChartDetailData[i];
-        if (song.youtube_video_id) {
-            queue.push({
-                title: song.title,
-                artist: song.artist,
-                videoId: song.youtube_video_id,
-                artwork: getArtworkUrl(song),
-                score: song.score
-            });
-        }
-    }
-
-    // Play first song
-    const firstSong = currentChartDetailData[startIndex];
-    if (firstSong && firstSong.youtube_video_id) {
-        playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.youtube_video_id, getArtworkUrl(firstSong), firstSong.score);
-    }
-
-    updateQueueBadge();
+    playFromIndex(currentChartDetailData, startIndex);
 }
 
 function shuffleChartDetail() {
     if (!currentChartDetailData || currentChartDetailData.length === 0) return;
-
-    // Create shuffled copy
-    const shuffled = [...currentChartDetailData].sort(() => Math.random() - 0.5);
-
-    // Clear queue and add shuffled songs
-    queue.length = 0;
-    shuffled.forEach(song => {
-        if (song.youtube_video_id) {
-            queue.push({
-                title: song.title,
-                artist: song.artist,
-                videoId: song.youtube_video_id,
-                artwork: getArtworkUrl(song),
-                score: song.score
-            });
-        }
-    });
-
-    // Play first song from queue
-    const first = queue.shift();
-    if (first && first.videoId) {
-        playRegionalSongDirect(first.title, first.artist, first.videoId, first.artwork, first.score);
-    }
-
-    updateQueueBadge();
-    showToast(`Shuffling ${currentChartDetailData.length} songs`);
+    shuffleAndPlay(currentChartDetailData, 'songs');
 }
 
 function toggleChartSongFavorite(index) {
     if (!currentChartDetailData || !currentChartDetailData[index]) return;
 
     const song = currentChartDetailData[index];
-    const existingIndex = favorites.findIndex(f => f.title === song.title && f.artist === song.artist);
 
-    if (existingIndex >= 0) {
-        favorites.splice(existingIndex, 1);
-        showToast('Removed from favorites');
-    } else {
-        favorites.push({
-            title: song.title,
-            artist: song.artist,
-            videoId: song.youtube_video_id,
-            artwork: getArtworkUrl(song),
-            addedAt: Date.now()
-        });
-        showToast('Added to favorites');
-    }
-
-    saveFavorites();
+    // Use the common toggleFavorite function
+    toggleFavorite(song);
 
     // Re-render the chart detail to update heart icons
-    if (currentChartDetailType) {
-        const detailData = currentChartDetailData;
-        let chartName, chartCoverClass, chartIcon, chartMeta;
+    rerenderCurrentChartDetail();
+}
 
-        if (currentChartDetailType === 'india') {
-            chartName = 'India Top 25';
-            chartCoverClass = 'india';
-            chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
-            </svg>`;
-            chartMeta = 'Updated weekly • Aggregated from 9 platforms';
-        } else if (currentChartDetailType === 'global') {
-            chartName = 'Global Top 25';
-            chartCoverClass = 'global';
-            chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>`;
-            chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
-        } else {
-            chartName = currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1) + ' Top 10';
-            chartCoverClass = 'regional';
-            chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M9 18V5l12-2v13"></path>
-                <circle cx="6" cy="18" r="3"></circle>
-                <circle cx="18" cy="16" r="3"></circle>
-            </svg>`;
-            chartMeta = `Updated weekly • ${currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1)} music`;
-        }
+// Helper to re-render the current chart detail view
+function rerenderCurrentChartDetail() {
+    if (!currentChartDetailType || !currentChartDetailData) return;
 
-        renderChartDetail(detailData, chartName, chartCoverClass, chartIcon, chartMeta);
+    let chartName, chartCoverClass, chartIcon, chartMeta;
+
+    if (currentChartDetailType === 'india') {
+        chartName = 'India Top 25';
+        chartCoverClass = 'india';
+        chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+        </svg>`;
+        chartMeta = 'Updated weekly • Aggregated from 9 platforms';
+    } else if (currentChartDetailType === 'global') {
+        chartName = 'Global Top 25';
+        chartCoverClass = 'global';
+        chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>`;
+        chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
+    } else {
+        chartName = currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1) + ' Top 10';
+        chartCoverClass = 'regional';
+        chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+        </svg>`;
+        chartMeta = `Updated weekly • ${currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1)} music`;
     }
+
+    renderChartDetail(currentChartDetailData, chartName, chartCoverClass, chartIcon, chartMeta);
 }
 
 function addChartSongToQueue(index) {
@@ -5034,21 +4991,7 @@ function playPlaylist(playlistId, startIndex = 0) {
     // Track this playlist as recently played
     trackPlaylistPlayed(playlistId);
 
-    // Load remaining songs into queue
-    queue = playlist.songs.slice(startIndex + 1).map((s, i) => ({
-        id: Date.now() + i,
-        title: s.title,
-        artist: s.artist,
-        videoId: s.videoId,
-        artwork: s.artwork
-    }));
-    saveQueue();
-    renderQueuePanel();
-
-    // Play first song
-    const firstSong = playlist.songs[startIndex];
-    playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.videoId, firstSong.artwork);
-    showToast(`Playing "${playlist.name}"`);
+    playFromIndex(playlist.songs, startIndex, `"${playlist.name}"`);
 }
 
 function shufflePlaylist(playlistId) {
@@ -5057,25 +5000,7 @@ function shufflePlaylist(playlistId) {
         showToast('Playlist is empty');
         return;
     }
-
-    // Shuffle songs
-    const shuffled = [...playlist.songs].sort(() => Math.random() - 0.5);
-
-    // Load all but first into queue
-    queue = shuffled.slice(1).map((s, i) => ({
-        id: Date.now() + i,
-        title: s.title,
-        artist: s.artist,
-        videoId: s.videoId,
-        artwork: s.artwork
-    }));
-    saveQueue();
-    renderQueuePanel();
-
-    // Play first shuffled song
-    const firstSong = shuffled[0];
-    playRegionalSongDirect(firstSong.title, firstSong.artist, firstSong.videoId, firstSong.artwork);
-    showToast(`Shuffling "${playlist.name}"`);
+    shuffleAndPlay(playlist.songs, `"${playlist.name}"`);
 }
 
 function updatePlaylistCount() {
@@ -7937,61 +7862,12 @@ function playChartFromDetail() {
 
 function shuffleChartFromDetail() {
     if (!currentChartDetail?.data?.chart?.length) return;
-    const songs = [...currentChartDetail.data.chart];
-    const shuffled = songs.sort(() => Math.random() - 0.5);
-
-    const firstSong = shuffled[0];
-    const videoId = firstSong.youtube_video_id || '';
-    const artworkUrl = firstSong.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
-
-    if (videoId) {
-        playRegionalSongDirect(firstSong.title, firstSong.artist, videoId, artworkUrl);
-    }
-
-    // Add rest to queue
-    queue.length = 0;
-    shuffled.slice(1).forEach(song => {
-        const vid = song.youtube_video_id || '';
-        const art = song.artwork_url || (vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '');
-        addToQueue({
-            title: song.title,
-            artist: song.artist,
-            videoId: vid,
-            artwork: art
-        });
-    });
-
-    showToast(`Shuffling ${currentChartDetail.meta.name}`);
+    shuffleAndPlay(currentChartDetail.data.chart, currentChartDetail.meta.name);
 }
 
 function playChartSongFromDetail(index) {
     if (!currentChartDetail?.data?.chart) return;
-
-    const songs = currentChartDetail.data.chart;
-    if (index < 0 || index >= songs.length) return;
-
-    const song = songs[index];
-    const videoId = song.youtube_video_id || '';
-    const artworkUrl = song.artwork_url || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '');
-
-    if (videoId) {
-        playRegionalSongDirect(song.title, song.artist, videoId, artworkUrl);
-    }
-
-    // Add remaining songs to queue
-    queue.length = 0;
-    songs.slice(index + 1).forEach(s => {
-        const vid = s.youtube_video_id || '';
-        const art = s.artwork_url || (vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '');
-        addToQueue({
-            title: s.title,
-            artist: s.artist,
-            videoId: vid,
-            artwork: art
-        });
-    });
-
-    showToast(`Playing from ${currentChartDetail.meta.name}`);
+    playFromIndex(currentChartDetail.data.chart, index, currentChartDetail.meta.name);
 }
 
 // Mood icons SVG
@@ -8602,40 +8478,23 @@ function playCuratedPlaylist(startIndex = 0) {
 
 function shuffleCuratedPlaylist() {
     if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
-
     const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
     if (playableSongs.length === 0) return;
-
-    // Shuffle the songs
-    const shuffled = [...playableSongs].sort(() => Math.random() - 0.5);
-
-    // Set up queue with shuffled songs
-    queue = shuffled.map(song => ({
-        title: song.title,
-        artist: song.artist,
-        videoId: song.youtube_video_id,
-        artwork: getArtworkUrl(song),
-    }));
-
-    // Play first song
-    currentSongIndex = 0;
-    playSongFromQueue(0);
-
-    showToast('Shuffling playlist...');
+    shuffleAndPlay(playableSongs, 'playlist');
 }
 
 function playCuratedSong(index) {
     if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
 
-    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
+    const playableSongs = currentCuratedPlaylist.songs.filter(s => getSongVideoId(s));
     if (index >= playableSongs.length) return;
 
     // Set up queue and play
     queue = playableSongs.map(song => ({
         title: song.title,
         artist: song.artist,
-        videoId: song.youtube_video_id,
-        artwork: getArtworkUrl(song),
+        videoId: getSongVideoId(song),
+        artwork: getSongArtwork(song),
     }));
 
     currentSongIndex = index;
@@ -9172,25 +9031,16 @@ function toggleAISongFavorite(index) {
     const song = currentAIPlaylist.songs[index];
     if (!song) return;
 
-    const favoriteData = {
+    // Normalize song object for toggleFavorite (map AI playlist field names)
+    const normalizedSong = {
         title: song.title,
         artist: song.artist,
         videoId: song.video_id || null,
-        artwork: song.thumbnail_url || '',
-        addedAt: new Date().toISOString()
+        artwork: song.thumbnail_url || ''
     };
 
-    const existingIndex = favorites.findIndex(f => f.title === song.title && f.artist === song.artist);
-
-    if (existingIndex >= 0) {
-        favorites.splice(existingIndex, 1);
-        showToast('Removed from favorites');
-    } else {
-        favorites.unshift(favoriteData);
-        showToast('Added to favorites');
-    }
-
-    saveFavorites();
+    // Use the common toggleFavorite function
+    toggleFavorite(normalizedSong);
 
     // Re-render the detail view to update heart icons
     renderAIPlaylistDetailView(currentAIPlaylist, currentAIPresetKey);
@@ -9294,13 +9144,17 @@ async function shuffleAIPlaylist() {
     const shuffled = [...songs].sort(() => Math.random() - 0.5);
 
     // Set up queue - use video_id from playlist if available
-    queue = shuffled.map(song => ({
-        title: song.title,
-        artist: song.artist,
-        videoId: song.video_id || null,
-        artwork: song.thumbnail_url || '',
-        needsSearch: !song.video_id,
-    }));
+    // Note: AI playlists may have songs without video IDs that need searching
+    queue = shuffled.map(song => {
+        const videoId = getSongVideoId(song);
+        return {
+            title: song.title,
+            artist: song.artist,
+            videoId: videoId,
+            artwork: getSongArtwork(song),
+            needsSearch: !videoId,
+        };
+    });
 
     currentSongIndex = 0;
     showToast('Shuffling playlist...');
@@ -9318,13 +9172,16 @@ async function playAISong(index) {
     if (index >= currentAIPlaylist.songs.length) return;
 
     // Set up queue - use video_id from playlist if available
-    queue = currentAIPlaylist.songs.map(song => ({
-        title: song.title,
-        artist: song.artist,
-        videoId: song.video_id || null,
-        artwork: song.thumbnail_url || '',
-        needsSearch: !song.video_id,
-    }));
+    queue = currentAIPlaylist.songs.map(song => {
+        const videoId = getSongVideoId(song);
+        return {
+            title: song.title,
+            artist: song.artist,
+            videoId: videoId,
+            artwork: getSongArtwork(song),
+            needsSearch: !videoId,
+        };
+    });
 
     currentSongIndex = index;
 

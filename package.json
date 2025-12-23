@@ -1,6 +1,6 @@
 {
   "name": "tldrmusic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TLDR Music - India's Top 25 Music Chart Aggregator",
   "private": true,
   "scripts": {
