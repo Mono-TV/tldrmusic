@@ -248,18 +248,26 @@ window.onYouTubeIframeAPIReady = function() {
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+    // Initialize UI and event listeners first (non-blocking)
+    initSidebar();      // Initialize sidebar
+    initSearch();       // Initialize search functionality
+    setupEventListeners();
+    initializePlaybackUI();
+    renderSkeletons(); // Show skeletons immediately
+
+    // Start loading external resources (non-blocking)
     loadYouTubeAPI();
     initGoogleAuth();   // Initialize Google Sign-In
     checkAuthState();   // Check if user is already logged in
+
+    // Load user data and auth UI
     loadUserData();
-    initSidebar();      // Initialize sidebar
-    initSearch();       // Initialize search functionality
-    renderSkeletons(); // Show skeletons immediately
-    await loadChartData();
-    initDiscoverIndia(); // Initialize Discover India section
-    setupEventListeners();
-    initializePlaybackUI();
     updateAuthUI();     // Update auth button in header
+
+    // Load chart data (don't block on this - show skeletons while loading)
+    loadChartData().then(() => {
+        initDiscoverIndia(); // Initialize Discover India section after charts load
+    });
 
     // Handle URL parameters for shared content
     handleUrlParameters();
@@ -7400,16 +7408,43 @@ const PLAYLIST_SLUG_MAP = {
     'Telugu': 'telugu-hits'
 };
 
-// Fetch playlist colors from API
+// Shared playlist data cache (used by both colors and AI generated view)
+let cachedPlaylistData = null;
+let playlistDataPromise = null;
+
+// Fetch playlist data from API (shared cache)
+async function fetchPlaylistData() {
+    // Return cached data if available
+    if (cachedPlaylistData) return cachedPlaylistData;
+
+    // Return existing promise if fetch is in progress
+    if (playlistDataPromise) return playlistDataPromise;
+
+    // Start new fetch
+    playlistDataPromise = fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`)
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to fetch playlists');
+            return response.json();
+        })
+        .then(data => {
+            cachedPlaylistData = data.playlists || [];
+            return cachedPlaylistData;
+        })
+        .catch(error => {
+            console.error('Error fetching playlists:', error);
+            playlistDataPromise = null; // Allow retry on error
+            return [];
+        });
+
+    return playlistDataPromise;
+}
+
+// Fetch playlist colors from cached data
 async function fetchPlaylistColors() {
     if (playlistColorsLoaded) return cachedPlaylistColors;
 
     try {
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`);
-        if (!response.ok) throw new Error('Failed to fetch playlists');
-
-        const data = await response.json();
-        const playlists = data.playlists || [];
+        const playlists = await fetchPlaylistData();
 
         // Build color map by slug
         playlists.forEach(playlist => {
@@ -8672,16 +8707,14 @@ async function renderAIGeneratedView() {
     const content = document.getElementById('aiGeneratedContent');
     if (!content) return;
 
-    // Show loading state
-    content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading curated playlists...</p></div>';
+    // Show loading state only if no cached data
+    if (!cachedPlaylistData) {
+        content.innerHTML = '<div class="ai-loading"><div class="spinner"></div><p>Loading curated playlists...</p></div>';
+    }
 
     try {
-        // Fetch playlists from Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`);
-        if (!response.ok) throw new Error('Failed to load playlists');
-
-        const data = await response.json();
-        const allPlaylists = data.playlists || [];
+        // Fetch playlists from shared cache
+        const allPlaylists = await fetchPlaylistData();
 
         // Convert to preset format for compatibility
         aiPlaylistPresets = allPlaylists.map(p => ({
