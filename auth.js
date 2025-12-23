@@ -413,6 +413,7 @@ async function syncFromCloud() {
         const localData = {
             local_favorites: JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [],
             local_history: JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [],
+            local_total_songs_played: parseInt(localStorage.getItem('tldr-total-songs-played')) || 0,
             local_queue: JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [],
             local_playlists: JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [],
             local_preferences: {
@@ -436,6 +437,13 @@ async function syncFromCloud() {
             }
             if (merged.merged_history) {
                 localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(merged.merged_history));
+            }
+            // Sync total songs played (use max of local and server)
+            if (merged.total_songs_played !== undefined) {
+                const localTotal = parseInt(localStorage.getItem('tldr-total-songs-played')) || 0;
+                const serverTotal = merged.total_songs_played || 0;
+                const maxTotal = Math.max(localTotal, serverTotal);
+                localStorage.setItem('tldr-total-songs-played', maxTotal);
             }
             if (merged.merged_queue) {
                 localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(merged.merged_queue));
@@ -504,7 +512,10 @@ async function syncToCloud(type) {
                 break;
             case 'history':
                 endpoint = '/api/me/history';
-                body = { history: JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [] };
+                body = {
+                    history: JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [],
+                    total_songs_played: parseInt(localStorage.getItem('tldr-total-songs-played')) || 0
+                };
                 break;
             case 'queue':
                 endpoint = '/api/me/queue';
@@ -1782,7 +1793,8 @@ function populateShareCard() {
 
     // Stats
     const songsPlayedEl = document.getElementById('shareCardSongsPlayed');
-    if (songsPlayedEl) songsPlayedEl.textContent = userHistory?.length || 0;
+    const totalPlayed = parseInt(localStorage.getItem('tldr-total-songs-played')) || 0;
+    if (songsPlayedEl) songsPlayedEl.textContent = totalPlayed;
 
     const likedSongsEl = document.getElementById('shareCardLikedSongs');
     if (likedSongsEl) likedSongsEl.textContent = userFavorites?.length || 0;

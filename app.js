@@ -81,7 +81,8 @@ const STORAGE_KEYS = {
     PLAYLISTS: 'tldr-playlists',
     CHART_CACHE: 'tldr-chart-cache',
     CHART_CACHE_TIME: 'tldr-chart-cache-time',
-    RECENT_SEARCHES: 'tldr-recent-searches'
+    RECENT_SEARCHES: 'tldr-recent-searches',
+    TOTAL_SONGS_PLAYED: 'tldr-total-songs-played'
 };
 
 // Cache TTL: 30 minutes (in milliseconds)
@@ -161,7 +162,8 @@ function updateNowPlayingIndicators() {
 
 // User data (persisted in localStorage)
 let favorites = [];           // Array of {title, artist, videoId, artwork, addedAt}
-let playHistory = [];         // Array of recently played songs
+let playHistory = [];         // Array of recently played songs (max 50)
+let totalSongsPlayed = 0;     // Cumulative count of all songs ever played
 let queue = [];               // Custom queue
 let isShuffleOn = false;
 let repeatMode = 'off';       // 'off', 'all', 'one'
@@ -3638,6 +3640,7 @@ function loadUserData() {
     try {
         favorites = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
         playHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
+        totalSongsPlayed = parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_SONGS_PLAYED)) || 0;
         queue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE)) || [];
         playlists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
 
@@ -3785,16 +3788,16 @@ function updateFavoritesCount() {
  * Update all history count displays across the app
  */
 function updateHistoryCount() {
-    const count = playHistory.length;
-    const text = `${count} song${count !== 1 ? 's' : ''}`;
+    const recentCount = playHistory.length;
+    const recentText = `${recentCount} song${recentCount !== 1 ? 's' : ''}`;
 
-    // Library card count
+    // Library card count (shows recent history count)
     const libraryCount = document.getElementById('historyCardCount');
-    if (libraryCount) libraryCount.textContent = text;
+    if (libraryCount) libraryCount.textContent = recentText;
 
-    // Profile page count
+    // Profile page count (shows total songs ever played)
     const profileCount = document.getElementById('profileHistoryCount');
-    if (profileCount) profileCount.textContent = count;
+    if (profileCount) profileCount.textContent = totalSongsPlayed;
 }
 
 /**
@@ -4139,6 +4142,10 @@ function addToHistory(song) {
 
     // Keep only last 50
     playHistory = playHistory.slice(0, 50);
+
+    // Increment total songs played (cumulative, not capped)
+    totalSongsPlayed++;
+    localStorage.setItem(STORAGE_KEYS.TOTAL_SONGS_PLAYED, totalSongsPlayed);
 
     saveHistory();
     renderHistorySection();
