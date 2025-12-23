@@ -31,6 +31,9 @@ let lastSyncTimestamp = 0;
 let isSyncing = false;
 let hasMultipleSessions = false;
 const REALTIME_SYNC_INTERVAL = 2000; // 2 seconds
+
+// Track pending local changes to prevent pullFromCloud from overwriting them
+const pendingLocalChanges = new Set();
 const SESSION_CHECK_INTERVAL = 60000; // Check for multiple sessions every 60 seconds
 
 // Generate a unique session ID for this browser tab (persists in sessionStorage)
@@ -577,6 +580,8 @@ async function syncToCloud(type) {
                     }
                     console.log(`Synced playlists to cloud: ${syncResult.count} playlists`);
                 }
+                // Clear pending flag after successful sync
+                pendingLocalChanges.delete('playlists');
                 return;
             default:
                 return;
@@ -588,8 +593,12 @@ async function syncToCloud(type) {
             body: JSON.stringify(body)
         });
 
+        // Clear pending flag after successful sync
+        pendingLocalChanges.delete(type);
         console.log(`Synced ${type} to cloud`);
     } catch (error) {
+        // Clear pending flag even on error to prevent permanent blocking
+        pendingLocalChanges.delete(type);
         console.error(`Sync ${type} error:`, error);
     }
 }
@@ -610,12 +619,31 @@ function debounce(func, wait) {
 }
 
 // Debounced sync functions (1 second delay)
+// These set pending flags to prevent pullFromCloud from overwriting local changes
 const debouncedSyncFavorites = debounce(() => syncToCloud('favorites'), 1000);
 const debouncedSyncHistory = debounce(() => syncToCloud('history'), 1000);
 const debouncedSyncQueue = debounce(() => syncToCloud('queue'), 1000);
 const debouncedSyncPreferences = debounce(() => syncToCloud('preferences'), 1000);
 const debouncedSyncPlaylists = debounce(() => syncToCloud('playlists'), 1000);
 const debouncedSyncRecentSearches = debounce(() => syncToCloud('recent_searches'), 1000);
+
+// Wrapper functions that set pending flag before debounced sync
+function triggerFavoritesSync() {
+    pendingLocalChanges.add('favorites');
+    debouncedSyncFavorites();
+}
+function triggerHistorySync() {
+    pendingLocalChanges.add('history');
+    debouncedSyncHistory();
+}
+function triggerQueueSync() {
+    pendingLocalChanges.add('queue');
+    debouncedSyncQueue();
+}
+function triggerPlaylistsSync() {
+    pendingLocalChanges.add('playlists');
+    debouncedSyncPlaylists();
+}
 
 // ============================================================
 // REAL-TIME SYNC (Background polling - only when multiple sessions)
@@ -784,8 +812,8 @@ async function pullFromCloud() {
             const serverData = await res.json();
             let hasChanges = false;
 
-            // Compare and update favorites
-            if (serverData.merged_favorites) {
+            // Compare and update favorites (skip if local changes pending)
+            if (serverData.merged_favorites && !pendingLocalChanges.has('favorites')) {
                 const localFavorites = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES) || '[]');
                 if (!arraysEqual(localFavorites, serverData.merged_favorites, 'videoId')) {
                     localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(serverData.merged_favorites));
@@ -803,8 +831,8 @@ async function pullFromCloud() {
                 }
             }
 
-            // Compare and update history
-            if (serverData.merged_history) {
+            // Compare and update history (skip if local changes pending)
+            if (serverData.merged_history && !pendingLocalChanges.has('history')) {
                 const localHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]');
                 if (!arraysEqual(localHistory, serverData.merged_history, 'videoId')) {
                     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(serverData.merged_history));
@@ -819,8 +847,8 @@ async function pullFromCloud() {
                 }
             }
 
-            // Compare and update queue
-            if (serverData.merged_queue) {
+            // Compare and update queue (skip if local changes pending)
+            if (serverData.merged_queue && !pendingLocalChanges.has('queue')) {
                 const localQueue = JSON.parse(localStorage.getItem(STORAGE_KEYS.QUEUE) || '[]');
                 if (!arraysEqual(localQueue, serverData.merged_queue, 'videoId')) {
                     localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(serverData.merged_queue));
@@ -835,8 +863,8 @@ async function pullFromCloud() {
                 }
             }
 
-            // Compare and update playlists
-            if (serverData.merged_playlists) {
+            // Compare and update playlists (skip if local changes pending)
+            if (serverData.merged_playlists && !pendingLocalChanges.has('playlists')) {
                 const localPlaylists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS) || '[]');
                 if (!playlistsEqual(localPlaylists, serverData.merged_playlists)) {
                     localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(serverData.merged_playlists));

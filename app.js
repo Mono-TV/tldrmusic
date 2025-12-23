@@ -3808,19 +3808,19 @@ function loadUserData() {
 function saveFavorites() {
     localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
     // Sync to cloud if authenticated
-    if (typeof debouncedSyncFavorites === 'function') debouncedSyncFavorites();
+    if (typeof triggerFavoritesSync === 'function') triggerFavoritesSync();
 }
 
 function saveHistory() {
     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(playHistory.slice(0, 50)));
     // Sync to cloud if authenticated
-    if (typeof debouncedSyncHistory === 'function') debouncedSyncHistory();
+    if (typeof triggerHistorySync === 'function') triggerHistorySync();
 }
 
 function saveQueue() {
     localStorage.setItem(STORAGE_KEYS.QUEUE, JSON.stringify(queue));
     // Sync to cloud if authenticated
-    if (typeof debouncedSyncQueue === 'function') debouncedSyncQueue();
+    if (typeof triggerQueueSync === 'function') triggerQueueSync();
 }
 
 function savePlaybackSettings() {
@@ -3833,7 +3833,7 @@ function savePlaybackSettings() {
 function savePlaylists() {
     localStorage.setItem(STORAGE_KEYS.PLAYLISTS, JSON.stringify(playlists));
     // Sync to cloud if authenticated
-    if (typeof debouncedSyncPlaylists === 'function') debouncedSyncPlaylists();
+    if (typeof triggerPlaylistsSync === 'function') triggerPlaylistsSync();
     // Update UI
     updatePlaylistCount();
 }
