@@ -4440,9 +4440,14 @@ body::before {
 .profile-page-container {
     position: relative;
     width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
     height: 100%;
     overflow-y: auto;
     padding-bottom: 100px;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
 }
 
 /* Profile Header */
@@ -4753,8 +4758,8 @@ body::before {
 .profile-hero-enhanced {
     display: flex;
     align-items: flex-start;
-    gap: 2rem;
-    padding: 0 2rem 2rem;
+    gap: 1.5rem;
+    padding: 0 1.5rem 1.5rem;
     margin-top: -60px;
     position: relative;
     z-index: 1;
@@ -4816,9 +4821,9 @@ body::before {
 /* Profile Stats Grid */
 .profile-stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    padding: 0 2rem 2rem;
+    padding: 0 1.5rem 1.5rem;
 }
 
 .profile-stat-card {
@@ -4896,7 +4901,7 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     margin-bottom: 1rem;
 }
 
@@ -4921,7 +4926,7 @@ body::before {
 .profile-top-artists {
     display: flex;
     gap: 1rem;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -4984,7 +4989,7 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
 }
 
 .profile-song-item {
@@ -5054,7 +5059,7 @@ body::before {
 
 /* Update profile row scroll for sections */
 .profile-section .profile-row-scroll {
-    padding: 0 2rem;
+    padding: 0 1.5rem;
 }
 
 .profile-section .profile-row-empty {
