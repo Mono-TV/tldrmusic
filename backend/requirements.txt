@@ -31,6 +31,9 @@ aiohttp>=3.9.0
 # Caching
 # redis>=5.0.0  # Redis (optional)
 
+# Rate Limiting
+slowapi>=0.1.9
+
 # Utilities
 python-multipart>=0.0.6  # File uploads
 python-dotenv>=1.0.0

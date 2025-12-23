@@ -2,8 +2,9 @@
 User Library API Routes - Favorites, History, Queue, Playlists
 """
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
+from ...config import limiter, RateLimits
 from ...models import (
     User,
     UserLibrary,
@@ -462,7 +463,9 @@ async def remove_song_from_playlist(
 # ============== AI Playlist Generation ==============
 
 @router.post("/playlists/generate")
+@limiter.limit(RateLimits.AI_PLAYLIST_GENERATE)
 async def generate_playlist(
+    request: Request,
     data: dict,
     user: User = Depends(get_current_user_required)
 ):
@@ -470,17 +473,23 @@ async def generate_playlist(
     Generate a playlist using AI based on user's prompt.
 
     Request body:
-    - prompt: string (required) - User's description of desired playlist
+    - prompt: string (required, max 500 chars) - User's description of desired playlist
     - song_count: int (optional, default 25) - Number of songs to include
     - language: string (optional) - Preferred language code (hi, en, ta, etc.)
 
     Returns generated playlist that user can preview and save.
+
+    Rate limited to 10 requests per hour per user.
     """
     from ...services.playlist_generator import PlaylistGeneratorService
 
     prompt = data.get("prompt", "").strip()
     if not prompt:
         raise HTTPException(status_code=400, detail="Prompt is required")
+
+    # Validate prompt length to prevent abuse
+    if len(prompt) > 500:
+        raise HTTPException(status_code=400, detail="Prompt must be 500 characters or less")
 
     song_count = data.get("song_count", 25)
     if song_count < 5:
