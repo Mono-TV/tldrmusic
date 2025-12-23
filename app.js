@@ -5187,6 +5187,16 @@ function renderPlaylistsView() {
         countEl.textContent = playlists.length;
     }
 
+    // Update favorites and history counts
+    const favoritesCountEl = document.getElementById('favoritesCardCount');
+    const historyCountEl = document.getElementById('historyCardCount');
+    if (favoritesCountEl) {
+        favoritesCountEl.textContent = `${favorites.length} song${favorites.length !== 1 ? 's' : ''}`;
+    }
+    if (historyCountEl) {
+        historyCountEl.textContent = `${playHistory.length} song${playHistory.length !== 1 ? 's' : ''}`;
+    }
+
     if (!grid) return;
 
     // Hide recently played and divider if no playlists
