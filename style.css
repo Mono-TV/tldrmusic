@@ -3686,6 +3686,7 @@ body::before {
 }
 
 .queue-item-artwork {
+    position: relative;
     width: 40px;
     height: 40px;
     border-radius: 6px;
@@ -3695,9 +3696,13 @@ body::before {
 }
 
 .queue-item-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .queue-item-placeholder {
@@ -3860,9 +3865,13 @@ body::before {
 }
 
 .favorite-card-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .favorite-card-placeholder {
@@ -4003,9 +4012,13 @@ body::before {
 }
 
 .history-card-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .history-card-placeholder {
@@ -4658,9 +4671,13 @@ body::before {
 }
 
 .profile-card-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .profile-card-play {
@@ -5032,6 +5049,7 @@ body::before {
 }
 
 .profile-song-artwork {
+    position: relative;
     width: 48px;
     height: 48px;
     border-radius: 8px;
@@ -5040,9 +5058,13 @@ body::before {
 }
 
 .profile-song-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .profile-song-info {
@@ -5712,12 +5734,17 @@ body::before {
     aspect-ratio: 1;
     background: var(--bg-elevated);
     position: relative;
+    overflow: hidden;
 }
 
 .recently-played-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .recently-played-info {
@@ -5964,15 +5991,20 @@ body::before {
 }
 
 .playlist-grid-artwork {
+    position: relative;
     aspect-ratio: 1;
     background: var(--bg-elevated);
     overflow: hidden;
 }
 
 .playlist-grid-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .playlist-grid-artwork.multi {
@@ -6249,9 +6281,13 @@ body::before {
 }
 
 .artist-album-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .artist-album-placeholder {
@@ -6492,9 +6528,13 @@ body::before {
 }
 
 .detail-song-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .detail-song-play-overlay {
@@ -7133,12 +7173,22 @@ body::before {
 
 .playlist-detail-artwork.single {
     display: block;
+    position: relative;
 }
 
 .playlist-detail-artwork img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.playlist-detail-artwork.single img {
+    width: 135%;
+    height: 135%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .playlist-detail-info {
@@ -7274,6 +7324,7 @@ body::before {
 }
 
 .playlist-song-artwork {
+    position: relative;
     width: 48px;
     height: 48px;
     border-radius: 6px;
@@ -7283,9 +7334,13 @@ body::before {
 }
 
 .playlist-song-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .playlist-song-info {
@@ -7519,6 +7574,7 @@ body::before {
 }
 
 .playlist-select-artwork {
+    position: relative;
     width: 44px;
     height: 44px;
     border-radius: 6px;
@@ -7528,9 +7584,13 @@ body::before {
 }
 
 .playlist-select-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .playlist-select-info {
@@ -8366,6 +8426,7 @@ body::before {
 }
 
 .artwork-preview {
+    position: relative;
     width: 180px;
     height: 180px;
     margin: 0 auto 1.5rem;
@@ -8380,9 +8441,13 @@ body::before {
 }
 
 .artwork-preview img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .artwork-preview-placeholder {
@@ -8446,6 +8511,7 @@ body::before {
 }
 
 .artwork-song-option {
+    position: relative;
     width: 56px;
     height: 56px;
     border-radius: 8px;
@@ -8458,9 +8524,13 @@ body::before {
 }
 
 .artwork-song-option img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .artwork-song-option:hover {
@@ -8965,6 +9035,7 @@ body::before {
 }
 
 .chart-song-artwork {
+    position: relative;
     width: 48px;
     height: 48px;
     border-radius: 6px;
@@ -8974,9 +9045,13 @@ body::before {
 }
 
 .chart-song-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .chart-song-placeholder {
@@ -9293,6 +9368,7 @@ body::before {
 }
 
 .search-dropdown-item-artwork {
+    position: relative;
     width: 44px;
     height: 44px;
     border-radius: 6px;
@@ -9302,9 +9378,13 @@ body::before {
 }
 
 .search-dropdown-item-artwork img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .search-dropdown-item-info {
