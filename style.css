@@ -6144,6 +6144,7 @@ body::before {
 }
 
 .detail-cover {
+    position: relative;
     width: 220px;
     height: 220px;
     border-radius: 12px;
@@ -6154,9 +6155,13 @@ body::before {
 }
 
 .detail-cover img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .detail-cover.multi {
@@ -6212,6 +6217,7 @@ body::before {
 }
 
 .artist-cover {
+    position: relative;
     width: 220px;
     height: 220px;
     border-radius: 50%;
@@ -6225,9 +6231,13 @@ body::before {
 }
 
 .artist-cover img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .artist-cover.no-image {
@@ -8146,9 +8156,13 @@ body::before {
 }
 
 .public-profile-playlist-cover img {
-    width: 100%;
-    height: 100%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .public-profile-playlist-play {
