@@ -1496,6 +1496,10 @@ function showArtistPage(artistName) {
     const searchView = document.getElementById('searchView');
     const discoverView = document.getElementById('discoverView');
     const curatedDetailView = document.getElementById('curatedDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const chartsView = document.getElementById('chartsView');
+    const chartsDetailView = document.getElementById('chartsDetailView');
 
     if (homeView) homeView.style.display = 'none';
     if (heroSection) heroSection.style.display = 'none';
@@ -1508,6 +1512,10 @@ function showArtistPage(artistName) {
     if (searchView) searchView.style.display = 'none';
     if (discoverView) discoverView.style.display = 'none';
     if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (chartsView) chartsView.style.display = 'none';
+    if (chartsDetailView) chartsDetailView.style.display = 'none';
 
     // Show artist detail view
     const artistView = document.getElementById('artistDetailView');
@@ -3183,6 +3191,13 @@ function togglePlayPause() {
 
 // Play previous song
 function playPrevious() {
+    // If playing from a curated playlist (regional/discover), use the queue
+    if (isRegionalSongPlaying && queue.length > 0 && currentSongIndex > 0) {
+        playSongFromQueue(currentSongIndex - 1);
+        return;
+    }
+
+    // Normal chart playback
     if (currentSongIndex > 0) {
         playSong(currentSongIndex - 1);
     }
@@ -3190,11 +3205,26 @@ function playPrevious() {
 
 // Play next song
 function playNext() {
-    // Check queue first
-    const queuedSong = playFromQueue();
-    if (queuedSong) {
-        playRegionalSongDirect(queuedSong.title, queuedSong.artist, queuedSong.videoId, queuedSong.artwork, queuedSong.score);
-        return;
+    // If playing from a curated playlist (regional/discover), continue from the current queue index
+    if (isRegionalSongPlaying && queue.length > 0) {
+        const nextIndex = currentSongIndex + 1;
+
+        // Handle shuffle for playlist
+        if (isShuffleOn) {
+            const randomIndex = Math.floor(Math.random() * queue.length);
+            playSongFromQueue(randomIndex);
+            return;
+        }
+
+        // Play next in queue
+        if (nextIndex < queue.length) {
+            playSongFromQueue(nextIndex);
+            return;
+        } else if (repeatMode === 'all') {
+            playSongFromQueue(0); // Loop back to start
+            return;
+        }
+        // Queue exhausted, fall through to check main chart
     }
 
     // Handle repeat one (handled in onPlayerStateChange for auto-next)
@@ -7328,6 +7358,81 @@ const CURATED_PLAYLISTS = {
     ]
 };
 
+// Cached playlist colors from API
+let cachedPlaylistColors = {};
+let playlistColorsLoaded = false;
+
+// Map local playlist IDs to API slugs
+const PLAYLIST_SLUG_MAP = {
+    // Moods
+    'chill': 'chill-vibes',
+    'workout': 'workout-energy',
+    'party': 'party-mode',
+    'focus': 'focus-study',
+    // Languages
+    'hindi': 'hindi-hits',
+    'english': 'english-hits',
+    'tamil': 'tamil-hits',
+    'telugu': 'telugu-hits',
+    'punjabi': 'punjabi-hits',
+    'spanish': 'spanish-hits',
+    'korean': 'korean-hits',
+    'japanese': 'japanese-hits',
+    // Genres (lowercase)
+    'hip-hop-rap': 'hip-hop-rap',
+    'pop': 'pop-hits',
+    'rock': 'rock-classics',
+    'electronic': 'electronic-dance',
+    'rnb': 'rnb-soul',
+    'latin': 'latin-vibes',
+    'jazz': 'jazz-classics',
+    'classical': 'classical-music',
+    'alternative': 'alternative-indie',
+    // Featured playlists (title case)
+    'Indian Pop': 'pop-hits',
+    'Bollywood': 'hindi-hits',
+    'Pop': 'pop-hits',
+    'Hip-Hop/Rap': 'hip-hop-rap',
+    'Electronic': 'electronic-dance',
+    'Rock': 'rock-classics',
+    'Punjabi': 'punjabi-hits',
+    'Tamil': 'tamil-hits',
+    'Telugu': 'telugu-hits'
+};
+
+// Fetch playlist colors from API
+async function fetchPlaylistColors() {
+    if (playlistColorsLoaded) return cachedPlaylistColors;
+
+    try {
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists`);
+        if (!response.ok) throw new Error('Failed to fetch playlists');
+
+        const data = await response.json();
+        const playlists = data.playlists || [];
+
+        // Build color map by slug
+        playlists.forEach(playlist => {
+            if (playlist.slug && playlist.artwork?.color) {
+                cachedPlaylistColors[playlist.slug] = playlist.artwork.color;
+            }
+        });
+
+        playlistColorsLoaded = true;
+        console.log('Loaded playlist colors:', Object.keys(cachedPlaylistColors).length);
+    } catch (error) {
+        console.error('Error fetching playlist colors:', error);
+    }
+
+    return cachedPlaylistColors;
+}
+
+// Get color for a playlist (with fallback)
+function getPlaylistColor(key, fallbackColor = '#1a1a2e') {
+    const slug = PLAYLIST_SLUG_MAP[key] || key;
+    return cachedPlaylistColors[slug] || fallbackColor;
+}
+
 // ============================================================
 // CHARTS VIEW
 // ============================================================
@@ -7792,7 +7897,7 @@ const MOOD_ICONS = {
     energize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'
 };
 
-function showDiscoverView() {
+async function showDiscoverView() {
     isHomeViewVisible = false;
     isPlaylistPanelVisible = false;
     isSearchViewActive = false;
@@ -7833,7 +7938,15 @@ function showDiscoverView() {
     const sidebar = document.getElementById('sidebar');
     sidebar?.classList.remove('open');
 
-    // Render discover playlists
+    // Fetch playlist colors from API (non-blocking)
+    fetchPlaylistColors().then(() => {
+        // Re-render with colors once loaded
+        if (playlistColorsLoaded) {
+            renderDiscoverPlaylists();
+        }
+    });
+
+    // Render discover playlists immediately (with fallback colors)
     renderDiscoverPlaylists();
 }
 
@@ -7863,16 +7976,19 @@ function renderFeaturedPlaylists() {
     const grid = document.getElementById('featuredPlaylistsGrid');
     if (!grid) return;
 
-    grid.innerHTML = FEATURED_PLAYLISTS.map(playlist => `
-        <div class="discover-card featured-card" data-genre="${playlist.genre}" onclick="openFeaturedPlaylist('${playlist.genre}')">
-            <div class="discover-card-bg"></div>
-            <div class="discover-card-content">
-                <div class="discover-card-icon">${playlist.icon}</div>
-                <h4 class="discover-card-title">${playlist.name}</h4>
-                <span class="discover-card-meta">${playlist.songCount.toLocaleString()}+ songs</span>
+    grid.innerHTML = FEATURED_PLAYLISTS.map(playlist => {
+        const color = getPlaylistColor(playlist.genre);
+        return `
+            <div class="discover-card featured-card" data-genre="${playlist.genre}" style="--card-color: ${color}" onclick="openFeaturedPlaylist('${playlist.genre}')">
+                <div class="discover-card-bg"></div>
+                <div class="discover-card-content">
+                    <div class="discover-card-icon">${playlist.icon}</div>
+                    <h4 class="discover-card-title">${playlist.name}</h4>
+                    <span class="discover-card-meta">${playlist.songCount.toLocaleString()}+ songs</span>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 async function openFeaturedPlaylist(genreKey) {
@@ -7945,16 +8061,19 @@ function renderMoodPlaylists() {
     const grid = document.getElementById('moodPlaylistsGrid');
     if (!grid) return;
 
-    grid.innerHTML = CURATED_PLAYLISTS.moods.map(mood => `
-        <div class="discover-card" data-mood="${mood.mood}" onclick="openCuratedPlaylist('mood', '${mood.id}')">
-            <div class="discover-card-bg"></div>
-            <div class="discover-card-content">
-                <div class="discover-card-icon">${MOOD_ICONS[mood.mood] || ''}</div>
-                <h4 class="discover-card-title">${mood.name}</h4>
-                <span class="discover-card-meta">${mood.songCount.toLocaleString()} songs</span>
+    grid.innerHTML = CURATED_PLAYLISTS.moods.map(mood => {
+        const color = getPlaylistColor(mood.mood);
+        return `
+            <div class="discover-card" data-mood="${mood.mood}" style="--card-color: ${color}" onclick="openCuratedPlaylist('mood', '${mood.id}')">
+                <div class="discover-card-bg"></div>
+                <div class="discover-card-content">
+                    <div class="discover-card-icon">${MOOD_ICONS[mood.mood] || ''}</div>
+                    <h4 class="discover-card-title">${mood.name}</h4>
+                    <span class="discover-card-meta">${mood.songCount.toLocaleString()} songs</span>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function renderLanguagePlaylists() {
@@ -7963,16 +8082,19 @@ function renderLanguagePlaylists() {
 
     const musicIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
 
-    grid.innerHTML = CURATED_PLAYLISTS.languages.map(lang => `
-        <div class="discover-card" data-lang="${lang.lang}" onclick="openCuratedPlaylist('language', '${lang.id}')">
-            <div class="discover-card-bg"></div>
-            <div class="discover-card-content">
-                <div class="discover-card-icon">${musicIcon}</div>
-                <h4 class="discover-card-title">${lang.name}</h4>
-                <span class="discover-card-meta">${lang.songCount.toLocaleString()} songs</span>
+    grid.innerHTML = CURATED_PLAYLISTS.languages.map(lang => {
+        const color = getPlaylistColor(lang.lang);
+        return `
+            <div class="discover-card" data-lang="${lang.lang}" style="--card-color: ${color}" onclick="openCuratedPlaylist('language', '${lang.id}')">
+                <div class="discover-card-bg"></div>
+                <div class="discover-card-content">
+                    <div class="discover-card-icon">${musicIcon}</div>
+                    <h4 class="discover-card-title">${lang.name}</h4>
+                    <span class="discover-card-meta">${lang.songCount.toLocaleString()} songs</span>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function renderArtistPlaylists() {
