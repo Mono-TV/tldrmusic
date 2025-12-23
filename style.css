@@ -545,14 +545,19 @@ body::before {
     position: relative;
     width: 280px;
     height: 280px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
 }
 
 .hero-artwork {
-    width: 280px;
-    height: 280px;
-    border-radius: 16px;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .hero-artwork-wrapper .hero-rank {
@@ -3295,11 +3300,6 @@ body::before {
     }
 
     .hero-artwork-wrapper {
-        width: 160px;
-        height: 160px;
-    }
-
-    .hero-artwork {
         width: 160px;
         height: 160px;
     }
