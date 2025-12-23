@@ -1484,9 +1484,26 @@ function createDiscoverIndiaSongCard(song, index) {
         </div>
     `;
 
-    // Click handler - play the song
+    // Click handler for the play button - toggle play/pause
+    const playBtn = card.querySelector('.song-card-play-btn');
+    if (playBtn) {
+        playBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (isCurrentlyPlaying(videoId)) {
+                togglePlayPause();
+            } else {
+                playDiscoverIndiaSong(song, index);
+            }
+        });
+    }
+
+    // Click handler for the card - play the song (or toggle if already playing)
     card.addEventListener('click', () => {
-        playDiscoverIndiaSong(song, index);
+        if (isCurrentlyPlaying(videoId)) {
+            togglePlayPause();
+        } else {
+            playDiscoverIndiaSong(song, index);
+        }
     });
 
     return card;
