@@ -4694,6 +4694,632 @@ body::before {
     text-overflow: ellipsis;
 }
 
+/* ============================================
+   Enhanced Profile Page Styles
+   ============================================ */
+
+/* Profile Header Actions */
+.profile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.profile-share-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    color: var(--accent);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile-share-btn:hover {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--accent);
+}
+
+/* Profile Banner */
+.profile-banner {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.profile-banner-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%);
+    opacity: 0.8;
+}
+
+.profile-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--bg-dark) 0%, transparent 100%);
+}
+
+/* Enhanced Profile Hero */
+.profile-hero-enhanced {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 0 2rem 2rem;
+    margin-top: -60px;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-avatar-container {
+    flex-shrink: 0;
+}
+
+.profile-avatar-large {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--bg-elevated);
+    border: 4px solid var(--bg-dark);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.profile-hero-content {
+    flex: 1;
+    padding-top: 70px;
+}
+
+.profile-display-name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.2;
+}
+
+.profile-bio {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0.75rem 0;
+    line-height: 1.5;
+}
+
+.profile-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.profile-member-since {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.profile-member-since svg {
+    opacity: 0.7;
+}
+
+/* Profile Stats Grid */
+.profile-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 0 2rem 2rem;
+}
+
+.profile-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+
+.profile-stat-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.stat-card-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.stat-card-icon.songs-played {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.stat-card-icon.liked-songs {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.stat-card-icon.playlists {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+}
+
+.stat-card-icon.top-genre {
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--accent);
+}
+
+.stat-card-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.stat-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.stat-card-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Profile Sections */
+.profile-section {
+    padding: 1.5rem 0;
+}
+
+.profile-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    margin-bottom: 1rem;
+}
+
+.profile-section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.profile-section-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.profile-section-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Top Artists Grid */
+.profile-top-artists {
+    display: flex;
+    gap: 1rem;
+    padding: 0 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.profile-top-artists::-webkit-scrollbar {
+    display: none;
+}
+
+.profile-artist-card {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+}
+
+.profile-artist-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-4px);
+}
+
+.profile-artist-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--bg-dark);
+}
+
+.profile-artist-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.profile-artist-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Top Songs Grid */
+.profile-top-songs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 2rem;
+}
+
+.profile-song-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile-song-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.profile-song-rank {
+    width: 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+}
+
+.profile-song-artwork {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.profile-song-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-song-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-song-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-song-artist {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-song-plays {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Update profile row scroll for sections */
+.profile-section .profile-row-scroll {
+    padding: 0 2rem;
+}
+
+.profile-section .profile-row-empty {
+    min-width: 100%;
+    padding: 2rem;
+}
+
+/* Profile Page Mobile Enhancements */
+@media (max-width: 768px) {
+    .profile-banner {
+        height: 140px;
+    }
+
+    .profile-hero-enhanced {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+        margin-top: -50px;
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-hero-content {
+        padding-top: 0;
+    }
+
+    .profile-display-name {
+        font-size: 1.5rem;
+    }
+
+    .profile-meta {
+        justify-content: center;
+    }
+
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .stat-card-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .stat-card-value {
+        font-size: 1.25rem;
+    }
+
+    .profile-section-header,
+    .profile-top-artists,
+    .profile-top-songs,
+    .profile-section .profile-row-scroll {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .profile-header-actions {
+        gap: 0.5rem;
+    }
+
+    .profile-share-btn span {
+        display: none;
+    }
+
+    .profile-share-btn {
+        padding: 0.5rem;
+    }
+}
+
+/* Share Profile Card Modal */
+.share-card-modal {
+    max-width: 480px;
+    text-align: center;
+}
+
+.share-card-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem !important;
+}
+
+.share-card-preview-container {
+    padding: 1.5rem;
+    background: var(--bg-dark);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.share-card-preview {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1.2;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    background: #1a1a2e;
+}
+
+.share-card-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 40%, #1a1a2e 100%);
+    opacity: 0.9;
+}
+
+.share-card-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.share-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.share-card-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.share-card-user {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.share-card-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.share-card-handle {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.share-card-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.share-card-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.share-card-stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.share-card-stat-label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+}
+
+.share-card-top-artists {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.share-card-top-artists-title {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.share-card-artist {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+}
+
+.share-card-artist-rank {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.2);
+    color: #D4AF37;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 6px;
+}
+
+.share-card-artist-name {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #fff;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.share-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.share-card-logo {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #D4AF37;
+}
+
+.share-card-url {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.share-card-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.share-card-actions .btn-primary,
+.share-card-actions .btn-secondary {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
 /* Profile Page Mobile */
 @media (max-width: 600px) {
     .profile-hero {
@@ -7491,6 +8117,164 @@ body::before {
     opacity: 0.5;
 }
 
+/* Enhanced Public Profile Styles */
+.public-profile-banner {
+    position: relative;
+    width: calc(100% + 4rem);
+    margin: -2rem -2rem 0;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+}
+
+.public-profile-banner-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%);
+    opacity: 0.9;
+}
+
+.public-profile-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, var(--bg-card) 0%, transparent 100%);
+}
+
+.public-profile-hero-enhanced {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-top: -50px;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.public-profile-avatar-container {
+    flex-shrink: 0;
+}
+
+.public-profile-avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--bg-elevated);
+    border: 3px solid var(--bg-card);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.public-profile-hero-content {
+    flex: 1;
+    padding-top: 55px;
+    min-width: 0;
+}
+
+.public-profile-display-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.2;
+}
+
+.public-profile-handle {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin: 0;
+}
+
+.public-profile-bio {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0.75rem 0 0;
+    line-height: 1.4;
+}
+
+/* Public Profile Stats Grid */
+.public-profile-stats-grid {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.public-profile-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    flex: 1;
+}
+
+.public-stat-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.public-stat-icon.playlists {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+}
+
+.public-stat-icon.songs {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.public-stat-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.public-stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.public-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Public Profile Section Header */
+.public-profile-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.public-profile-section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.public-profile-section-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
 @media (max-width: 600px) {
     .public-profile-view {
         padding: 0;
@@ -7500,6 +8284,44 @@ body::before {
         max-height: 100vh;
         border-radius: 0;
         border: none;
+        padding: 1.5rem;
+    }
+
+    .public-profile-banner {
+        width: calc(100% + 3rem);
+        margin: -1.5rem -1.5rem 0;
+        height: 120px;
+        border-radius: 0;
+    }
+
+    .public-profile-hero-enhanced {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+        margin-top: -40px;
+    }
+
+    .public-profile-avatar-large {
+        width: 80px;
+        height: 80px;
+    }
+
+    .public-profile-hero-content {
+        padding-top: 0;
+    }
+
+    .public-profile-display-name {
+        font-size: 1.25rem;
+    }
+
+    .public-profile-stats-grid {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .public-profile-stat-card {
+        padding: 0.875rem 1rem;
     }
 
     .public-profile-hero {

@@ -736,9 +736,45 @@ function renderPublicProfileView(profile, playlists) {
     const initials = (profile.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect fill="#D4AF37" width="96" height="96" rx="48"/><text x="48" y="58" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="36" font-weight="600">${initials}</text></svg>`)}`;
 
+    // Calculate total songs across all playlists
+    const totalSongs = playlists.reduce((sum, p) => sum + (p.song_count || 0), 0);
+
+    // Stats cards HTML
+    const statsHTML = `
+        <div class="public-profile-stats-grid">
+            <div class="public-profile-stat-card">
+                <div class="public-stat-icon playlists">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15V6M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 12H3M16 6H3M12 18H3"/>
+                    </svg>
+                </div>
+                <div class="public-stat-info">
+                    <span class="public-stat-value">${profile.playlist_count || 0}</span>
+                    <span class="public-stat-label">Playlists</span>
+                </div>
+            </div>
+            <div class="public-profile-stat-card">
+                <div class="public-stat-icon songs">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18V5l12-2v13"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <circle cx="18" cy="16" r="3"/>
+                    </svg>
+                </div>
+                <div class="public-stat-info">
+                    <span class="public-stat-value">${totalSongs}</span>
+                    <span class="public-stat-label">Songs Shared</span>
+                </div>
+            </div>
+        </div>
+    `;
+
     const playlistsHTML = playlists.length > 0 ? `
         <div class="public-profile-playlists">
-            <h2>Public Playlists</h2>
+            <div class="public-profile-section-header">
+                <h2>Public Playlists</h2>
+                <span class="public-profile-section-count">${playlists.length} playlist${playlists.length !== 1 ? 's' : ''}</span>
+            </div>
             <div class="public-profile-playlist-grid">
                 ${playlists.map(playlist => {
                     const coverArt = playlist.cover_urls?.[0] || playlist.artwork_url ||
@@ -780,15 +816,25 @@ function renderPublicProfileView(profile, playlists) {
                 </svg>
             </button>
 
-            <div class="public-profile-hero">
-                <img class="public-profile-avatar" src="${profile.picture || fallbackSvg}" alt="${escapeHtml(profile.name)}"
-                     referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${fallbackSvg}'">
-                <div class="public-profile-info">
-                    <h1 class="public-profile-name">${escapeHtml(profile.name)}</h1>
-                    <p class="public-profile-username">@${profile.username}</p>
-                    <p class="public-profile-stats">${profile.playlist_count} public playlist${profile.playlist_count !== 1 ? 's' : ''}</p>
+            <!-- Enhanced Banner -->
+            <div class="public-profile-banner">
+                <div class="public-profile-banner-gradient"></div>
+            </div>
+
+            <!-- Enhanced Hero Section -->
+            <div class="public-profile-hero-enhanced">
+                <div class="public-profile-avatar-container">
+                    <img class="public-profile-avatar-large" src="${profile.picture || fallbackSvg}" alt="${escapeHtml(profile.name)}"
+                         referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='${fallbackSvg}'">
+                </div>
+                <div class="public-profile-hero-content">
+                    <h1 class="public-profile-display-name">${escapeHtml(profile.name)}</h1>
+                    <p class="public-profile-handle">@${profile.username}</p>
+                    ${profile.bio ? `<p class="public-profile-bio">${escapeHtml(profile.bio)}</p>` : ''}
                 </div>
             </div>
+
+            ${statsHTML}
 
             ${playlistsHTML}
         </div>

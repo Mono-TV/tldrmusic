@@ -40,7 +40,7 @@
     }
     </script>
 
-    <link rel="stylesheet" href="style.css?v=52">
+    <link rel="stylesheet" href="style.css?v=54">
     <!-- Preconnect to APIs for faster initial load -->
     <link rel="preconnect" href="https://tldrmusic-api-401132033262.asia-south1.run.app">
     <link rel="preconnect" href="https://harvester.lumiolabs.in">
@@ -853,22 +853,40 @@
                     </svg>
                     Back
                 </button>
-                <button class="profile-signout-btn" id="profileSignout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                    Sign Out
-                </button>
+                <div class="profile-header-actions">
+                    <button class="profile-share-btn" id="profileShareBtn" title="Share Profile">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        Share
+                    </button>
+                    <button class="profile-signout-btn" id="profileSignout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Sign Out
+                    </button>
+                </div>
             </div>
 
-            <!-- User Hero -->
-            <div class="profile-hero">
-                <img class="profile-hero-avatar" id="profileAvatar" src="" alt="">
-                <div class="profile-hero-info">
-                    <h1 class="profile-hero-name" id="profileName">-</h1>
-                    <p class="profile-hero-email" id="profileEmail">-</p>
+            <!-- Profile Banner -->
+            <div class="profile-banner" id="profileBanner">
+                <div class="profile-banner-gradient"></div>
+            </div>
+
+            <!-- User Hero (Enhanced) -->
+            <div class="profile-hero-enhanced">
+                <div class="profile-avatar-container">
+                    <img class="profile-avatar-large" id="profileAvatar" src="" alt="">
+                </div>
+                <div class="profile-hero-content">
+                    <h1 class="profile-display-name" id="profileName">-</h1>
                     <div class="profile-username-row" id="profileUsernameRow">
                         <span class="profile-username" id="profileUsername">Set a username</span>
                         <button class="profile-username-edit" onclick="showUsernameModal()" title="Edit username">
@@ -878,24 +896,116 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="profile-hero-stats">
-                        <div class="profile-hero-stat">
-                            <span class="stat-value" id="profileFavCount">0</span>
-                            <span class="stat-label">Liked</span>
-                        </div>
-                        <div class="profile-hero-stat">
-                            <span class="stat-value" id="profileHistoryCount">0</span>
-                            <span class="stat-label">Played</span>
-                        </div>
+                    <p class="profile-bio" id="profileBio">Music lover exploring new sounds</p>
+                    <div class="profile-meta">
+                        <span class="profile-member-since" id="profileMemberSince">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Listening since Dec 2024
+                        </span>
                     </div>
                 </div>
             </div>
 
+            <!-- Stats Cards -->
+            <div class="profile-stats-grid">
+                <div class="profile-stat-card">
+                    <div class="stat-card-icon songs-played">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </div>
+                    <div class="stat-card-info">
+                        <span class="stat-card-value" id="profileHistoryCount">0</span>
+                        <span class="stat-card-label">Songs Played</span>
+                    </div>
+                </div>
+                <div class="profile-stat-card">
+                    <div class="stat-card-icon liked-songs">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-card-info">
+                        <span class="stat-card-value" id="profileFavCount">0</span>
+                        <span class="stat-card-label">Liked Songs</span>
+                    </div>
+                </div>
+                <div class="profile-stat-card">
+                    <div class="stat-card-icon playlists">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <div class="stat-card-info">
+                        <span class="stat-card-value" id="profilePlaylistCount">0</span>
+                        <span class="stat-card-label">Playlists</span>
+                    </div>
+                </div>
+                <div class="profile-stat-card">
+                    <div class="stat-card-icon top-genre">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18V5l12-2v13"></path>
+                            <circle cx="6" cy="18" r="3"></circle>
+                            <circle cx="18" cy="16" r="3"></circle>
+                        </svg>
+                    </div>
+                    <div class="stat-card-info">
+                        <span class="stat-card-value" id="profileTopLanguage">-</span>
+                        <span class="stat-card-label">Top Language</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Artists Section -->
+            <section class="profile-section">
+                <div class="profile-section-header">
+                    <h2>Top Artists</h2>
+                    <span class="profile-section-subtitle">Based on your favorites</span>
+                </div>
+                <div class="profile-top-artists" id="profileTopArtists">
+                    <div class="profile-row-empty">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <p>Like some songs to see your top artists</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top Songs Section -->
+            <section class="profile-section">
+                <div class="profile-section-header">
+                    <h2>Most Played</h2>
+                    <span class="profile-section-subtitle">Your favorite tracks</span>
+                </div>
+                <div class="profile-top-songs" id="profileTopSongs">
+                    <div class="profile-row-empty">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 18V5l12-2v13"></path>
+                            <circle cx="6" cy="18" r="3"></circle>
+                            <circle cx="18" cy="16" r="3"></circle>
+                        </svg>
+                        <p>Play some songs to see your most played</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- Liked Songs Row -->
-            <section class="profile-row">
-                <div class="profile-row-header">
+            <section class="profile-section">
+                <div class="profile-section-header">
                     <h2>Liked Songs</h2>
-                    <span class="profile-row-count" id="likedCount">0 songs</span>
+                    <span class="profile-section-count" id="likedCount">0 songs</span>
                 </div>
                 <div class="profile-row-scroll" id="profileLikedSongs">
                     <div class="profile-row-empty">
@@ -1163,12 +1273,78 @@
         </div>
     </div>
 
+    <!-- Share Profile Card Modal -->
+    <div class="modal" id="shareProfileCardModal">
+        <div class="modal-backdrop" onclick="hideShareProfileCardModal()"></div>
+        <div class="modal-content share-card-modal">
+            <h3>Share Your Music Profile</h3>
+            <p class="share-card-subtitle">Download and share your listening stats</p>
+
+            <!-- Card Preview -->
+            <div class="share-card-preview-container">
+                <div class="share-card-preview" id="shareCardPreview">
+                    <div class="share-card-bg"></div>
+                    <div class="share-card-content">
+                        <div class="share-card-header">
+                            <img class="share-card-avatar" id="shareCardAvatar" src="" alt="">
+                            <div class="share-card-user">
+                                <span class="share-card-name" id="shareCardName"></span>
+                                <span class="share-card-handle" id="shareCardHandle"></span>
+                            </div>
+                        </div>
+                        <div class="share-card-stats">
+                            <div class="share-card-stat">
+                                <span class="share-card-stat-value" id="shareCardSongsPlayed">0</span>
+                                <span class="share-card-stat-label">Songs Played</span>
+                            </div>
+                            <div class="share-card-stat">
+                                <span class="share-card-stat-value" id="shareCardLikedSongs">0</span>
+                                <span class="share-card-stat-label">Liked Songs</span>
+                            </div>
+                            <div class="share-card-stat">
+                                <span class="share-card-stat-value" id="shareCardPlaylists">0</span>
+                                <span class="share-card-stat-label">Playlists</span>
+                            </div>
+                        </div>
+                        <div class="share-card-top-artists" id="shareCardTopArtists">
+                            <!-- Top artists will be populated here -->
+                        </div>
+                        <div class="share-card-footer">
+                            <span class="share-card-logo">TLDRMusic</span>
+                            <span class="share-card-url" id="shareCardUrl"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="share-card-actions">
+                <button class="btn-primary" onclick="downloadShareCard()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Image
+                </button>
+                <button class="btn-secondary" onclick="copyProfileLink()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                    Copy Link
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div class="toast" id="toast">
         <span id="toastMessage"></span>
     </div>
 
-    <script src="auth.js?v=9"></script>
+    <!-- html2canvas for share card generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="auth.js?v=10"></script>
     <script src="app.js?v=49"></script>
     <script src="js/router.js?v=1"></script>
 </body>

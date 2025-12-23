@@ -1251,11 +1251,12 @@ function showProfilePanel() {
     // Update profile info
     const avatar = document.getElementById('profileAvatar');
     const name = document.getElementById('profileName');
-    const email = document.getElementById('profileEmail');
     const favCount = document.getElementById('profileFavCount');
     const historyCount = document.getElementById('profileHistoryCount');
     const likedCount = document.getElementById('likedCount');
-    const historyRowCount = document.getElementById('historyCount');
+    const playlistCountEl = document.getElementById('profilePlaylistCount');
+    const topLanguageEl = document.getElementById('profileTopLanguage');
+    const memberSinceEl = document.getElementById('profileMemberSince');
 
     if (avatar) {
         // Get user initials for fallback
@@ -1266,7 +1267,6 @@ function showProfilePanel() {
         avatar.referrerPolicy = 'no-referrer';
     }
     if (name) name.textContent = currentUser.name;
-    if (email) email.textContent = currentUser.email;
 
     // Update username display
     const usernameEl = document.getElementById('profileUsername');
@@ -1283,14 +1283,49 @@ function showProfilePanel() {
     // Update stats
     const favs = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
     const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
+    const playlists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
+
     if (favCount) favCount.textContent = favs.length;
     if (historyCount) historyCount.textContent = history.length;
     if (likedCount) likedCount.textContent = `${favs.length} song${favs.length !== 1 ? 's' : ''}`;
-    if (historyRowCount) historyRowCount.textContent = `${history.length} song${history.length !== 1 ? 's' : ''}`;
+    if (playlistCountEl) playlistCountEl.textContent = playlists.length;
+
+    // Compute and display top language
+    if (topLanguageEl) {
+        const topLang = computeTopLanguage(favs);
+        topLanguageEl.textContent = topLang || '-';
+    }
+
+    // Update member since date
+    if (memberSinceEl) {
+        const createdAt = currentUser.created_at || currentUser.createdAt;
+        if (createdAt) {
+            const date = new Date(createdAt);
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            memberSinceEl.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Listening since ${monthNames[date.getMonth()]} ${date.getFullYear()}
+            `;
+        }
+    }
+
+    // Update profile banner gradient based on preferences
+    updateProfileBanner(favs);
 
     // Render liked songs and history
     renderProfileLikedSongs();
     renderProfileHistory();
+
+    // Render top artists
+    renderProfileTopArtists(favs);
+
+    // Render top/most played songs
+    renderProfileTopSongs(history);
 
     // Show page
     panel.classList.add('visible');
@@ -1433,6 +1468,409 @@ function playHistoryFromProfile(index) {
     } else if (typeof playSongDirect === 'function') {
         playSongDirect(song);
     }
+}
+
+// ============================================================
+// ENHANCED PROFILE FUNCTIONS
+// ============================================================
+
+/**
+ * Compute top language from favorites
+ */
+function computeTopLanguage(favorites) {
+    if (!favorites || favorites.length === 0) return null;
+
+    // Language keywords mapping
+    const languageKeywords = {
+        'Hindi': ['bollywood', 'hindi', 'desi'],
+        'English': ['english', 'pop', 'rock', 'edm', 'electronic'],
+        'Punjabi': ['punjabi', 'bhangra'],
+        'Tamil': ['tamil', 'kollywood'],
+        'Telugu': ['telugu', 'tollywood'],
+        'Bengali': ['bengali', 'bangla'],
+        'Kannada': ['kannada', 'sandalwood'],
+        'Malayalam': ['malayalam', 'mollywood'],
+        'Korean': ['k-pop', 'korean', 'kpop'],
+        'Spanish': ['spanish', 'latin', 'reggaeton'],
+        'Japanese': ['j-pop', 'japanese', 'jpop', 'anime']
+    };
+
+    const langCounts = {};
+
+    favorites.forEach(song => {
+        const titleLower = (song.title || '').toLowerCase();
+        const artistLower = (song.artist || '').toLowerCase();
+        const combinedText = `${titleLower} ${artistLower}`;
+
+        // Check for language keywords
+        for (const [lang, keywords] of Object.entries(languageKeywords)) {
+            if (keywords.some(kw => combinedText.includes(kw))) {
+                langCounts[lang] = (langCounts[lang] || 0) + 1;
+            }
+        }
+    });
+
+    // Default to Hindi if no language detected (since it's an Indian app)
+    if (Object.keys(langCounts).length === 0) {
+        return favorites.length > 0 ? 'Hindi' : null;
+    }
+
+    // Return the most common language
+    return Object.entries(langCounts)
+        .sort((a, b) => b[1] - a[1])[0][0];
+}
+
+/**
+ * Compute top artists from favorites
+ */
+function computeTopArtists(favorites, limit = 5) {
+    if (!favorites || favorites.length === 0) return [];
+
+    const artistCounts = {};
+
+    favorites.forEach(song => {
+        // Get the primary artist (first one before comma or &)
+        const primaryArtist = (song.artist || 'Unknown')
+            .split(/[,&]/)[0]
+            .trim();
+
+        if (primaryArtist && primaryArtist !== 'Unknown') {
+            artistCounts[primaryArtist] = (artistCounts[primaryArtist] || 0) + 1;
+        }
+    });
+
+    return Object.entries(artistCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, limit)
+        .map(([name, count]) => ({ name, count }));
+}
+
+/**
+ * Compute most played songs from history
+ */
+function computeTopSongs(history, limit = 5) {
+    if (!history || history.length === 0) return [];
+
+    const songCounts = {};
+    const songData = {};
+
+    history.forEach(song => {
+        const key = song.videoId || `${song.title}-${song.artist}`;
+        songCounts[key] = (songCounts[key] || 0) + 1;
+        songData[key] = song;
+    });
+
+    return Object.entries(songCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, limit)
+        .map(([key, count]) => ({
+            ...songData[key],
+            playCount: count
+        }));
+}
+
+/**
+ * Update profile banner gradient based on user preferences
+ */
+function updateProfileBanner(favorites) {
+    const banner = document.getElementById('profileBanner');
+    if (!banner) return;
+
+    // Define gradient presets based on music taste
+    const gradientPresets = {
+        'Hindi': 'linear-gradient(135deg, #ff6b35 0%, #f7c59f 50%, #ffd93d 100%)',
+        'English': 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%)',
+        'Punjabi': 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff6b6b 100%)',
+        'Tamil': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%)',
+        'Telugu': 'linear-gradient(135deg, #fa709a 0%, #fee140 50%, #fa709a 100%)',
+        'Korean': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d299c2 100%)',
+        'Spanish': 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%)',
+        'default': 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%)'
+    };
+
+    const topLang = computeTopLanguage(favorites);
+    const gradient = gradientPresets[topLang] || gradientPresets['default'];
+
+    const bannerGradient = banner.querySelector('.profile-banner-gradient');
+    if (bannerGradient) {
+        bannerGradient.style.background = gradient;
+    }
+}
+
+/**
+ * Render top artists in profile
+ */
+function renderProfileTopArtists(favorites) {
+    const container = document.getElementById('profileTopArtists');
+    if (!container) return;
+
+    const topArtists = computeTopArtists(favorites, 6);
+
+    if (topArtists.length === 0) {
+        container.innerHTML = `
+            <div class="profile-row-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <p>Like some songs to see your top artists</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = topArtists.map(artist => {
+        const initials = artist.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        return `
+            <div class="profile-artist-card" onclick="searchForArtist('${escapeHtml(artist.name)}')">
+                <div class="profile-artist-avatar">${initials}</div>
+                <div class="profile-artist-name">${escapeHtml(artist.name)}</div>
+                <div class="profile-artist-count">${artist.count} ${artist.count === 1 ? 'song' : 'songs'}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+/**
+ * Render top/most played songs in profile
+ */
+function renderProfileTopSongs(history) {
+    const container = document.getElementById('profileTopSongs');
+    if (!container) return;
+
+    const topSongs = computeTopSongs(history, 5);
+
+    if (topSongs.length === 0) {
+        container.innerHTML = `
+            <div class="profile-row-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <p>Play some songs to see your most played</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = topSongs.map((song, index) => `
+        <div class="profile-song-item" onclick="playTopSongFromProfile(${index})">
+            <div class="profile-song-rank">${index + 1}</div>
+            <div class="profile-song-artwork">
+                <img src="${song.artwork || ''}"
+                     alt="${escapeHtml(song.title)}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23666%22 font-size=%2240%22>♪</text></svg>'">
+            </div>
+            <div class="profile-song-info">
+                <div class="profile-song-title">${escapeHtml(song.title)}</div>
+                <div class="profile-song-artist">${escapeHtml(song.artist)}</div>
+            </div>
+            <div class="profile-song-plays">${song.playCount} ${song.playCount === 1 ? 'play' : 'plays'}</div>
+        </div>
+    `).join('');
+}
+
+/**
+ * Play a top song from profile
+ */
+function playTopSongFromProfile(index) {
+    const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
+    const topSongs = computeTopSongs(history, 5);
+    const song = topSongs[index];
+    if (!song) return;
+
+    closeProfilePanel();
+
+    if (typeof playRegionalSongDirect === 'function') {
+        playRegionalSongDirect(song.title, song.artist, song.videoId, song.artwork);
+    } else if (typeof playSongDirect === 'function') {
+        playSongDirect(song);
+    }
+}
+
+/**
+ * Search for an artist from profile
+ */
+function searchForArtist(artistName) {
+    closeProfilePanel();
+
+    // Navigate to search with artist name
+    if (typeof showArtistPage === 'function') {
+        showArtistPage(artistName);
+    } else if (typeof navigate === 'function') {
+        navigate(`/search?q=${encodeURIComponent(artistName)}`);
+    }
+}
+
+/**
+ * Share profile - show share card modal
+ */
+function shareProfile() {
+    if (!currentUser || !currentUser.username) {
+        showToast('Set a username first to share your profile');
+        showUsernameModal();
+        return;
+    }
+
+    showShareProfileCardModal();
+}
+
+/**
+ * Show share profile card modal
+ */
+function showShareProfileCardModal() {
+    const modal = document.getElementById('shareProfileCardModal');
+    if (!modal) return;
+
+    // Populate the card preview
+    populateShareCard();
+
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Hide share profile card modal
+ */
+function hideShareProfileCardModal() {
+    const modal = document.getElementById('shareProfileCardModal');
+    if (modal) {
+        modal.classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+}
+
+/**
+ * Populate the share card with user data
+ */
+function populateShareCard() {
+    // Avatar
+    const avatar = document.getElementById('shareCardAvatar');
+    if (avatar && currentUser) {
+        const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect fill="#D4AF37" width="96" height="96" rx="48"/><text x="48" y="58" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="36" font-weight="600">${initials}</text></svg>`)}`;
+        avatar.src = currentUser.picture || fallbackSvg;
+        avatar.onerror = () => { avatar.src = fallbackSvg; };
+    }
+
+    // Name and handle
+    const nameEl = document.getElementById('shareCardName');
+    if (nameEl) nameEl.textContent = currentUser?.name || 'Music Lover';
+
+    const handleEl = document.getElementById('shareCardHandle');
+    if (handleEl) handleEl.textContent = currentUser?.username ? `@${currentUser.username}` : '';
+
+    // Stats
+    const songsPlayedEl = document.getElementById('shareCardSongsPlayed');
+    if (songsPlayedEl) songsPlayedEl.textContent = userHistory?.length || 0;
+
+    const likedSongsEl = document.getElementById('shareCardLikedSongs');
+    if (likedSongsEl) likedSongsEl.textContent = userFavorites?.length || 0;
+
+    const playlistsEl = document.getElementById('shareCardPlaylists');
+    if (playlistsEl) playlistsEl.textContent = userPlaylists?.length || 0;
+
+    // Top artists
+    const topArtistsEl = document.getElementById('shareCardTopArtists');
+    if (topArtistsEl) {
+        const topArtists = computeTopArtists(userFavorites || [], 3);
+
+        if (topArtists.length > 0) {
+            topArtistsEl.innerHTML = `
+                <div class="share-card-top-artists-title">Top Artists</div>
+                ${topArtists.map((artist, i) => `
+                    <div class="share-card-artist">
+                        <span class="share-card-artist-rank">${i + 1}</span>
+                        <span class="share-card-artist-name">${escapeHtml(artist.name)}</span>
+                    </div>
+                `).join('')}
+            `;
+        } else {
+            topArtistsEl.innerHTML = `
+                <div class="share-card-top-artists-title">Top Artists</div>
+                <div class="share-card-artist" style="justify-content: center; color: rgba(255,255,255,0.5);">
+                    Like songs to see your top artists
+                </div>
+            `;
+        }
+    }
+
+    // Profile URL
+    const urlEl = document.getElementById('shareCardUrl');
+    if (urlEl && currentUser?.username) {
+        urlEl.textContent = `tldrmusic.com/@${currentUser.username}`;
+    }
+}
+
+/**
+ * Download share card as image
+ */
+async function downloadShareCard() {
+    const cardEl = document.getElementById('shareCardPreview');
+    if (!cardEl) {
+        showToast('Card element not found');
+        return;
+    }
+
+    if (typeof html2canvas === 'undefined') {
+        showToast('Image generation not available');
+        return;
+    }
+
+    showToast('Generating image...');
+
+    try {
+        const canvas = await html2canvas(cardEl, {
+            scale: 2,
+            backgroundColor: '#1a1a2e',
+            useCORS: true,
+            logging: false
+        });
+
+        // Create download link
+        const link = document.createElement('a');
+        link.download = `tldrmusic-${currentUser?.username || 'profile'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        showToast('Image downloaded!');
+    } catch (error) {
+        console.error('Error generating share card:', error);
+        showToast('Failed to generate image');
+    }
+}
+
+/**
+ * Copy profile link to clipboard
+ */
+function copyProfileLink() {
+    if (!currentUser?.username) {
+        showToast('Set a username first');
+        return;
+    }
+
+    const profileUrl = `${window.location.origin}${window.location.pathname}#/profile/${currentUser.username}`;
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(profileUrl).then(() => {
+            showToast('Profile link copied!');
+        }).catch(() => {
+            showToast('Failed to copy link');
+        });
+    } else {
+        showToast('Clipboard not available');
+    }
+}
+
+/**
+ * Escape HTML to prevent XSS
+ */
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // ============================================================
@@ -1650,6 +2088,12 @@ function initProfilePanel() {
             closeProfilePanel();
             logout();
         });
+    }
+
+    // Share profile button
+    const shareBtn = document.getElementById('profileShareBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', shareProfile);
     }
 
     // Click outside to close
