@@ -1353,9 +1353,7 @@ function showProfilePanel() {
 
     // Close other panels
     const queuePanel = document.getElementById('queuePanel');
-    const lyricsPanel = document.getElementById('lyricsPanel');
     if (queuePanel) queuePanel.classList.remove('visible');
-    if (lyricsPanel) lyricsPanel.classList.remove('visible');
 }
 
 /**

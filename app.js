@@ -37,7 +37,6 @@ function mapHarvesterSong(song, index) {
         platform_positions: song.platform_positions,
         duration_ms: song.duration_ms,
         genre: song.genre,
-        lyrics: song.lyrics,
         isrc: song.isrc,
         song_id: song.song_id
     };
@@ -108,7 +107,6 @@ let player = null;
 let playerReady = false;
 let isPlaying = false;
 let isVideoVisible = false;
-let isLyricsVisible = false;
 let isTheaterMode = false;
 let isQueueVisible = false;
 let progressInterval = null;
@@ -204,12 +202,6 @@ const videoToggleBtn = document.getElementById('videoToggleBtn');
 const videoContainer = document.getElementById('videoContainer');
 const videoClose = document.getElementById('videoClose');
 const mainGradient = document.getElementById('mainGradient');
-const lyricsPanel = document.getElementById('lyricsPanel');
-const lyricsToggleBtn = document.getElementById('lyricsToggleBtn');
-const lyricsClose = document.getElementById('lyricsClose');
-const lyricsContent = document.getElementById('lyricsContent');
-const lyricsSongTitle = document.getElementById('lyricsSongTitle');
-const lyricsSongArtist = document.getElementById('lyricsSongArtist');
 const progressBar = document.getElementById('progressBar');
 const progressFill = document.getElementById('progressFill');
 const progressHandle = document.getElementById('progressHandle');
@@ -228,7 +220,6 @@ const heroProgressBar = document.getElementById('heroProgressBar');
 const heroProgressFill = document.getElementById('heroProgressFill');
 const heroTimeCurrent = document.getElementById('heroTimeCurrent');
 const heroTimeDuration = document.getElementById('heroTimeDuration');
-const heroLyricsBtn = document.getElementById('heroLyricsBtn');
 const heroVideoBtn = document.getElementById('heroVideoBtn');
 
 // Initialize YouTube API
@@ -2643,11 +2634,6 @@ function updateNowPlaying(index) {
     // Update hero section with currently playing song
     updateHeroWithSong(song, index);
 
-    // Update lyrics if panel is visible
-    if (isLyricsVisible) {
-        updateLyrics(index);
-    }
-
     // Update theater info if in theater mode
     if (isTheaterMode) {
         if (theaterTitle) theaterTitle.textContent = song.title;
@@ -3151,14 +3137,6 @@ function setupEventListeners() {
     videoClose?.addEventListener('click', closeTheaterMode);
     theaterClose?.addEventListener('click', closeTheaterMode);
 
-    // Lyrics panel controls
-    lyricsToggleBtn?.addEventListener('click', toggleLyrics);
-    lyricsClose?.addEventListener('click', () => {
-        lyricsPanel?.classList.remove('visible');
-        lyricsToggleBtn?.classList.remove('active');
-        isLyricsVisible = false;
-    });
-
     // Progress bar seek
     progressBar?.addEventListener('click', (e) => {
         const rect = progressBar.getBoundingClientRect();
@@ -3174,7 +3152,6 @@ function setupEventListeners() {
     });
 
     // Hero action buttons
-    heroLyricsBtn?.addEventListener('click', toggleLyrics);
     heroVideoBtn?.addEventListener('click', toggleVideo);
 
     // New feature buttons
@@ -3526,80 +3503,6 @@ function closeTheaterMode(skipResume = false) {
     updatePlayerBarVisibility();
 }
 
-// Toggle lyrics panel
-function toggleLyrics() {
-    isLyricsVisible = !isLyricsVisible;
-    if (isLyricsVisible) {
-        lyricsPanel?.classList.add('visible');
-        lyricsToggleBtn?.classList.add('active');
-        heroLyricsBtn?.classList.add('active');
-        // Update lyrics for current song
-        if (currentSongIndex >= 0) {
-            updateLyrics(currentSongIndex);
-        }
-    } else {
-        lyricsPanel?.classList.remove('visible');
-        lyricsToggleBtn?.classList.remove('active');
-        heroLyricsBtn?.classList.remove('active');
-    }
-}
-
-// Update lyrics display
-function updateLyrics(index) {
-    if (!chartData || !chartData.chart[index]) return;
-
-    const song = chartData.chart[index];
-
-    // Update header
-    if (lyricsSongTitle) lyricsSongTitle.textContent = song.title;
-    if (lyricsSongArtist) lyricsSongArtist.textContent = song.artist;
-
-    // Check if lyrics are available
-    const lyrics = song.lyrics_plain || song.lyrics_synced;
-
-    if (!lyrics) {
-        const lyricsMessages = [
-            { emoji: '🤐', text: "This song's keeping its lyrics a secret" },
-            { emoji: '🎤', text: "The lyrics are on a karaoke break" },
-            { emoji: '📝', text: "Oops, someone forgot to write down the words" },
-            { emoji: '🔇', text: "Lyrics went silent. Time to freestyle!" },
-            { emoji: '🎧', text: "Just vibe to the music - lyrics unavailable" },
-        ];
-        const msg = lyricsMessages[Math.floor(Math.random() * lyricsMessages.length)];
-
-        lyricsContent.innerHTML = `
-            <div class="lyrics-unavailable">
-                <span class="error-emoji">${msg.emoji}</span>
-                <p class="error-title">${msg.text}</p>
-                <p class="error-subtitle">Try a different song or check back later</p>
-            </div>
-        `;
-        return;
-    }
-
-    // Parse and display lyrics
-    const lyricsText = song.lyrics_plain || parseSyncedLyrics(song.lyrics_synced);
-
-    // Split into lines and wrap each line for potential synced highlighting
-    const lines = lyricsText.split('\n');
-    const linesHtml = lines.map((line, i) =>
-        `<span class="lyrics-line" data-line="${i}">${escapeHtml(line) || '&nbsp;'}</span>`
-    ).join('');
-
-    lyricsContent.innerHTML = `<div class="lyrics-text">${linesHtml}</div>`;
-}
-
-// Parse synced lyrics (LRC format) to plain text
-function parseSyncedLyrics(syncedLyrics) {
-    if (!syncedLyrics) return '';
-
-    // Remove timestamps like [00:00.00] from LRC format
-    return syncedLyrics
-        .split('\n')
-        .map(line => line.replace(/\[\d{2}:\d{2}\.\d{2,3}\]/g, '').trim())
-        .join('\n');
-}
-
 // Share
 async function shareChart() {
     const url = window.location.href;
@@ -3658,11 +3561,6 @@ function handleKeyboard(e) {
                 playSong(0);
             }
             break;
-        case 'l':
-        case 'L':
-            e.preventDefault();
-            toggleLyrics();
-            break;
         case 'h':
         case 'H':
             e.preventDefault();
@@ -3698,9 +3596,6 @@ function handleKeyboard(e) {
             } else if (isTheaterMode) {
                 e.preventDefault();
                 closeTheaterMode();
-            } else if (isLyricsVisible) {
-                e.preventDefault();
-                toggleLyrics();
             }
             break;
     }

@@ -466,40 +466,15 @@ const E2ETestRunner = {
         this.click(songCards[0]);
         await this.wait(100);
 
-        // Test 1: Lyrics toggle button exists
-        const lyricsBtn = this.$('#lyricsToggleBtn');
-        this.assert(lyricsBtn !== null, 'Lyrics toggle button exists');
-
-        // Test 2: Lyrics panel exists
-        const lyricsPanel = this.$('#lyricsPanel');
-        this.assert(lyricsPanel !== null, 'Lyrics panel exists');
-
-        // Test 3: Lyrics panel hidden initially
-        this.assert(!lyricsPanel?.classList.contains('visible'),
-            'Lyrics panel hidden initially');
-
-        // Test 4: Click lyrics button opens panel
-        this.click(lyricsBtn);
-        await this.wait(100);
-        this.assert(lyricsPanel?.classList.contains('visible'),
-            'Clicking lyrics button opens panel');
-
-        // Test 5: Close button closes lyrics panel
-        const lyricsClose = this.$('#lyricsClose');
-        this.click(lyricsClose);
-        await this.wait(100);
-        this.assert(!lyricsPanel?.classList.contains('visible'),
-            'Close button closes lyrics panel');
-
-        // Test 6: Video toggle button exists
+        // Test 1: Video toggle button exists
         const videoBtn = this.$('#videoToggleBtn');
         this.assert(videoBtn !== null, 'Video toggle button exists');
 
-        // Test 7: Video container exists
+        // Test 2: Video container exists
         const videoContainer = this.$('#videoContainer');
         this.assert(videoContainer !== null, 'Video container exists');
 
-        // Test 8: Toast appears on actions
+        // Test 3: Toast appears on actions
         // Trigger a toast by toggling favorite
         const favBtn = this.$('#favoriteBtn');
         this.click(favBtn);
@@ -560,22 +535,14 @@ const E2ETestRunner = {
         this.assert(queuePanel?.classList.contains('visible') !== wasVisible,
             '"Q" key toggles queue panel');
 
-        // Test 6: 'L' toggles lyrics panel
-        const lyricsPanel = this.$('#lyricsPanel');
-        const lyricsWasVisible = lyricsPanel?.classList.contains('visible');
-        pressKey('l');
-        await this.wait(100);
-        this.assert(lyricsPanel?.classList.contains('visible') !== lyricsWasVisible,
-            '"L" key toggles lyrics panel');
-
-        // Test 7: Arrow Down goes to next song
+        // Test 6: Arrow Down goes to next song
         const beforeDown = currentSongIndex;
         pressKey('ArrowDown');
         await this.wait(100);
         this.assert(currentSongIndex === beforeDown + 1,
             'Arrow Down advances to next song');
 
-        // Test 8: Arrow Up goes to previous song
+        // Test 7: Arrow Up goes to previous song
         const beforeUp = currentSongIndex;
         pressKey('ArrowUp');
         await this.wait(100);

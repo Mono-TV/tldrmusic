@@ -44,7 +44,6 @@ const QATestRunner = {
         }
 
         // Close any open panels
-        this.$('#lyricsPanel')?.classList.remove('visible');
         this.$('#queuePanel')?.classList.remove('visible');
 
         await this.waitForChartLoad();
@@ -282,13 +281,8 @@ const QATestRunner = {
         }
 
         // Close any open panels
-        const lyricsPanel = document.getElementById('lyricsPanel');
         const queuePanel = document.getElementById('queuePanel');
 
-        if (lyricsPanel?.classList.contains('visible')) {
-            lyricsPanel.classList.remove('visible');
-            if (typeof isLyricsVisible !== 'undefined') isLyricsVisible = false;
-        }
         if (queuePanel?.classList.contains('visible')) {
             queuePanel.classList.remove('visible');
             if (typeof isQueueVisible !== 'undefined') isQueueVisible = false;
@@ -361,21 +355,16 @@ const QATestRunner = {
         const toggleBtns = this.$$('.toggle-btn');
         this.assert(toggleBtns.length === 2, 'India/Global toggle buttons exist');
 
-        // Test 6: Lyrics panel has proper positioning
-        const lyricsPanel = this.$('#lyricsPanel');
-        const lyricsPanelStyle = window.getComputedStyle(lyricsPanel);
-        this.assert(lyricsPanelStyle.position === 'fixed', 'Lyrics panel is fixed positioned');
-
-        // Test 7: Queue panel has proper positioning
+        // Test 6: Queue panel has proper positioning
         const queuePanel = this.$('#queuePanel');
         const queuePanelStyle = window.getComputedStyle(queuePanel);
         this.assert(queuePanelStyle.position === 'fixed', 'Queue panel is fixed positioned');
 
-        // Test 8: Favorites section container exists
+        // Test 7: Favorites section container exists
         const favSection = this.$('#favoritesSection');
         this.assert(favSection !== null, 'Favorites section container exists');
 
-        // Test 9: All control buttons have minimum touch target size (44x44 recommended)
+        // Test 8: All control buttons have minimum touch target size (44x44 recommended)
         const controlBtns = this.$$('.control-btn');
         let allButtonsAccessible = true;
         controlBtns.forEach(btn => {
@@ -548,24 +537,7 @@ const QATestRunner = {
         cycleRepeat();
         this.assertEqual(repeatMode, 'off', 'Repeat cycles back to off');
 
-        // Test 7: Opening queue panel while lyrics panel is open
-        await this.setup();
-        const lyricsBtn = this.$('#lyricsToggleBtn');
-        const queueBtn = this.$('#queueToggleBtn');
-
-        this.click(lyricsBtn);
-        await this.wait(100);
-        this.click(queueBtn);
-        await this.wait(100);
-
-        const lyricsPanel = this.$('#lyricsPanel');
-        const queuePanel = this.$('#queuePanel');
-        // Both panels can be open simultaneously or one closes the other
-        const atLeastOneOpen = lyricsPanel?.classList.contains('visible') ||
-                              queuePanel?.classList.contains('visible');
-        this.assert(atLeastOneOpen, 'Panel interaction works correctly');
-
-        // Test 8: Queue priority - playFromQueue returns items in order
+        // Test 7: Queue priority - playFromQueue returns items in order
         await this.setup();
         addToQueue(chartData.chart[0], false);
         addToQueue(chartData.chart[1], false);
@@ -628,11 +600,9 @@ const QATestRunner = {
         const favSection = this.$('#favoritesSection');
         this.assert(this.isVisible(favSection), 'Favorites section visible when favorites exist');
 
-        // Test 7: Panel buttons are functional
+        // Test 7: Queue panel button is functional
         const queueBtn = this.$('#queueToggleBtn');
-        const lyricsBtn = this.$('#lyricsToggleBtn');
         this.assert(this.isClickable(queueBtn), 'Queue toggle button is clickable');
-        this.assert(this.isClickable(lyricsBtn), 'Lyrics toggle button is clickable');
     },
 
     // ==================== PROGRESS BAR AND SEEKING TESTS ====================
@@ -1147,7 +1117,7 @@ const QATestRunner = {
 
     // ==================== HUMAN USAGE TESTS ====================
     // These tests simulate actual user interactions like playing songs,
-    // waiting for audio, changing tracks, viewing lyrics, etc.
+    // waiting for audio, changing tracks, etc.
 
     async testHumanUsage() {
         console.log('\n👤 HUMAN USAGE TESTS');
@@ -1196,23 +1166,7 @@ const QATestRunner = {
         await this.wait(500);
         this.assert(true, 'Previous button can be clicked');
 
-        // Test 6: Toggle lyrics panel - sync state first
-        const lyricsPanel = this.$('#lyricsPanel');
-        // Sync state: close panel and reset internal state
-        lyricsPanel?.classList.remove('visible');
-        isLyricsVisible = false;
-        await this.wait(100);
-        // Now open it
-        toggleLyrics();
-        await this.wait(400);
-        this.assert(lyricsPanel?.classList.contains('visible'), 'Lyrics panel opens via toggle function');
-
-        // Test 7: Close lyrics panel
-        toggleLyrics();
-        await this.wait(400);
-        this.assert(!lyricsPanel?.classList.contains('visible'), 'Lyrics panel closes via toggle function');
-
-        // Test 8: Toggle queue panel - sync state first
+        // Test 6: Toggle queue panel - sync state first
         const queuePanel = this.$('#queuePanel');
         // Sync state: close panel and reset internal state
         queuePanel?.classList.remove('visible');
@@ -1223,12 +1177,12 @@ const QATestRunner = {
         await this.wait(400);
         this.assert(queuePanel?.classList.contains('visible'), 'Queue panel opens via toggle function');
 
-        // Test 9: Close queue panel
+        // Test 7: Close queue panel
         toggleQueue();
         await this.wait(400);
         this.assert(!queuePanel?.classList.contains('visible'), 'Queue panel closes via toggle function');
 
-        // Test 10: Add song to favorites via button
+        // Test 8: Add song to favorites via button
         await this.setup();
         // First play a song so favorite button works
         this.click(songCards[0]);
@@ -1239,58 +1193,45 @@ const QATestRunner = {
         await this.wait(200);
         this.assert(favorites.length === initialFavCount + 1, 'Favorite button adds song to favorites');
 
-        // Test 11: Remove song from favorites
+        // Test 9: Remove song from favorites
         this.click(favBtn);
         await this.wait(200);
         this.assert(favorites.length === initialFavCount, 'Clicking favorite again removes from favorites');
 
-        // Test 12: Toggle shuffle mode
+        // Test 10: Toggle shuffle mode
         const shuffleBtn = this.$('#shuffleBtn');
         const shuffleStateBefore = isShuffleOn;
         this.click(shuffleBtn);
         await this.wait(200);
         this.assert(isShuffleOn !== shuffleStateBefore, 'Shuffle button toggles shuffle mode');
 
-        // Test 13: Cycle repeat mode
+        // Test 11: Cycle repeat mode
         const repeatBtn = this.$('#repeatBtn');
         const repeatBefore = repeatMode;
         this.click(repeatBtn);
         await this.wait(200);
         this.assert(repeatMode !== repeatBefore, 'Repeat button cycles repeat mode');
 
-        // Test 14: Click on hero play button
+        // Test 12: Click on hero play button
         await this.setup();
         const heroPlayBtn = this.$('#playHeroBtn');
         this.click(heroPlayBtn);
         await this.wait(500);
         this.assertEqual(currentSongIndex, 0, 'Hero play button plays #1 song');
 
-        // Test 15: Click on hero lyrics button
-        // First sync state - close panel
-        lyricsPanel?.classList.remove('visible');
-        isLyricsVisible = false;
-        await this.wait(100);
-        const heroLyricsBtn = this.$('#heroLyricsBtn');
-        this.click(heroLyricsBtn);
-        await this.wait(400);
-        this.assert(lyricsPanel?.classList.contains('visible'), 'Hero lyrics button opens lyrics panel');
-        // Close via toggle
-        toggleLyrics();
-        await this.wait(200);
-
-        // Test 16: Switch chart from India to Global
+        // Test 13: Switch chart from India to Global
         const globalBtn = this.$('.toggle-btn[data-chart="global"]');
         this.click(globalBtn);
         await this.wait(1000);
         this.assert(globalBtn?.classList.contains('active'), 'Global chart toggle works');
 
-        // Test 17: Switch back to India chart
+        // Test 14: Switch back to India chart
         const indiaBtn = this.$('.toggle-btn[data-chart="india"]');
         this.click(indiaBtn);
         await this.wait(1000);
         this.assert(indiaBtn?.classList.contains('active'), 'India chart toggle works');
 
-        // Test 18: Progress bar click for seeking (simulate)
+        // Test 15: Progress bar click for seeking (simulate)
         const progressBar = this.$('#progressBar');
         if (progressBar) {
             const rect = progressBar.getBoundingClientRect();
@@ -1304,7 +1245,7 @@ const QATestRunner = {
             this.assert(true, 'Progress bar accepts click for seeking');
         }
 
-        // Test 19: Hero progress bar click
+        // Test 16: Hero progress bar click
         const heroProgressBar = this.$('#heroProgressBar');
         if (heroProgressBar) {
             const rect = heroProgressBar.getBoundingClientRect();
@@ -1318,7 +1259,7 @@ const QATestRunner = {
             this.assert(true, 'Hero progress bar accepts click for seeking');
         }
 
-        // Test 20: Video toggle button
+        // Test 17: Video toggle button
         const videoToggleBtn = this.$('#videoToggleBtn');
         const heroSection = this.$('#heroSection');
         const wasInTheaterMode = heroSection?.classList.contains('theater-mode');
@@ -1344,7 +1285,7 @@ const QATestRunner = {
             await this.wait(300);
         }
 
-        // Test 21: Add multiple songs to queue and verify
+        // Test 18: Add multiple songs to queue and verify
         await this.setup();
         // Simulate right-click or use addToQueue directly
         addToQueue(chartData.chart[5], false);
@@ -1352,7 +1293,7 @@ const QATestRunner = {
         this.assertEqual(queue.length, 2, 'Can add multiple songs to queue');
         this.assertEqual(queue[0].title, chartData.chart[6].title, 'Play next adds song to front of queue');
 
-        // Test 22: Clear queue button
+        // Test 19: Clear queue button
         const queueToggle = this.$('#queueToggleBtn');
         toggleQueue(); // Open queue panel
         await this.wait(200);
@@ -1362,7 +1303,7 @@ const QATestRunner = {
         this.assertEqual(queue.length, 0, 'Clear queue button empties the queue');
         toggleQueue(); // Close queue panel
 
-        // Test 23: Click song in favorites section
+        // Test 20: Click song in favorites section
         await this.setup();
         toggleFavorite(chartData.chart[0]);
         toggleFavorite(chartData.chart[1]);
@@ -1377,12 +1318,12 @@ const QATestRunner = {
             this.assert(true, 'Can click on favorite card to play');
         }
 
-        // Test 24: Keyboard shortcut - Space for play/pause
+        // Test 21: Keyboard shortcut - Space for play/pause
         this.pressKey(' ');
         await this.wait(200);
         this.assert(true, 'Space key triggers play/pause');
 
-        // Test 25: Keyboard shortcut - H for favorite
+        // Test 22: Keyboard shortcut - H for favorite
         const favCountBefore = favorites.length;
         this.pressKey('h');
         await this.wait(200);
@@ -1390,19 +1331,7 @@ const QATestRunner = {
         this.assert(favorites.length !== favCountBefore || favorites.length === favCountBefore,
             'H key triggers favorite toggle');
 
-        // Test 26: Keyboard shortcut - L for lyrics
-        // Ensure panel is closed first
-        lyricsPanel?.classList.remove('visible');
-        await this.wait(100);
-        this.pressKey('l');
-        await this.wait(400);
-        const lyricsOpenAfterKey = lyricsPanel?.classList.contains('visible');
-        this.assert(lyricsOpenAfterKey, 'L key opens lyrics panel');
-        // Close it
-        lyricsPanel?.classList.remove('visible');
-        await this.wait(200);
-
-        // Test 27: Keyboard shortcut - Q for queue
+        // Test 23: Keyboard shortcut - Q for queue
         // Sync state first
         queuePanel?.classList.remove('visible');
         isQueueVisible = false;
@@ -1415,19 +1344,19 @@ const QATestRunner = {
         toggleQueue();
         await this.wait(200);
 
-        // Test 28: Keyboard shortcut - S for shuffle
+        // Test 24: Keyboard shortcut - S for shuffle
         const shuffleBefore = isShuffleOn;
         this.pressKey('s');
         await this.wait(200);
         this.assert(isShuffleOn !== shuffleBefore, 'S key toggles shuffle');
 
-        // Test 29: Keyboard shortcut - R for repeat
+        // Test 25: Keyboard shortcut - R for repeat
         const repeatModeBefore = repeatMode;
         this.pressKey('r');
         await this.wait(200);
         this.assert(repeatMode !== repeatModeBefore, 'R key cycles repeat mode');
 
-        // Test 30: Click song artwork in player bar (if clickable)
+        // Test 26: Click song artwork in player bar (if clickable)
         const playerArtwork = this.$('#playerBarArtwork');
         if (playerArtwork) {
             this.click(playerArtwork);
@@ -1435,7 +1364,7 @@ const QATestRunner = {
             this.assert(true, 'Player bar artwork can be clicked');
         }
 
-        // Test 31: Regional song click
+        // Test 27: Regional song click
         const regionalSongs = this.$$('.regional-song');
         if (regionalSongs.length > 0) {
             this.click(regionalSongs[0]);
@@ -1443,7 +1372,7 @@ const QATestRunner = {
             this.assert(true, 'Regional song can be clicked to play');
         }
 
-        // Test 32: Share button click
+        // Test 28: Share button click
         const shareBtn = this.$('#shareBtn');
         if (shareBtn) {
             this.click(shareBtn);
@@ -1600,31 +1529,23 @@ const QATestRunner = {
         const heroFavBtn = this.$('#heroFavoriteBtn');
         this.assert(heroFavBtn !== null, 'Hero favorite button exists');
 
-        // Test 19: Lyrics toggle button exists
-        const lyricsBtn = this.$('#lyricsToggleBtn');
-        this.assert(lyricsBtn !== null, 'Lyrics toggle button exists');
-
-        // Test 20: Queue toggle button exists
+        // Test 19: Queue toggle button exists
         const queueBtn = this.$('#queueToggleBtn');
         this.assert(queueBtn !== null, 'Queue toggle button exists');
 
-        // Test 21: Video toggle button exists
+        // Test 20: Video toggle button exists
         const videoBtn = this.$('#videoToggleBtn');
         this.assert(videoBtn !== null, 'Video toggle button exists');
 
-        // Test 22: Hero video button exists
+        // Test 21: Hero video button exists
         const heroVideoBtn = this.$('#heroVideoBtn');
         this.assert(heroVideoBtn !== null, 'Hero video button exists');
 
-        // Test 23: Hero lyrics button exists
-        const heroLyricsBtn = this.$('#heroLyricsBtn');
-        this.assert(heroLyricsBtn !== null, 'Hero lyrics button exists');
-
-        // Test 24: Share button exists
+        // Test 22: Share button exists
         const shareBtn = this.$('#shareBtn');
         this.assert(shareBtn !== null, 'Share button exists');
 
-        // Test 25: Queue badge updates with queue count
+        // Test 23: Queue badge updates with queue count
         await this.setup();
         const queueBadge = this.$('#queueBadge');
         addToQueue(chartData.chart[0], false);
@@ -1633,28 +1554,28 @@ const QATestRunner = {
         const badgeVisible = queueBadge?.classList.contains('visible');
         this.assert(badgeVisible, 'Queue badge visible when queue has items');
 
-        // Test 26: Clear queue hides badge
+        // Test 24: Clear queue hides badge
         clearQueue();
         await this.wait(100);
         const badgeHidden = !queueBadge?.classList.contains('visible');
         this.assert(badgeHidden, 'Queue badge hidden when queue is empty');
 
-        // Test 27: Play different song updates hero to that song
+        // Test 25: Play different song updates hero to that song
         await this.setup();
         this.click(songCards[2]);
         await this.wait(500);
         const heroTitle = this.$('#heroTitle')?.textContent;
         this.assertEqual(heroTitle, chartData.chart[2].title, 'Hero title updates to clicked song');
 
-        // Test 28: Progress bar fill element exists
+        // Test 26: Progress bar fill element exists
         const progressFill = this.$('#progressFill');
         this.assert(progressFill !== null, 'Progress bar fill element exists');
 
-        // Test 29: Hero progress bar fill element exists
+        // Test 27: Hero progress bar fill element exists
         const heroProgressFill = this.$('#heroProgressFill');
         this.assert(heroProgressFill !== null, 'Hero progress bar fill element exists');
 
-        // Test 30: Time displays show 0:00 format
+        // Test 28: Time displays show 0:00 format
         const timeCurrent = this.$('#timeCurrent');
         const timeDuration = this.$('#timeDuration');
         this.assert(timeCurrent?.textContent?.includes(':'), 'Current time has correct format');
@@ -1777,15 +1698,6 @@ const QATestRunner = {
         const atEnd = currentSongIndex >= chartData.chart.length - 1;
         this.assert(atEnd && repeatMode === 'off', 'Normal mode at end of playlist');
 
-        // Test 14: Lyrics content container exists
-        const lyricsContent = this.$('#lyricsContent');
-        this.assert(lyricsContent !== null, 'Lyrics content container exists');
-
-        // Test 15: Lyrics placeholder or content exists
-        const lyricsPlaceholder = this.$('.lyrics-placeholder');
-        // Placeholder may or may not be visible depending on whether lyrics were fetched
-        this.assert(lyricsPlaceholder !== null || lyricsContent?.children.length > 0,
-            'Lyrics placeholder or content exists');
     },
 
     // ==================== INTERACTION FLOW TESTS ====================
@@ -1853,31 +1765,7 @@ const QATestRunner = {
         this.assert(globalActive, 'Flow: Global chart loads correctly');
         this.assert(indiaActive, 'Flow: India chart loads correctly');
 
-        // Flow 6: User opens lyrics while playing
-        console.log('  Testing: Lyrics viewing flow');
-        await this.setup();
-        this.click(songCards[0]);
-        await this.wait(300);
-
-        const flowLyricsPanel = this.$('#lyricsPanel');
-        // Sync state first
-        flowLyricsPanel?.classList.remove('visible');
-        isLyricsVisible = false;
-        await this.wait(100);
-        // Now open it
-        toggleLyrics();
-        await this.wait(400);
-
-        const lyricsSongTitle = this.$('#lyricsSongTitle')?.textContent;
-        this.assert(flowLyricsPanel?.classList.contains('visible'), 'Flow: Lyrics panel opens');
-        this.assert(lyricsSongTitle && lyricsSongTitle !== 'Lyrics',
-            'Flow: Lyrics panel shows song title');
-
-        // Close for next test
-        toggleLyrics();
-        await this.wait(200);
-
-        // Flow 7: User manages queue while playing
+        // Flow 6: User manages queue while playing
         console.log('  Testing: Queue management flow');
         await this.setup();
         this.click(songCards[0]);
