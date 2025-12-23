@@ -4978,6 +4978,9 @@ function showPlaylistsView() {
     const chartsDetailView = document.getElementById('chartsDetailView');
     const discoverView = document.getElementById('discoverView');
     const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    const artistDetailView = document.getElementById('artistDetailView');
     const searchView = document.getElementById('searchView');
 
     if (homeView) homeView.style.display = 'none';
@@ -4990,6 +4993,9 @@ function showPlaylistsView() {
     if (chartsDetailView) chartsDetailView.style.display = 'none';
     if (discoverView) discoverView.style.display = 'none';
     if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (artistDetailView) artistDetailView.style.display = 'none';
     if (searchView) searchView.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'block';
 
