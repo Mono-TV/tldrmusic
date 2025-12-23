@@ -5473,6 +5473,189 @@ function renderPlaylistPanel() {
     renderPlaylistsView();
 }
 
+// ============================================================
+// AI PLAYLIST GENERATION
+// ============================================================
+
+let generatedPlaylistData = null; // Stores the generated playlist for preview
+
+async function generateAIPlaylist() {
+    const promptInput = document.getElementById('aiPlaylistPrompt');
+    const languageSelect = document.getElementById('aiPlaylistLanguage');
+    const generateBtn = document.getElementById('aiPlaylistGenerateBtn');
+    const previewSection = document.getElementById('aiPlaylistPreview');
+
+    const prompt = promptInput?.value?.trim();
+    if (!prompt) {
+        showToast('Please enter a description for your playlist');
+        promptInput?.focus();
+        return;
+    }
+
+    // Check authentication
+    if (!requireAuth(() => generateAIPlaylist())) return;
+
+    // Show loading state
+    generateBtn.disabled = true;
+    generateBtn.classList.add('loading');
+    generateBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+        </svg>
+        Generating...
+    `;
+
+    try {
+        const response = await fetchWithAuth(`${API_BASE}/api/me/playlists/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt: prompt,
+                language: languageSelect?.value || null,
+                song_count: 25
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to generate playlist');
+        }
+
+        const data = await response.json();
+        generatedPlaylistData = data;
+
+        // Render preview
+        renderGeneratedPlaylistPreview(data);
+        previewSection.style.display = 'block';
+        previewSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        showToast(`Generated "${data.name}" with ${data.songs?.length || 0} songs`);
+
+    } catch (error) {
+        console.error('AI playlist generation error:', error);
+        showToast(error.message || 'Failed to generate playlist. Please try again.');
+    } finally {
+        // Reset button
+        generateBtn.disabled = false;
+        generateBtn.classList.remove('loading');
+        generateBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Generate
+        `;
+    }
+}
+
+function renderGeneratedPlaylistPreview(data) {
+    const nameEl = document.getElementById('aiPreviewName');
+    const countEl = document.getElementById('aiPreviewCount');
+    const songsEl = document.getElementById('aiPreviewSongs');
+
+    if (nameEl) nameEl.textContent = data.name || 'Generated Playlist';
+    if (countEl) countEl.textContent = `${data.songs?.length || 0} songs`;
+
+    if (songsEl && data.songs) {
+        songsEl.innerHTML = data.songs.map((song, index) => `
+            <div class="ai-preview-song" onclick="playGeneratedSong(${index})">
+                <span class="ai-preview-song-num">${index + 1}</span>
+                <img class="ai-preview-song-art"
+                     src="${song.artwork_url || ''}"
+                     alt="${song.title}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23666%22 font-size=%2240%22>♪</text></svg>'">
+                <div class="ai-preview-song-info">
+                    <div class="ai-preview-song-title">${song.title || 'Unknown'}</div>
+                    <div class="ai-preview-song-artist">${song.artist || 'Unknown Artist'}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function playGeneratedSong(index) {
+    if (!generatedPlaylistData?.songs) return;
+
+    const songs = generatedPlaylistData.songs.map(s => ({
+        title: s.title,
+        artist: s.artist,
+        youtube_video_id: s.youtube_video_id,
+        artwork_url: s.artwork_url
+    }));
+
+    // Set as current playlist and play
+    currentPlaylist = songs;
+    currentIndex = index;
+    playSong(index);
+}
+
+function playGeneratedPlaylist() {
+    if (!generatedPlaylistData?.songs?.length) {
+        showToast('No songs to play');
+        return;
+    }
+    playGeneratedSong(0);
+}
+
+async function saveGeneratedPlaylist() {
+    if (!generatedPlaylistData) {
+        showToast('No playlist to save');
+        return;
+    }
+
+    if (!requireAuth(() => saveGeneratedPlaylist())) return;
+
+    try {
+        // Create the playlist
+        const playlistId = 'pl_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        const now = Date.now();
+
+        const newPlaylist = {
+            id: playlistId,
+            name: generatedPlaylistData.name || 'AI Generated Playlist',
+            description: generatedPlaylistData.description || '',
+            is_public: false,
+            songs: generatedPlaylistData.songs.map(s => ({
+                title: s.title,
+                artist: s.artist,
+                videoId: s.youtube_video_id,
+                artwork: s.artwork_url
+            })),
+            song_count: generatedPlaylistData.songs.length,
+            cover_urls: generatedPlaylistData.songs.slice(0, 4).map(s => s.artwork_url).filter(Boolean),
+            createdAt: now,
+            updatedAt: now
+        };
+
+        // Add to local playlists
+        playlists.unshift(newPlaylist);
+        savePlaylists();
+
+        // Re-render playlists view
+        renderPlaylistsView();
+
+        // Close preview
+        closeGeneratedPreview();
+
+        // Clear input
+        const promptInput = document.getElementById('aiPlaylistPrompt');
+        if (promptInput) promptInput.value = '';
+
+        showToast(`Saved "${newPlaylist.name}" to your library`);
+
+    } catch (error) {
+        console.error('Error saving playlist:', error);
+        showToast('Failed to save playlist');
+    }
+}
+
+function closeGeneratedPreview() {
+    const previewSection = document.getElementById('aiPlaylistPreview');
+    if (previewSection) {
+        previewSection.style.display = 'none';
+    }
+    generatedPlaylistData = null;
+}
+
 function showCreatePlaylistModal() {
     const modal = document.getElementById('createPlaylistModal');
     if (modal) {

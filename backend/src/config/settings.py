@@ -69,6 +69,9 @@ class Settings(BaseSettings):
     # Lyrics Provider
     LYRICS_PROVIDER: str = "lrclib"  # lrclib, musixmatch, genius
 
+    # AI/LLM Provider (for AI playlist generation)
+    GEMINI_API_KEY: Optional[str] = None
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

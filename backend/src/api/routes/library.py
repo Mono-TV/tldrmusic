@@ -459,6 +459,52 @@ async def remove_song_from_playlist(
     return {"message": "Song removed from playlist"}
 
 
+# ============== AI Playlist Generation ==============
+
+@router.post("/playlists/generate")
+async def generate_playlist(
+    data: dict,
+    user: User = Depends(get_current_user_required)
+):
+    """
+    Generate a playlist using AI based on user's prompt.
+
+    Request body:
+    - prompt: string (required) - User's description of desired playlist
+    - song_count: int (optional, default 25) - Number of songs to include
+    - language: string (optional) - Preferred language code (hi, en, ta, etc.)
+
+    Returns generated playlist that user can preview and save.
+    """
+    from ...services.playlist_generator import PlaylistGeneratorService
+
+    prompt = data.get("prompt", "").strip()
+    if not prompt:
+        raise HTTPException(status_code=400, detail="Prompt is required")
+
+    song_count = data.get("song_count", 25)
+    if song_count < 5:
+        song_count = 5
+    elif song_count > 50:
+        song_count = 50
+
+    language = data.get("language")
+
+    try:
+        result = await PlaylistGeneratorService.generate_playlist(
+            prompt=prompt,
+            user_id=user.id,
+            song_count=song_count,
+            language=language
+        )
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        print(f"AI playlist generation error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate playlist. Please try again.")
+
+
 # ============== Preferences ==============
 
 @router.get("/preferences")
