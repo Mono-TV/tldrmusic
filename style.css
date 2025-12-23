@@ -2631,14 +2631,25 @@ body::before {
     min-width: 0;
 }
 
-.player-bar-artwork {
+.player-bar-artwork-wrapper {
+    position: relative;
     width: 72px;
     height: 72px;
     border-radius: 10px;
-    object-fit: cover;
+    overflow: hidden;
     background: var(--bg-elevated);
     flex-shrink: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.player-bar-artwork {
+    width: 135%;
+    height: 135%;
+    object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .player-bar-text {
@@ -3335,7 +3346,7 @@ body::before {
         gap: 0.5rem;
     }
 
-    .player-bar-artwork {
+    .player-bar-artwork-wrapper {
         width: 48px;
         height: 48px;
     }
