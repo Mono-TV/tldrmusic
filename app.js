@@ -5506,7 +5506,7 @@ async function generateAIPlaylist() {
     `;
 
     try {
-        const response = await fetchWithAuth(`${API_BASE}/api/me/playlists/generate`, {
+        const response = await fetchWithAuth('/api/me/playlists/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
