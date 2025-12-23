@@ -1345,7 +1345,8 @@ function showProfilePanel() {
     renderProfileTopArtists(favs);
 
     // Render top/most played songs
-    renderProfileTopSongs(history);
+    const userHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
+    renderProfileTopSongs(userHistory);
 
     // Show page
     panel.classList.add('visible');
