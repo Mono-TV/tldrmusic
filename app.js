@@ -3863,12 +3863,78 @@ function updateFavoriteButtons() {
     btn?.classList.toggle('active', isFav);
 }
 
-function renderFavoritesSection() {
-    // Update the library card count
-    const countEl = document.getElementById('favoritesCardCount');
-    if (countEl) {
-        countEl.textContent = `${favorites.length} song${favorites.length !== 1 ? 's' : ''}`;
+// ============================================================
+// Unified Count Update Functions
+// ============================================================
+
+/**
+ * Update all favorites count displays across the app
+ */
+function updateFavoritesCount() {
+    const count = favorites.length;
+    const text = `${count} song${count !== 1 ? 's' : ''}`;
+
+    // Library card count
+    const libraryCount = document.getElementById('favoritesCardCount');
+    if (libraryCount) libraryCount.textContent = text;
+
+    // Profile page counts
+    const profileFavCount = document.getElementById('profileFavCount');
+    if (profileFavCount) profileFavCount.textContent = count;
+
+    const likedCount = document.getElementById('likedCount');
+    if (likedCount) likedCount.textContent = text;
+}
+
+/**
+ * Update all history count displays across the app
+ */
+function updateHistoryCount() {
+    const count = playHistory.length;
+    const text = `${count} song${count !== 1 ? 's' : ''}`;
+
+    // Library card count
+    const libraryCount = document.getElementById('historyCardCount');
+    if (libraryCount) libraryCount.textContent = text;
+
+    // Profile page count
+    const profileCount = document.getElementById('profileHistoryCount');
+    if (profileCount) profileCount.textContent = count;
+}
+
+/**
+ * Update all playlist count displays across the app
+ */
+function updatePlaylistCount() {
+    const count = playlists.length;
+
+    // Library panel count
+    const panelCount = document.getElementById('playlistPanelCount');
+    if (panelCount) panelCount.textContent = `${count} playlist${count !== 1 ? 's' : ''}`;
+
+    // Profile page count
+    const profileCount = document.getElementById('profilePlaylistCount');
+    if (profileCount) profileCount.textContent = count;
+
+    // Sidebar badge
+    const badge = document.getElementById('playlistBadge');
+    if (badge) {
+        badge.textContent = count || '';
+        badge.style.display = count ? 'inline' : 'none';
     }
+}
+
+/**
+ * Update all counts across the app
+ */
+function updateAllCounts() {
+    updateFavoritesCount();
+    updateHistoryCount();
+    updatePlaylistCount();
+}
+
+function renderFavoritesSection() {
+    updateFavoritesCount();
 }
 
 function showFavoritesDetail() {
@@ -4184,11 +4250,7 @@ function addToHistory(song) {
 }
 
 function renderHistorySection() {
-    // Update the library card count
-    const countEl = document.getElementById('historyCardCount');
-    if (countEl) {
-        countEl.textContent = `${playHistory.length} song${playHistory.length !== 1 ? 's' : ''}`;
-    }
+    updateHistoryCount();
 }
 
 function showHistoryDetail() {
@@ -5003,19 +5065,6 @@ function shufflePlaylist(playlistId) {
     shuffleAndPlay(playlist.songs, `"${playlist.name}"`);
 }
 
-function updatePlaylistCount() {
-    const countEl = document.getElementById('playlistPanelCount');
-    if (countEl) {
-        countEl.textContent = `${playlists.length} playlist${playlists.length !== 1 ? 's' : ''}`;
-    }
-    // Update sidebar badge if exists
-    const badge = document.getElementById('playlistBadge');
-    if (badge) {
-        badge.textContent = playlists.length || '';
-        badge.style.display = playlists.length ? 'inline' : 'none';
-    }
-}
-
 // Show playlists view in main content
 function showPlaylistsView() {
     isPlaylistPanelVisible = true;
@@ -5112,15 +5161,8 @@ function renderPlaylistsView() {
         countEl.textContent = playlists.length;
     }
 
-    // Update favorites and history counts
-    const favoritesCountEl = document.getElementById('favoritesCardCount');
-    const historyCountEl = document.getElementById('historyCardCount');
-    if (favoritesCountEl) {
-        favoritesCountEl.textContent = `${favorites.length} song${favorites.length !== 1 ? 's' : ''}`;
-    }
-    if (historyCountEl) {
-        historyCountEl.textContent = `${playHistory.length} song${playHistory.length !== 1 ? 's' : ''}`;
-    }
+    // Update all counts using unified functions
+    updateAllCounts();
 
     if (!grid) return;
 

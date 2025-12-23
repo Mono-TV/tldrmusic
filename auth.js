@@ -1279,10 +1279,6 @@ function showProfilePanel() {
     // Update profile info
     const avatar = document.getElementById('profileAvatar');
     const name = document.getElementById('profileName');
-    const favCount = document.getElementById('profileFavCount');
-    const historyCount = document.getElementById('profileHistoryCount');
-    const likedCount = document.getElementById('likedCount');
-    const playlistCountEl = document.getElementById('profilePlaylistCount');
     const topLanguageEl = document.getElementById('profileTopLanguage');
     const memberSinceEl = document.getElementById('profileMemberSince');
 
@@ -1308,17 +1304,13 @@ function showProfilePanel() {
         }
     }
 
-    // Update stats
-    const favs = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
-    const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
-    const playlists = JSON.parse(localStorage.getItem(STORAGE_KEYS.PLAYLISTS)) || [];
-
-    if (favCount) favCount.textContent = favs.length;
-    if (historyCount) historyCount.textContent = history.length;
-    if (likedCount) likedCount.textContent = `${favs.length} song${favs.length !== 1 ? 's' : ''}`;
-    if (playlistCountEl) playlistCountEl.textContent = playlists.length;
+    // Update stats using unified functions from app.js
+    if (typeof updateAllCounts === 'function') {
+        updateAllCounts();
+    }
 
     // Compute and display top language
+    const favs = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVORITES)) || [];
     if (topLanguageEl) {
         const topLang = computeTopLanguage(favs);
         topLanguageEl.textContent = topLang || '-';
