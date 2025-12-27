@@ -7,18 +7,61 @@ const MUSIC_CONDUCTOR_API = 'http://34.14.162.121:8000';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
+// YouTube thumbnail sizes (width x height)
+const YOUTUBE_THUMBNAILS = {
+    maxres: 'maxresdefault.jpg',    // 1280x720 (not always available)
+    sd: 'sddefault.jpg',            // 640x480
+    hq: 'hqdefault.jpg',            // 480x360
+    mq: 'mqdefault.jpg',            // 320x180
+    default: 'default.jpg'          // 120x90
+};
+
+// Get optimal YouTube thumbnail size based on display context
+function getYouTubeThumbnail(youtubeId, size = 'medium') {
+    if (!youtubeId) return '';
+
+    const sizeMap = {
+        'large': YOUTUBE_THUMBNAILS.sd,      // For hero, large displays (640x480)
+        'medium': YOUTUBE_THUMBNAILS.hq,     // For song cards (480x360)
+        'small': YOUTUBE_THUMBNAILS.mq       // For player bar, small thumbs (320x180)
+    };
+
+    const thumbnail = sizeMap[size] || YOUTUBE_THUMBNAILS.hq;
+    return `https://i.ytimg.com/vi/${youtubeId}/${thumbnail}`;
+}
+
+// Handle image loading errors with fallback chain
+// Call this on img onerror to try lower quality YouTube thumbnails
+window.handleImageError = function(img, youtubeId) {
+    if (!img || !youtubeId) return;
+
+    const currentSrc = img.src;
+
+    // Fallback chain: sd -> hq -> mq -> default
+    if (currentSrc.includes(YOUTUBE_THUMBNAILS.sd)) {
+        img.src = `https://i.ytimg.com/vi/${youtubeId}/${YOUTUBE_THUMBNAILS.hq}`;
+    } else if (currentSrc.includes(YOUTUBE_THUMBNAILS.hq)) {
+        img.src = `https://i.ytimg.com/vi/${youtubeId}/${YOUTUBE_THUMBNAILS.mq}`;
+    } else if (currentSrc.includes(YOUTUBE_THUMBNAILS.mq)) {
+        img.src = `https://i.ytimg.com/vi/${youtubeId}/${YOUTUBE_THUMBNAILS.default}`;
+    } else {
+        // Final fallback: hide the image and show placeholder
+        img.style.display = 'none';
+        // Show parent placeholder if it exists
+        const placeholder = img.parentElement?.querySelector('.song-card-artwork-placeholder');
+        if (placeholder) placeholder.style.display = 'flex';
+    }
+};
+
 // Get valid artwork URL from Music Harvester data
 // Handles placeholder URLs by falling back to YouTube thumbnail
-function getHarvesterArtwork(artworkUrl, youtubeId) {
+function getHarvesterArtwork(artworkUrl, youtubeId, size = 'medium') {
     // Check if artwork URL is valid (not a placeholder)
     if (artworkUrl && !artworkUrl.includes('{country-code}') && artworkUrl.startsWith('http')) {
         return artworkUrl;
     }
-    // Fall back to YouTube thumbnail
-    if (youtubeId) {
-        return `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`;
-    }
-    return '';
+    // Fall back to YouTube thumbnail with appropriate size
+    return getYouTubeThumbnail(youtubeId, size);
 }
 
 // Map Music Harvester chart song to our internal format
@@ -90,11 +133,11 @@ const CACHE_TTL = 30 * 60 * 1000;
 
 // Get artwork URL with YouTube thumbnail fallback
 // Harvester API uses image_url, legacy API uses artwork_url
-function getArtworkUrl(song) {
+function getArtworkUrl(song, size = 'medium') {
     if (song.image_url) return song.image_url;
     // Use getHarvesterArtwork to handle {country-code} placeholder URLs
     if (song.artwork_url || song.youtube_video_id) {
-        return getHarvesterArtwork(song.artwork_url, song.youtube_video_id);
+        return getHarvesterArtwork(song.artwork_url, song.youtube_video_id, size);
     }
     return '';
 }
@@ -1082,13 +1125,17 @@ function renderHero() {
     const heroRatingStat = heroScore?.closest('.stat');
     if (heroRatingStat) heroRatingStat.style.display = '';
 
-    // Hero artwork
+    // Hero artwork - use large size for better quality
     const heroArtwork = document.getElementById('heroArtwork');
-    const artworkUrl = getArtworkUrl(song);
+    const artworkUrl = getArtworkUrl(song, 'large');
     if (heroArtwork && artworkUrl) {
         heroArtwork.src = artworkUrl;
         heroArtwork.alt = `${song.title} album art`;
         heroArtwork.style.display = 'block';
+        // Add error handler for YouTube thumbnail fallback
+        if (song.youtube_video_id) {
+            heroArtwork.onerror = function() { handleImageError(this, song.youtube_video_id); };
+        }
     }
 
     // Hero background from album artwork
@@ -2199,7 +2246,12 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
 
     // Update favorite button state (after UI update so it reads correct song info)
     updateFavoriteButtons();
-    if (playerBarArtwork && artworkUrl) {
+    // Use small size for player bar artwork for better performance
+    if (playerBarArtwork && videoId) {
+        const smallArtworkUrl = getYouTubeThumbnail(videoId, 'small');
+        playerBarArtwork.src = smallArtworkUrl || artworkUrl;
+        playerBarArtwork.onerror = function() { handleImageError(this, videoId); };
+    } else if (playerBarArtwork && artworkUrl) {
         playerBarArtwork.src = artworkUrl;
     }
 
@@ -2261,10 +2313,15 @@ function updateHeroForDirectPlay(title, artist, artworkUrl, score) {
         if (heroRatingStat) heroRatingStat.style.display = 'none';
     }
 
-    // Update artwork
+    // Update artwork (already at large size from caller)
     if (heroArtwork && artworkUrl) {
         heroArtwork.src = artworkUrl;
         heroArtwork.alt = `${title} album art`;
+        // Note: artworkUrl passed here may be YouTube thumbnail, add fallback
+        heroArtwork.onerror = function() {
+            const videoId = window.player?.getVideoData?.()?.video_id;
+            if (videoId) handleImageError(this, videoId);
+        };
     }
 
     // Update background
@@ -2617,11 +2674,15 @@ function updateNowPlaying(index) {
     currentSongIndex = index;
 
     // Update player bar info
-    const artworkUrl = getArtworkUrl(song);
+    const artworkUrl = getArtworkUrl(song, 'small');  // Use small size for player bar
     if (playerBarTitle) playerBarTitle.textContent = song.title;
     if (playerBarArtist) playerBarArtist.textContent = song.artist;
     if (playerBarArtwork && artworkUrl) {
         playerBarArtwork.src = artworkUrl;
+        // Add error handler for YouTube thumbnail fallback
+        if (song.youtube_video_id) {
+            playerBarArtwork.onerror = function() { handleImageError(this, song.youtube_video_id); };
+        }
     }
 
     // Update player bar visibility based on hero visibility
@@ -4017,7 +4078,7 @@ function playAllFavorites() {
  * @param {string} sourceName - Name to show in toast (e.g., "favorites", "history")
  */
 // Helper to normalize song artwork from various field names
-function getSongArtwork(song) {
+function getSongArtwork(song, size = 'medium') {
     // Check for direct artwork fields first
     if (song.artwork) return song.artwork;
     if (song.image_url) return song.image_url;
@@ -4030,10 +4091,8 @@ function getSongArtwork(song) {
         return artworkUrl;
     }
     if (song.thumbnail_url) return song.thumbnail_url;
-    if (videoId) {
-        return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
-    }
-    return '';
+    // Use optimized YouTube thumbnail size
+    return getYouTubeThumbnail(videoId, size);
 }
 
 // Helper to normalize song video ID from various field names
@@ -6812,9 +6871,9 @@ function renderSearchDropdown(suggestions) {
     }
 
     content.innerHTML = suggestions.map((song, index) => {
-        // Get artwork URL with YouTube thumbnail fallback
-        const artworkUrl = song.artwork_url ||
-            (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/mqdefault.jpg` : '');
+        // Get artwork URL with YouTube thumbnail fallback (use small size for dropdown)
+        const artworkUrl = getHarvesterArtwork(song.artwork_url, song.youtube_video_id, 'small');
+        const videoId = song.youtube_video_id;
 
         return `
             <div class="search-dropdown-item"
@@ -6822,7 +6881,7 @@ function renderSearchDropdown(suggestions) {
                  onclick="playSearchResult(${index})">
                 <div class="search-dropdown-item-artwork">
                     ${artworkUrl
-                        ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                        ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy" onerror="handleImageError(this, '${videoId}')">`
                         : '<div class="placeholder"></div>'}
                 </div>
                 <div class="search-dropdown-item-info">
