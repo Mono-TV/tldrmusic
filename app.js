@@ -2432,18 +2432,16 @@ function createSongElement(song, index, chartMode = 'india') {
                 <span class="score"><img src="✦.png" alt="" class="rating-icon">${(song.score || 0).toFixed(2)}</span>
                 ${rankMovement}
                 ${viewsText ? `<span>${viewsText} views</span>` : ''}
+                <button class="song-add-playlist" title="Add to playlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 12H3"></path>
+                        <path d="M16 6H3"></path>
+                        <path d="M16 18H3"></path>
+                        <path d="M18 9v6"></path>
+                        <path d="M21 12h-6"></path>
+                    </svg>
+                </button>
             </div>
-        </div>
-        <div class="song-card-actions">
-            <button class="song-add-playlist" title="Add to playlist">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 12H3"></path>
-                    <path d="M16 6H3"></path>
-                    <path d="M16 18H3"></path>
-                    <path d="M18 9v6"></path>
-                    <path d="M21 12h-6"></path>
-                </svg>
-            </button>
         </div>
     `;
 

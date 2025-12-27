@@ -1294,6 +1294,11 @@ body::before {
     color: var(--text-muted);
 }
 
+.song-card-meta .song-add-playlist {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
 .song-card-meta .score {
     color: var(--accent);
     font-weight: 600;
