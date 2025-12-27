@@ -1,0 +1,929 @@
+{
+  "generated_at": "2025-12-23T18:54:59.736882Z",
+  "week": "2025-W52",
+  "total_songs": 25,
+  "chart": [
+    {
+      "rank": 1,
+      "title": "All I Want For Christmas Is You",
+      "artist": "Mariah Carey",
+      "score": 4.27,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 1,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 1,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 2,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "aAkMkVFwAoo",
+      "youtube_views": 853073086,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/1f/db/b1/1fdbb174-b7f3-2cb9-1e28-83e8137b95ae/886447958520.jpg/600x600bb.jpg",
+      "youtube_likes": 7108046,
+      "youtube_duration": "PT4M3S",
+      "youtube_published": "2019-12-20",
+      "album": "Merry Christmas (Deluxe Anniversary Edition)",
+      "release_date": "1994-10-28",
+      "genre": "Christmas: Pop",
+      "duration_ms": 241562,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/2f/4b/b9/2f4bb91c-3427-bc48-99d7-fe4651975d06/mzaf_3160283559965009152.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/all-i-want-for-christmas-is-you/1480780245?i=1480780254&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/all-i-want-for-christmas-is-you/1480780245?i=1480780254&uo=4",
+      "lyrics_plain": "I don't want a lot for Christmas\nThere is just one thing I need\nI don't care about the presents underneath the Christmas tree\nI just want you for my own\nMore than you could ever know\nMake my wish come true\nAll I want for Christmas is you\nYeah\n\nI don't want a lot for Christmas\nThere is just one thing I need (and I)\nDon't care about the presents underneath the Christmas tree\nI don't need to hang my stocking there upon the fireplace\nSanta Claus won't make me happy with a toy on Christmas Day\n\nI just want you for my own\nMore than you could ever know\nMake my wish come true\nAll I want for Christmas is you\nYou, baby\n\nOh, I won't ask for much this Christmas\nI won't even wish for snow (and I)\nI'm just gonna keep on waiting underneath the mistletoe\nI won't make a list and send it to the North Pole for Saint Nick\nI won't even stay awake to hear those magic reindeer click\n\n'Cause I just want you here tonight\nHolding on to me so tight\nWhat more can I do?\nOh, baby, all I want for Christmas is you\nYou, baby\n\nOh-oh, all the lights are shining so brightly everywhere (so brightly, baby)\nAnd the sound of children's laughter fills the air (oh, oh, yeah)\nAnd everyone is singing (oh, yeah)\nI hear those sleigh bells ringing\nSanta, won't you bring me the one I really need? (Yeah, oh)\nWon't you please bring my baby to me?\n\nOh, I don't want a lot for Christmas\nThis is all I'm asking for\nI just wanna see my baby standing right outside my door\n\nOh, I just want you for my own\nMore than you could ever know\nMake my wish come true\nOh, baby, all I want for Christmas is you\nYou, baby\n\nAll I want for Christmas is you, baby\nAll I want for Christmas is you, baby\nAll I want for Christmas is you, baby\nAll I want for Christmas (all I really want) is you, baby\nAll I want (I want) for Christmas (all I really want) is you, baby",
+      "lyrics_synced": "[00:06.85] I don't want a lot for Christmas\n[00:15.05] There is just one thing I need\n[00:19.25] I don't care about the presents underneath the Christmas tree\n[00:26.05] I just want you for my own\n[00:30.28] More than you could ever know\n[00:34.12] Make my wish come true\n[00:40.73] All I want for Christmas is you\n[00:51.53] Yeah\n[00:54.98] \n[00:58.28] I don't want a lot for Christmas\n[01:01.73] There is just one thing I need (and I)\n[01:05.50] Don't care about the presents underneath the Christmas tree\n[01:11.23] I don't need to hang my stocking there upon the fireplace\n[01:17.73] Santa Claus won't make me happy with a toy on Christmas Day\n[01:24.18] I just want you for my own\n[01:27.57] More than you could ever know\n[01:30.55] Make my wish come true\n[01:33.79] All I want for Christmas is you\n[01:40.23] You, baby\n[01:43.47] Oh, I won't ask for much this Christmas\n[01:46.56] I won't even wish for snow (and I)\n[01:50.25] I'm just gonna keep on waiting underneath the mistletoe\n[01:56.33] I won't make a list and send it to the North Pole for Saint Nick\n[02:02.75] I won't even stay awake to hear those magic reindeer click\n[02:09.04] 'Cause I just want you here tonight\n[02:12.00] Holding on to me so tight\n[02:15.26] What more can I do?\n[02:18.47] Oh, baby, all I want for Christmas is you\n[02:24.91] You, baby\n[02:28.38] Oh-oh, all the lights are shining so brightly everywhere (so brightly, baby)\n[02:34.95] And the sound of children's laughter fills the air (oh, oh, yeah)\n[02:41.81] And everyone is singing (oh, yeah)\n[02:44.93] I hear those sleigh bells ringing\n[02:47.41] Santa, won't you bring me the one I really need? (Yeah, oh)\n[02:51.47] Won't you please bring my baby to me?\n[02:55.39] Oh, I don't want a lot for Christmas\n[02:56.89] This is all I'm asking for\n[03:00.19] I just wanna see my baby standing right outside my door\n[03:06.52] Oh, I just want you for my own\n[03:09.73] More than you could ever know\n[03:12.88] Make my wish come true\n[03:16.05] Oh, baby, all I want for Christmas is you\n[03:24.54] You, baby\n[03:29.20] All I want for Christmas is you, baby\n[03:35.59] All I want for Christmas is you, baby\n[03:41.72] All I want for Christmas is you, baby\n[03:48.18] All I want for Christmas (all I really want) is you, baby\n[03:54.55] All I want (I want) for Christmas (all I really want) is you, baby\n[03:59.02] "
+    },
+    {
+      "rank": 2,
+      "title": "Jingle Bell Rock",
+      "artist": "Bobby Helms",
+      "score": 4.098,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 2,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 3,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 5,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "nIhs1T7OcZg",
+      "youtube_views": 31334626,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/e8/18/6b/e8186bf9-5696-e721-b273-a5f173caf8c1/18UMGIM07062.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 167710,
+      "youtube_duration": "PT2M11S",
+      "youtube_published": "2022-11-28",
+      "album": "Jingle Bell Rock / Captain Santa Claus (And His Reindeer Space Patrol) - Single",
+      "release_date": "1957-12-02",
+      "genre": "Christmas",
+      "duration_ms": 130973,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/91/dd/54/91dd54a1-22a4-5e8b-ea30-25ecad8f6227/mzaf_1754360905466369426.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/jingle-bell-rock/1358462130?i=1358462132&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/jingle-bell-rock/1358462130?i=1358462132&uo=4",
+      "lyrics_plain": "Jingle bell, jingle bell, jingle bell rock\nJingle bells swing and jingle bells ring\nSnowin' and blowin' up bushels of fun\nNow the jingle hop has begun\n\nJingle bell, jingle bell, jingle bell rock\nJingle bells chime in jingle bell time\nDancin' and prancin' in Jingle Bell Square\nIn the frosty air\n\nWhat a bright time, it's the right time\nTo rock the night away\nJingle bell time is a swell time\nTo go glidin' in a one-horse sleigh\n\nGiddy-up jingle horse, pick up your feet\nJingle around the clock\nMix and a-mingle in the jinglin' feet\nThat's the jingle bell rock\n\nJingle bell, jingle bell, jingle bell rock\nJingle bell chime in jingle bell time\nDancin' and prancin' in Jingle Bell Square\nIn the frosty air\n\nWhat a bright time, it's the right time\nTo rock the night away\nJingle bell time is a swell time\nTo go glidin' in a one-horse sleigh\n\nGiddy-up jingle horse, pick up your feet\nJingle around the clock\nMix and a-mingle in the jinglin' feet\nThat's the jingle bell\nThat's the jingle bell\nThat's the jingle bell rock...",
+      "lyrics_synced": "[00:08.19] Jingle bell, jingle bell, jingle bell rock\n[00:12.14] Jingle bells swing and jingle bells ring\n[00:15.83] Snowin' and blowin' up bushels of fun\n[00:20.39] Now the jingle hop has begun\n[00:23.97] Jingle bell, jingle bell, jingle bell rock\n[00:27.93] Jingle bells chime in jingle bell time\n[00:31.97] Dancin' and prancin' in Jingle Bell Square\n[00:36.22] In the frosty air\n[00:39.47] What a bright time, it's the right time\n[00:43.60] To rock the night away\n[00:47.57] Jingle bell time is a swell time\n[00:52.04] To go glidin' in a one-horse sleigh\n[00:55.76] Giddy-up jingle horse, pick up your feet\n[00:59.77] Jingle around the clock\n[01:03.71] Mix and a-mingle in the jinglin' feet\n[01:07.99] That's the jingle bell rock\n[01:11.63] Jingle bell, jingle bell, jingle bell rock\n[01:15.82] Jingle bell chime in jingle bell time\n[01:19.87] Dancin' and prancin' in Jingle Bell Square\n[01:24.32] In the frosty air\n[01:27.44] What a bright time, it's the right time\n[01:31.75] To rock the night away\n[01:35.43] Jingle bell time is a swell time\n[01:40.30] To go glidin' in a one-horse sleigh\n[01:43.10] Giddy-up jingle horse, pick up your feet\n[01:47.99] Jingle around the clock\n[01:51.96] Mix and a-mingle in the jinglin' feet\n[01:56.37] That's the jingle bell\n[01:58.23] That's the jingle bell\n[02:00.35] That's the jingle bell rock...\n[02:05.44] "
+    },
+    {
+      "rank": 3,
+      "title": "The Fate Of Ophelia",
+      "artist": "Taylor Swi",
+      "score": 3.862,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 4,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 4,
+          "weight": 1.3
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 10,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "ko70cExuzZM",
+      "youtube_views": 182292171,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/2d/46/e0/2d46e0bc-8ab9-85dd-4b56-ee6951351034/25UM1IM19577.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 2366574,
+      "youtube_duration": "PT3M59S",
+      "youtube_published": "2025-10-05",
+      "album": "The Life of a Showgirl",
+      "release_date": "2025-10-03",
+      "genre": "Pop",
+      "duration_ms": 226074,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fa/1c/6b/fa1c6be0-8f12-52fa-3b36-5465d32ac602/mzaf_13774232611391010550.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/the-fate-of-ophelia/1833328839?i=1833328840&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/the-fate-of-ophelia/1833328839?i=1833328840&uo=4"
+    },
+    {
+      "rank": 4,
+      "title": "Underneath The Tree",
+      "artist": "Kelly Clarkson",
+      "score": 3.854,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 2,
+          "weight": 1.3
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 7,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 9,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "EM2Fnp_qnE8",
+      "youtube_views": 88890075,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d8/e3/a5/d8e3a5f3-9296-07cc-9714-26069c01fd44/886448741190.jpg/600x600bb.jpg",
+      "youtube_likes": 285250,
+      "youtube_duration": "PT4M",
+      "youtube_published": "2013-12-03",
+      "album": "Wrapped In Red (Deluxe Version)",
+      "release_date": "2013-10-25",
+      "genre": "Christmas",
+      "duration_ms": 229638,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fe/fc/0b/fefc0ba6-d406-fd6d-d52f-1a1b2f73625b/mzaf_9004761021113762981.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/underneath-the-tree/1537216364?i=1537216368&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/underneath-the-tree/1537216364?i=1537216368&uo=4",
+      "lyrics_plain": "You're here where you should be\nSnow is falling as the carolers sing\nIt just wasn't the same\nAlone on Christmas day\nPresents, what a beautiful sight\nDon't mean a thing if you ain't holding me tight\nYou're all that I need\nUnderneath the tree\n\nTonight I'm gonna hold you close\nMake sure that you know\nI was lost before you\nChristmas was cold and grey\nAnother holiday alone to celebrate\n\nBut then one day everything changed\nYou're all I need\nUnderneath the tree\n\nYou're here where you should be\nSnow is falling as the carolers sing\nIt just wasn't the same\nAlone on Christmas day\nPresents, what a beautiful sight\nDon't mean a thing if you ain't holding me tight\nYou're all that I need\nUnderneath the tree\n\nI found what I was looking for\nA love that's meant for me\nA heart that's mine completely\nKnocked me right off my feet\nAnd this year I will fall\nWith no worries at all\n\n'Cause you are near and everything's clear\nYou're all I need\nUnderneath the tree\n\nYou're here where you should be\nSnow is falling as the carolers sing\nIt just wasn't the same\nAlone on Christmas day\nPresents, what a beautiful sight\nDon't mean a thing if you ain't holding me tight\nYou're all that I need\nUnderneath the tree\n\nAnd then one day, everything changed\nYou're all I need\nUnderneath the tree\n\nYou're here where you should be (oh yeah)\nSnow is falling as the carolers sing\n(Oh yeah!) It just wasn't the same\n(Oh yeah!) Alone on Christmas day\nPresents, what a beautiful sight (oh, you're all I need)\nDon't mean a thing if you ain't holding me tight\n(Underneath the tree) you're all that I need\n(Underneath my tree) underneath the tree\nTonight\n\nOh you're all I need!\nAll I need underneath my tree\nOh",
+      "lyrics_synced": "[00:06.13] You're here where you should be\n[00:09.04] Snow is falling as the carolers sing\n[00:12.10] It just wasn't the same\n[00:15.18] Alone on Christmas day\n[00:18.07] Presents, what a beautiful sight\n[00:21.12] Don't mean a thing if you ain't holding me tight\n[00:24.13] You're all that I need\n[00:27.02] Underneath the tree\n[00:29.91] Tonight I'm gonna hold you close\n[00:36.19] Make sure that you know\n[00:39.21] I was lost before you\n[00:43.83] Christmas was cold and grey\n[00:48.07] Another holiday alone to celebrate\n[00:53.85] But then one day everything changed\n[00:59.32] You're all I need\n[01:01.52] Underneath the tree\n[01:03.28] You're here where you should be\n[01:06.10] Snow is falling as the carolers sing\n[01:08.90] It just wasn't the same\n[01:12.04] Alone on Christmas day\n[01:15.16] Presents, what a beautiful sight\n[01:18.07] Don't mean a thing if you ain't holding me tight\n[01:21.29] You're all that I need\n[01:24.02] Underneath the tree\n[01:26.98] I found what I was looking for\n[01:33.08] A love that's meant for me\n[01:36.06] A heart that's mine completely\n[01:40.83] Knocked me right off my feet\n[01:44.93] And this year I will fall\n[01:48.14] With no worries at all\n[01:50.77] 'Cause you are near and everything's clear\n[01:56.45] You're all I need\n[01:58.69] Underneath the tree\n[01:59.98] You're here where you should be\n[02:03.03] Snow is falling as the carolers sing\n[02:05.96] It just wasn't the same\n[02:09.00] Alone on Christmas day\n[02:12.27] Presents, what a beautiful sight\n[02:15.08] Don't mean a thing if you ain't holding me tight\n[02:18.11] You're all that I need\n[02:21.27] Underneath the tree\n[02:25.97] \n[02:47.81] And then one day, everything changed\n[02:53.55] You're all I need\n[02:55.64] Underneath the tree\n[02:57.25] You're here where you should be (oh yeah)\n[03:00.07] Snow is falling as the carolers sing\n[03:02.67] (Oh yeah!) It just wasn't the same\n[03:05.54] (Oh yeah!) Alone on Christmas day\n[03:09.17] Presents, what a beautiful sight (oh, you're all I need)\n[03:12.47] Don't mean a thing if you ain't holding me tight\n[03:14.28] (Underneath the tree) you're all that I need\n[03:17.23] (Underneath my tree) underneath the tree\n[03:20.83] Tonight\n[03:22.79] Oh you're all I need!\n[03:28.17] All I need underneath my tree\n[03:35.72] Oh\n[03:37.26] "
+    },
+    {
+      "rank": 5,
+      "title": "Santa Tell Me",
+      "artist": "Ariana Grande",
+      "score": 3.848,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 5,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 6,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 8,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "nlR0MkrRklg",
+      "youtube_views": 328458360,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/60/c8/2b/60c82b22-cd58-cdcd-5b51-6fad7a8b7055/14UMGIM55455.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 3400859,
+      "youtube_duration": "PT5M40S",
+      "youtube_published": "2014-12-13",
+      "album": "Santa Tell Me - Single",
+      "release_date": "2013-12-13",
+      "genre": "Christmas",
+      "duration_ms": 204093,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/fc/57/24/fc572468-b31a-ab0c-766b-d46a06f82a01/mzaf_16039963406167695060.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/santa-tell-me/1444319981?i=1444319982&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/santa-tell-me/1444319981?i=1444319982&uo=4",
+      "lyrics_plain": "Santa, tell me if you're really there\nDon't make me fall in love again\nIf he won't be here next year\n\nSanta, tell me if he really cares\n'Cause I can't give it all away\nIf he won't be here next year\n\nFeeling Christmas all around\nAnd I'm trying to play it cool\nBut it's hard to focus\nWhen I see him walking 'cross the room\n\n\"Let It Snow\" is blasting out\nBut I won't get in the mood\nI'm avoiding every mistletoe until I know...\n\nIt's true love that he thinks of\nSo next Christmas I'm not all alone, boy\n\nSanta, tell me if you're really there\nDon't make me fall in love again\nIf he won't be here next year\n\nSanta, tell me if he really cares\n'Cause I can't give it all away\nIf he won't be here next year\n\nI've been down this road before\nFell in love on Christmas night\nBut on New Year's Day, I woke up and\nHe wasn't by my side\n\nNow I need someone to hold\nBe my fire in the cold\nBut it's hard to tell\nIf this is just a fling or if it's...\n\nTrue love that he thinks of\nSo next Christmas I'm not all alone, boy\n\nSanta, tell me if you're really there\nDon't make me fall in love again\nIf he won't be here next year\n\nSanta, tell me if he really cares\n'Cause I can't give it all away\nIf he won't be here next year\n\nOh, I wanna have him beside me like, oh, woo, ooh\nOn the 25th by that fireplace, oh, whoa\nBut I don't want a new broken heart\nThis year I've got to be smart\n\nOh, baby (Santa, tell me, Santa, tell me)\nIf he won't be, if he won't be here (Santa, tell me)\n(Santa, tell me)\n\nSanta, tell me if you're really there (Santa, tell me)\nDon't make me fall in love again ('cause I'm waitin' here)\nIf he won't be here next year (he won't be here next year)\n\nSanta, tell me if he really cares (tell me)\n'Cause I can't give it all away (tell me, 'cause)\nIf he won't be here next year (he won't be here next year)\n\nSanta, tell me if you're really there (tell me)\nDon't make me fall in love again (tell me, baby)\nIf he won't be here next year (If he won't be, if he won't be here)\nSanta, tell me (tell me) if he really cares (do you care?)\n'Cause I can't give it all away\nIf he won't be here next year",
+      "lyrics_synced": "[00:10.82] Santa, tell me if you're really there\n[00:14.93] Don't make me fall in love again\n[00:17.58] If he won't be here next year\n[00:20.87] Santa, tell me if he really cares\n[00:24.85] 'Cause I can't give it all away\n[00:27.59] If he won't be here next year\n[00:31.13] Feeling Christmas all around\n[00:33.57] And I'm trying to play it cool\n[00:36.17] But it's hard to focus\n[00:37.96] When I see him walking 'cross the room\n[00:41.13] \"Let It Snow\" is blasting out\n[00:43.55] But I won't get in the mood\n[00:46.24] I'm avoiding every mistletoe until I know...\n[00:49.90] It's true love that he thinks of\n[00:54.36] So next Christmas I'm not all alone, boy\n[01:00.87] Santa, tell me if you're really there\n[01:04.82] Don't make me fall in love again\n[01:07.58] If he won't be here next year\n[01:10.75] Santa, tell me if he really cares\n[01:14.82] 'Cause I can't give it all away\n[01:17.43] If he won't be here next year\n[01:21.01] I've been down this road before\n[01:23.77] Fell in love on Christmas night\n[01:26.09] But on New Year's Day, I woke up and\n[01:28.69] He wasn't by my side\n[01:31.19] Now I need someone to hold\n[01:33.52] Be my fire in the cold\n[01:36.13] But it's hard to tell\n[01:37.68] If this is just a fling or if it's...\n[01:40.35] True love that he thinks of\n[01:44.14] So next Christmas I'm not all alone, boy\n[01:50.70] Santa, tell me if you're really there\n[01:54.89] Don't make me fall in love again\n[01:57.52] If he won't be here next year\n[02:00.88] Santa, tell me if he really cares\n[02:04.85] 'Cause I can't give it all away\n[02:07.42] If he won't be here next year\n[02:12.01] Oh, I wanna have him beside me like, oh, woo, ooh\n[02:16.93] On the 25th by that fireplace, oh, whoa\n[02:22.09] But I don't want a new broken heart\n[02:25.37] This year I've got to be smart\n[02:29.55] Oh, baby (Santa, tell me, Santa, tell me)\n[02:34.34] If he won't be, if he won't be here (Santa, tell me)\n[02:38.01] (Santa, tell me)\n[02:40.85] Santa, tell me if you're really there (Santa, tell me)\n[02:44.80] Don't make me fall in love again ('cause I'm waitin' here)\n[02:47.48] If he won't be here next year (he won't be here next year)\n[02:50.86] Santa, tell me if he really cares (tell me)\n[02:54.88] 'Cause I can't give it all away (tell me, 'cause)\n[02:57.84] If he won't be here next year (he won't be here next year)\n[03:00.88] Santa, tell me if you're really there (tell me)\n[03:04.82] Don't make me fall in love again (tell me, baby)\n[03:07.55] If he won't be here next year (If he won't be, if he won't be here)\n[03:10.76] Santa, tell me (tell me) if he really cares (do you care?)\n[03:15.01] 'Cause I can't give it all away\n[03:17.45] If he won't be here next year\n[03:20.05] "
+    },
+    {
+      "rank": 6,
+      "title": "Rockin' Around The Christmas Tree",
+      "artist": "Brenda Lee",
+      "score": 3.842,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 3,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 3,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 14,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "TFsZy9t-qDc",
+      "youtube_views": 111519960,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d4/ea/6b/d4ea6b89-f9ac-f476-270d-66931315bc4c/06UMGIM02727.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 613194,
+      "youtube_duration": "PT2M9S",
+      "youtube_published": "2023-11-03",
+      "album": "Rockin' Around the Christmas Tree",
+      "release_date": "1958-01-01",
+      "genre": "Christmas",
+      "duration_ms": 126267,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/86/40/11/864011b9-f8a6-3e5b-c5f4-3471c3fb670c/mzaf_6057715606403594924.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/rockin-around-the-christmas-tree-single/1444032014?i=1444032015&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/rockin-around-the-christmas-tree-single/1444032014?i=1444032015&uo=4",
+      "lyrics_plain": "Rockin' around the Christmas tree\nAt the Christmas party hop\nMistletoe hung where you can see\nEvery couple tries to stop\nRockin' around the Christmas tree\nLet the Christmas spirit ring\nLater we'll have some pumpkin pie\nAnd we'll do some caroling\n\nYou will get a sentimental feeling when you hear\nVoices singing, let's be jolly\nDeck the halls with boughs of holly\nRockin' around the Christmas tree\nHave a happy holiday\nEveryone dancin' merrily\nIn the new old-fashioned way\n\nYou will get a sentimental feeling when you hear\nVoices singing, let's be jolly\nDeck the halls with boughs of holly\nRockin' around the Christmas tree\nHave a happy holiday\nEveryone dancin' merrily\nIn the new old-fashioned way",
+      "lyrics_synced": "[00:07.77] Rockin' around the Christmas tree\n[00:10.18] At the Christmas party hop\n[00:14.33] Mistletoe hung where you can see\n[00:16.90] Every couple tries to stop\n[00:20.73] Rockin' around the Christmas tree\n[00:23.80] Let the Christmas spirit ring\n[00:27.02] Later we'll have some pumpkin pie\n[00:30.83] And we'll do some caroling\n[00:34.84] You will get a sentimental feeling when you hear\n[00:40.84] Voices singing, let's be jolly\n[00:44.41] Deck the halls with boughs of holly\n[00:47.86] Rockin' around the Christmas tree\n[00:50.98] Have a happy holiday\n[00:54.86] Everyone dancin' merrily\n[00:57.69] In the new old-fashioned way\n[01:00.99] \n[01:28.87] You will get a sentimental feeling when you hear\n[01:35.45] Voices singing, let's be jolly\n[01:38.88] Deck the halls with boughs of holly\n[01:42.44] Rockin' around the Christmas tree\n[01:45.22] Have a happy holiday\n[01:49.12] Everyone dancin' merrily\n[01:51.98] In the new old-fashioned way\n[01:56.10] "
+    },
+    {
+      "rank": 7,
+      "title": "Let It Snow! Let It Snow! Let It Snow!",
+      "artist": "Dean Martin",
+      "score": 3.65,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 7,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 8,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 11,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "Rnil5LyK_B0",
+      "youtube_views": 50414302,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a5/6f/84/a56f8452-ab01-07c7-b395-29af364caa06/13UACIM76530.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 328095,
+      "youtube_duration": "PT1M57S",
+      "youtube_published": "2019-11-13",
+      "album": "A Winter Romance",
+      "release_date": "1959-11-16",
+      "genre": "Christmas: Classic",
+      "duration_ms": 117147,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/23/1c/23231cde-29da-cc7b-8e24-3c6396daefa4/mzaf_7816655172717981833.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/let-it-snow-let-it-snow-let-it-snow/724322340?i=724322860&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/let-it-snow-let-it-snow-let-it-snow/724322340?i=724322860&uo=4",
+      "lyrics_plain": "Oh, the weather outside is frightful\nBut the fire is so delightful\nAnd since we've no place to go\nLet it snow! Let it snow! Let it snow!\n\nMan it doesn't show signs of stopping\nAnd I brought me some corn for popping\nThe lights are turned way down low\nLet it snow! Let it snow!\n\nWhen we finally kiss goodnight\nHow I'll hate going out in the storm\nBut if you'll really hold me tight\nAll the way home I'll be warm\n\nAnd the fire is slowly dying\nAnd, my dear, we're still goodbying\nBut as long as you'd love me so\nLet it snow! Let it snow and snow!\n\nWhen we finally kiss goodnight\nHow I'll hate going out in the storm\nBut if you really grab me tight\nAll the way home I'll be warm\n\nOh, the fire is slowly dying\nAnd, my dear, we're still goodbying\nBut as long as you'd love me so\nLet it snow, let it snow, let it snow!",
+      "lyrics_synced": "[00:07.47] Oh, the weather outside is frightful\n[00:10.78] But the fire is so delightful\n[00:14.10] And since we've no place to go\n[00:17.74] Let it snow! Let it snow! Let it snow!\n[00:21.20] Man it doesn't show signs of stopping\n[00:24.97] And I brought me some corn for popping\n[00:28.86] The lights are turned way down low\n[00:31.97] Let it snow! Let it snow!\n[00:35.97] When we finally kiss goodnight\n[00:39.23] How I'll hate going out in the storm\n[00:42.80] But if you'll really hold me tight\n[00:46.73] All the way home I'll be warm\n[00:49.80] And the fire is slowly dying\n[00:53.32] And, my dear, we're still goodbying\n[00:56.93] But as long as you'd love me so\n[01:00.34] Let it snow! Let it snow and snow!\n[01:05.10] \n[01:18.44] When we finally kiss goodnight\n[01:21.91] How I'll hate going out in the storm\n[01:25.56] But if you really grab me tight\n[01:29.28] All the way home I'll be warm\n[01:32.56] Oh, the fire is slowly dying\n[01:35.99] And, my dear, we're still goodbying\n[01:39.57] But as long as you'd love me so\n[01:42.95] Let it snow, let it snow, let it snow!\n[01:47.62] "
+    },
+    {
+      "rank": 8,
+      "title": "It's The Most Wonderful Time Of The Year",
+      "artist": "Andy Williams",
+      "score": 3.556,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 9,
+          "weight": 1.5
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 10,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 10,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "cbZTfrhcamA",
+      "youtube_views": 33966072,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d9/84/16/d98416a4-d960-4602-8f2c-4f03165d434d/mzi.hohpjzfa.jpg/600x600bb.jpg",
+      "youtube_likes": 94476,
+      "youtube_duration": "PT2M32S",
+      "youtube_published": "2020-12-04",
+      "album": "The Andy Williams Christmas Album",
+      "release_date": "1963-10-14",
+      "genre": "Christmas: Classic",
+      "duration_ms": 152570,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/f2/e3/9f/f2e39f0a-e9e2-0086-a956-c79cf2a727f1/mzaf_4409231736110364397.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/its-the-most-wonderful-time-of-the-year/171434474?i=171434594&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/its-the-most-wonderful-time-of-the-year/171434474?i=171434594&uo=4",
+      "lyrics_plain": "It's the most wonderful time of the year\nWith the kids jingle belling\nAnd everyone telling you be of good cheer\nIt's the most wonderful time of the year\n\nIt's the hap-happiest season of all\nWith those holiday greetings and gay happy meetings\nWhen friends come to call\nIt's the hap-happiest season of all\n\nThere'll be parties for hosting\nMarshmallows for toasting\nAnd caroling out in the snow\nThere'll be scary ghost stories\nAnd tales of the glories of\nChristmases long, long ago\n\nIt's the most wonderful time of the year\nThere'll be much mistltoeing\nAnd hearts will be glowing\nWhen loved ones are near\nIt's the most wonderful time of the year.\n\nThere'll be parties for hosting\nMarshmallows for toasting\nAnd caroling out in the snow\nThere'll be scary ghost stories\nAnd tales of the glories of\nChristmases long, long ago\n\nIt's the most wonderful time of the year\nThere'll be much mistltoeing\nAnd hearts will be glowing\nWhen loved ones are near\nIt's the most wonderful time\nYes the most wonderful time\nOh the most wonderful time\nOf the year"
+    },
+    {
+      "rank": 9,
+      "title": "Last Christmas",
+      "artist": "Wham!",
+      "score": 3.534,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 1,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 4,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 27,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "E8gmARGvPlI",
+      "youtube_views": 1080461026,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/96/8e/a1/968ea1bc-3024-2cba-8eee-6432d7326236/886448113539.jpg/600x600bb.jpg",
+      "youtube_likes": 5910109,
+      "youtube_duration": "PT4M39S",
+      "youtube_published": "2009-10-25",
+      "album": "Last Christmas: The Original Motion Picture Soundtrack",
+      "release_date": "1984-12-01",
+      "genre": "Pop",
+      "duration_ms": 264960,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/67/59/ae/6759ae17-20a7-f6e2-579c-764217a78fbb/mzaf_11321118107711631331.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/last-christmas/1485908119?i=1485908120&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/last-christmas/1485908119?i=1485908120&uo=4",
+      "lyrics_plain": "Oh, oh-oh, ooh-oh-oh-oh\nAh-ah\n\nLast Christmas, I gave you my heart\nBut the very next day, you gave it away\nThis year, to save me from tears\nI'll give it to someone special\n\nLast Christmas, I gave you my heart\nBut the very next day, you gave it away (you gave it away)\nThis year, to save me from tears\nI'll give it to someone special (special)\n\nOnce bitten and twice shy\nI keep my distance, but you still catch my eye\nTell me, baby, do you recognize me?\nWell, it's been a year, it doesn't surprise me\n\n\"Merry Christmas,\" I wrapped it up and sent it\nWith a note saying, \"I love you,\" I meant it\nNow I know what a fool I've been\nBut if you kissed me now, I know you'd fool me again\n\nLast Christmas, I gave you my heart\nBut the very next day, you gave it away (you gave it away)\nThis year, to save me from tears\nI'll give it to someone special (special)\n\nLast Christmas, I gave you my heart\nBut the very next day, you gave it away\nThis year, to save me from tears\nI'll give it to someone special (special)\nOh-oh, oh my, baby\n\nA crowded room, friends with tired eyes\nI'm hiding from you, and your soul of ice\nMy God, I thought you were someone to rely on\nMe? I guess I was a shoulder to cry on\n\nA face on a lover with a fire in his heart\nA man undercover, but you tore me apart\nOoh-hoo\nNow I've found a real love, you'll never fool me again\n\nLast Christmas, I gave you my heart\nBut the very next day, you gave it away (you gave it away)\nThis year, to save me from tears\nI'll give it to someone special (special)\n\nLast Christmas, I gave you my heart (I gave you my heart)\nBut the very next day, you gave it away (you gave it away)\nThis year, to save me from tears\nI'll give it to someone special (special)\n\nA face on a lover with a fire in his heart (I gave you my heart)\nA man undercover, but you tore him apart\nMaybe next year, I'll give it to someone\nI'll give it to someone special (special!)\nSo long!",
+      "lyrics_synced": "[00:06.53] Oh, oh-oh, ooh-oh-oh-oh\n[00:13.13] Ah-ah\n[00:18.48] Last Christmas, I gave you my heart\n[00:22.07] But the very next day, you gave it away\n[00:27.32] This year, to save me from tears\n[00:31.18] I'll give it to someone special\n[00:36.73] Last Christmas, I gave you my heart\n[00:40.17] But the very next day, you gave it away (you gave it away)\n[00:45.30] This year, to save me from tears\n[00:49.47] I'll give it to someone special (special)\n[01:12.74] Once bitten and twice shy\n[01:17.16] I keep my distance, but you still catch my eye\n[01:21.46] Tell me, baby, do you recognize me?\n[01:26.11] Well, it's been a year, it doesn't surprise me\n[01:31.40] \"Merry Christmas,\" I wrapped it up and sent it\n[01:34.84] With a note saying, \"I love you,\" I meant it\n[01:39.12] Now I know what a fool I've been\n[01:43.07] But if you kissed me now, I know you'd fool me again\n[01:48.02] Last Christmas, I gave you my heart\n[01:51.84] But the very next day, you gave it away (you gave it away)\n[01:57.25] This year, to save me from tears\n[02:01.13] I'll give it to someone special (special)\n[02:06.29] Last Christmas, I gave you my heart\n[02:10.20] But the very next day, you gave it away\n[02:14.89] This year, to save me from tears\n[02:18.86] I'll give it to someone special (special)\n[02:24.67] Oh-oh, oh my, baby\n[02:42.34] A crowded room, friends with tired eyes\n[02:46.84] I'm hiding from you, and your soul of ice\n[02:51.55] My God, I thought you were someone to rely on\n[02:55.03] Me? I guess I was a shoulder to cry on\n[02:59.87] A face on a lover with a fire in his heart\n[03:04.59] A man undercover, but you tore me apart\n[03:08.81] Ooh-hoo\n[03:13.34] Now I've found a real love, you'll never fool me again\n[03:18.01] Last Christmas, I gave you my heart\n[03:21.78] But the very next day, you gave it away (you gave it away)\n[03:26.67] This year, to save me from tears\n[03:30.97] I'll give it to someone special (special)\n[03:35.87] Last Christmas, I gave you my heart (I gave you my heart)\n[03:40.23] But the very next day, you gave it away (you gave it away)\n[03:45.00] This year, to save me from tears\n[03:49.13] I'll give it to someone special (special)\n[03:53.50] A face on a lover with a fire in his heart (I gave you my heart)\n[03:58.32] A man undercover, but you tore him apart\n[04:02.03] Maybe next year, I'll give it to someone\n[04:07.55] I'll give it to someone special (special!)\n[04:16.64] So long!\n[04:25.31] "
+    },
+    {
+      "rank": 10,
+      "title": "The Christmas Song (Merry Christmas To You)",
+      "artist": "Nat \"King\" Cole",
+      "score": 3.276,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 6,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 15,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 18,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "g8UmqvOqB1A",
+      "youtube_views": 2764050,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/0f/19/eb/0f19eb0e-1d72-9b00-6e3b-4a8a6fca817d/18UMGIM52342.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 26676,
+      "youtube_duration": "PT3M11S",
+      "youtube_published": "2017-03-15",
+      "album": "The Christmas Song (Expanded Edition)",
+      "release_date": "1955-11-15",
+      "genre": "Christmas",
+      "duration_ms": 192151,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/da/fd/3f/dafd3fc0-2f18-4414-bd6a-ad103625ae0a/mzaf_7185785269279562362.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/the-christmas-song-merry-christmas-to-you/1435551048?i=1435551062&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/the-christmas-song-merry-christmas-to-you/1435551048?i=1435551062&uo=4",
+      "lyrics_plain": "Chestnuts roasting on an open fire\nJack Frost nipping at your nose\nYuletide carols being sung by a choir\nAnd folks dressed up like Eskimos\n\nEverybody knows a turkey and some mistletoe\nHelp to make the season bright\nTiny tots with their eyes all aglow\nWill find it hard to sleep tonight\n\nThey know that Santa's on his way\nHe's loaded lots of toys and goodies on his sleigh\nAnd every mother's child is gonna spy\nTo see if reindeer really know how to fly\n\nAnd so I'm offering this simple phrase\nTo kids from one to ninety-two\nAlthough it's been said many times\nMany ways, Merry Christmas to you\n\nAnd so I'm offering this simple phrase\nTo kids from one to ninety-two\nAlthough it's been said many times\nMany ways, Merry Christmas to you",
+      "lyrics_synced": "[00:13.06] Chestnuts roasting on an open fire\n[00:20.24] Jack Frost nipping at your nose\n[00:26.61] Yuletide carols being sung by a choir\n[00:33.87] And folks dressed up like Eskimos\n[00:39.21] Everybody knows a turkey and some mistletoe\n[00:48.32] Help to make the season bright\n[00:55.54] Tiny tots with their eyes all aglow\n[01:00.94] Will find it hard to sleep tonight\n[01:07.61] They know that Santa's on his way\n[01:14.86] He's loaded lots of toys and goodies on his sleigh\n[01:21.18] And every mother's child is gonna spy\n[01:27.53] To see if reindeer really know how to fly\n[01:34.76] And so I'm offering this simple phrase\n[01:42.85] To kids from one to ninety-two\n[01:49.19] Although it's been said many times\n[01:53.72] Many ways, Merry Christmas to you\n[02:29.87] And so I'm offering this simple phrase\n[02:38.97] To kids from one to ninety-two\n[02:45.25] Although it's been said many times\n[02:49.36] Many ways, Merry Christmas to you\n[03:07.60] "
+    },
+    {
+      "rank": 11,
+      "title": "Sleigh Ride",
+      "artist": "The Ronettes",
+      "score": 3.264,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 12,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 12,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 15,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "DkXIJe8CaIc",
+      "youtube_views": 48742980,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/2e/92/5f/2e925fa4-6a4e-a15e-7cfc-bb3f13f053e1/mzi.ermvbetx.jpg/600x600bb.jpg",
+      "youtube_likes": 177318,
+      "youtube_duration": "PT3M2S",
+      "youtube_published": "2020-11-19",
+      "album": "A Christmas Gift For You From Phil Spector",
+      "release_date": "1963-11-22",
+      "genre": "Christmas: Classic",
+      "duration_ms": 186241,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/58/45/2e/58452ee8-5573-6085-ecba-df534691f023/mzaf_9608512872599528015.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/sleigh-ride/336036941?i=336037282&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/sleigh-ride/336036941?i=336037282&uo=4",
+      "lyrics_plain": "Just hear those sleigh bells jingling\nRing tingle tingling too (ring-a-ling-a-ling-a-ding-dong-ding)\nCome on, it's lovely weather\nFor a sleigh ride together with you (ring-a-ling-a-ling-a-ding-dong-ding)\n\nOutside the snow is falling\nAnd friends are calling, \"Yoo hoo\" (ring-a-ling-a-ling-a-ding-dong-ding)\nCome on, it's lovely weather\nFor a sleigh ride together with you\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n\nOur cheeks are nice and rosy\nAnd comfy and cosy are we (ring-a-ling-a-ling-a-ding-dong-ding)\nWe're snuggled up together\nLike two birds of a feather would be (ring-a-ling-a-ling-a-ding-dong-ding)\n\nLet's take the road before us\nAnd sing a chorus or two (ring-a-ling-a-ling-a-ding-dong-ding)\nCome on, it's lovely weather\nFor a sleigh ride together with you\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n\nOur cheeks are nice and rosy\nAnd comfy and cosy are we (ring-a-ling-a-ling-a-ding-dong-ding)\nWe're snuggled up together\nLike two birds of a feather would be (ring-a-ling-a-ling-a-ding-dong-ding)\n\nLet's take a road before us\nAnd sing a chorus or two (ring-a-ling-a-ling-a-ding-dong-ding)\nCome on, it's lovely weather\nFor a sleigh ride together with you\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)\n(Ring-a-ling-a-ling-a-ding-dong-ding)",
+      "lyrics_synced": "[00:25.30] Just hear those sleigh bells jingling\n[00:27.65] Ring tingle tingling too (ring-a-ling-a-ling-a-ding-dong-ding)\n[00:30.75] Come on, it's lovely weather\n[00:32.56] For a sleigh ride together with you (ring-a-ling-a-ling-a-ding-dong-ding)\n[00:35.95] Outside the snow is falling\n[00:37.88] And friends are calling, \"Yoo hoo\" (ring-a-ling-a-ling-a-ding-dong-ding)\n[00:41.12] Come on, it's lovely weather\n[00:43.02] For a sleigh ride together with you\n[00:45.03] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[00:47.18] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[00:49.23] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[00:52.60] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[00:56.34] \n[00:59.22] Our cheeks are nice and rosy\n[01:01.33] And comfy and cosy are we (ring-a-ling-a-ling-a-ding-dong-ding)\n[01:04.68] We're snuggled up together\n[01:06.37] Like two birds of a feather would be (ring-a-ling-a-ling-a-ding-dong-ding)\n[01:09.75] Let's take the road before us\n[01:11.90] And sing a chorus or two (ring-a-ling-a-ling-a-ding-dong-ding)\n[01:15.03] Come on, it's lovely weather\n[01:17.07] For a sleigh ride together with you\n[01:19.37] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:20.75] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:23.33] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:26.25] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:28.64] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:54.80] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:57.36] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[01:59.97] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[02:04.67] \n[02:07.41] Our cheeks are nice and rosy\n[02:09.68] And comfy and cosy are we (ring-a-ling-a-ling-a-ding-dong-ding)\n[02:12.95] We're snuggled up together\n[02:14.71] Like two birds of a feather would be (ring-a-ling-a-ling-a-ding-dong-ding)\n[02:18.23] Let's take a road before us\n[02:20.21] And sing a chorus or two (ring-a-ling-a-ling-a-ding-dong-ding)\n[02:23.68] Come on, it's lovely weather\n[02:25.49] For a sleigh ride together with you\n[02:27.79] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[02:29.19] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[02:31.72] (Ring-a-ling-a-ling-a-ding-dong-ding)\n[02:36.19] "
+    },
+    {
+      "rank": 12,
+      "title": "Man I Need",
+      "artist": "Olivia Dean",
+      "score": 2.998,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 13,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 17,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 18,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "oIv_Y2RPQ_A",
+      "youtube_views": 32809205,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/08/e2/21/08e22164-7c0b-1522-818f-e0e74f62dc49/25UMGIM69703.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 288119,
+      "youtube_duration": "PT3M22S",
+      "youtube_published": "2025-08-15",
+      "album": "The Art of Loving",
+      "release_date": "2025-09-26",
+      "genre": "Pop",
+      "duration_ms": 184000,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/91/06/c5/9106c56f-45b1-ce78-25d1-849054f92c13/mzaf_6432634085089146792.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/man-i-need/1817609404?i=1817609509&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/man-i-need/1817609404?i=1817609509&uo=4",
+      "lyrics_plain": "Talk to me, talk to me\nTalk to me, talk to me\nHm\nLooks like we're making up for lost time\nNeed you to spell it out for me\nBossa Nova on all night\nIt's like a type of alchemy\nIntroduce me to your best friend\nI can come and slot right in\nA satellite ain't even that far\nI, I kinda wonder where you are\nAlready know I can't leave it alone\nYou're on my mind, mm\nAlready gave you the time and the place\nSo, don't be shy\nJust come be the man I need\nTell me you got something to give, I want it\nI kinda like it when you call me wonderful\nWhatever the type of talk it is, come on then\nI gotta know you're meant to be the man I need\nTalk to me\nTalk to me\nMm, talk to me, talk to me\nBe the man that I need, baby\nTalk to me, talk to me\nBe the man that I need, need, need\nMm, talk to me, talk to me\nBe the man that I need, baby\nTalk to me, talk to me\nBe the man, man, man, man, man\nI'd like to think you feel the same way\nBut I can't tell with you sometimes\nSo, baby, let's get on the same page\nStop making me read between the lines\nAlready know I can't leave it alone\nYou're on my mind, mm\nAlready gave you the time and the place\nSo, don't be shy\nJust come be the man I need\nTell me you got something to give, I want it\nI kinda like it when you call me wonderful\nWhatever the type of talk it is, come on then\nI gotta know you're meant to be the man I need\nTalk to me, talk to me\nTalk to me, talk to me\nMm, talk to me, talk to me\nBe the man that I need, baby (be the man)\nTalk to me, talk to me\nBe the man that I need, need, need\nMm, talk to me, talk to me\nBe the man that I need, baby (be the man)\nTalk to me, talk to me\nBe the man, man, man, man, man\nMm\nMm-mm, mm-mm, mm\nMm-mm, mm\nMm-mm, mm-mm, mm-mm, mm-mm, mm\n",
+      "lyrics_synced": "[00:01.01] Talk to me, talk to me\n[00:04.62] Talk to me, talk to me\n[00:07.89] Hm\n[00:09.63] Looks like we're making up for lost time\n[00:13.71] Need you to spell it out for me\n[00:17.47] Bossa Nova on all night\n[00:21.63] It's like a type of alchemy\n[00:25.47] Introduce me to your best friend\n[00:29.71] I can come and slot right in\n[00:33.83] A satellite ain't even that far\n[00:37.59] I, I kinda wonder where you are\n[00:41.07] Already know I can't leave it alone\n[00:43.71] You're on my mind, mm\n[00:48.23] Already gave you the time and the place\n[00:51.79] So, don't be shy\n[00:54.35] Just come be the man I need\n[00:56.47] Tell me you got something to give, I want it\n[01:00.88] I kinda like it when you call me wonderful\n[01:05.11] Whatever the type of talk it is, come on then\n[01:08.83] I gotta know you're meant to be the man I need\n[01:13.47] Talk to me\n[01:14.95] Talk to me\n[01:16.79] Mm, talk to me, talk to me\n[01:18.79] Be the man that I need, baby\n[01:20.83] Talk to me, talk to me\n[01:22.68] Be the man that I need, need, need\n[01:25.15] Mm, talk to me, talk to me\n[01:26.67] Be the man that I need, baby\n[01:29.03] Talk to me, talk to me\n[01:30.67] Be the man, man, man, man, man\n[01:34.55] I'd like to think you feel the same way\n[01:37.99] But I can't tell with you sometimes\n[01:42.27] So, baby, let's get on the same page\n[01:46.32] Stop making me read between the lines\n[01:49.35] Already know I can't leave it alone\n[01:52.15] You're on my mind, mm\n[01:55.43] Already gave you the time and the place\n[01:59.79] So, don't be shy\n[02:02.67] Just come be the man I need\n[02:05.03] Tell me you got something to give, I want it\n[02:09.39] I kinda like it when you call me wonderful\n[02:13.35] Whatever the type of talk it is, come on then\n[02:17.31] I gotta know you're meant to be the man I need\n[02:21.95] Talk to me, talk to me\n[02:25.00] Talk to me, talk to me\n[02:29.43] Mm, talk to me, talk to me\n[02:31.44] Be the man that I need, baby (be the man)\n[02:33.95] Talk to me, talk to me\n[02:35.28] Be the man that I need, need, need\n[02:37.40] Mm, talk to me, talk to me\n[02:39.28] Be the man that I need, baby (be the man)\n[02:41.67] Talk to me, talk to me\n[02:43.23] Be the man, man, man, man, man\n[02:45.83] Mm\n[02:49.59] Mm-mm, mm-mm, mm\n[02:53.35] Mm-mm, mm\n[02:55.71] Mm-mm, mm-mm, mm-mm, mm-mm, mm\n[03:01.71] "
+    },
+    {
+      "rank": 13,
+      "title": "Christmas (Baby Please Come Home)",
+      "artist": "Darlene Love",
+      "score": 2.726,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 17,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 20,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 21,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "vf4ZXBzbAio",
+      "youtube_views": 11245941,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d5/ff/88/d5ff884d-9d52-d325-6e1b-e7492b1861e0/886448915102.jpg/600x600bb.jpg",
+      "youtube_likes": 46804,
+      "youtube_duration": "PT2M47S",
+      "youtube_published": "2020-11-25",
+      "album": "Christmas (Baby, Please Come Home)",
+      "release_date": "1963-11-22",
+      "genre": "Christmas: Classic",
+      "duration_ms": 166453,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/9b/7f/3f/9b7f3f12-5376-e0ce-d62a-eceedd992f98/mzaf_5712293069627470153.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/christmas-baby-please-come-home/1541405777?i=1541405779&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/christmas-baby-please-come-home/1541405777?i=1541405779&uo=4",
+      "lyrics_plain": "(Christmas)\nThe snow's coming down\n(Christmas)\nI'm watching it fall\n(Christmas)\nLots of people around\n(Christmas)\nBaby, please come home\n\n(Christmas)\nThe church bells in town\n(Christmas)\nAll ringing in song\n(Christmas)\nFull of happy sounds\n(Christmas)\nBaby, please come home\n\nThey're singing, 'Deck The Halls'\nBut it's not like Christmas at all\n'Cause I remember when you were here\nAnd all the fun we had last year\n\n(Christmas)\nPretty lights on the tree\n(Christmas)\nI'm watching them shine\n(Christmas)\nYou should be here with me\n(Christmas)\nBaby, please come home\nCome on!\n\nYeah come on!\nI know, I know y'all wanna get up\nGet on up!\n\nThey're singing, 'Deck The Halls'\nBut it's not like Christmas at all\n'Cause I remember when you were here\nAnd all the fun we had last year\n\n(Christmas)\nIf there was a way\n(Christmas)\nI'd hold back this tear\n(Christmas)\nBut it's Christmas day\n\n(Please) Please\n(Please) Please\n(Please) Please\n(Please) Please\n(Please) Please\n(Please) Please\n\nBaby, please come home (Christmas)\nBaby, please come home (Christmas)\nBaby, please come home (Christmas)\nBaby, please come home (Christmas)\nOh, yeah, yeah, yeah, yeah...\n\nI need you, I need you (Christmas)\nBaby please come home (Christmas)\nBaby please come home (Christmas)\nOh yeah, yeah, yeah... (Christmas)\n\nThank you so much\nGod bless you, thank you for coming out\nAnd making this a special day for me, I love you so much\n\nThey're singing, 'Deck The Halls'\nBut it's not like Christmas at all\n'Cause I remember when you were here\nAnd all the fun we had last year\n\n(Christmas)\nIf there was a way\n(Christmas)\nI'd hold back this tear\n(Christmas)\nBut it's Christmas day\n\n(Please) Please\n(Please) Please\n(Please) Please\n(Please) Please\n(Please) Please\n(Please) Please\n\nBaby, please come home (Christmas)\nBaby, please come home (Christmas)\nBaby, please come home (Christmas)\nBaby, please come home (Christmas)\nOh, yeah, yeah, yeah, yeah...\n\nI need you, I need you (Christmas)\nBaby please come home (Christmas)\nBaby please come home (Christmas)\nOh yeah, yeah, yeah... (Christmas)",
+      "lyrics_synced": "[00:16.06] (Christmas)\n[00:17.20] The snow's coming down\n[00:19.77] (Christmas)\n[00:21.18] I'm watching it fall\n[00:23.51] (Christmas)\n[00:24.97] Lots of people around\n[00:27.30] (Christmas)\n[00:28.65] Baby, please come home\n[00:31.14] (Christmas)\n[00:32.46] The church bells in town\n[00:34.97] (Christmas)\n[00:36.48] All ringing in song\n[00:38.54] (Christmas)\n[00:40.07] Full of happy sounds\n[00:42.47] (Christmas)\n[00:43.88] Baby, please come home\n[00:46.83] They're singing, 'Deck The Halls'\n[00:50.53] But it's not like Christmas at all\n[00:54.38] 'Cause I remember when you were here\n[00:58.06] And all the fun we had last year\n[01:01.52] (Christmas)\n[01:02.47] Pretty lights on the tree\n[01:05.22] (Christmas)\n[01:06.56] I'm watching them shine\n[01:09.10] (Christmas)\n[01:10.27] You should be here with me\n[01:12.33] (Christmas)\n[01:14.06] Baby, please come home\n[01:17.07] Come on!\n[01:17.91] Yeah come on!\n[01:18.99] I know, I know y'all wanna get up\n[01:22.73] Get on up!\n[01:32.12] They're singing, 'Deck The Halls'\n[01:35.97] But it's not like Christmas at all\n[01:39.52] 'Cause I remember when you were here\n[01:43.63] And all the fun we had last year\n[01:46.84] (Christmas)\n[01:47.93] If there was a way\n[01:50.59] (Christmas)\n[01:51.99] I'd hold back this tear\n[01:54.49] (Christmas)\n[01:55.66] But it's Christmas day\n[01:58.26] (Please) Please\n[02:00.33] (Please) Please\n[02:01.94] (Please) Please\n[02:02.74] (Please) Please\n[02:03.02] (Please) Please\n[02:04.77] (Please) Please\n[02:06.08] Baby, please come home (Christmas)\n[02:09.60] Baby, please come home (Christmas)\n[02:13.34] Baby, please come home (Christmas)\n[02:17.30] Baby, please come home (Christmas)\n[02:19.77] Oh, yeah, yeah, yeah, yeah...\n[02:24.16] I need you, I need you (Christmas)\n[02:28.17] Baby please come home (Christmas)\n[02:35.07] Baby please come home (Christmas)\n[02:35.24] Oh yeah, yeah, yeah... (Christmas)\n[02:36.20] Thank you so much\n[02:36.74] God bless you, thank you for coming out\n[02:37.30] And making this a special day for me, I love you so much\n[02:37.72] They're singing, 'Deck The Halls'\n[02:38.33] But it's not like Christmas at all\n[02:38.84] 'Cause I remember when you were here\n[02:39.34] And all the fun we had last year\n[02:39.81] (Christmas)\n[02:40.37] If there was a way\n[02:40.98] (Christmas)\n[02:41.26] I'd hold back this tear\n[02:41.79] (Christmas)\n[02:42.17] But it's Christmas day\n[02:42.55] (Please) Please\n[02:42.88] (Please) Please\n[02:43.14] (Please) Please\n[02:43.42] (Please) Please\n[02:43.62] (Please) Please\n[02:43.88] (Please) Please\n[02:44.07] Baby, please come home (Christmas)\n[02:44.24] Baby, please come home (Christmas)\n[02:44.46] Baby, please come home (Christmas)\n[02:44.65] Baby, please come home (Christmas)\n[02:44.74] Oh, yeah, yeah, yeah, yeah...\n[02:44.90] I need you, I need you (Christmas)\n[02:45.16] Baby please come home (Christmas)\n[02:45.31] Baby please come home (Christmas)\n[02:45.87] Oh yeah, yeah, yeah... (Christmas)\n[02:46.03] "
+    },
+    {
+      "rank": 14,
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "score": 2.588,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 15,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 23,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 25,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "u2ah9tWTkmk",
+      "youtube_views": 235432962,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/46/78/fb/4678fb84-d19e-f11b-93ff-4dc17660bff8/075679619075.jpg/600x600bb.jpg",
+      "youtube_likes": 2003105,
+      "youtube_duration": "PT3M7S",
+      "youtube_published": "2025-02-21",
+      "album": "Ordinary - Single",
+      "release_date": "2024-09-26",
+      "genre": "Pop",
+      "duration_ms": 186964,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f4/2f/82/f42f82e5-e164-dd14-4f9a-2767d0215bae/mzaf_2512873933120069750.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/ordinary/1793663382?i=1793663645&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/ordinary/1793663382?i=1793663645&uo=4",
+      "lyrics_plain": "They say, \"The holy water's watered down\nAnd this town's lost its faith\nOur colors will fade eventually\"\nSo, if our time is runnin' out\nDay after day\nWe'll make the mundane our masterpiece\n\nOh, my, my\nOh, my, my love\nI take one look at you\n\nYou're takin' me out of the ordinary\nI want you layin' me down 'til we're dead and buried\nOn the edge of your knife, stayin' drunk on your vine\nThe angels up in the clouds are jealous knowin' we found\nSomethin' so out of the ordinary\nYou got me kissin' thе ground of your sanctuary\nShatter me with your touch, oh, Lord, return mе to dust\nThe angels up in the clouds are jealous knowin' we found\n\nHopeless hallelujah\nOn this side of Heaven's gate\nOh, my life, how do ya\nBreathe and take my breath away?\nAt your altar, I will pray\nYou're the sculptor, I'm the clay\nOh, my, my\n\nYou're takin' me out of the ordinary\nI want you layin' me down 'til we're dead and buried\nOn the edge of your knife, stayin' drunk on your vine\nThe angels up in the clouds are jealous knowin' we found\nSomethin' so out (Out) of the ordinary (Ordinary)\nYou got me kissing the ground (Ground) of your sanctuary (Sanctuary)\nShatter me with your touch, oh, Lord, return me to dust\nThe angels up in the clouds are jealous knowin' we found\n\nSomethin' so heavenly, higher than ecstasy\nWhenever you're next to me, oh, my, my\nWorld was in black and white until I saw your light\nI thought you had to die to find\n\nSomethin' so out of the ordinary\nI want you laying me down 'til we're dead and buried\nOn the edge of your knife, stayin' drunk on your vine\nThe angels up in the clouds are jealous knowin' we found\nSomethin' so out (Out) of the ordinary\nYou got me kissing the ground (Ground) of your sanctuary (Sanctuary)\nShatter me with your touch, oh, Lord, return me to dust\nThe angels up in the clouds are jealous knowin' we found",
+      "lyrics_synced": "[00:08.15] They say, \"The holy water's watered down\n[00:11.80] And this town's lost its faith\n[00:14.08] Our colors will fade eventually\"\n[00:17.26] So, if our time is runnin' out\n[00:20.69] Day after day\n[00:22.75] We'll make the mundane our masterpiece\n[00:26.79] Oh, my, my\n[00:28.83] Oh, my, my love\n[00:32.36] I take one look at you\n[00:33.97] You're takin' me out of the ordinary\n[00:37.82] I want you layin' me down 'til we're dead and buried\n[00:42.46] On the edge of your knife, stayin' drunk on your vine\n[00:47.16] The angels up in the clouds are jealous knowin' we found\n[00:51.23] Somethin' so out of the ordinary\n[00:54.98] You got me kissin' thе ground of your sanctuary\n[00:59.24] Shatter me with your touch, oh, Lord, return mе to dust\n[01:04.69] The angels up in the clouds are jealous knowin' we found\n[01:10.22] Hopeless hallelujah\n[01:14.24] On this side of Heaven's gate\n[01:18.68] Oh, my life, how do ya\n[01:22.85] Breathe and take my breath away?\n[01:28.03] At your altar, I will pray\n[01:30.33] You're the sculptor, I'm the clay\n[01:32.88] Oh, my, my\n[01:34.06] You're takin' me out of the ordinary\n[01:37.76] I want you layin' me down 'til we're dead and buried\n[01:42.08] On the edge of your knife, stayin' drunk on your vine\n[01:47.53] The angels up in the clouds are jealous knowin' we found\n[01:51.32] Somethin' so out (Out) of the ordinary (Ordinary)\n[01:55.12] You got me kissing the ground (Ground) of your sanctuary (Sanctuary)\n[01:59.14] Shatter me with your touch, oh, Lord, return me to dust\n[02:04.46] The angels up in the clouds are jealous knowin' we found\n[02:09.32] Somethin' so heavenly, higher than ecstasy\n[02:13.72] Whenever you're next to me, oh, my, my\n[02:18.03] World was in black and white until I saw your light\n[02:22.31] I thought you had to die to find\n[02:25.57] Somethin' so out of the ordinary\n[02:29.33] I want you laying me down 'til we're dead and buried\n[02:33.44] On the edge of your knife, stayin' drunk on your vine\n[02:38.64] The angels up in the clouds are jealous knowin' we found\n[02:42.69] Somethin' so out (Out) of the ordinary\n[02:46.56] You got me kissing the ground (Ground) of your sanctuary (Sanctuary)\n[02:50.80] Shatter me with your touch, oh, Lord, return me to dust\n[02:55.95] The angels up in the clouds are jealous knowin' we found\n[02:59.69] "
+    },
+    {
+      "rank": 15,
+      "title": "Golden",
+      "artist": "HUNTR/X",
+      "score": 2.37,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 6,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 11,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "yebNIHKAC4A",
+      "youtube_views": 854506645,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e1/15/42/e1154273-8ecd-5702-e6e6-597f28001681/25UMGIM82363.rgb.jpg/600x600bb.jpg",
+      "album": "KPop Demon Hunters (Soundtrack from the Netflix Film)",
+      "release_date": "2025-06-19",
+      "genre": "K-Pop",
+      "duration_ms": 194608,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b0/a1/9f/b0a19f8c-65c1-12c8-e060-a55e9d601810/mzaf_18243853170459082896.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/golden/1820264137?i=1820264150&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/golden/1820264137?i=1820264150&uo=4",
+      "lyrics_plain": "I was a ghost,i was alone(hah)\n어두워진 (hah) 압길속에 (ah)\nGiven the throne i don't know (hah)\nHow to believe(hah)\nI was the queen that i'm meant to be\nI lived two lives,tried to play both sides\nBut I couldn't find my own place\nCalled a problem child cause i got too wild\nBut now that's how i'm getting paid,끝없이 on stage\n\nI'm done hidin' now I'm shinin'\nLike I'm born to be\nWe dreamin hard,we came so far\nNow I believe\n\nWe're goin' up-up-up\nIt's our moment\nYou know together we're glowing\nGonna be,gonna be golden\nOh, up-up-up\nWith our voices\n영원히 깨질 수 없는\nGonna be,gonna be golden\n\nOoh, i'm done hidin' now I'm shinin'\nLike I'm born to be\nOh, our time, no fear, no lies\nThat's who we're born to be\n\nWaited so long to break these walls down\nTo make up and feel like me\nPut these patterns all in the past now\nAnd finally live like the girl they all see\n\nNo more hiding, i'll be shining\nLike I'm born to be\nCause we are hunters,voices strong\nAnd i know i believe\n\nWe're goin' up-up-up\nIt's our moment\nYou know together we're glowing\nGonna be, gonna be golden\nOh, up-up-up\nWith our voices\n영원히 깨질 수 없는\nGonna be, gonna be golden\n\nOoh, i'm done hidin' now I'm shining\nLike I'm born to be\nOh, our time, no fears, no lies\nThat's who we're born to be\n\nYou know we're gonna be,gonna be golden\nWe're gonna be, gonna be\nBorn to be,born to be glowin'\n밝게 빛나는 우린\nYou know that it's our time,no fears,no lies\nThat's who we're born to be",
+      "lyrics_synced": "[00:15.62] I was a ghost,i was alone(hah)\n[00:18.79] 어두워진 (hah) 압길속에 (ah)\n[00:23.43] Given the throne i don't know (hah)\n[00:26.72] How to believe(hah)\n[00:28.37] I was the queen that i'm meant to be\n[00:30.89] I lived two lives,tried to play both sides\n[00:34.41] But I couldn't find my own place\n[00:37.92] Called a problem child cause i got too wild\n[00:42.32] But now that's how i'm getting paid,끝없이 on stage\n[00:46.22] I'm done hidin' now I'm shinin'\n[00:50.50] Like I'm born to be\n[00:54.19] We dreamin hard,we came so far\n[00:58.06] Now I believe\n[01:01.66] We're goin' up-up-up\n[01:03.64] It's our moment\n[01:05.11] You know together we're glowing\n[01:07.17] Gonna be,gonna be golden\n[01:09.21] Oh, up-up-up\n[01:11.42] With our voices\n[01:12.94] 영원히 깨질 수 없는\n[01:15.04] Gonna be,gonna be golden\n[01:17.01] Ooh, i'm done hidin' now I'm shinin'\n[01:21.75] Like I'm born to be\n[01:25.18] Oh, our time, no fear, no lies\n[01:29.33] That's who we're born to be\n[01:34.66] Waited so long to break these walls down\n[01:39.25] To make up and feel like me\n[01:43.09] Put these patterns all in the past now\n[01:46.92] And finally live like the girl they all see\n[01:51.56] No more hiding, i'll be shining\n[01:55.57] Like I'm born to be\n[01:58.75] Cause we are hunters,voices strong\n[02:02.96] And i know i believe\n[02:06.80] We're goin' up-up-up\n[02:09.17] It's our moment\n[02:10.73] You know together we're glowing\n[02:12.61] Gonna be, gonna be golden\n[02:14.57] Oh, up-up-up\n[02:16.75] With our voices\n[02:18.43] 영원히 깨질 수 없는\n[02:20.31] Gonna be, gonna be golden\n[02:22.65] Ooh, i'm done hidin' now I'm shining\n[02:27.11] Like I'm born to be\n[02:30.67] Oh, our time, no fears, no lies\n[02:34.41] That's who we're born to be\n[02:38.56] You know we're gonna be,gonna be golden\n[02:40.88] We're gonna be, gonna be\n[02:42.49] Born to be,born to be glowin'\n[02:44.57] 밝게 빛나는 우린\n[02:46.40] You know that it's our time,no fears,no lies\n[02:50.63] That's who we're born to be\n[02:52.89] "
+    },
+    {
+      "rank": 16,
+      "title": "It's Beginning to Look a Lot like Christmas",
+      "artist": "Michael Bublé",
+      "score": 2.262,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 9,
+          "weight": 1.3
+        },
+        {
+          "platform": "spotify_global",
+          "rank": 12,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "QJ5DOWPGxwg",
+      "youtube_views": 156548518,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/37/2d/6e/372d6e16-7a32-91f0-1a03-0f2d9dbe389e/093624942788.jpg/600x600bb.jpg",
+      "youtube_likes": 663614,
+      "youtube_duration": "PT3M28S",
+      "youtube_published": "2017-12-05",
+      "album": "Christmas",
+      "release_date": "2011-10-14",
+      "genre": "Christmas",
+      "duration_ms": 207200,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/60/92/39/609239fd-e1b3-b31a-d527-95adb63aa337/mzaf_361152750552946547.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/its-beginning-to-look-a-lot-like-christmas/669854820?i=669854831&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/its-beginning-to-look-a-lot-like-christmas/669854820?i=669854831&uo=4",
+      "lyrics_plain": "It's beginning to look a lot like Christmas\nEverywhere you go\nTake a look at the five and ten\nIt's glistening once again\nWith candy canes and silver lanes that glow\n\nIt's beginning to look a lot like Christmas\nToys in every store\nBut the prettiest sight to see\nIs the holly that will be\nOn your own front door\n\nA pair of Hopalong boots and a pistol that shoots\nIs the wish of Barney and Ben\nDolls that'll talk and will go for a walk\nIs the hope of Janice and Jen\nMum and Dad can hardly wait for school to start again\n\nIt's beginning to look a lot like Christmas\nEverywhere you go\nThere's a tree in the grand hotel\nOne in the park as well\nIt's the sturdy kind that doesn't mind the snow\n\nIt's beginning to look a lot like Christmas\nSoon the bells will start\nAnd the thing that will make them ring\nIs the carol that you sing\nRight within your heart\n\nIt's beginning to look a lot like Christmas\nToys in every store\nBut the prettiest sight to see\nIs the holly that will be\nOn your own front door\nSure, it's Christmas wants and more",
+      "lyrics_synced": "[00:34.63] It's beginning to look a lot like Christmas\n[00:41.32] Everywhere you go\n[00:45.50] Take a look at the five and ten\n[00:48.29] It's glistening once again\n[00:50.96] With candy canes and silver lanes that glow\n[00:55.96] It's beginning to look a lot like Christmas\n[01:01.84] Toys in every store\n[01:06.41] But the prettiest sight to see\n[01:08.87] Is the holly that will be\n[01:11.32] On your own front door\n[01:16.12] A pair of Hopalong boots and a pistol that shoots\n[01:19.34] Is the wish of Barney and Ben\n[01:21.94] Dolls that'll talk and will go for a walk\n[01:24.31] Is the hope of Janice and Jen\n[01:26.85] Mum and Dad can hardly wait for school to start again\n[01:31.58] It's beginning to look a lot like Christmas\n[01:37.33] Everywhere you go\n[01:41.96] There's a tree in the grand hotel\n[01:44.65] One in the park as well\n[01:47.09] It's the sturdy kind that doesn't mind the snow\n[01:52.02] It's beginning to look a lot like Christmas\n[01:58.16] Soon the bells will start\n[02:02.57] And the thing that will make them ring\n[02:05.05] Is the carol that you sing\n[02:07.86] Right within your heart\n[02:13.63] \n[02:32.91] It's beginning to look a lot like Christmas\n[02:39.37] Toys in every store\n[02:44.83] But the prettiest sight to see\n[02:49.40] Is the holly that will be\n[02:54.27] On your own front door\n[03:02.25] Sure, it's Christmas wants and more\n[03:12.16] "
+    },
+    {
+      "rank": 17,
+      "title": "Mistletoe",
+      "artist": "Justin Bieber",
+      "score": 2.148,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 16,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 18,
+          "weight": 1.3
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 43,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "LUjn3RpkcKY",
+      "youtube_views": 560914939,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/c8/5f/cc/c85fccdc-dfd4-53bf-7d1b-2a283bef0361/11UMGIM34123.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 3652811,
+      "youtube_duration": "PT3M4S",
+      "youtube_published": "2011-10-18",
+      "album": "Under The Mistletoe",
+      "release_date": "2011-10-17",
+      "genre": "Christmas",
+      "duration_ms": 182947,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/02/58/49/02584996-7db7-7698-1526-3ad7af297f0d/mzaf_1222145498879605605.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/mistletoe/1440650036?i=1440650039&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/mistletoe/1440650036?i=1440650039&uo=4",
+      "lyrics_plain": "It's the most beautiful time of the year\nLights fill the streets, spreading so much cheer\nI should be playing in the winter snow\nBut I'ma be under the mistletoe\nI don't wanna miss out on the holiday\nBut I can't stop staring at your face\nI should be playing in the winter snow\nBut I'ma be under the mistletoe\nWith you, shawty with you\nWith you, shawty with you\nWith you, under the mistletoe\nEveryone's gathering around the fire\nChestnuts roasting like a hot July\nI should be chilling with my folks, I know\nBut I'ma be under the mistletoe\nWord on the street, Santa's coming tonight\nReindeer's flying through the sky so high\nI should be making a list, I know\nBut I'ma be under the mistletoe\nWith you, shawty with you\nWith you, shawty with you\nWith you, under the mistletoe\nWith you, shawty with you\nWith you, shawty with you\nWith you, under the mistletoe\nAyy love\nThe wise men followed the star (the wise men followed the star)\nThe way I followed my heart\nAnd it led me to a miracle\nAyy love (ayy love)\nDon't you buy me nothing (don't you buy me nothing)\n'Cause I am feeling one thing, your lips on my lips\nThat's a merry, merry Christmas\nIt's the most beautiful time of the year\nLights fill the streets, spreading so much cheer\nI should be playing in the winter snow\nBut I'ma be under the mistletoe\nI don't wanna miss out on the holiday\nBut I can't stop staring at your face\nI should be playing in the winter snow\nBut I'ma be under the mistletoe\nWith you, shawty with you\nWith you, shawty with you\nWith you, under the mistletoe (yeah)\nWith you, shawty with you\nWith you, shawty with you\nWith you, under the mistletoe (under the mistletoe)\nKiss me underneath the mistletoe (kiss me underneath the mistletoe)\nShow me, baby, that you love me so-oh-oh, oh, oh, oh (oh, oh, oh, yeah)\nKiss me underneath the mistletoe (kiss me underneath the mistletoe)\nShow me, baby, that you love me so-oh-oh, oh, oh, oh (whoa, whoa)\n\n",
+      "lyrics_synced": "[00:03.79] It's the most beautiful time of the year\n[00:06.61] Lights fill the streets, spreading so much cheer\n[00:09.52] I should be playing in the winter snow\n[00:12.50] But I'ma be under the mistletoe\n[00:15.43] I don't wanna miss out on the holiday\n[00:18.35] But I can't stop staring at your face\n[00:21.30] I should be playing in the winter snow\n[00:24.32] But I'ma be under the mistletoe\n[00:27.12] With you, shawty with you\n[00:30.50] With you, shawty with you\n[00:32.92] With you, under the mistletoe\n[00:39.47] Everyone's gathering around the fire\n[00:42.40] Chestnuts roasting like a hot July\n[00:45.49] I should be chilling with my folks, I know\n[00:48.35] But I'ma be under the mistletoe\n[00:51.38] Word on the street, Santa's coming tonight\n[00:54.29] Reindeer's flying through the sky so high\n[00:57.25] I should be making a list, I know\n[01:00.14] But I'ma be under the mistletoe\n[01:02.64] With you, shawty with you\n[01:05.75] With you, shawty with you\n[01:08.55] With you, under the mistletoe\n[01:14.58] With you, shawty with you\n[01:17.74] With you, shawty with you\n[01:20.52] With you, under the mistletoe\n[01:25.97] Ayy love\n[01:27.62] The wise men followed the star (the wise men followed the star)\n[01:30.52] The way I followed my heart\n[01:34.34] And it led me to a miracle\n[01:37.86] Ayy love (ayy love)\n[01:39.27] Don't you buy me nothing (don't you buy me nothing)\n[01:42.29] 'Cause I am feeling one thing, your lips on my lips\n[01:47.78] That's a merry, merry Christmas\n[01:50.62] It's the most beautiful time of the year\n[01:53.52] Lights fill the streets, spreading so much cheer\n[01:56.48] I should be playing in the winter snow\n[01:59.48] But I'ma be under the mistletoe\n[02:02.30] I don't wanna miss out on the holiday\n[02:05.30] But I can't stop staring at your face\n[02:08.36] I should be playing in the winter snow\n[02:11.33] But I'ma be under the mistletoe\n[02:14.60] With you, shawty with you\n[02:17.20] With you, shawty with you\n[02:19.95] With you, under the mistletoe (yeah)\n[02:26.50] With you, shawty with you\n[02:28.88] With you, shawty with you\n[02:31.88] With you, under the mistletoe (under the mistletoe)\n[02:37.36] Kiss me underneath the mistletoe (kiss me underneath the mistletoe)\n[02:40.27] Show me, baby, that you love me so-oh-oh, oh, oh, oh (oh, oh, oh, yeah)\n[02:49.36] Kiss me underneath the mistletoe (kiss me underneath the mistletoe)\n[02:51.92] Show me, baby, that you love me so-oh-oh, oh, oh, oh (whoa, whoa)\n[03:01.67] \n"
+    },
+    {
+      "rank": 18,
+      "title": "Snowman",
+      "artist": "Sia",
+      "score": 2.044,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 8,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 22,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "gset79KMmt0",
+      "youtube_views": 398690006,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/85/c3/21/85c32113-1c4c-571c-7602-88f568d8081c/075679861016.jpg/600x600bb.jpg",
+      "youtube_likes": 5647017,
+      "youtube_duration": "PT2M53S",
+      "youtube_published": "2020-10-30",
+      "album": "Everyday Is Christmas (Deluxe)",
+      "release_date": "2017-11-09",
+      "genre": "Christmas",
+      "duration_ms": 165900,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a5/4c/0c/a54c0c24-4eed-024b-a235-baf1f74904e3/mzaf_5745668337090900642.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/snowman/1440098012?i=1440098017&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/snowman/1440098012?i=1440098017&uo=4",
+      "lyrics_plain": "Don't cry, snowman, not in front of me\nWho'll catch your tears if you can't catch me, darling\nIf you can't catch me, darling\n\nDon't cry, snowman, don't leave me this way\nA puddle of water can't hold me close, baby\nCan't hold me close, baby\n\nI want you to know that I'm never leaving\n'Cause I'm Mrs. Snow, 'til death we'll be freezing\nYeah, you are my home, my home for all seasons\nSo come on, let's go\n\nLet's go below zero and hide from the sun\nI love you forever where we'll have some fun\nYes, let's hit the North Pole and live happily\nPlease don't cry no tears now, it's Christmas, baby\n\nMy snowman and me\n\nMy snowman and me\nBaby\n\nDon't cry, snowman, don't you fear the sun\nWho'll carry me without legs to run, honey\nWithout legs to run, honey\n\nDon't cry, snowman, don't you shed a tear\nWho'll hear my secrets if you don't have ears, baby\nIf you don't have ears, baby\n\nI want you to know that I'm never leaving\n'Cause I'm Mrs. Snow, 'til death we'll be freezing\nYeah, you are my home, my home for all seasons\nSo come on, let's go\n\nLet's go below zero and hide from the sun\nI love you forever where we'll have some fun\nYes, let's hit the North Pole and live happily\nPlease don't cry no tears now, it's Christmas, baby\n\nMy snowman and me\n\nMy snowman and me\nBaby",
+      "lyrics_synced": "[00:06.19] Don't cry, snowman, not in front of me\n[00:10.33] Who'll catch your tears if you can't catch me, darling\n[00:15.20] If you can't catch me, darling\n[00:19.76] Don't cry, snowman, don't leave me this way\n[00:24.19] A puddle of water can't hold me close, baby\n[00:28.97] Can't hold me close, baby\n[00:34.29] I want you to know that I'm never leaving\n[00:37.74] 'Cause I'm Mrs. Snow, 'til death we'll be freezing\n[00:41.00] Yeah, you are my home, my home for all seasons\n[00:44.51] So come on, let's go\n[00:48.19] Let's go below zero and hide from the sun\n[00:51.51] I love you forever where we'll have some fun\n[00:54.82] Yes, let's hit the North Pole and live happily\n[00:58.20] Please don't cry no tears now, it's Christmas, baby\n[01:01.73] My snowman and me\n[01:06.21] \n[01:08.55] My snowman and me\n[01:14.70] Baby\n[01:18.24] \n[01:21.62] Don't cry, snowman, don't you fear the sun\n[01:25.82] Who'll carry me without legs to run, honey\n[01:30.55] Without legs to run, honey\n[01:35.32] Don't cry, snowman, don't you shed a tear\n[01:39.56] Who'll hear my secrets if you don't have ears, baby\n[01:44.60] If you don't have ears, baby\n[01:49.89] I want you to know that I'm never leaving\n[01:53.15] 'Cause I'm Mrs. Snow, 'til death we'll be freezing\n[01:56.68] Yeah, you are my home, my home for all seasons\n[02:00.19] So come on, let's go\n[02:03.65] Let's go below zero and hide from the sun\n[02:06.84] I love you forever where we'll have some fun\n[02:10.34] Yes, let's hit the North Pole and live happily\n[02:13.74] Please don't cry no tears now, it's Christmas, baby\n[02:17.14] My snowman and me\n[02:21.90] \n[02:24.18] My snowman and me\n[02:30.24] Baby\n[02:31.82] "
+    },
+    {
+      "rank": 19,
+      "title": "Feliz Navidad",
+      "artist": "José Feliciano",
+      "score": 2.02,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 14,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 16,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "N8NcQzMQN_U",
+      "youtube_views": 77777617,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/cf/a7/f8/cfa7f807-e9a6-758d-97e0-f1cd843b5a20/mzi.vcbwvmqu.jpg/600x600bb.jpg",
+      "youtube_likes": 488076,
+      "youtube_duration": "PT3M4S",
+      "youtube_published": "2019-08-16",
+      "album": "Feliz Navidad",
+      "release_date": "1970-11-01",
+      "genre": "Christmas",
+      "duration_ms": 181795,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ac/dc/fd/acdcfd31-05cc-1add-6a17-eb6f3ac28a5b/mzaf_12842628939350963308.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/feliz-navidad/255615877?i=255615879&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/feliz-navidad/255615877?i=255615879&uo=4",
+      "lyrics_plain": "Feliz Navidad\nFeliz Navidad\nFeliz Navidad\nProspero año y felicidad\n\nFeliz Navidad\nFeliz Navidad\nFeliz Navidad\nProspero año y felicidad\n\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nFrom the bottom of my heart\n\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nFrom the bottom of my heart\n\nFeliz Navidad\nFeliz Navidad\nFeliz Navidad\nProspero año y felicidad\n\nFeliz Navidad\nFeliz Navidad\nFeliz Navidad\nProspero año y felicidad\n\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nFrom the bottom of my heart\n\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nFrom the bottom of my heart\n\nFeliz Navidad\nFeliz Navidad\nFeliz Navidad\nProspero año y felicidad\n\nFeliz Navidad\nFeliz Navidad\nFeliz Navidad\nProspero año y felicidad\n\nLa-la, la-la, la-la, la-la, la-la\nLa-la, la-la, la-la, la-la, la-la\nLa-la, la-la, la-la, la-la, la-la\nFrom the bottom of my heart\n\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nFrom the bottom of my heart\n\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nI wanna wish you a Merry Christmas\nFrom the bottom of my heart",
+      "lyrics_synced": "[00:12.56] Feliz Navidad\n[00:15.44] Feliz Navidad\n[00:19.26] Feliz Navidad\n[00:20.71] Prospero año y felicidad\n[00:24.36] Feliz Navidad\n[00:27.78] Feliz Navidad\n[00:31.36] Feliz Navidad\n[00:33.35] Prospero año y felicidad\n[00:36.63] I wanna wish you a Merry Christmas\n[00:40.04] I wanna wish you a Merry Christmas\n[00:44.80] I wanna wish you a Merry Christmas\n[00:47.28] From the bottom of my heart\n[00:51.04] I wanna wish you a Merry Christmas\n[00:53.99] I wanna wish you a Merry Christmas\n[00:57.03] I wanna wish you a Merry Christmas\n[01:00.08] From the bottom of my heart\n[01:04.41] Feliz Navidad\n[01:07.66] Feliz Navidad\n[01:10.76] Feliz Navidad\n[01:12.66] Prospero año y felicidad\n[01:15.92] Feliz Navidad\n[01:19.25] Feliz Navidad\n[01:22.83] Feliz Navidad\n[01:25.32] Prospero año y felicidad\n[01:29.24] I wanna wish you a Merry Christmas\n[01:32.70] I wanna wish you a Merry Christmas\n[01:36.00] I wanna wish you a Merry Christmas\n[01:38.81] From the bottom of my heart\n[01:42.32] I wanna wish you a Merry Christmas\n[01:46.13] I wanna wish you a Merry Christmas\n[01:48.99] I wanna wish you a Merry Christmas\n[01:51.88] From the bottom of my heart\n[01:55.97] Feliz Navidad\n[01:59.55] Feliz Navidad\n[02:01.90] Feliz Navidad\n[02:04.23] Prospero año y felicidad\n[02:07.34] Feliz Navidad\n[02:11.26] Feliz Navidad\n[02:14.59] Feliz Navidad\n[02:16.98] Prospero año y felicidad\n[02:19.70] La-la, la-la, la-la, la-la, la-la\n[02:25.09] La-la, la-la, la-la, la-la, la-la\n[02:27.36] La-la, la-la, la-la, la-la, la-la\n[02:28.94] From the bottom of my heart\n[02:31.19] I wanna wish you a Merry Christmas\n[02:33.09] I wanna wish you a Merry Christmas\n[02:35.23] I wanna wish you a Merry Christmas\n[02:37.50] From the bottom of my heart\n[02:41.36] I wanna wish you a Merry Christmas\n[02:43.49] I wanna wish you a Merry Christmas\n[02:46.47] I wanna wish you a Merry Christmas\n[02:49.29] From the bottom of my heart\n[02:54.34] "
+    },
+    {
+      "rank": 20,
+      "title": "FDO",
+      "artist": "Pooh Shiesty",
+      "score": 2.014,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 7,
+          "weight": 1.3
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 22,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "MPuK06zUIhc",
+      "youtube_views": 13104221,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e6/eb/89/e6eb89c9-7b6e-5eff-97fa-1b70f5652a4d/075679592941.jpg/600x600bb.jpg",
+      "youtube_likes": 402886,
+      "youtube_duration": "PT6M12S",
+      "youtube_published": "2025-12-12",
+      "album": "FDO - Single",
+      "release_date": "2025-12-12",
+      "genre": "Hip-Hop/Rap",
+      "duration_ms": 319213,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d7/95/36/d795369d-f2b6-29bd-f56b-ca1389f71779/mzaf_13535623069359439809.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/fdo/1860649615?i=1860649805&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/fdo/1860649615?i=1860649805&uo=4",
+      "lyrics_plain": "(Once again, I'm locked in with TP, we finna make a hit) pussy nigga, blrrrd, ay\n\nFDO, FTF, first day out, bitch, fuck the feds\nWalked out the jail, I saw six foreigns, I just got out the bunk bed\nThree million cash, can't fit in my hand, then sit some on my head\nBae, come put that pussy on me, bitch, I'm fresh from out the feds (on God)\n\nI say fresh from out the feds, baby, come put that pussy on me (put that pussy on me)\nTurnt as fuck in the strip club, ran outta ones, started throwin' hunnids\nNigga, I can't fumble shit, the whole world been waitin' on it (yup)\nTucked that knife all way to R&D, gave it to my lil' homie, nigga (let's go)\n\nAin't no more Mufasa, Mr. Goldman, I catch jets to Johnny (yup)\nAin't no more outfits from Southland Mall, this setup made in London (yup)\nCouple hos jumped off my bid, majority waited on me (fuck 'em)\nShe just actin' faithful to you 'til I get home, trust me, homie (I stamp that)\n\nFeel impatient, I might do a demonktration off GP (this one here on me)\nI ain't shot nothin' in like four years, I ain't sent a hit in three (on GP)\nDon't let Durk verse go to your head, ain't nobody slime as me (I stamp that)\nI'm the one from 'round the corner where they snaked Martin Luther King (yup)\n\nExtra aggressive out in traffic 'cause Hank ain't in the backseat (free Hank)\nEverywhere I go, it's cars trailin' 'cause Reckless ain't drivin' me (long live the gang)\nI get mad when I look around and my members ain't where they 'posed to be\nA whole war goin' on, I'm stuck in the cage, it drove me crazy\n\n(Did that time, Shiesty, stay out the way) 30, pass me that Drac' (blrrrd)\n(Say fuck the hood, Memphis ain't no good) get your bitch ass out my face (blrrrd)\nUnfortunately, I'm CEO and the top shooter for my gang\nMy grandma told me keep my grass low, the whole time, I'm the snake (a slime)\n\nSmelled his plot from like three miles away, he can't outsnake a snake\nI ain't choose the skreets, they chose me, steppin' on shit my lane\nI ain't choose to rap, it chose me, my name held too much weight\nType influence I got where I'm from, got Yo Gotti totin' a Drac' (on God)\n\nWhen you meet me, you gon' get real motivated same day (on God)\nThem tear drops played out, go get your favorite bullet on your face (on God)\nDo not rap when I am told, I rap when I got shit to say\nSF90, I'm allergic to Corvettes, fuck a C8 (lil' nigga)\n\nThis an F8, not a C8, nigga, Mansory edition\nIn the May-May, oh my God, what-happened-to-Virgil edition (that Maybach)\nIn the Wray-Wray, widebody, Cullinan, Black Badge edition (that Rolls-Royce)\nIn the same Scat Pack since I left, that mean you stuck, lil' nigga (yup)\n\nWe all on a race to the top, these niggas stuck, can't get no bigger (say what?)\nI got richer while in jail, locked in the feds outdoin' niggas (on God)\nNow my watch got on a watch, my chain got more chains than you niggas\nAin't no such thing as real niggas, but I'm damn sure ain't counterfeit (I ain't fakin' this shit)\n\nHid ten M's in the bank, then went fed, got penitentiary rich (I'm still filthy rich)\nOrderin' Ferraris off a jail call, I'm real rich\nMake sure she cover my name up if you plan on keepin' the bitch (fuck her)\nI signed a deal, then went to jail, they ain't even seen me pop my shit (on gang)\n\nI'm just now buyin' a chain that say my name, I been bullshittin'\nMy niggas died while in chains, get-back gang, I'm right back for revenge (gang, on gang)\nAy, I'm just way more colder, every eight hours, I'm changin' fits (what?)\nEvery seven, I change the bitch (what?), nothin' but foreigns when we change lanes (blrrrd)\n\nHood poet, all these jewels I drop, how you ain't make a chain? (Goofy)\nHe ain't dead, but I got niggas in the feds smokin' Lil Wayne (big Tunechi)\nSoon I see my Memphis homies, ay, mane, say, mane (what up?)\nI had nine M's to my name, makin' chi-chis out Shabangs\n\nReorganized my whole gang, on Sundays, we work on our aim (on God)\nAnd every month on the 13th, I'm boppin' out with a new chain\nI heard skreet nigga gettin' tummy tucks, told you these rappers lame (man, these niggas gay)\nIn my cell, I did a thousand burpees, I toned up my frame (thousand of 'em skraight)\n\nFitted suit on, fitted cap turned backwards, Richard Millie plain (Patek plain Jane)\nThem steppers who got him served, they wasn't doin' it for lil' Saint\nSee, my daddy my first co-D, jumped in the skreets, he showed me lanes (them facts)\nYour daddy a killer, but you ain't, you just like Bronny James (facts)\n\nI asked her where she want my kids, she told me grab the brush and paint\nSo I aimed right at her forehead and tried to spell out my name (yeah, yeah, yeah)\nI got locked, nigga dropped million dollars worth salt around my gang (right there by my name, nigga)\nPlease tell me that shit fell up out they pockets, skinny man\n\nPlease tell these rap niggas sayin', \"Blrrrd,\" without permission that they stealin' (blrrrd, blrrrd, blrrrd)\nMemphis menace, kids, say no to drugs and damn right to killin' (blrrrd)\nShe choose, but her lips ain't move, I read her eyes, they said, \"Pimp me\"\nSee, bae, I'm least likely some pimpin', but I'm more likely a bachelor\n\nSuper Shiesty, crooked letter, crooked letter, David Banner (slatt)\nIn the trap, feelin' like O-Dog, watchin' hits I did on camera (I shoot shit on camera)\nOut on papers with a 922G sittin' on my counter (say what?)\nI'm out on papers with a fully ARP sittin' on the counter (blrrrd, that blrrrd)\n\nIf you think you got more shots than CG, come and try your luck (pussy)\nYou ain't never bought no crate or no grenade, shut the fuck up (shut y'all broke-ass up, nigga)\nI just ordered a gun store, nobody ain't got more chop than us (on God)\n901, 375, 0762, call my bluff (try that)\n\nI treat a player like a player and a custo like a cluck\nYou need to treat your glizzy like a collared shirt and button it up (ah, ah)\nI treat gangstas like civilians, I treat smart niggas like ducks (quack)\nLong story short, short story shorter, nigga, I cannot be touched (at all)\n\nCannot slip up, can't get on books, can't go out sad, can't get out far (the fuck?)\nI sicced a C girl on the opps, she left an AirTag in his glove box (slatt)\nKD patient, he might spank 'em next year or tomorrow (try that)\nI took my homie Dummo Glock 'cause he went out like Cheddar Bob (fuck him)\n\nThank e'ry bitch I had to shit on for these foreigns in my garage (they custom)\nE'ry bitch who lost faith in me named after one of my cars\nWhere y'all? Stolo still parked, stuffin' zaza in pickle jars (blrrrd, blrrrd, blrrd)\nIf my Drac' jam on me, we beefin', I'ma turn Kendrick Lamar\n\nHe got his car flipped on Lamar, died with his gun, he couldn't e'en shoot\nI'm CEO, I cannot go, even my skrikers bulletproof\nAll my hos from Memphis still allowed to call me Mr. Pooh\nSeven foreigns, rose gold, my first day out, damn fool, blrrrd (blrrrd, blrrrd)\n\nRooster-ass nigga",
+      "lyrics_synced": "[00:10.39] (Once again, I'm locked in with TP, we finna make a hit) pussy nigga, blrrrd, ay\n[00:13.13] FDO, FTF, first day out, bitch, fuck the feds\n[00:15.90] Walked out the jail, I saw six foreigns, I just got out the bunk bed\n[00:18.96] Three million cash, can't fit in my hand, then sit some on my head\n[00:22.27] Bae, come put that pussy on me, bitch, I'm fresh from out the feds (on God)\n[00:25.92] I say fresh from out the feds, baby, come put that pussy on me (put that pussy on me)\n[00:29.08] Turnt as fuck in the strip club, ran outta ones, started throwin' hunnids\n[00:32.28] Nigga, I can't fumble shit, the whole world been waitin' on it (yup)\n[00:35.70] Tucked that knife all way to R&D, gave it to my lil' homie, nigga (let's go)\n[00:39.22] Ain't no more Mufasa, Mr. Goldman, I catch jets to Johnny (yup)\n[00:42.51] Ain't no more outfits from Southland Mall, this setup made in London (yup)\n[00:45.62] Couple hos jumped off my bid, majority waited on me (fuck 'em)\n[00:48.79] She just actin' faithful to you 'til I get home, trust me, homie (I stamp that)\n[00:51.96] Feel impatient, I might do a demonktration off GP (this one here on me)\n[00:55.52] I ain't shot nothin' in like four years, I ain't sent a hit in three (on GP)\n[00:58.44] Don't let Durk verse go to your head, ain't nobody slime as me (I stamp that)\n[01:01.46] I'm the one from 'round the corner where they snaked Martin Luther King (yup)\n[01:04.90] Extra aggressive out in traffic 'cause Hank ain't in the backseat (free Hank)\n[01:07.92] Everywhere I go, it's cars trailin' 'cause Reckless ain't drivin' me (long live the gang)\n[01:11.35] I get mad when I look around and my members ain't where they 'posed to be\n[01:14.60] A whole war goin' on, I'm stuck in the cage, it drove me crazy\n[01:17.95] (Did that time, Shiesty, stay out the way) 30, pass me that Drac' (blrrrd)\n[01:21.43] (Say fuck the hood, Memphis ain't no good) get your bitch ass out my face (blrrrd)\n[01:24.68] Unfortunately, I'm CEO and the top shooter for my gang\n[01:27.72] My grandma told me keep my grass low, the whole time, I'm the snake (a slime)\n[01:31.14] Smelled his plot from like three miles away, he can't outsnake a snake\n[01:35.23] I ain't choose the skreets, they chose me, steppin' on shit my lane\n[01:38.43] I ain't choose to rap, it chose me, my name held too much weight\n[01:41.81] Type influence I got where I'm from, got Yo Gotti totin' a Drac' (on God)\n[01:45.15] When you meet me, you gon' get real motivated same day (on God)\n[01:48.38] Them tear drops played out, go get your favorite bullet on your face (on God)\n[01:51.31] Do not rap when I am told, I rap when I got shit to say\n[01:54.89] SF90, I'm allergic to Corvettes, fuck a C8 (lil' nigga)\n[01:58.49] This an F8, not a C8, nigga, Mansory edition\n[02:01.85] In the May-May, oh my God, what-happened-to-Virgil edition (that Maybach)\n[02:04.45] In the Wray-Wray, widebody, Cullinan, Black Badge edition (that Rolls-Royce)\n[02:07.80] In the same Scat Pack since I left, that mean you stuck, lil' nigga (yup)\n[02:11.04] We all on a race to the top, these niggas stuck, can't get no bigger (say what?)\n[02:14.31] I got richer while in jail, locked in the feds outdoin' niggas (on God)\n[02:17.69] Now my watch got on a watch, my chain got more chains than you niggas\n[02:20.56] Ain't no such thing as real niggas, but I'm damn sure ain't counterfeit (I ain't fakin' this shit)\n[02:24.03] Hid ten M's in the bank, then went fed, got penitentiary rich (I'm still filthy rich)\n[02:27.33] Orderin' Ferraris off a jail call, I'm real rich\n[02:30.65] Make sure she cover my name up if you plan on keepin' the bitch (fuck her)\n[02:34.09] I signed a deal, then went to jail, they ain't even seen me pop my shit (on gang)\n[02:37.35] I'm just now buyin' a chain that say my name, I been bullshittin'\n[02:40.29] My niggas died while in chains, get-back gang, I'm right back for revenge (gang, on gang)\n[02:43.54] Ay, I'm just way more colder, every eight hours, I'm changin' fits (what?)\n[02:46.94] Every seven, I change the bitch (what?), nothin' but foreigns when we change lanes (blrrrd)\n[02:50.70] Hood poet, all these jewels I drop, how you ain't make a chain? (Goofy)\n[02:53.80] He ain't dead, but I got niggas in the feds smokin' Lil Wayne (big Tunechi)\n[02:57.05] Soon I see my Memphis homies, ay, mane, say, mane (what up?)\n[03:00.04] I had nine M's to my name, makin' chi-chis out Shabangs\n[03:03.81] Reorganized my whole gang, on Sundays, we work on our aim (on God)\n[03:06.64] And every month on the 13th, I'm boppin' out with a new chain\n[03:09.77] I heard skreet nigga gettin' tummy tucks, told you these rappers lame (man, these niggas gay)\n[03:13.55] In my cell, I did a thousand burpees, I toned up my frame (thousand of 'em skraight)\n[03:16.85] Fitted suit on, fitted cap turned backwards, Richard Millie plain (Patek plain Jane)\n[03:20.01] Them steppers who got him served, they wasn't doin' it for lil' Saint\n[03:23.37] See, my daddy my first co-D, jumped in the skreets, he showed me lanes (them facts)\n[03:26.41] Your daddy a killer, but you ain't, you just like Bronny James (facts)\n[03:29.80] I asked her where she want my kids, she told me grab the brush and paint\n[03:32.87] So I aimed right at her forehead and tried to spell out my name (yeah, yeah, yeah)\n[03:36.39] I got locked, nigga dropped million dollars worth salt around my gang (right there by my name, nigga)\n[03:39.77] Please tell me that shit fell up out they pockets, skinny man\n[03:42.82] Please tell these rap niggas sayin', \"Blrrrd,\" without permission that they stealin' (blrrrd, blrrrd, blrrrd)\n[03:46.13] Memphis menace, kids, say no to drugs and damn right to killin' (blrrrd)\n[03:49.47] She choose, but her lips ain't move, I read her eyes, they said, \"Pimp me\"\n[03:52.66] See, bae, I'm least likely some pimpin', but I'm more likely a bachelor\n[03:55.75] Super Shiesty, crooked letter, crooked letter, David Banner (slatt)\n[03:59.36] In the trap, feelin' like O-Dog, watchin' hits I did on camera (I shoot shit on camera)\n[04:02.61] Out on papers with a 922G sittin' on my counter (say what?)\n[04:05.87] I'm out on papers with a fully ARP sittin' on the counter (blrrrd, that blrrrd)\n[04:09.38] If you think you got more shots than CG, come and try your luck (pussy)\n[04:12.17] You ain't never bought no crate or no grenade, shut the fuck up (shut y'all broke-ass up, nigga)\n[04:15.56] I just ordered a gun store, nobody ain't got more chop than us (on God)\n[04:18.54] 901, 375, 0762, call my bluff (try that)\n[04:22.35] I treat a player like a player and a custo like a cluck\n[04:25.70] You need to treat your glizzy like a collared shirt and button it up (ah, ah)\n[04:29.09] I treat gangstas like civilians, I treat smart niggas like ducks (quack)\n[04:32.35] Long story short, short story shorter, nigga, I cannot be touched (at all)\n[04:35.69] Cannot slip up, can't get on books, can't go out sad, can't get out far (the fuck?)\n[04:38.74] I sicced a C girl on the opps, she left an AirTag in his glove box (slatt)\n[04:41.98] KD patient, he might spank 'em next year or tomorrow (try that)\n[04:45.12] I took my homie Dummo Glock 'cause he went out like Cheddar Bob (fuck him)\n[04:48.77] Thank e'ry bitch I had to shit on for these foreigns in my garage (they custom)\n[04:51.85] E'ry bitch who lost faith in me named after one of my cars\n[04:55.16] Where y'all? Stolo still parked, stuffin' zaza in pickle jars (blrrrd, blrrrd, blrrd)\n[04:58.83] If my Drac' jam on me, we beefin', I'ma turn Kendrick Lamar\n[05:01.76] He got his car flipped on Lamar, died with his gun, he couldn't e'en shoot\n[05:05.13] I'm CEO, I cannot go, even my skrikers bulletproof\n[05:08.42] All my hos from Memphis still allowed to call me Mr. Pooh\n[05:11.64] Seven foreigns, rose gold, my first day out, damn fool, blrrrd (blrrrd, blrrrd)\n[05:16.31] Rooster-ass nigga\n[05:18.21] "
+    },
+    {
+      "rank": 21,
+      "title": "Back To Friends",
+      "artist": "sombr",
+      "score": 1.694,
+      "platforms_count": 3,
+      "platform_ranks": [
+        {
+          "platform": "spotify_global",
+          "rank": 19,
+          "weight": 1.5
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 30,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 47,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "c8zq4kAn_O0",
+      "youtube_views": 83528704,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5d/d5/ad/5dd5ad1b-fabf-9218-77f0-3adbfd5328ac/054391237118.jpg/600x600bb.jpg",
+      "youtube_likes": 792476,
+      "youtube_duration": "PT3M22S",
+      "youtube_published": "2025-04-03",
+      "album": "back to friends - Single",
+      "release_date": "2024-12-27",
+      "genre": "Indie Rock",
+      "duration_ms": 199032,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/fb/e4/78fbe49b-71f9-100f-031a-e966b2e039a5/mzaf_16909816455493328525.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/back-to-friends/1786481196?i=1786481197&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/back-to-friends/1786481196?i=1786481197&uo=4",
+      "lyrics_plain": "Touch my body tender\n'Cause the feeling makes me weak\nKicking off the covers\nI see the ceiling while you're looking down at me\n\nHow can we go back to being friends\nWhen we just shared a bed?\nHow can you look at me and pretend\nI'm someone you've never met?\n\nIt was last December\nYou were layin' on my chest\nI still remember\nI was scared to take a breath, didn't want you to move your head\n\nHow can we go back to being friends\nWhen we just shared a bed? (Yeah)\nHow can you look at me and pretend\nI'm someone you've never met?\n\nThe devil in your eyes\nWon't deny the lies you've sold\nI'm holding on too tight\nWhile you let go, this is casual\n\nHow can we go back to being friends\nWhen we just shared a bed? (Yeah)\nHow can you look at me and pretend\nI'm someone you've never met?\n\nHow can we go back to being friends\nWhen we just shared a bed? (Yeah)\nHow can you look at me and pretend\nI'm someone you've never met?\n\nI'm someone you've never met (yeah)",
+      "lyrics_synced": "[00:23.10] Touch my body tender\n[00:27.52] 'Cause the feeling makes me weak\n[00:33.43] Kicking off the covers\n[00:37.94] I see the ceiling while you're looking down at me\n[00:44.04] How can we go back to being friends\n[00:48.91] When we just shared a bed?\n[00:54.26] How can you look at me and pretend\n[00:59.18] I'm someone you've never met?\n[01:04.57] It was last December\n[01:08.90] You were layin' on my chest\n[01:14.87] I still remember\n[01:19.15] I was scared to take a breath, didn't want you to move your head\n[01:25.48] How can we go back to being friends\n[01:30.34] When we just shared a bed? (Yeah)\n[01:35.82] How can you look at me and pretend\n[01:40.42] I'm someone you've never met?\n[01:45.88] The devil in your eyes\n[01:52.67] Won't deny the lies you've sold\n[01:58.74] I'm holding on too tight\n[02:02.67] While you let go, this is casual\n[02:17.05] How can we go back to being friends\n[02:22.14] When we just shared a bed? (Yeah)\n[02:27.40] How can you look at me and pretend\n[02:32.16] I'm someone you've never met?\n[02:37.71] How can we go back to being friends\n[02:42.57] When we just shared a bed? (Yeah)\n[02:48.03] How can you look at me and pretend\n[02:52.88] I'm someone you've never met?\n[03:00.21] I'm someone you've never met (yeah)\n[03:18.24] "
+    },
+    {
+      "rank": 22,
+      "title": "A Holly Jolly Christmas",
+      "artist": "Burl Ives",
+      "score": 1.622,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 16,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 29,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "e_AMTbO50vU",
+      "youtube_views": 7701769,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/8f/83/4c/8f834c3f-6931-d183-85af-69b269618fd6/14UMGIM50722.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 31321,
+      "youtube_duration": "PT2M23S",
+      "youtube_published": "2019-11-08",
+      "album": "Rudolph the Red Nosed Reindeer (Original 1964 TV Soundtrack)",
+      "release_date": "1964-12-01",
+      "genre": "Christmas",
+      "duration_ms": 82800,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/98/50/fe/9850fe02-fbcd-df2a-7181-f029ff18923c/mzaf_5097538416806776723.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/a-holly-jolly-christmas/1440814412?i=1440815070&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/a-holly-jolly-christmas/1440814412?i=1440815070&uo=4",
+      "lyrics_plain": "Ding-dong, ding\nDing-dong, ding\n\nHave a holly jolly Christmas (ding-dong, ding)\nIt's the best time of the year (ding-dong, ding)\nI don't know if there'll be snow\nBut have a cup of cheer\n\nHave a holly jolly Christmas (ding-dong, ding)\nAnd when you walk down the street (ding-dong, ding)\nSay hello to friends you know\nAnd everyone you meet\n\nOh ho, the mistletoe hung where you can see\nSomebody waits for you, kiss her once for me\n\nHave a holly jolly Christmas (ding-dong, ding)\nAnd in case you didn't here (ding-dong, ding)\nOh by golly, have a holly jolly Christmas this year\n\nHave a holly jolly Christmas\nIt's the best time of the year\n\nHave a holly jolly Christmas\nAnd when you walk down the street\nSay hello to friends you know\nAnd everyone you meet\n\nOh-ho, the mistletoe hung where you can see\nSomebody waits for you, kiss her once for me\n\nHave a holly jolly Christmas (ding-dong, ding)\nAnd in case you didn't here (ding-dong, ding)\nOh by golly, have a holly jolly Christmas this year\n\nDing-dong (dong, dong)\nDing-dong (dong, dong)\nDing-dong (dong, dong)\nDing-dong (dong, dong)\nDing-dong (dong, dong)",
+      "lyrics_synced": "[00:00.39] Ding-dong, ding\n[00:03.74] Ding-dong, ding\n[00:06.48] \n[00:13.69] Have a holly jolly Christmas (ding-dong, ding)\n[00:16.87] It's the best time of the year (ding-dong, ding)\n[00:20.18] I don't know if there'll be snow\n[00:24.78] But have a cup of cheer\n[00:27.40] Have a holly jolly Christmas (ding-dong, ding)\n[00:30.63] And when you walk down the street (ding-dong, ding)\n[00:34.28] Say hello to friends you know\n[00:37.67] And everyone you meet\n[00:41.46] Oh ho, the mistletoe hung where you can see\n[00:48.21] Somebody waits for you, kiss her once for me\n[00:54.44] Have a holly jolly Christmas (ding-dong, ding)\n[00:58.12] And in case you didn't here (ding-dong, ding)\n[01:02.07] Oh by golly, have a holly jolly Christmas this year\n[01:08.51] Have a holly jolly Christmas\n[01:12.05] It's the best time of the year\n[01:14.69] \n[01:22.38] Have a holly jolly Christmas\n[01:25.53] And when you walk down the street\n[01:29.29] Say hello to friends you know\n[01:32.75] And everyone you meet\n[01:36.16] Oh-ho, the mistletoe hung where you can see\n[01:42.91] Somebody waits for you, kiss her once for me\n[01:49.38] Have a holly jolly Christmas (ding-dong, ding)\n[01:52.77] And in case you didn't here (ding-dong, ding)\n[01:56.59] Oh by golly, have a holly jolly Christmas this year\n[02:01.91] Ding-dong (dong, dong)\n[02:03.50] Ding-dong (dong, dong)\n[02:05.32] Ding-dong (dong, dong)\n[02:06.89] Ding-dong (dong, dong)\n[02:08.56] Ding-dong (dong, dong)\n[02:10.42] "
+    },
+    {
+      "rank": 23,
+      "title": "Run Rudolph Run",
+      "artist": "Chuck Berry",
+      "score": 1.558,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 19,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 28,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "YiadNVhaGwk",
+      "youtube_views": 20108746,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3a/7a/1b/3a7a1ba9-cbbb-8c92-11c9-a29934045529/06UMGIM18712.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 136231,
+      "youtube_duration": "PT2M58S",
+      "youtube_published": "2020-10-16",
+      "album": "Rock 'n Roll Rarities",
+      "release_date": "1958-01-01",
+      "genre": "Rock",
+      "duration_ms": 165733,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2d/d5/92/2dd5924a-9ab2-8aa1-dff3-c3d9623286e1/mzaf_4122244298725376338.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/run-rudolph-run/1443831031?i=1443832242&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/run-rudolph-run/1443831031?i=1443832242&uo=4",
+      "lyrics_plain": "Out of all the reindeers you know you are the mastermind\nRun, run Rudolph, Randolph ain't too far behind\nRun, run Rudolph, Santa's gotta make it to town\nSanta, make him hurry, tell him he can take the freeway down\nRun, run Rudolph 'cause I'm reelin' like a merry-go-round\n\nSaid Santa to a boy child, \"What have you been longin' for?\"\n\"All I want for Christmas is a rock 'n' roll 'lectric guitar\"\nAnd then away went Rudolph whizzin' like a shootin' star\n\nRun, run Rudolph, Santa's has to make it in town\nSanta, make him hurry, tell him he can take the freeway down\nRun, run Rudolph, reelin' like a merry-go-round\n\nRun, run Rudolph, Santa's gotta make it to town\nSanta, make him hurry, tell him he can take the freeway down\nRun, run Rudolph, I'm reelin' like a merry-go-round\n\nSaid Santa to a girl child, \"What would please you most to get?\"\n\"A little baby doll that can cry, sleep, drink and wet\"\nAnd then away went Rudolph, whizzin' like a Saber jet\n\nRun, run Rudolph, Santa's gotta make it to town\nSanta, make him hurry, tell him he can take the freeway down\nRun, run Rudolph I'm reelin' like a merry-go-round",
+      "lyrics_synced": "[00:07.00] Out of all the reindeers you know you are the mastermind\n[00:13.12] Run, run Rudolph, Randolph ain't too far behind\n[00:19.32] Run, run Rudolph, Santa's gotta make it to town\n[00:25.55] Santa, make him hurry, tell him he can take the freeway down\n[00:31.72] Run, run Rudolph 'cause I'm reelin' like a merry-go-round\n[00:37.76] Said Santa to a boy child, \"What have you been longin' for?\"\n[00:44.30] \"All I want for Christmas is a rock 'n' roll 'lectric guitar\"\n[00:50.09] And then away went Rudolph whizzin' like a shootin' star\n[00:56.85] Run, run Rudolph, Santa's has to make it in town\n[01:03.18] Santa, make him hurry, tell him he can take the freeway down\n[01:09.59] Run, run Rudolph, reelin' like a merry-go-round\n[01:15.06] \n[01:34.65] Run, run Rudolph, Santa's gotta make it to town\n[01:40.94] Santa, make him hurry, tell him he can take the freeway down\n[01:47.34] Run, run Rudolph, I'm reelin' like a merry-go-round\n[01:53.34] Said Santa to a girl child, \"What would please you most to get?\"\n[01:59.94] \"A little baby doll that can cry, sleep, drink and wet\"\n[02:05.78] And then away went Rudolph, whizzin' like a Saber jet\n[02:12.54] Run, run Rudolph, Santa's gotta make it to town\n[02:18.81] Santa, make him hurry, tell him he can take the freeway down\n[02:25.27] Run, run Rudolph I'm reelin' like a merry-go-round\n[02:28.62] "
+    },
+    {
+      "rank": 24,
+      "title": "Like It's Christmas",
+      "artist": "Jonas Brothers",
+      "score": 1.492,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "apple_global",
+          "rank": 19,
+          "weight": 1.3
+        },
+        {
+          "platform": "billboard_hot100",
+          "rank": 29,
+          "weight": 1.5
+        }
+      ],
+      "youtube_video_id": "tIyE3IrC7r0",
+      "youtube_views": 20373962,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/27/9d/df/279ddfe1-74db-1929-b48e-8faade18e3a1/19UMGIM98457.rgb.jpg/600x600bb.jpg",
+      "youtube_likes": 129052,
+      "youtube_duration": "PT3M23S",
+      "youtube_published": "2019-12-06",
+      "album": "Like It's Christmas - Single",
+      "release_date": "2019-11-08",
+      "genre": "Christmas",
+      "duration_ms": 200873,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/60/e7/e5/60e7e533-e188-be5e-1526-5669265dad83/mzaf_17379341785791955989.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/like-its-christmas/1485796557?i=1485796558&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/like-its-christmas/1485796557?i=1485796558&uo=4",
+      "lyrics_plain": "Ba dum dum dum dum\nThe snow on the ground\nThe love in the air\nSleigh bells are ringing\nThis is what it's all about\nThe fire is warm\nThe angels are singing\nAnd I don't wanna miss\nA single thing\nDon't wanna put an end to all this cheer\nBut as long as you're with me\nIt's always that time of the year\nYou make every day feel like it's Christmas\nNever wanna stop\nFeeling like the first thing on your wish list\nRight up at the top\nI can't deny what I'm feeling inside\nNothing fake about the way you bring me to life\nYou make every day feel like it's Christmas\nEvery day that I'm with you\nLook at the lights\nTwinkling bright\n24/7\nEvery inch of Central Park\nIs covered in white\nThis could be Heaven\nAnd I don't wanna miss\nA single thing\nDon't wanna put an end to all this cheer\nBut as long as you're with me\nIt's always that time of the year (woo)\nYou make every day feel like it's Christmas (like it's Christmas)\nNever wanna stop\nFeeling like the first thing on your wish list\nRight up at the top\nI can't deny what I'm feeling inside\nNothing fake about the way you bring me to life\nYou make every day feel like it's Christmas\nEvery day that I'm with you (woo)\n(Woo hoo, yeah)\nEvery day that I'm with you\n(Every day, every day) (oh, whoa all night, yeah)\nYou make every day feel like it's Christmas\nNever wanna stop\nFeeling like the first thing on your wish list\nRight up at the top (and I can't deny)\nI can't deny what I'm feeling inside\nNothing fake about the way you bring me to life\nYou make every day feel like it's Christmas\nEvery day that I'm with you\nYeah yeah yeah yeah\nEvery day\n(La la la)\nI can't deny what I'm feeling inside\nNo matter the reason, no matter the season\nMy heart'll keep beating, you better believe\nYou make every day feel like it's Christmas (like it's Christmas)\nEvery day that I'm with you\n(Oh oh, oh oh, oh oh)\nEvery day that I'm with you\n(Oh oh, oh oh, oh oh)\nEvery day that I'm with you"
+    },
+    {
+      "rank": 25,
+      "title": "Choosin' Texas",
+      "artist": "Ella Langley",
+      "score": 1.4,
+      "platforms_count": 2,
+      "platform_ranks": [
+        {
+          "platform": "billboard_hot100",
+          "rank": 26,
+          "weight": 1.5
+        },
+        {
+          "platform": "apple_global",
+          "rank": 26,
+          "weight": 1.3
+        }
+      ],
+      "youtube_video_id": "hLOheGDwD_0",
+      "youtube_views": 10034149,
+      "artwork_url": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e2/91/4d/e2914d0a-7f1d-f04c-fbf4-c50b38548838/196873638690.jpg/600x600bb.jpg",
+      "youtube_likes": 88960,
+      "youtube_duration": "PT3M52S",
+      "youtube_published": "2025-10-17",
+      "album": "Choosin' Texas - Single",
+      "release_date": "2025-10-17",
+      "genre": "Country",
+      "duration_ms": 232226,
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f1/7a/5e/f17a5e39-0041-7e2b-47a7-ba1bea866ad6/mzaf_9564649528592941839.plus.aac.p.m4a",
+      "itunes_url": "https://music.apple.com/in/album/choosin-texas/1844932149?i=1844932150&uo=4",
+      "apple_music_url": "https://music.apple.com/in/album/choosin-texas/1844932149?i=1844932150&uo=4",
+      "lyrics_plain": "Just when I thought I got him to fall in love with Tennessee\nI shoulda known better than to take him back to Abilene\nI put him right back into her arms\nI wasn't a match for that kinda spark\n\nShe's from Texas I can tell by the way\nHe's two steppin' round the room\nAnd judgin' by the smile that's written on his face\nThere's nothin' I can to do\nIt doesn't take a crystal ball to see\nA cowboy always finds a way to leave\nDrinkin' Jack all by myself\nHe's choosin' Texas I can tell\n\nWell, I guess he forgot about the smoky mountain rain\nThem old Hank tunes the Memphis blues we used sing\nHe always loved Amarillo By Morning\nI shoulda taken that as warning\n\nShe's from Texas I can tell by the way\nHe's two steppin' round the room\nAnd judgin' by the smile that's written on his face\nThere's nothin' I can to do\nIt doesn't take a crystal ball to see\nA cowboy always finds a way to leave\nDrinkin' Jack all by myself\nHe's choosin' Texas I can tell\n\nWhen I'm eastbound and down and I can't help but cry\nCause I-40 gets lonelier with every mile\nI'll know that his mind wasn't ever gonna change\nCause his heart still belongs to the lone star state\n\nShe's from Texas I can tell by the way\nHe's two steppin' round the room\nAnd judgin' by the smile that's written on his face\nThere's nothin' I can to do, naw yeah\nIt doesn't take a crystal ball to see\nA cowboy always finds a way to leave\nDrinkin' Jack all by myself\nHe's choosing Texas I can tell, no\nDrinkin' Jack all by myself\nHe's choosin' Texas I can tell\n\nC'mon baby\nOhh yeah\nJust when I thought I got him to fall in love with Tennessee"
+    }
+  ]
+}

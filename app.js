@@ -107,7 +107,7 @@ function mapHarvesterSearchResult(song) {
         language: song.language,
         genre: song.genre,
         mood: song.mood,
-        album: song.album,
+        album: song.album_name || song.album,
         year: song.year,
         isrc: song.isrc,
         id: song.id
@@ -7201,7 +7201,7 @@ function renderSearchResults(songs, total) {
                 </div>
                 <div class="detail-song-info">
                     <div class="detail-song-title">${escapeHtml(song.title)}</div>
-                    <div class="detail-song-artist">${escapeHtml(song.artist)}</div>
+                    <div class="detail-song-artist">${escapeHtml(song.artist)}${song.album ? ` · ${escapeHtml(song.album)}` : ''}</div>
                 </div>
                 <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id || ''}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to playlist">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

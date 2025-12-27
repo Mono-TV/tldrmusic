@@ -331,5 +331,257 @@
     "likes": 60338,
     "duration": "PT5M12S",
     "published": "2025-11-12"
+  },
+  "gehra hua|shashwat sachdev": {
+    "video_id": "GX9x62kFsVU",
+    "title": "Gehra Hua | Dhurandhar | Ranveer Singh, Sara Arjun, Shashwat Sachdev, Arijit Singh, Irshad Kamil",
+    "channel": "Saregama Music",
+    "views": 47209811,
+    "likes": 520034,
+    "duration": "PT3M51S",
+    "published": "2025-11-28"
+  },
+  "shararat|shashwat sachdev": {
+    "video_id": "YyepU5ztLf4",
+    "title": "Shararat | Dhurandhar | Ranveer, Aditya Dhar, Shashwat, Jasmine, Madhubanti, Ayesha, Krystle",
+    "channel": "Saregama Music",
+    "views": 58404360,
+    "likes": 418033,
+    "duration": "PT3M49S",
+    "published": "2025-12-09"
+  },
+  "sitaare|arijit singh": {
+    "video_id": "nDjloeIB3Pc",
+    "title": "Sitaare | Ikkis | Agastya Nanda, Simar Bhatia, Dharmendra Deol, Jaideep A | Arijit Singh, Amitabh B",
+    "channel": "Sony Music India",
+    "views": 29460961,
+    "likes": 272318,
+    "duration": "PT3M16S",
+    "published": "2025-12-03"
+  },
+  "shararat|madhubanti bagchi": {
+    "video_id": "YyepU5ztLf4",
+    "title": "Shararat | Dhurandhar | Ranveer, Aditya Dhar, Shashwat, Jasmine, Madhubanti, Ayesha, Krystle",
+    "channel": "Saregama Music",
+    "views": 58404360,
+    "likes": 418033,
+    "duration": "PT3M49S",
+    "published": "2025-12-09"
+  },
+  "all i want for christmas is you|mariah carey": {
+    "video_id": "aAkMkVFwAoo",
+    "title": "Mariah Carey - All I Want for Christmas Is You (Make My Wish Come True Edition)",
+    "channel": "MariahCareyVEVO",
+    "views": 853073086,
+    "likes": 7108046,
+    "duration": "PT4M3S",
+    "published": "2019-12-20"
+  },
+  "jingle bell rock|bobby helms": {
+    "video_id": "nIhs1T7OcZg",
+    "title": "Bobby Helms - Jingle Bell Rock",
+    "channel": "Pizza Music",
+    "views": 31334626,
+    "likes": 167710,
+    "duration": "PT2M11S",
+    "published": "2022-11-28"
+  },
+  "the fate of ophelia|taylor swi": {
+    "video_id": "ko70cExuzZM",
+    "title": "Taylor Swift - The Fate of Ophelia (Official Music Video)",
+    "channel": "Taylor Swift",
+    "views": 182292171,
+    "likes": 2366574,
+    "duration": "PT3M59S",
+    "published": "2025-10-05"
+  },
+  "underneath the tree|kelly clarkson": {
+    "video_id": "EM2Fnp_qnE8",
+    "title": "Kelly Clarkson - Underneath the Tree (Official Video)",
+    "channel": "kellyclarksonVEVO",
+    "views": 88890075,
+    "likes": 285250,
+    "duration": "PT4M",
+    "published": "2013-12-03"
+  },
+  "santa tell me|ariana grande": {
+    "video_id": "nlR0MkrRklg",
+    "title": "Ariana Grande - Santa Tell Me (Official Video)",
+    "channel": "ArianaGrandeVevo",
+    "views": 328458360,
+    "likes": 3400859,
+    "duration": "PT5M40S",
+    "published": "2014-12-13"
+  },
+  "rockin' around the christmas tree|brenda lee": {
+    "video_id": "TFsZy9t-qDc",
+    "title": "Brenda Lee - Rockin&#39; Around The Christmas Tree (Official Music Video)",
+    "channel": "BrendaLeeVEVO",
+    "views": 111519960,
+    "likes": 613194,
+    "duration": "PT2M9S",
+    "published": "2023-11-03"
+  },
+  "let it snow! let it snow! let it snow!|dean martin": {
+    "video_id": "Rnil5LyK_B0",
+    "title": "Dean Martin - Let It Snow! Let It Snow! Let It Snow! (Official Video)",
+    "channel": "DeanMartinVEVO",
+    "views": 50414302,
+    "likes": 328095,
+    "duration": "PT1M57S",
+    "published": "2019-11-13"
+  },
+  "it's the most wonderful time of the year|andy williams": {
+    "video_id": "cbZTfrhcamA",
+    "title": "Andy Williams - It&#39;s the Most Wonderful Time of the Year (Official Music Video)",
+    "channel": "AndyWilliamsVEVO",
+    "views": 33966072,
+    "likes": 94476,
+    "duration": "PT2M32S",
+    "published": "2020-12-04"
+  },
+  "last christmas|wham!": {
+    "video_id": "E8gmARGvPlI",
+    "title": "Wham! - Last Christmas (Official Video)",
+    "channel": "WhamVEVO",
+    "views": 1080461026,
+    "likes": 5910109,
+    "duration": "PT4M39S",
+    "published": "2009-10-25"
+  },
+  "the christmas song (merry christmas to you)|nat \"king\" cole": {
+    "video_id": "g8UmqvOqB1A",
+    "title": "The Christmas Song (Merry Christmas To You)",
+    "channel": "Nat King Cole - Topic",
+    "views": 2764050,
+    "likes": 26676,
+    "duration": "PT3M11S",
+    "published": "2017-03-15"
+  },
+  "sleigh ride|the ronettes": {
+    "video_id": "DkXIJe8CaIc",
+    "title": "The Ronettes - Sleigh Ride (Official Music Video)",
+    "channel": "TheRonettesVEVO",
+    "views": 48742980,
+    "likes": 177318,
+    "duration": "PT3M2S",
+    "published": "2020-11-19"
+  },
+  "man i need|olivia dean": {
+    "video_id": "oIv_Y2RPQ_A",
+    "title": "Olivia Dean - Man I Need",
+    "channel": "OliviaDeanVEVO",
+    "views": 32809205,
+    "likes": 288119,
+    "duration": "PT3M22S",
+    "published": "2025-08-15"
+  },
+  "christmas (baby please come home)|darlene love": {
+    "video_id": "vf4ZXBzbAio",
+    "title": "Darlene Love - Christmas (Baby Please Come Home) (Official Music Video)",
+    "channel": "DarleneLoveVEVO",
+    "views": 11245941,
+    "likes": 46804,
+    "duration": "PT2M47S",
+    "published": "2020-11-25"
+  },
+  "ordinary|alex warren": {
+    "video_id": "u2ah9tWTkmk",
+    "title": "Alex Warren - Ordinary (Official Video)",
+    "channel": "Alex Warren",
+    "views": 235432962,
+    "likes": 2003105,
+    "duration": "PT3M7S",
+    "published": "2025-02-21"
+  },
+  "it's beginning to look a lot like christmas|michael bublé": {
+    "video_id": "QJ5DOWPGxwg",
+    "title": "Michael Bublé - It&#39;s Beginning To Look A Lot Like Christmas [Official HD Audio]",
+    "channel": "Michael Bublé",
+    "views": 156548518,
+    "likes": 663614,
+    "duration": "PT3M28S",
+    "published": "2017-12-05"
+  },
+  "mistletoe|justin bieber": {
+    "video_id": "LUjn3RpkcKY",
+    "title": "Justin Bieber - Mistletoe (Official Music Video)",
+    "channel": "JustinBieberVEVO",
+    "views": 560914939,
+    "likes": 3652811,
+    "duration": "PT3M4S",
+    "published": "2011-10-18"
+  },
+  "snowman|sia": {
+    "video_id": "gset79KMmt0",
+    "title": "Sia - Snowman [Official Video]",
+    "channel": "Sia",
+    "views": 398690006,
+    "likes": 5647017,
+    "duration": "PT2M53S",
+    "published": "2020-10-30"
+  },
+  "feliz navidad|josé feliciano": {
+    "video_id": "N8NcQzMQN_U",
+    "title": "José Feliciano - Feliz Navidad (Official Audio)",
+    "channel": "JoseFelicianoVEVO",
+    "views": 77777617,
+    "likes": 488076,
+    "duration": "PT3M4S",
+    "published": "2019-08-16"
+  },
+  "fdo|pooh shiesty": {
+    "video_id": "MPuK06zUIhc",
+    "title": "Pooh Shiesty - FDO [Official Music Video]",
+    "channel": "Pooh Shiesty",
+    "views": 13104221,
+    "likes": 402886,
+    "duration": "PT6M12S",
+    "published": "2025-12-12"
+  },
+  "back to friends|sombr": {
+    "video_id": "c8zq4kAn_O0",
+    "title": "sombr - back to friends (official video)",
+    "channel": "sombr",
+    "views": 83528704,
+    "likes": 792476,
+    "duration": "PT3M22S",
+    "published": "2025-04-03"
+  },
+  "a holly jolly christmas|burl ives": {
+    "video_id": "e_AMTbO50vU",
+    "title": "Burl Ives - A Holly Jolly Christmas (Official Video)",
+    "channel": "Christmas Music",
+    "views": 7701769,
+    "likes": 31321,
+    "duration": "PT2M23S",
+    "published": "2019-11-08"
+  },
+  "run rudolph run|chuck berry": {
+    "video_id": "YiadNVhaGwk",
+    "title": "Chuck Berry - Run Rudolph Run (Official Video)",
+    "channel": "ChuckBerryVEVO",
+    "views": 20108746,
+    "likes": 136231,
+    "duration": "PT2M58S",
+    "published": "2020-10-16"
+  },
+  "like it's christmas|jonas brothers": {
+    "video_id": "tIyE3IrC7r0",
+    "title": "Jonas Brothers - Like It&#39;s Christmas (Official Lyric Video)",
+    "channel": "JonasBrothersVEVO",
+    "views": 20373962,
+    "likes": 129052,
+    "duration": "PT3M23S",
+    "published": "2019-12-06"
+  },
+  "choosin' texas|ella langley": {
+    "video_id": "hLOheGDwD_0",
+    "title": "Ella Langley - Choosin&#39; Texas (Official Lyric Video)",
+    "channel": "EllaLangleyVEVO",
+    "views": 10034149,
+    "likes": 88960,
+    "duration": "PT3M52S",
+    "published": "2025-10-17"
   }
 }

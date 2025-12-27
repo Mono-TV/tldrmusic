@@ -1,0 +1,1388 @@
+{
+  "spotify_global": [
+    {
+      "title": "Last Christmas",
+      "artist": "Wham!",
+      "position": 1,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "All I Want for Christmas Is You",
+      "artist": "Mariah Carey",
+      "position": 2,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Rockin' Around The Christmas Tree",
+      "artist": "Brenda Lee",
+      "position": 3,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swi",
+      "position": 4,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Jingle Bell Rock",
+      "artist": "Bobby Helms",
+      "position": 5,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Santa Tell Me",
+      "artist": "Ariana Grande",
+      "position": 6,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Let It Snow! Let It Snow! Let It Snow!",
+      "artist": "Dean Martin",
+      "position": 7,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Snowman",
+      "artist": "Sia",
+      "position": 8,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Underneath the Tree",
+      "artist": "Kelly Clarkson",
+      "position": 9,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "It's the Most Wonderful Time of the Year",
+      "artist": "Andy Williams",
+      "position": 10,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Golden",
+      "artist": "HUNTR/X",
+      "position": 11,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "It's Beginning to Look a Lot like Christmas",
+      "artist": "Michael Bublé",
+      "position": 12,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Holly Jolly Christmas",
+      "artist": "Michael Bublé",
+      "position": 13,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Feliz Navidad",
+      "artist": "José Feliciano",
+      "position": 14,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Sleigh Ride",
+      "artist": "The Ronettes",
+      "position": 15,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Mistletoe",
+      "artist": "Justin Bieber",
+      "position": 16,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Man I Need",
+      "artist": "Olivia Dean",
+      "position": 17,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "The Christmas Song (Merry Christmas To You)",
+      "artist": "Nat King Cole",
+      "position": 18,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "back to friends",
+      "artist": "sombr",
+      "position": 19,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Happy Xmas (War Is Over) - Remastered 2010",
+      "artist": "John Lennon",
+      "position": 20,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Christmas (Baby Please Come Home)",
+      "artist": "Darlene Love",
+      "position": 21,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "So Easy (To Fall In Love)",
+      "artist": "Olivia Dean",
+      "position": 22,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "WHERE IS MY HUSBAND!",
+      "artist": "RAYE",
+      "position": 23,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "End of Beginning",
+      "artist": "Djo",
+      "position": 24,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "position": 25,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "CHANEL",
+      "artist": "Tyla",
+      "position": 26,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Wonderful Christmastime - Edited Version / Remastered 2011",
+      "artist": "Paul McCartney",
+      "position": 27,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Driving Home for Christmas - 2019 Remaster",
+      "artist": "Chris Rea",
+      "position": 28,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Merry Christmas Everyone",
+      "artist": "Shakin' Stevens",
+      "position": 29,
+      "platform": "spotify_global"
+    },
+    {
+      "title": "Every Breath You Take",
+      "artist": "The Police",
+      "position": 30,
+      "platform": "spotify_global"
+    }
+  ],
+  "billboard_hot100": [
+    {
+      "title": "All I Want For Christmas Is You",
+      "artist": "Mariah Carey",
+      "position": 1,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Jingle Bell Rock",
+      "artist": "Bobby Helms",
+      "position": 2,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Rockin' Around The Christmas Tree",
+      "artist": "Brenda Lee",
+      "position": 3,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Last Christmas",
+      "artist": "Wham!",
+      "position": 4,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Santa Tell Me",
+      "artist": "Ariana Grande",
+      "position": 5,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "The Christmas Song (Merry Christmas To You)",
+      "artist": "Nat \"King\" Cole",
+      "position": 6,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Underneath The Tree",
+      "artist": "Kelly Clarkson",
+      "position": 7,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Let It Snow! Let It Snow! Let It Snow!",
+      "artist": "Dean Martin",
+      "position": 8,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "It's The Most Wonderful Time Of The Year",
+      "artist": "Andy Williams",
+      "position": 9,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "The Fate Of Ophelia",
+      "artist": "Taylor Swi",
+      "position": 10,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Golden",
+      "artist": "HUNTR/X: EJAE",
+      "position": 11,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Sleigh Ride",
+      "artist": "The Ronettes",
+      "position": 12,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "It's Beginning To Look A Lot Like Christmas",
+      "artist": "Michael Buble",
+      "position": 13,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Feliz Navidad",
+      "artist": "Jose Feliciano",
+      "position": 14,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "position": 15,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "A Holly Jolly Christmas",
+      "artist": "Burl Ives",
+      "position": 16,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Christmas (Baby Please Come Home)",
+      "artist": "Darlene Love",
+      "position": 17,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Man I Need",
+      "artist": "Olivia Dean",
+      "position": 18,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Run Rudolph Run",
+      "artist": "Chuck Berry",
+      "position": 19,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "White Christmas (1947)",
+      "artist": "Bing Crosby With Ken Darby Singers",
+      "position": 20,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Jingle Bells",
+      "artist": "Frank Sinatra With The Orchestra",
+      "position": 21,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "FDO",
+      "artist": "Pooh Shiesty",
+      "position": 22,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "It's Beginning To Look A Lot Like Christmas",
+      "artist": "Perry Como And The Fontane Sisters With Mitchell Ayres And His Orchestra",
+      "position": 23,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Santa Baby",
+      "artist": "Eartha Kitt With Henri Rene And His Orchestra",
+      "position": 24,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Deck The Halls",
+      "artist": "Nat King Cole",
+      "position": 25,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Choosin' Texas",
+      "artist": "Ella Langley",
+      "position": 26,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Blue Christmas",
+      "artist": "Elvis Presley",
+      "position": 27,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Here Comes Santa Claus (Right Down Santa Claus Lane)",
+      "artist": "Gene Autry",
+      "position": 28,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Like It's Christmas",
+      "artist": "Jonas Brothers",
+      "position": 29,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Back To Friends",
+      "artist": "sombr",
+      "position": 30,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Mutt",
+      "artist": "Leon Thomas",
+      "position": 31,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Wonderful Christmastime",
+      "artist": "Paul McCartney",
+      "position": 32,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Please Come Home For Christmas",
+      "artist": "Eagles",
+      "position": 33,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Folded",
+      "artist": "Kehlani",
+      "position": 34,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Rudolph The Red-Nosed Reindeer",
+      "artist": "Gene Autry",
+      "position": 35,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Christmastime Is Here",
+      "artist": "Vince Guaraldi Trio",
+      "position": 36,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Opalite",
+      "artist": "Taylor Swi",
+      "position": 37,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Santa, Can't You Hear Me",
+      "artist": "Kelly Clarkson",
+      "position": 38,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "You're A Mean One, Mr. Grinch",
+      "artist": "Thurl Ravenscro",
+      "position": 39,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Holly Jolly Christmas",
+      "artist": "Michael Buble",
+      "position": 40,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Little Saint Nick",
+      "artist": "The Beach Boys",
+      "position": 41,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Merry Christmas",
+      "artist": "Ed Sheeran",
+      "position": 42,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Mistletoe",
+      "artist": "Justin Bieber",
+      "position": 43,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Daisies",
+      "artist": "Justin Bieber",
+      "position": 44,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Baby It's Cold Outside",
+      "artist": "Dean Martin",
+      "position": 45,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "(There's No Place Like) Home For The Holidays (1959)",
+      "artist": "Perry Como With Mitchell Ayers And His Orchestra",
+      "position": 46,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "This Christmas",
+      "artist": "Donny Hathaway",
+      "position": 47,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Santa Claus Is Comin' To Town",
+      "artist": "Jackson 5",
+      "position": 48,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Happy Holiday / The Holiday Season",
+      "artist": "Andy Williams",
+      "position": 49,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Winter Wonderland",
+      "artist": "Darlene Love",
+      "position": 50,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Mr Recoup",
+      "artist": "21 Savage",
+      "position": 51,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "It Depends",
+      "artist": "Chris Brown",
+      "position": 52,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Where Is My Husband!",
+      "artist": "RAYE",
+      "position": 53,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "So Easy (To Fall In Love)",
+      "artist": "Olivia Dean",
+      "position": 54,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Don't Mind If I Do",
+      "artist": "Riley Green",
+      "position": 55,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Tit For Tat",
+      "artist": "Tate McRae",
+      "position": 56,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "wgft",
+      "artist": "Gunna",
+      "position": 57,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "20 Cigarettes",
+      "artist": "Morgan Wallen",
+      "position": 58,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Is It A Crime",
+      "artist": "Mariah The Scientist",
+      "position": 59,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Gabriela",
+      "artist": "KATSEYE",
+      "position": 60,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Nice To Meet You",
+      "artist": "Myles Smith",
+      "position": 61,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Yukon",
+      "artist": "Justin Bieber",
+      "position": 62,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Happen To Me",
+      "artist": "Russell Dickerson",
+      "position": 63,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Hell At Night",
+      "artist": "BigXthaPlug",
+      "position": 64,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "6 Months Later",
+      "artist": "Megan Moroney",
+      "position": 65,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "House Again",
+      "artist": "Hudson Westbrook",
+      "position": 66,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Tears",
+      "artist": "Sabrina Carpenter",
+      "position": 67,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Better Me For You (Brown Eyes)",
+      "artist": "Max McNown",
+      "position": 68,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "A Couple Minutes",
+      "artist": "Olivia Dean",
+      "position": 69,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "The Fall",
+      "artist": "Cody Johnson",
+      "position": 70,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Shake The Snow Globe",
+      "artist": "Gwen Stefani",
+      "position": 71,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Shot Callin",
+      "artist": "YoungBoy Never Broke Again",
+      "position": 72,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Amen",
+      "artist": "Shaboozey",
+      "position": 73,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "I Thought I Saw Your Face Today",
+      "artist": "She",
+      "position": 74,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Eternity",
+      "artist": "Alex Warren",
+      "position": 75,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Favorite Country Song",
+      "artist": "HARDY",
+      "position": 76,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "HA",
+      "artist": "21 Savage",
+      "position": 77,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Dracula",
+      "artist": "Tame Impala",
+      "position": 78,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "12 To 12",
+      "artist": "sombr",
+      "position": 79,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "How Far Does A Goodbye Go",
+      "artist": "Jason Aldean",
+      "position": 80,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Take Me Thru Dere",
+      "artist": "Metro Boomin",
+      "position": 81,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Turn The Lights Off",
+      "artist": "KATO",
+      "position": 82,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "ErrTime",
+      "artist": "Cardi B",
+      "position": 83,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Cowgirl",
+      "artist": "Parmalee",
+      "position": 84,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Elizabeth Taylor",
+      "artist": "Taylor Swi",
+      "position": 85,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Where You From",
+      "artist": "21 Savage",
+      "position": 86,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Days Like These",
+      "artist": "Luke Combs",
+      "position": 87,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Camera",
+      "artist": "Ed Sheeran",
+      "position": 88,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Stepbrothers",
+      "artist": "21 Savage",
+      "position": 89,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Last One To Know",
+      "artist": "Gavin Adcock",
+      "position": 90,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Travelin' Soldier",
+      "artist": "Cody Johnson",
+      "position": 91,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Gone Gone Gone",
+      "artist": "David Guetta",
+      "position": 92,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Dog $hit",
+      "artist": "21 Savage",
+      "position": 93,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Chanel",
+      "artist": "Tyla",
+      "position": 94,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "4 Raws",
+      "artist": "EsDeeKid",
+      "position": 95,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Sugar On My Tongue",
+      "artist": "Tyler",
+      "position": 96,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Father Figure",
+      "artist": "Taylor Swi",
+      "position": 97,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "3am",
+      "artist": "Loe Shimmy",
+      "position": 98,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "Darlin'",
+      "artist": "Chase Matthew",
+      "position": 99,
+      "platform": "billboard_hot100"
+    },
+    {
+      "title": "I Ain't Coming Back",
+      "artist": "Morgan Wallen",
+      "position": 100,
+      "platform": "billboard_hot100"
+    }
+  ],
+  "apple_global": [
+    {
+      "title": "All I Want for Christmas Is You",
+      "artist": "Mariah Carey",
+      "position": 1,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Underneath the Tree",
+      "artist": "Kelly Clarkson",
+      "position": 2,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Jingle Bell Rock",
+      "artist": "Bobby Helms",
+      "position": 3,
+      "platform": "apple_global"
+    },
+    {
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swi",
+      "position": 4,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Last Christmas (Single Version)",
+      "artist": "Wham!",
+      "position": 5,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Golden",
+      "artist": "HUNTR/X",
+      "position": 6,
+      "platform": "apple_global"
+    },
+    {
+      "title": "FDO",
+      "artist": "Pooh Shiesty",
+      "position": 7,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Santa Tell Me",
+      "artist": "Ariana Grande",
+      "position": 8,
+      "platform": "apple_global"
+    },
+    {
+      "title": "It's Beginning To Look a Lot Like Christmas",
+      "artist": "Michael Bublé",
+      "position": 9,
+      "platform": "apple_global"
+    },
+    {
+      "title": "It's the Most Wonderful Time of the Year",
+      "artist": "Andy Williams",
+      "position": 10,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Let It Snow! Let It Snow! Let It Snow!",
+      "artist": "Dean Martin",
+      "position": 11,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Sleigh Ride",
+      "artist": "The Ronettes",
+      "position": 12,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Man I Need",
+      "artist": "Olivia Dean",
+      "position": 13,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Rockin' Around the Christmas Tree (Single)",
+      "artist": "Brenda Lee",
+      "position": 14,
+      "platform": "apple_global"
+    },
+    {
+      "title": "The Christmas Song (Merry Christmas to You)",
+      "artist": "Nat \"King\" Cole",
+      "position": 15,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Feliz Navidad",
+      "artist": "José Feliciano",
+      "position": 16,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Merry Christmas",
+      "artist": "Ed Sheeran",
+      "position": 17,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Mistletoe",
+      "artist": "Justin Bieber",
+      "position": 18,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Like It's Christmas",
+      "artist": "Jonas Brothers",
+      "position": 19,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Christmas (Baby Please Come Home)",
+      "artist": "Darlene Love",
+      "position": 20,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Opalite",
+      "artist": "Taylor Swi",
+      "position": 21,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Snowman",
+      "artist": "Sia",
+      "position": 22,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "position": 23,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Step into Christmas",
+      "artist": "Elton John",
+      "position": 24,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Folded",
+      "artist": "Kehlani",
+      "position": 25,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Choosin' Texas",
+      "artist": "Ella Langley",
+      "position": 26,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Last Christmas",
+      "artist": "Wham!",
+      "position": 27,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Run Rudolph Run",
+      "artist": "Chuck Berry",
+      "position": 28,
+      "platform": "apple_global"
+    },
+    {
+      "title": "A Holly Jolly Christmas (Single Version)",
+      "artist": "Burl Ives",
+      "position": 29,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Christmas Tree Farm",
+      "artist": "Taylor Swi",
+      "position": 30,
+      "platform": "apple_global"
+    },
+    {
+      "title": "IRIS OUT",
+      "artist": "Kenshi Yonezu",
+      "position": 31,
+      "platform": "apple_global"
+    },
+    {
+      "title": "White Christmas",
+      "artist": "Bing Crosby",
+      "position": 32,
+      "platform": "apple_global"
+    },
+    {
+      "title": "So Easy (To Fall In Love)",
+      "artist": "Olivia Dean",
+      "position": 33,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Santa Baby",
+      "artist": "Eartha Kitt",
+      "position": 34,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Officially Christmas",
+      "artist": "Dan + Shay",
+      "position": 35,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Wonderful Christmastime (Edited Version)",
+      "artist": "Paul McCartney",
+      "position": 36,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Santa, Can't You Hear Me",
+      "artist": "Kelly Clarkson",
+      "position": 37,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Here Comes Santa Claus (Down Santa Claus Lane)",
+      "artist": "Doris Day",
+      "position": 38,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Santa Claus Is Coming To Town",
+      "artist": "Jackson 5",
+      "position": 39,
+      "platform": "apple_global"
+    },
+    {
+      "title": "MR RECOUP",
+      "artist": "21 Savage",
+      "position": 40,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Cozy Little Christmas",
+      "artist": "Katy Perry",
+      "position": 41,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Manchild",
+      "artist": "Sabrina Carpenter",
+      "position": 42,
+      "platform": "apple_global"
+    },
+    {
+      "title": "30 For 30 (with Kendrick Lamar)",
+      "artist": "SZA",
+      "position": 43,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Do They Know It's Christmas? (Original 1984 Version)",
+      "artist": "Band Aid",
+      "position": 44,
+      "platform": "apple_global"
+    },
+    {
+      "title": "What I Want",
+      "artist": "Morgan Wallen",
+      "position": 45,
+      "platform": "apple_global"
+    },
+    {
+      "title": "DtMF",
+      "artist": "Bad Bunny",
+      "position": 46,
+      "platform": "apple_global"
+    },
+    {
+      "title": "back to friends",
+      "artist": "sombr",
+      "position": 47,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Not Like Us",
+      "artist": "Kendrick Lamar",
+      "position": 48,
+      "platform": "apple_global"
+    },
+    {
+      "title": "luther",
+      "artist": "Kendrick Lamar",
+      "position": 49,
+      "platform": "apple_global"
+    },
+    {
+      "title": "What Christmas Means To Me",
+      "artist": "Stevie Wonder",
+      "position": 50,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Die With A Smile",
+      "artist": "Lady Gaga",
+      "position": 51,
+      "platform": "apple_global"
+    },
+    {
+      "title": "CHANEL",
+      "artist": "Tyla",
+      "position": 52,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Little Saint Nick",
+      "artist": "The Beach Boys",
+      "position": 53,
+      "platform": "apple_global"
+    },
+    {
+      "title": "You Make It Feel Like Christmas (feat. Blake Shelton)",
+      "artist": "Gwen Stefani",
+      "position": 54,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Frosty the Snowman (with The Cass County Boys) [78rpm Version]",
+      "artist": "Gene Autry",
+      "position": 55,
+      "platform": "apple_global"
+    },
+    {
+      "title": "That’s So True",
+      "artist": "Gracie Abrams",
+      "position": 56,
+      "platform": "apple_global"
+    },
+    {
+      "title": "BAILE INoLVIDABLE",
+      "artist": "Bad Bunny",
+      "position": 57,
+      "platform": "apple_global"
+    },
+    {
+      "title": "4 Raws",
+      "artist": "EsDeeKid",
+      "position": 58,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Someday At Christmas",
+      "artist": "Stevie Wonder",
+      "position": 59,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Snooze",
+      "artist": "SZA",
+      "position": 60,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Please Come Home for Christmas",
+      "artist": "Eagles",
+      "position": 61,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Freestyle",
+      "artist": "Lil Baby",
+      "position": 62,
+      "platform": "apple_global"
+    },
+    {
+      "title": "I'm The Problem",
+      "artist": "Morgan Wallen",
+      "position": 63,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Zoo",
+      "artist": "Shakira",
+      "position": 64,
+      "platform": "apple_global"
+    },
+    {
+      "title": "One More Sleep",
+      "artist": "Leona Lewis",
+      "position": 65,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Lilac",
+      "artist": "Mrs. GREEN APPLE",
+      "position": 66,
+      "platform": "apple_global"
+    },
+    {
+      "title": "APT.",
+      "artist": "ROSÉ",
+      "position": 67,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Burning Blue",
+      "artist": "Mariah the Scientist",
+      "position": 68,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Soda Pop",
+      "artist": "Saja Boys",
+      "position": 69,
+      "platform": "apple_global"
+    },
+    {
+      "title": "I Saw Mommy Kissing Santa Claus",
+      "artist": "Jackson 5",
+      "position": 70,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Blue Christmas",
+      "artist": "Elvis Presley",
+      "position": 71,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Baby, It's Cold Outside (feat. Kelly Clarkson)",
+      "artist": "John Legend",
+      "position": 72,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Tití Me Preguntó",
+      "artist": "Bad Bunny",
+      "position": 73,
+      "platform": "apple_global"
+    },
+    {
+      "title": "All I Want For Christmas Is You",
+      "artist": "Kelly Clarkson",
+      "position": 74,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Beautiful Things",
+      "artist": "Benson Boone",
+      "position": 75,
+      "platform": "apple_global"
+    },
+    {
+      "title": "WHERE IS MY HUSBAND!",
+      "artist": "RAYE",
+      "position": 76,
+      "platform": "apple_global"
+    },
+    {
+      "title": "WILDFLOWER",
+      "artist": "Billie Eilish",
+      "position": 77,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Just In Case",
+      "artist": "Morgan Wallen",
+      "position": 78,
+      "platform": "apple_global"
+    },
+    {
+      "title": "BIRDS OF A FEATHER",
+      "artist": "Billie Eilish",
+      "position": 79,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Under The Mistletoe",
+      "artist": "Kelly Clarkson",
+      "position": 80,
+      "platform": "apple_global"
+    },
+    {
+      "title": "WAIT FOR U (feat. Drake & Tems)",
+      "artist": "Future",
+      "position": 81,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Deck the Hall",
+      "artist": "Nat \"King\" Cole",
+      "position": 82,
+      "platform": "apple_global"
+    },
+    {
+      "title": "In A Minute",
+      "artist": "Lil Baby",
+      "position": 83,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Mary, Did You Know?",
+      "artist": "Pentatonix",
+      "position": 84,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Holly Jolly Christmas",
+      "artist": "Michael Bublé",
+      "position": 85,
+      "platform": "apple_global"
+    },
+    {
+      "title": "I Had Some Help (feat. Morgan Wallen)",
+      "artist": "Post Malone",
+      "position": 86,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Tears",
+      "artist": "Sabrina Carpenter",
+      "position": 87,
+      "platform": "apple_global"
+    },
+    {
+      "title": "wgft (feat. Burna Boy)",
+      "artist": "Gunna",
+      "position": 88,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Espresso",
+      "artist": "Sabrina Carpenter",
+      "position": 89,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Have Yourself A Merry Little Christmas",
+      "artist": "Judy Garland",
+      "position": 90,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Mele Kalikimaka (Merry Christmas)",
+      "artist": "Bing Crosby",
+      "position": 91,
+      "platform": "apple_global"
+    },
+    {
+      "title": "A Couple Minutes",
+      "artist": "Olivia Dean",
+      "position": 92,
+      "platform": "apple_global"
+    },
+    {
+      "title": "I Got Better",
+      "artist": "Morgan Wallen",
+      "position": 93,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Heroine",
+      "artist": "back number",
+      "position": 94,
+      "platform": "apple_global"
+    },
+    {
+      "title": "ocean eyes",
+      "artist": "Billie Eilish",
+      "position": 95,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Winter Wonderland",
+      "artist": "Aretha Franklin",
+      "position": 96,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Christmas Song",
+      "artist": "back number",
+      "position": 97,
+      "platform": "apple_global"
+    },
+    {
+      "title": "Santa Claus Is Comin' to Town (Live at C.W. Post College, Greenvale, NY - December 1975)",
+      "artist": "Bruce Springsteen",
+      "position": 98,
+      "platform": "apple_global"
+    },
+    {
+      "title": "DAISIES",
+      "artist": "Justin Bieber",
+      "position": 99,
+      "platform": "apple_global"
+    },
+    {
+      "title": "NON STOP",
+      "artist": "HANA",
+      "position": 100,
+      "platform": "apple_global"
+    }
+  ]
+}

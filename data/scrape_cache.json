@@ -1,452 +1,452 @@
 {
   "billboard": [
     {
-      "title": "Sahiba",
-      "artist": "Aditya Rikhari",
+      "title": "Ishq Jalakar: Karvaan",
+      "artist": "Shashwat Sachdev",
       "position": 1,
+      "platform": "billboard"
+    },
+    {
+      "title": "Dhurandhar: Title Track",
+      "artist": "Hanumankind",
+      "position": 2,
+      "platform": "billboard"
+    },
+    {
+      "title": "Gehra Hua",
+      "artist": "Arijit Singh",
+      "position": 3,
+      "platform": "billboard"
+    },
+    {
+      "title": "Shararat",
+      "artist": "Madhubanti Bagchi",
+      "position": 4,
+      "platform": "billboard"
+    },
+    {
+      "title": "FA9LA",
+      "artist": "Flipperachi",
+      "position": 5,
       "platform": "billboard"
     },
     {
       "title": "Shree Hanuman Chalisa",
       "artist": "Hariharan",
-      "position": 2,
+      "position": 6,
+      "platform": "billboard"
+    },
+    {
+      "title": "Sahiba",
+      "artist": "Aditya Rikhari",
+      "position": 7,
       "platform": "billboard"
     },
     {
       "title": "Saiyaara",
       "artist": "Faheem Abdullah",
-      "position": 3,
+      "position": 8,
       "platform": "billboard"
     },
     {
       "title": "Pal Pal",
       "artist": "Afusic",
-      "position": 4,
+      "position": 9,
       "platform": "billboard"
     },
     {
       "title": "Aawaara Angaara",
       "artist": "Faheem Abdullah",
-      "position": 5,
+      "position": 10,
       "platform": "billboard"
     },
     {
       "title": "For A Reason",
       "artist": "Karan Aujla",
-      "position": 6,
+      "position": 11,
       "platform": "billboard"
     },
     {
       "title": "Oorum Blood",
       "artist": "Sai Abhyankkar",
-      "position": 7,
-      "platform": "billboard"
-    },
-    {
-      "title": "Deewaniyat",
-      "artist": "Vishal Mishra",
-      "position": 8,
-      "platform": "billboard"
-    },
-    {
-      "title": "Chikiri Chikiri",
-      "artist": "Mohit Chauhan",
-      "position": 9,
-      "platform": "billboard"
-    },
-    {
-      "title": "Boyfriend",
-      "artist": "Karan Aujla",
-      "position": 10,
-      "platform": "billboard"
-    },
-    {
-      "title": "Mann Mera",
-      "artist": "Gajendra Verma",
-      "position": 11,
+      "position": 12,
       "platform": "billboard"
     },
     {
       "title": "Finding Her",
       "artist": "Kushagra",
-      "position": 12,
-      "platform": "billboard"
-    },
-    {
-      "title": "Haseen",
-      "artist": "Talwiinder",
       "position": 13,
       "platform": "billboard"
     },
     {
-      "title": "Tum Ho Toh",
-      "artist": "Vishal Mishra",
+      "title": "Mann Mera",
+      "artist": "Gajendra Verma",
       "position": 14,
       "platform": "billboard"
     },
     {
-      "title": "Ishq",
-      "artist": "Faheem Abdullah X Rauhan Malik",
+      "title": "Boyfriend",
+      "artist": "Karan Aujla",
       "position": 15,
       "platform": "billboard"
     },
     {
-      "title": "Raanjhan (From Do Patti)",
-      "artist": "Parampara Tandon",
+      "title": "Chikiri Chikiri",
+      "artist": "Mohit Chauhan",
       "position": 16,
-      "platform": "billboard"
-    },
-    {
-      "title": "Singari",
-      "artist": "Pradeep Ranganathan",
-      "position": 17,
-      "platform": "billboard"
-    },
-    {
-      "title": "Barbaad",
-      "artist": "Jubin Nautiyal",
-      "position": 18,
-      "platform": "billboard"
-    },
-    {
-      "title": "Saiyaara Reprise - Female",
-      "artist": "Shreya Ghoshal",
-      "position": 19,
-      "platform": "billboard"
-    },
-    {
-      "title": "Khayaal",
-      "artist": "Talwiinder",
-      "position": 20,
-      "platform": "billboard"
-    },
-    {
-      "title": "Naam Chale",
-      "artist": "Vikram Sarkar",
-      "position": 21,
       "platform": "billboard"
     },
     {
       "title": "Wheels On The Bus",
       "artist": "CoComelon",
+      "position": 17,
+      "platform": "billboard"
+    },
+    {
+      "title": "Deewaniyat",
+      "artist": "Vishal Mishra",
+      "position": 18,
+      "platform": "billboard"
+    },
+    {
+      "title": "Ishq",
+      "artist": "Faheem Abdullah X Rauhan Malik",
+      "position": 19,
+      "platform": "billboard"
+    },
+    {
+      "title": "Tum Ho Toh",
+      "artist": "Vishal Mishra",
+      "position": 20,
+      "platform": "billboard"
+    },
+    {
+      "title": "Haseen",
+      "artist": "Talwiinder",
+      "position": 21,
+      "platform": "billboard"
+    },
+    {
+      "title": "Raanjhan (From Do Patti)",
+      "artist": "Parampara Tandon",
       "position": 22,
       "platform": "billboard"
     },
     {
-      "title": "Sundari",
-      "artist": "Sanju Rathod",
+      "title": "Financer",
+      "artist": "Bintu Pabra",
       "position": 23,
       "platform": "billboard"
     },
     {
-      "title": "Jo Tum Mere Ho",
-      "artist": "Anuv Jain",
+      "title": "Singari",
+      "artist": "Pradeep Ranganathan",
       "position": 24,
       "platform": "billboard"
     },
     {
-      "title": "I'm Done",
-      "artist": "Maan Panu",
+      "title": "Barbaad",
+      "artist": "Jubin Nautiyal",
       "position": 25,
       "platform": "billboard"
     }
   ],
   "youtube_music": [
     {
-      "title": "Peddi Reddy",
-      "artist": "Mamatha Ramesh",
+      "title": "Jana Nayagan – Oru Pere Varalaaru Lyrical",
+      "artist": "T-Series",
       "position": 1,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Aawaara Angaara",
-      "artist": "Faheem Abdullah",
-      "position": 2,
       "platform": "youtube_music"
     },
     {
       "title": "Shararat",
       "artist": "Madhubanti Bagchi",
+      "position": 2,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Sahana Sahana Song (Telugu)",
+      "artist": "T-Series Telugu",
       "position": 3,
       "platform": "youtube_music"
     },
     {
-      "title": "Bayilone Ballipalike",
-      "artist": "Mangli",
+      "title": "Candy Shop",
+      "artist": "Tony Kakkar",
       "position": 4,
       "platform": "youtube_music"
     },
     {
-      "title": "Sasirekha",
-      "artist": "Bheems Ceciroleo",
+      "title": "Aawaara Angaara",
+      "artist": "Faheem Abdullah",
       "position": 5,
       "platform": "youtube_music"
     },
     {
-      "title": "Barota",
-      "artist": "Sidhu Moose Wala",
+      "title": "Dekhlenge Saala",
+      "artist": "Vishal Dadlani",
       "position": 6,
       "platform": "youtube_music"
     },
     {
-      "title": "Shaky",
-      "artist": "ManishSamratVEVO",
+      "title": "#VIDEO",
+      "artist": "West Bhojpuri",
       "position": 7,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Payal Ki Khanak",
+      "artist": "Kajal Hathrasi",
+      "position": 8,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "RANGBAAZ",
+      "artist": "Khesari Lal Yadav",
+      "position": 9,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Masth Malaika (Kannada)",
+      "artist": "B. Ajaneesh Loknath",
+      "position": 10,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Aadat",
+      "artist": "Yo Yo Honey Singh",
+      "position": 11,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Run Down The City - Monica",
+      "artist": "Asha Bhosle",
+      "position": 12,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Payal Ki Khanak",
+      "artist": "Kajal Hathrasi",
+      "position": 13,
       "platform": "youtube_music"
     },
     {
       "title": "Gehra Hua",
       "artist": "Arijit Singh",
-      "position": 8,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "मटन खाके बटन खोले",
-      "artist": "Moons Music Bhojpuri",
-      "position": 9,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "ও পাগলি রে",
-      "artist": "Kriti Kashyap",
-      "position": 10,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Hopeless",
-      "artist": "Amanraj Gill",
-      "position": 11,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Sarpanch",
-      "artist": "Masoom Sharma",
-      "position": 12,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Sadiya Sarkawa Raja Ji",
-      "artist": "Neelkamal Singh",
-      "position": 13,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Dhamaka",
-      "artist": "Pawan Singh",
       "position": 14,
       "platform": "youtube_music"
     },
     {
-      "title": "Tu Mo Suna Chadhei",
-      "artist": "LP Ananya",
+      "title": "Jana Nayagan – Oru Pere Varalaaru Promo",
+      "artist": "T-Series Tamil",
       "position": 15,
       "platform": "youtube_music"
     },
     {
-      "title": "Ishq Jalakar (Karvaan)",
-      "artist": "Shashwat Sachdev",
+      "title": "#Video",
+      "artist": "Trimurti Music World",
       "position": 16,
       "platform": "youtube_music"
     },
     {
-      "title": "Rehman Dakait Entry (REMIX)",
-      "artist": "DJ Dalal",
+      "title": "Theekkoluthi Video Song",
+      "artist": "Think Music India",
       "position": 17,
       "platform": "youtube_music"
     },
     {
-      "title": "God Did",
-      "artist": "Nijjar",
+      "title": "राजा रंगबाज़",
+      "artist": "Pawan Singh",
       "position": 18,
       "platform": "youtube_music"
     },
     {
-      "title": "Tuhu Roabu Rani",
-      "artist": "Khesari Lal Yadav",
+      "title": "BHA BHA BA - Azhinjattam Lyric Video",
+      "artist": "Sree Gokulam Movies",
       "position": 19,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "मुझे ले चलो ख्वाजा जी के मेले में",
+      "artist": "Khwaja Ke Deewane",
+      "position": 20,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Aaj Kehna Zaroori Hai",
+      "artist": "Romantic Rhapsodies",
+      "position": 21,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Fa9la",
+      "artist": "Rapstar AK",
+      "position": 22,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "पायल",
+      "artist": "Khesari Lal Yadav",
+      "position": 23,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Chinni Gundelo",
+      "artist": "Mervin Solomon",
+      "position": 24,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Peddi Reddy",
+      "artist": "Sound Lagare",
+      "position": 25,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Bhukhal Bhatar Ke Hiyai",
+      "artist": "Rajeev Yadav",
+      "position": 26,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Yeno Onthara Chanda",
+      "artist": "Abby V",
+      "position": 27,
+      "platform": "youtube_music"
+    },
+    {
+      "title": "Idre Nemdiyaag Irbek - Video Song",
+      "artist": "Saregama Kannada",
+      "position": 28,
       "platform": "youtube_music"
     },
     {
       "title": "Vomit On Paper",
       "artist": "Dhanda Nyoliwala",
-      "position": 20,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Chhoti Chhoti Gaiya Chhote Chhote Gwal",
-      "artist": "Devi Richa Mishra Ji",
-      "position": 21,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "The Fire",
-      "artist": "Akay Dhariwal",
-      "position": 22,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Zat Pat Pata Pat",
-      "artist": "Danny Pandit",
-      "position": 23,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Rebel Saab",
-      "artist": "Sanjith Hegde",
-      "position": 24,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Together",
-      "artist": "Nirvair Pannu",
-      "position": 25,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Sasirekha (Promo)",
-      "artist": "T-Series Telugu",
-      "position": 26,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Dil Kaat Ke",
-      "artist": "B Praak",
-      "position": 27,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Gira Gira Gingiraagirey",
-      "artist": "Ram Miriyala",
-      "position": 28,
-      "platform": "youtube_music"
-    },
-    {
-      "title": "Dusokur Kaajolere",
-      "artist": "Sabita Sharma Goswami",
       "position": 29,
       "platform": "youtube_music"
     },
     {
-      "title": "धनिया में पनिया",
-      "artist": "Pawan Singh",
+      "title": "Sasirekha",
+      "artist": "Bheems Ceciroleo",
       "position": 30,
       "platform": "youtube_music"
     }
   ],
   "gaana": [
     {
-      "title": "Saiyaara",
-      "artist": "Tanishk Bagchi",
+      "title": "FA9LA",
+      "artist": "Flipperachi",
       "position": 1,
       "platform": "gaana"
     },
     {
-      "title": "Deewaniyat (Original Motion Picture Soundtrack)",
-      "artist": "Vishal Mishra",
+      "title": "Saiyaara",
+      "artist": "Tanishk Bagchi",
       "position": 2,
+      "platform": "gaana"
+    },
+    {
+      "title": "Ishq Jalakar - Karvaan",
+      "artist": "Shashwat Sachdev",
+      "position": 3,
+      "platform": "gaana"
+    },
+    {
+      "title": "Dhurandhar - Title Track",
+      "artist": "Shashwat Sachdev",
+      "position": 4,
+      "platform": "gaana"
+    },
+    {
+      "title": "Shararat",
+      "artist": "Shashwat Sachdev",
+      "position": 5,
       "platform": "gaana"
     },
     {
       "title": "Tere Ishk Mein",
       "artist": "A. R. Rahman",
-      "position": 3,
+      "position": 6,
+      "platform": "gaana"
+    },
+    {
+      "title": "Dhurandhar - Title Track",
+      "artist": "Shashwat Sachdev",
+      "position": 7,
       "platform": "gaana"
     },
     {
       "title": "Aawaara Angaara",
       "artist": "A. R. Rahman",
-      "position": 4,
-      "platform": "gaana"
-    },
-    {
-      "title": "Barbaad",
-      "artist": "The Rish",
-      "position": 5,
-      "platform": "gaana"
-    },
-    {
-      "title": "Saiyaara Reprise - Female",
-      "artist": "Tanishk Bagchi",
-      "position": 6,
-      "platform": "gaana"
-    },
-    {
-      "title": "Aavan Jaavan",
-      "artist": "Pritam",
-      "position": 7,
-      "platform": "gaana"
-    },
-    {
-      "title": "Agar Tum Saath Ho",
-      "artist": "Alka Yagnik",
       "position": 8,
       "platform": "gaana"
     },
     {
-      "title": "Ram Ram Jai Raja Ram",
-      "artist": "Aarav Malhotra",
+      "title": "Gehra Hua",
+      "artist": "Shashwat Sachdev",
       "position": 9,
       "platform": "gaana"
     },
     {
-      "title": "Finding Her",
-      "artist": "Kushagra",
+      "title": "Deewaniyat (Original Motion Picture Soundtrack)",
+      "artist": "Vishal Mishra",
       "position": 10,
       "platform": "gaana"
     }
   ],
   "jiosaavn": [
     {
-      "title": "Hasli Keno Bol (From &quot;Projapati 2&quot;)",
-      "artist": "Prasen",
+      "title": "Khawne Gorachand Khawne Kaala (Film)",
+      "artist": "Arijit Singh",
       "position": 1,
       "platform": "jiosaavn"
     },
     {
-      "title": "Sasirekha (From &quot;Mana ShankaraVaraprasad Garu - Pandagaki Vasthunnaru&quot;)",
-      "artist": "Bheems Ceciroleo",
+      "title": "Shri Ganesha Mantra",
+      "artist": "R Sandy",
       "position": 2,
       "platform": "jiosaavn"
     },
     {
-      "title": "Ishq Jalakar - Karvaan",
-      "artist": "Irshad Kamil",
+      "title": "Seet Lehar",
+      "artist": "Filmy",
       "position": 3,
       "platform": "jiosaavn"
     },
     {
-      "title": "Kande Pohe",
-      "artist": "Sunidhi Chauhan",
+      "title": "Idre Nemdiyaag Irbek",
+      "artist": "Aniruddha Sastry",
       "position": 4,
       "platform": "jiosaavn"
     },
     {
-      "title": "Thalattu",
-      "artist": "Vidhya Sagar",
+      "title": "Ningavva Ningavva (From &quot;LANDLORD&quot;)",
+      "artist": "B Ajaneesh Loknath",
       "position": 5,
       "platform": "jiosaavn"
     },
     {
-      "title": "Naal Nachna",
-      "artist": "Reble",
+      "title": "Ondhe Maathali Helodaadare (From &quot;PYAAR&quot;)",
+      "artist": "Palani D Senapathy",
       "position": 6,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "CHANEL",
-      "artist": "Tyla",
-      "position": 7,
       "platform": "jiosaavn"
     },
     {
       "title": "KALYANI",
       "artist": "ARJN",
+      "position": 7,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Candy Shop",
+      "artist": "Tony Kakkar",
       "position": 8,
       "platform": "jiosaavn"
     },
     {
-      "title": "Jay Maa Sherawali",
-      "artist": "Sanjana Noor",
+      "title": "Oru Pere Varalaaru (From &quot;Jana Nayagan&quot;)",
+      "artist": "Anirudh Ravichander",
       "position": 9,
       "platform": "jiosaavn"
     },
@@ -457,370 +457,370 @@
       "platform": "jiosaavn"
     },
     {
-      "title": "Hopeless",
-      "artist": "Amanraj Gill",
+      "title": "Hanuman Chalisa",
+      "artist": "Anup Jalota",
       "position": 11,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Ashakya Hi Shakya Kartil Swami",
-      "artist": "Sadhana Sargam",
-      "position": 12,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Jaalakaari",
-      "artist": "Sai Abhyankkar",
-      "position": 13,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Aakh Ye Taalibaani",
-      "artist": "Manish Sonipat Aala",
-      "position": 14,
       "platform": "jiosaavn"
     },
     {
       "title": "Sundari",
       "artist": "Sanju Rathod",
-      "position": 15,
+      "position": 12,
       "platform": "jiosaavn"
     },
     {
-      "title": "Oorum Blood Unplugged",
-      "artist": "Paal Dabba",
-      "position": 16,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Seet Lehar",
-      "artist": "Filmy",
-      "position": 17,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Circle",
+      "title": "Hopeless",
       "artist": "Amanraj Gill",
-      "position": 18,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Mann Dhaavataya (I-Popstar: Vol. 1)",
-      "artist": "Radhika Bhide",
-      "position": 19,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Long Distance Love",
-      "artist": "Ankan Kumar",
-      "position": 20,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "4 Aadmi",
-      "artist": "Sumit Parta",
-      "position": 21,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Naam Chale",
-      "artist": "Vikram Sarkar",
-      "position": 22,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Boyfriend",
-      "artist": "Karan Aujla",
-      "position": 23,
+      "position": 13,
       "platform": "jiosaavn"
     },
     {
       "title": "BLACK RIDE",
       "artist": "Dhanda Nyoliwala",
-      "position": 24,
+      "position": 14,
       "platform": "jiosaavn"
     },
     {
-      "title": "Kaali Gaadi",
-      "artist": "Amit Saini Rohtakiya",
-      "position": 25,
+      "title": "Piche Tere",
+      "artist": "Kunwarr",
+      "position": 15,
       "platform": "jiosaavn"
     },
     {
-      "title": "Sri Venkateshwara Suprabhatham",
-      "artist": "M. S. Subbulakshmi",
-      "position": 26,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Psycho Saithan (From &quot;Mark&quot;) (Kannada)",
-      "artist": "Anup Bhandari",
-      "position": 27,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Saiya Sewa Kare",
-      "artist": "Pawan Singh",
-      "position": 28,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Oorum Blood",
-      "artist": "Sai Abhyankkar",
-      "position": 29,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Tension",
-      "artist": "Dhanda Nyoliwala",
-      "position": 30,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Yaari",
-      "artist": "Masoom Sharma",
-      "position": 31,
+      "title": "Mann Dhaavataya (I-Popstar: Vol. 1)",
+      "artist": "Radhika Bhide",
+      "position": 16,
       "platform": "jiosaavn"
     },
     {
       "title": "SHERIYA",
       "artist": "KDS",
-      "position": 32,
+      "position": 17,
       "platform": "jiosaavn"
     },
     {
-      "title": "Rana Kumbha (From &quot;Varanasi&quot;)",
-      "artist": "Chaitanya Prasad",
-      "position": 33,
+      "title": "Oorum Blood",
+      "artist": "Sai Abhyankkar",
+      "position": 18,
       "platform": "jiosaavn"
     },
     {
-      "title": "Kulasthree",
-      "artist": "ThirumaLi",
-      "position": 34,
+      "title": "Circle",
+      "artist": "Amanraj Gill",
+      "position": 19,
       "platform": "jiosaavn"
     },
     {
-      "title": "Naane Neenanthe (From &quot;BRAT&quot;)",
-      "artist": "Arjun Janya",
-      "position": 35,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Fortuner (Feat. Gulshan Music, Jaat Nia)",
-      "artist": "Raj Mawar",
-      "position": 36,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Dhamaka",
-      "artist": "Pawan Singh",
-      "position": 37,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Aawaara Angaara",
-      "artist": "A.R. Rahman",
-      "position": 38,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Madam Ji",
-      "artist": "Masoom Sharma",
-      "position": 39,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Premavathi (From &quot;Athi Bheekara Kaamukan&quot;)",
-      "artist": "Heykarthii",
-      "position": 40,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "For A Reason",
-      "artist": "Karan Aujla",
-      "position": 41,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Neeye Punchiri - One Side Love",
-      "artist": "Hanan Shaah",
-      "position": 42,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Legacy",
-      "artist": "Vikram Sarkar",
-      "position": 43,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Chikiri Chikiri (From &quot;Peddi&quot;) - Telugu",
-      "artist": "A.R. Rahman",
-      "position": 44,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Sitaare (From &quot;Ikkis&quot;)",
-      "artist": "Arijit Singh",
-      "position": 45,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Alohomora - The True Emperor (From &quot;The Devil&quot;)",
-      "artist": "Aniruddha Sastry",
-      "position": 46,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Idre Nemdiyaag Irbek (From &quot;The Devil&quot;)",
-      "artist": "Aniruddha Sastry",
-      "position": 47,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Zat Pat Pata Pat",
-      "artist": "Danny Pandit",
-      "position": 48,
+      "title": "Masth Malaika (From &quot;Mark&quot;) (Kannada)",
+      "artist": "Anup Bhandari",
+      "position": 20,
       "platform": "jiosaavn"
     },
     {
       "title": "Raja Ka Chora",
       "artist": "Masoom Sharma",
-      "position": 49,
+      "position": 21,
       "platform": "jiosaavn"
     },
     {
-      "title": "Gabhru!",
+      "title": "CHANEL",
+      "artist": "Tyla",
+      "position": 22,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Chikiri Chikiri (From &quot;Peddi&quot;) - Telugu",
+      "artist": "A.R. Rahman",
+      "position": 23,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Yaari",
+      "artist": "Masoom Sharma",
+      "position": 24,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "PAN INDIA",
+      "artist": "Guru Randhawa",
+      "position": 25,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "AZUL",
+      "artist": "Lavish Dhiman",
+      "position": 26,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Boyfriend",
       "artist": "Karan Aujla",
-      "position": 50,
+      "position": 27,
       "platform": "jiosaavn"
     },
     {
-      "title": "Gira Gira Gingiraagirey (From &quot;Champion&quot;)",
-      "artist": "Mickey J. Meyer",
-      "position": 51,
+      "title": "Naam Chale",
+      "artist": "Vikram Sarkar",
+      "position": 28,
       "platform": "jiosaavn"
     },
     {
-      "title": "Not Like You",
-      "artist": "Hammy Muzic",
-      "position": 52,
+      "title": "Long Distance Love",
+      "artist": "Ankan Kumar",
+      "position": 29,
       "platform": "jiosaavn"
     },
     {
-      "title": "Guns and Roses",
-      "artist": "Thaman S",
-      "position": 53,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Milab Chori Chori Ae Gori",
-      "artist": "Pankaj Matalbi Yadav",
-      "position": 54,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Maruti",
-      "artist": "Dhanda Nyoliwala",
-      "position": 55,
-      "platform": "jiosaavn"
-    },
-    {
-      "title": "Gaane Gaane (From &quot;Dhumketu&quot;)",
-      "artist": "Anupam Roy",
-      "position": 56,
+      "title": "Bangle Bangari",
+      "artist": "Charan Raj",
+      "position": 30,
       "platform": "jiosaavn"
     },
     {
       "title": "Powerhouse",
       "artist": "Anirudh Ravichander",
+      "position": 31,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Neeye Punchiri - One Side Love",
+      "artist": "Hanan Shaah",
+      "position": 32,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Maruti",
+      "artist": "Dhanda Nyoliwala",
+      "position": 33,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Aakh Ye Taalibaani",
+      "artist": "Manish Sonipat Aala",
+      "position": 34,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Vazhikatti (Kizhakku Suryan)",
+      "artist": "Fejo",
+      "position": 35,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Naane Neenanthe (From &quot;BRAT&quot;)",
+      "artist": "Arjun Janya",
+      "position": 36,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Premavathi (From &quot;Athi Bheekara Kaamukan&quot;)",
+      "artist": "Heykarthii",
+      "position": 37,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Gira Gira Gingiraagirey (From &quot;Champion&quot;)",
+      "artist": "Mickey J. Meyer",
+      "position": 38,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Sitaare (From &quot;Ikkis&quot;)",
+      "artist": "Arijit Singh",
+      "position": 39,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Oorum Blood Unplugged",
+      "artist": "Paal Dabba",
+      "position": 40,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Saiya Sewa Kare",
+      "artist": "Pawan Singh",
+      "position": 41,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Jaalakaari",
+      "artist": "Sai Abhyankkar",
+      "position": 42,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Duppattawaali (From &quot;Odum Kuthira Chaadum Kuthira&quot;)",
+      "artist": "Suhail Koya",
+      "position": 43,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Thodi Si Daaru",
+      "artist": "AP Dhillon",
+      "position": 44,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Kulasthree",
+      "artist": "ThirumaLi",
+      "position": 45,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Dhamaka",
+      "artist": "Pawan Singh",
+      "position": 46,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Tension",
+      "artist": "Dhanda Nyoliwala",
+      "position": 47,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Ji Laage Babya Mai",
+      "artist": "Raj Mawar",
+      "position": 48,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Om Namo Bhagavate Vasudevaya",
+      "artist": "Vijay Prakash",
+      "position": 49,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Thalapathy Kacheri (From &quot;Jana Nayagan&quot;)",
+      "artist": "Thalapathy Vijay",
+      "position": 50,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "For A Reason",
+      "artist": "Karan Aujla",
+      "position": 51,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Monica",
+      "artist": "Anirudh Ravichander",
+      "position": 52,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "No Fluke",
+      "artist": "Dhanda Nyoliwala",
+      "position": 53,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Gehra Hua",
+      "artist": "Irshad Kamil",
+      "position": 54,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Gaane Gaane (From &quot;Dhumketu&quot;)",
+      "artist": "Anupam Roy",
+      "position": 55,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Raja Rangbaaz",
+      "artist": "Pawan Singh",
+      "position": 56,
+      "platform": "jiosaavn"
+    },
+    {
+      "title": "Fortuner (Feat. Gulshan Music, Jaat Nia)",
+      "artist": "Raj Mawar",
       "position": 57,
       "platform": "jiosaavn"
     },
     {
-      "title": "Coolie Disco",
-      "artist": "Anirudh Ravichander",
+      "title": "Zat Pat Pata Pat",
+      "artist": "Danny Pandit",
       "position": 58,
       "platform": "jiosaavn"
     },
     {
-      "title": "Hara Hara Eshwara",
-      "artist": "Madhu Priya",
+      "title": "4 Aadmi",
+      "artist": "Sumit Parta",
       "position": 59,
       "platform": "jiosaavn"
     },
     {
-      "title": "Lagan Tumse Laga Baithe",
-      "artist": "Kavita Raam",
+      "title": "Balenci",
+      "artist": "Shubh",
       "position": 60,
       "platform": "jiosaavn"
     }
   ],
   "spotify": [
     {
-      "title": "Sahiba",
-      "artist": "Aditya Rikhari",
+      "title": "Gehra Hua",
+      "artist": "Shashwat Sachdev",
       "position": 1,
       "platform": "spotify"
     },
     {
-      "title": "FA9LA",
-      "artist": "Flipperachi",
+      "title": "Sahiba",
+      "artist": "Aditya Rikhari",
       "position": 2,
-      "platform": "spotify"
-    },
-    {
-      "title": "Haseen",
-      "artist": "Talwiinder",
-      "position": 3,
-      "platform": "spotify"
-    },
-    {
-      "title": "Finding Her",
-      "artist": "Kushagra",
-      "position": 4,
-      "platform": "spotify"
-    },
-    {
-      "title": "For A Reason",
-      "artist": "Karan Aujla",
-      "position": 5,
       "platform": "spotify"
     },
     {
       "title": "Dhurandhar - Title Track",
       "artist": "Shashwat Sachdev",
-      "position": 6,
-      "platform": "spotify"
-    },
-    {
-      "title": "Saiyaara",
-      "artist": "Tanishk Bagchi",
-      "position": 7,
+      "position": 3,
       "platform": "spotify"
     },
     {
       "title": "Ishq Jalakar - Karvaan",
       "artist": "Shashwat Sachdev",
+      "position": 4,
+      "platform": "spotify"
+    },
+    {
+      "title": "FA9LA",
+      "artist": "Flipperachi",
+      "position": 5,
+      "platform": "spotify"
+    },
+    {
+      "title": "Haseen",
+      "artist": "Talwiinder",
+      "position": 6,
+      "platform": "spotify"
+    },
+    {
+      "title": "Finding Her",
+      "artist": "Kushagra",
+      "position": 7,
+      "platform": "spotify"
+    },
+    {
+      "title": "Shararat",
+      "artist": "Shashwat Sachdev",
       "position": 8,
+      "platform": "spotify"
+    },
+    {
+      "title": "For A Reason",
+      "artist": "Karan Aujla",
+      "position": 9,
+      "platform": "spotify"
+    },
+    {
+      "title": "Saiyaara",
+      "artist": "Tanishk Bagchi",
+      "position": 10,
       "platform": "spotify"
     },
     {
       "title": "Apna Bana Le",
       "artist": "Sachin-Jigar",
-      "position": 9,
-      "platform": "spotify"
-    },
-    {
-      "title": "Ishq",
-      "artist": "Faheem Abdullah",
-      "position": 10,
-      "platform": "spotify"
-    },
-    {
-      "title": "Gehra Hua",
-      "artist": "Shashwat Sachdev",
       "position": 11,
       "platform": "spotify"
     },
@@ -831,44 +831,44 @@
       "platform": "spotify"
     },
     {
-      "title": "Aawaara Angaara",
-      "artist": "A.R. Rahman",
+      "title": "Ishq",
+      "artist": "Faheem Abdullah",
       "position": 13,
       "platform": "spotify"
     },
     {
-      "title": "Khayaal",
-      "artist": "Talwiinder",
+      "title": "Dooron Dooron",
+      "artist": "Paresh Pahuja",
       "position": 14,
-      "platform": "spotify"
-    },
-    {
-      "title": "Tere Bina",
-      "artist": "A.R. Rahman",
-      "position": 15,
-      "platform": "spotify"
-    },
-    {
-      "title": "Mann Mera",
-      "artist": "Gajendra Verma",
-      "position": 16,
-      "platform": "spotify"
-    },
-    {
-      "title": "Jo Tum Mere Ho",
-      "artist": "Anuv Jain",
-      "position": 17,
       "platform": "spotify"
     },
     {
       "title": "Boyfriend",
       "artist": "Karan Aujla",
-      "position": 18,
+      "position": 15,
       "platform": "spotify"
     },
     {
       "title": "Raanjhan",
       "artist": "Sachet-Parampara",
+      "position": 16,
+      "platform": "spotify"
+    },
+    {
+      "title": "Mann Mera",
+      "artist": "Gajendra Verma",
+      "position": 17,
+      "platform": "spotify"
+    },
+    {
+      "title": "Tere Bina",
+      "artist": "A.R. Rahman",
+      "position": 18,
+      "platform": "spotify"
+    },
+    {
+      "title": "Sitaare",
+      "artist": "Arijit Singh",
       "position": 19,
       "platform": "spotify"
     },
@@ -879,26 +879,26 @@
       "platform": "spotify"
     },
     {
-      "title": "Dooron Dooron",
-      "artist": "Paresh Pahuja",
+      "title": "Jo Tum Mere Ho",
+      "artist": "Anuv Jain",
       "position": 21,
+      "platform": "spotify"
+    },
+    {
+      "title": "Khayaal",
+      "artist": "Talwiinder",
+      "position": 22,
+      "platform": "spotify"
+    },
+    {
+      "title": "bargad",
+      "artist": "sufr",
+      "position": 23,
       "platform": "spotify"
     },
     {
       "title": "Agar Tum Saath Ho",
       "artist": "Alka Yagnik",
-      "position": 22,
-      "platform": "spotify"
-    },
-    {
-      "title": "Oorum Blood",
-      "artist": "Sai Abhyankkar",
-      "position": 23,
-      "platform": "spotify"
-    },
-    {
-      "title": "Humdard",
-      "artist": "Arijit Singh",
       "position": 24,
       "platform": "spotify"
     },
@@ -909,20 +909,20 @@
       "platform": "spotify"
     },
     {
-      "title": "Ye Tune Kya Kiya",
-      "artist": "Pritam",
+      "title": "Zaalima",
+      "artist": "Arijit Singh",
       "position": 26,
       "platform": "spotify"
     },
     {
-      "title": "bargad",
-      "artist": "sufr",
+      "title": "Ye Tune Kya Kiya",
+      "artist": "Pritam",
       "position": 27,
       "platform": "spotify"
     },
     {
-      "title": "Samjho Na",
-      "artist": "Aditya Rikhari",
+      "title": "Aawaara Angaara",
+      "artist": "A.R. Rahman",
       "position": 28,
       "platform": "spotify"
     },
@@ -933,148 +933,148 @@
       "platform": "spotify"
     },
     {
-      "title": "I’m Done. - I-Popstar: Vol. 1",
-      "artist": "Maan Panu",
+      "title": "Oorum Blood",
+      "artist": "Sai Abhyankkar",
       "position": 30,
       "platform": "spotify"
     }
   ],
   "apple_music": [
     {
-      "title": "FA9LA",
-      "artist": "Flipperachi",
+      "title": "Dhurandhar - Title Track",
+      "artist": "Shashwat Sachdev",
       "position": 1,
       "platform": "apple_music"
     },
     {
-      "title": "Dhurandhar - Title Track",
+      "title": "Ishq Jalakar - Karvaan",
       "artist": "Shashwat Sachdev",
       "position": 2,
       "platform": "apple_music"
     },
     {
-      "title": "For A Reason",
-      "artist": "Karan Aujla",
+      "title": "Lutt Le Gaya",
+      "artist": "Shashwat Sachdev",
       "position": 3,
       "platform": "apple_music"
     },
     {
-      "title": "Boyfriend",
-      "artist": "Karan Aujla",
+      "title": "Gehra Hua",
+      "artist": "Shashwat Sachdev",
       "position": 4,
       "platform": "apple_music"
     },
     {
-      "title": "Ishq Jalakar - Karvaan",
+      "title": "Shararat",
       "artist": "Shashwat Sachdev",
       "position": 5,
       "platform": "apple_music"
     },
     {
-      "title": "Ishq Jalakar - Karvaan",
+      "title": "Run Down The City - Monica",
       "artist": "Shashwat Sachdev",
       "position": 6,
       "platform": "apple_music"
     },
     {
-      "title": "I Really Do...",
-      "artist": "Karan Aujla",
+      "title": "Naal Nachna",
+      "artist": "Shashwat Sachdev",
       "position": 7,
       "platform": "apple_music"
     },
     {
-      "title": "Sahiba",
-      "artist": "Aditya Rikhari",
+      "title": "FA9LA",
+      "artist": "Flipperachi",
       "position": 8,
       "platform": "apple_music"
     },
     {
-      "title": "Antidote",
+      "title": "For A Reason",
       "artist": "Karan Aujla",
       "position": 9,
       "platform": "apple_music"
     },
     {
-      "title": "Dhurandhar - Title Track",
+      "title": "Ez-Ez",
       "artist": "Shashwat Sachdev",
       "position": 10,
       "platform": "apple_music"
     },
     {
-      "title": "Saiyaara",
-      "artist": "Tanishk Bagchi",
+      "title": "Boyfriend",
+      "artist": "Karan Aujla",
       "position": 11,
       "platform": "apple_music"
     },
     {
-      "title": "Daytona",
-      "artist": "Karan Aujla",
+      "title": "Ramba Ho",
+      "artist": "Shashwat Sachdev",
       "position": 12,
       "platform": "apple_music"
     },
     {
-      "title": "Wavy",
-      "artist": "Karan Aujla",
+      "title": "Move - Yeh Ishq Ishq",
+      "artist": "Shashwat Sachdev",
       "position": 13,
       "platform": "apple_music"
     },
     {
-      "title": "MF Gabhru!",
-      "artist": "Karan Aujla",
+      "title": "Gehra Hua",
+      "artist": "Shashwat Sachdev",
       "position": 14,
       "platform": "apple_music"
     },
     {
-      "title": "Gehra Hua",
+      "title": "Teri Ni Kararan",
       "artist": "Shashwat Sachdev",
       "position": 15,
       "platform": "apple_music"
     },
     {
-      "title": "At Peace",
+      "title": "I Really Do...",
       "artist": "Karan Aujla",
       "position": 16,
       "platform": "apple_music"
     },
     {
-      "title": "Haseen",
-      "artist": "Talwiinder",
+      "title": "Antidote",
+      "artist": "Karan Aujla",
       "position": 17,
       "platform": "apple_music"
     },
     {
-      "title": "Oorum Blood",
-      "artist": "Sai Abhyankkar",
+      "title": "Sahiba",
+      "artist": "Aditya Rikhari",
       "position": 18,
       "platform": "apple_music"
     },
     {
-      "title": "Barbaad",
-      "artist": "The Rish",
+      "title": "At Peace",
+      "artist": "Karan Aujla",
       "position": 19,
       "platform": "apple_music"
     },
     {
-      "title": "bargad",
-      "artist": "sufr",
+      "title": "Ishq Jalakar - Karvaan",
+      "artist": "Shashwat Sachdev",
       "position": 20,
       "platform": "apple_music"
     },
     {
-      "title": "Apna Bana Le",
-      "artist": "Arijit Singh",
+      "title": "Saiyaara",
+      "artist": "Tanishk Bagchi",
       "position": 21,
       "platform": "apple_music"
     },
     {
-      "title": "Gehra Hua",
-      "artist": "Shashwat Sachdev",
+      "title": "Wavy",
+      "artist": "Karan Aujla",
       "position": 22,
       "platform": "apple_music"
     },
     {
-      "title": "Run Down The City - Monica",
-      "artist": "Shashwat Sachdev",
+      "title": "Daytona",
+      "artist": "Karan Aujla",
       "position": 23,
       "platform": "apple_music"
     },
@@ -1091,152 +1091,152 @@
       "platform": "apple_music"
     },
     {
-      "title": "Tum Ho Toh",
-      "artist": "Vishal Mishra",
+      "title": "Barbaad",
+      "artist": "The Rish",
       "position": 26,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Apna Bana Le",
+      "artist": "Arijit Singh",
+      "position": 27,
+      "platform": "apple_music"
+    },
+    {
+      "title": "By My Side",
+      "artist": "AP Dhillon",
+      "position": 28,
+      "platform": "apple_music"
+    },
+    {
+      "title": "MF Gabhru!",
+      "artist": "Karan Aujla",
+      "position": 29,
       "platform": "apple_music"
     },
     {
       "title": "Courtside",
       "artist": "Karan Aujla",
-      "position": 27,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Shree Hanuman Chalisa",
-      "artist": "Hariharan",
-      "position": 28,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Barota",
-      "artist": "Sidhu Moose Wala",
-      "position": 29,
-      "platform": "apple_music"
-    },
-    {
-      "title": "52 Bars",
-      "artist": "Karan Aujla",
       "position": 30,
       "platform": "apple_music"
     },
     {
-      "title": "Move - Yeh Ishq Ishq",
-      "artist": "Shashwat Sachdev",
+      "title": "bargad",
+      "artist": "sufr",
       "position": 31,
       "platform": "apple_music"
     },
     {
-      "title": "Winning Speech",
-      "artist": "Karan Aujla",
+      "title": "Haseen",
+      "artist": "Talwiinder",
       "position": 32,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Oorum Blood",
+      "artist": "Sai Abhyankkar",
+      "position": 33,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Tum Ho Toh",
+      "artist": "Vishal Mishra",
+      "position": 34,
       "platform": "apple_music"
     },
     {
       "title": "High On You",
       "artist": "Jind Universe",
-      "position": 33,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Lutt Le Gaya",
-      "artist": "Shashwat Sachdev",
-      "position": 34,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Ez-Ez",
-      "artist": "Shashwat Sachdev",
       "position": 35,
-      "platform": "apple_music"
-    },
-    {
-      "title": "HIM.",
-      "artist": "Karan Aujla",
-      "position": 36,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Teri Ni Kararan",
-      "artist": "Shashwat Sachdev",
-      "position": 37,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Hawayein",
-      "artist": "Pritam",
-      "position": 38,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Tujhe Kitna Chahne Lage",
-      "artist": "Arijit Singh",
-      "position": 39,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Lover",
-      "artist": "Diljit Dosanjh",
-      "position": 40,
       "platform": "apple_music"
     },
     {
       "title": "Dooron Dooron",
       "artist": "Paresh Pahuja",
+      "position": 36,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Winning Speech",
+      "artist": "Karan Aujla",
+      "position": 37,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Shree Hanuman Chalisa",
+      "artist": "Hariharan",
+      "position": 38,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Lover",
+      "artist": "Diljit Dosanjh",
+      "position": 39,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Hawayein",
+      "artist": "Pritam",
+      "position": 40,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Tujhe Kitna Chahne Lage",
+      "artist": "Arijit Singh",
       "position": 41,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Naal Nachna",
-      "artist": "Shashwat Sachdev",
-      "position": 42,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Shararat",
-      "artist": "Shashwat Sachdev",
-      "position": 43,
       "platform": "apple_music"
     },
     {
       "title": "Tere Liye",
       "artist": "Atif Aslam",
+      "position": 42,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Dil Nu",
+      "artist": "AP Dhillon",
+      "position": 43,
+      "platform": "apple_music"
+    },
+    {
+      "title": "HIM.",
+      "artist": "Karan Aujla",
       "position": 44,
       "platform": "apple_music"
     },
     {
-      "title": "CHANEL",
-      "artist": "Tyla",
+      "title": "Thodi Si Daaru",
+      "artist": "AP Dhillon",
       "position": 45,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Wo Noor",
+      "artist": "AP Dhillon",
+      "position": 46,
       "platform": "apple_music"
     },
     {
       "title": "Khuda Jaane",
       "artist": "Vishal",
-      "position": 46,
-      "platform": "apple_music"
-    },
-    {
-      "title": "Ramba Ho",
-      "artist": "Shashwat Sachdev",
       "position": 47,
       "platform": "apple_music"
     },
     {
-      "title": "Financer",
-      "artist": "Bintu Pabra",
+      "title": "Hopeless",
+      "artist": "Amanraj Gill",
       "position": 48,
+      "platform": "apple_music"
+    },
+    {
+      "title": "Dooriyan",
+      "artist": "Pritam",
+      "position": 49,
       "platform": "apple_music"
     },
     {
       "title": "Gal Sun",
       "artist": "Sabat Batin",
-      "position": 49,
-      "platform": "apple_music"
-    },
-    {
-      "title": "The Fate of Ophelia",
-      "artist": "Taylor Swi",
       "position": 50,
       "platform": "apple_music"
     }
@@ -1244,146 +1244,146 @@
   "shazam": [],
   "spotify_viral": [
     {
+      "title": "FA9LA",
+      "artist": "Flipperachi",
+      "position": 1,
+      "platform": "spotify_viral"
+    },
+    {
       "title": "Sahiba",
       "artist": "Aditya Rikhari",
-      "position": 1,
+      "position": 2,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Dhurandhar - Title Track",
+      "artist": "Shashwat Sachdev",
+      "position": 3,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Ishq Jalakar - Karvaan",
+      "artist": "Shashwat Sachdev",
+      "position": 4,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Gehra Hua",
+      "artist": "Shashwat Sachdev",
+      "position": 5,
       "platform": "spotify_viral"
     },
     {
       "title": "Haseen",
       "artist": "Talwiinder",
-      "position": 2,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "For A Reason",
-      "artist": "Karan Aujla",
-      "position": 3,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Saiyaara",
-      "artist": "Tanishk Bagchi",
-      "position": 4,
+      "position": 6,
       "platform": "spotify_viral"
     },
     {
       "title": "Finding Her",
       "artist": "Kushagra",
-      "position": 5,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Tere Ishk Mein",
-      "artist": "A.R. Rahman",
-      "position": 6,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Khayaal",
-      "artist": "Talwiinder",
       "position": 7,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "For A Reason",
+      "artist": "Karan Aujla",
+      "position": 8,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Saiyaara",
+      "artist": "Tanishk Bagchi",
+      "position": 9,
       "platform": "spotify_viral"
     },
     {
       "title": "Apna Bana Le",
       "artist": "Sachin-Jigar",
-      "position": 8,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Boyfriend",
-      "artist": "Karan Aujla",
-      "position": 9,
+      "position": 10,
       "platform": "spotify_viral"
     },
     {
       "title": "Ishq",
       "artist": "Faheem Abdullah",
-      "position": 10,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Aawaara Angaara",
-      "artist": "A.R. Rahman",
       "position": 11,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Mann Mera",
-      "artist": "Gajendra Verma",
-      "position": 12,
       "platform": "spotify_viral"
     },
     {
       "title": "Tere Liye",
       "artist": "Atif Aslam",
+      "position": 12,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Boyfriend",
+      "artist": "Karan Aujla",
       "position": 13,
       "platform": "spotify_viral"
     },
     {
-      "title": "Jo Tum Mere Ho",
-      "artist": "Anuv Jain",
+      "title": "Shararat",
+      "artist": "Shashwat Sachdev",
       "position": 14,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Oorum Blood",
-      "artist": "Sai Abhyankkar",
-      "position": 15,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Arz Kiya Hai",
-      "artist": "Anuv Jain",
-      "position": 16,
       "platform": "spotify_viral"
     },
     {
       "title": "Raanjhan",
       "artist": "Sachet-Parampara",
-      "position": 17,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Dooron Dooron",
-      "artist": "Paresh Pahuja",
-      "position": 18,
+      "position": 15,
       "platform": "spotify_viral"
     },
     {
       "title": "Tere Bina",
       "artist": "A.R. Rahman",
+      "position": 16,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Dooron Dooron",
+      "artist": "Paresh Pahuja",
+      "position": 17,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Jo Tum Mere Ho",
+      "artist": "Anuv Jain",
+      "position": 18,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Mann Mera",
+      "artist": "Gajendra Verma",
       "position": 19,
       "platform": "spotify_viral"
     },
     {
-      "title": "I’m Done. - I-Popstar: Vol. 1",
-      "artist": "Maan Panu",
+      "title": "Khayaal",
+      "artist": "Talwiinder",
       "position": 20,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Arz Kiya Hai",
+      "artist": "Anuv Jain",
+      "position": 21,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Aawaara Angaara",
+      "artist": "A.R. Rahman",
+      "position": 22,
       "platform": "spotify_viral"
     },
     {
       "title": "Agar Tum Saath Ho",
       "artist": "Alka Yagnik",
-      "position": 21,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Barota",
-      "artist": "Sidhu Moose Wala",
-      "position": 22,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Kashish",
-      "artist": "Ashish Bhatia",
       "position": 23,
       "platform": "spotify_viral"
     },
     {
-      "title": "Humdard",
-      "artist": "Arijit Singh",
+      "title": "Oorum Blood",
+      "artist": "Sai Abhyankkar",
       "position": 24,
       "platform": "spotify_viral"
     },
@@ -1394,2256 +1394,1119 @@
       "platform": "spotify_viral"
     },
     {
-      "title": "Tum Ho Toh",
-      "artist": "Vishal Mishra",
+      "title": "bargad",
+      "artist": "sufr",
       "position": 26,
       "platform": "spotify_viral"
     },
     {
-      "title": "Ehsaas",
-      "artist": "Faheem Abdullah",
+      "title": "Humdard",
+      "artist": "Arijit Singh",
       "position": 27,
+      "platform": "spotify_viral"
+    },
+    {
+      "title": "Mast Magan (From \"2 States)",
+      "artist": "Arijit Singh",
+      "position": 28,
       "platform": "spotify_viral"
     },
     {
       "title": "Ye Tune Kya Kiya",
       "artist": "Pritam",
-      "position": 28,
-      "platform": "spotify_viral"
-    },
-    {
-      "title": "Paro",
-      "artist": "Aditya Rikhari",
       "position": 29,
       "platform": "spotify_viral"
     },
     {
-      "title": "Barbaad",
-      "artist": "The Rish",
+      "title": "Sitaare",
+      "artist": "Arijit Singh",
       "position": 30,
       "platform": "spotify_viral"
     }
   ],
   "tamil": [
     {
-      "title": "Anbe En Anbe",
-      "artist": "Na.Muthukumar",
+      "title": "Monica (Tamil)",
+      "artist": "Anirudh Ravichander",
       "position": 1,
       "platform": "tamil"
     },
     {
-      "title": "Munbe Vaa",
-      "artist": "Naresh Iyer",
+      "title": "Thalapathy Kacheri",
+      "artist": "Anirudh Ravichander",
       "position": 2,
       "platform": "tamil"
     },
     {
-      "title": "Chinnama Chilakamma",
-      "artist": "A.R. Rahman",
+      "title": "Oorum Blood",
+      "artist": "Sai Abhyankkar",
       "position": 3,
       "platform": "tamil"
     },
     {
-      "title": "Vaarayo Vaarayo",
-      "artist": "Harris Jayaraj",
+      "title": "Powerhouse (Tamil)",
+      "artist": "Anirudh Ravichander",
       "position": 4,
       "platform": "tamil"
     },
     {
-      "title": "Engeyo Paartha",
-      "artist": "Yuvan Shankar Raja",
+      "title": "Kanimaa",
+      "artist": "Santhosh Narayanan",
       "position": 5,
       "platform": "tamil"
     },
     {
-      "title": "Annul Maelae",
-      "artist": "Harris Jayaraj",
+      "title": "Jinguchaa (Tamil)",
+      "artist": "A.R. Rahman",
       "position": 6,
       "platform": "tamil"
     },
     {
-      "title": "Aaruyire",
-      "artist": "A.R. Rahman",
+      "title": "Pottala Muttaye",
+      "artist": "Santhosh Narayanan",
       "position": 7,
       "platform": "tamil"
     },
     {
-      "title": "Thaen Thaen Thaen",
-      "artist": "Yugabharathi",
+      "title": "Vazhithunaiye",
+      "artist": "Leon James",
       "position": 8,
       "platform": "tamil"
     },
     {
-      "title": "Vizhi Moodi",
-      "artist": "Karthik",
+      "title": "Thangapoovey",
+      "artist": "Anirudh Ravichander",
       "position": 9,
       "platform": "tamil"
     },
     {
-      "title": "Vaseegara",
-      "artist": "Bombay Jayashri",
+      "title": "Mobsta",
+      "artist": "Anirudh Ravichander",
       "position": 10,
       "platform": "tamil"
     },
     {
-      "title": "Valayapatti",
-      "artist": "Naresh Iyer",
+      "title": "Chikitu (Tamil)",
+      "artist": "Anirudh Ravichander",
       "position": 11,
       "platform": "tamil"
     },
     {
-      "title": "Marudaani",
-      "artist": "A.R. Rahman",
+      "title": "Golden Sparrow",
+      "artist": "G. V. Prakash",
       "position": 12,
       "platform": "tamil"
     },
     {
-      "title": "Uyirin Uyire",
-      "artist": "Harris Jayaraj",
+      "title": "Sawadeeka",
+      "artist": "Anirudh Ravichander",
       "position": 13,
       "platform": "tamil"
     },
     {
-      "title": "Daddy Mummy",
-      "artist": "Naveen Madhav",
+      "title": "Salambala (Tamil)",
+      "artist": "Anirudh Ravichander",
       "position": 14,
       "platform": "tamil"
     },
     {
-      "title": "New York Nagaram",
-      "artist": "A.R. Rahman",
+      "title": "Og Sambavam",
+      "artist": "G. V. Prakash",
       "position": 15,
       "platform": "tamil"
     },
     {
-      "title": "Kangal Irandal",
-      "artist": "James Vasanthan",
+      "title": "Yedi",
+      "artist": "G. V. Prakash",
       "position": 16,
       "platform": "tamil"
     },
     {
-      "title": "Adiyae Kolluthey",
-      "artist": "Shruti Haasan",
+      "title": "Kannadi Poove",
+      "artist": "Santhosh Narayanan",
       "position": 17,
       "platform": "tamil"
     },
     {
-      "title": "Ale Ale",
+      "title": "Muththa Mazhai (Reprise)",
       "artist": "A.R. Rahman",
       "position": 18,
       "platform": "tamil"
     },
     {
-      "title": "Kadhal Sadugudu",
+      "title": "Nee Singam Dhan",
       "artist": "A.R. Rahman",
       "position": 19,
       "platform": "tamil"
     },
     {
-      "title": "Naakka Mukka (Male)",
-      "artist": "Vijay Antony",
+      "title": "Vennilavu Saaral",
+      "artist": "G. V. Prakash",
       "position": 20,
       "platform": "tamil"
     },
     {
-      "title": "Siragugal",
-      "artist": "Javed Ali",
+      "title": "Hey Minnale (Tamil)",
+      "artist": "G. V. Prakash",
       "position": 21,
       "platform": "tamil"
     },
     {
-      "title": "Enna Nenatche",
-      "artist": "Anuradha Sriram",
+      "title": "Aasa Kooda",
+      "artist": "Sai Abhyankkar",
       "position": 22,
       "platform": "tamil"
     },
     {
-      "title": "Akkam Pakkam",
-      "artist": "Sadhana Sargam",
+      "title": "Rise Of Dragon",
+      "artist": "Leon James",
       "position": 23,
       "platform": "tamil"
     },
     {
-      "title": "Mudher Kanave",
-      "artist": "Bombay Jayashri",
+      "title": "Sithira Puthiri",
+      "artist": "Sai Abhyankkar",
       "position": 24,
       "platform": "tamil"
     },
     {
-      "title": "Machaan Machaan",
-      "artist": "Yuvan Shankar Raja",
+      "title": "Paiya Dei",
+      "artist": "Asal Kolaar",
       "position": 25,
       "platform": "tamil"
     },
     {
-      "title": "Yaaro Manathile",
-      "artist": "Harris Jayaraj",
+      "title": "Manasilaayo",
+      "artist": "Anirudh Ravichander",
       "position": 26,
       "platform": "tamil"
     },
     {
-      "title": "Venmegam",
-      "artist": "Yuvan Shankar Raja",
+      "title": "Chillanjirukkiye",
+      "artist": "Sean Roldan",
       "position": 27,
       "platform": "tamil"
     },
     {
-      "title": "Soniya Soniya",
-      "artist": "Ratchakan",
-      "position": 28,
-      "platform": "tamil"
-    },
-    {
-      "title": "Enna Solla Pogirai",
-      "artist": "Shankar Mahadevan",
-      "position": 29,
-      "platform": "tamil"
-    },
-    {
-      "title": "Adada Adada",
-      "artist": "Siddharth",
-      "position": 30,
-      "platform": "tamil"
-    },
-    {
-      "title": "Kathala Kannala",
-      "artist": "Sundar C. Babu",
-      "position": 31,
-      "platform": "tamil"
-    },
-    {
-      "title": "Snehidhane",
+      "title": "Water Packet",
       "artist": "A.R. Rahman",
-      "position": 32,
-      "platform": "tamil"
-    },
-    {
-      "title": "Mundhinam",
-      "artist": "Prashanthini",
-      "position": 33,
-      "platform": "tamil"
-    },
-    {
-      "title": "June Ponal",
-      "artist": "Krish",
-      "position": 34,
-      "platform": "tamil"
-    },
-    {
-      "title": "Hasili Fisiliye",
-      "artist": "Harris Jayaraj",
-      "position": 35,
-      "platform": "tamil"
-    },
-    {
-      "title": "Dheemthanakka Thillana",
-      "artist": "Devi Sri Prasad",
-      "position": 36,
-      "platform": "tamil"
-    },
-    {
-      "title": "Manmatha Raasa",
-      "artist": "Shankar Mahadevan",
-      "position": 37,
-      "platform": "tamil"
-    },
-    {
-      "title": "Loosu Pennae",
-      "artist": "Yuvan Shankar Raja",
-      "position": 38,
-      "platform": "tamil"
-    },
-    {
-      "title": "Ondra Renda",
-      "artist": "Harris Jayaraj",
-      "position": 39,
-      "platform": "tamil"
-    },
-    {
-      "title": "Mellinamae",
-      "artist": "Mani Sharma",
-      "position": 40,
+      "position": 28,
       "platform": "tamil"
     }
   ],
   "telugu": [
     {
-      "title": "Confess Your Love",
-      "artist": "Jiandro",
+      "title": "Sasirekha",
+      "artist": "Bheems Ceciroleo",
       "position": 1,
       "platform": "telugu"
     },
     {
-      "title": "Head Shot / Gas In The Truck",
-      "artist": "IShowSpeed",
+      "title": "Sahana Sahana [TELUGU]",
+      "artist": "Thaman S",
       "position": 2,
       "platform": "telugu"
     },
     {
-      "title": "ACELERADA",
-      "artist": "sma$her",
+      "title": "Chikiri Chikiri [TELUGU]",
+      "artist": "A.R. Rahman",
       "position": 3,
       "platform": "telugu"
     },
     {
-      "title": "Golden",
-      "artist": "HUNTR/X",
+      "title": "Rebel Saab [TELUGU]",
+      "artist": "Thaman S",
       "position": 4,
       "platform": "telugu"
     },
     {
-      "title": "NO ERA AMOR - Slowed",
-      "artist": "DJ Asul",
+      "title": "Gira Gira Gingiraagirey",
+      "artist": "Mickey J. Meyer",
       "position": 5,
       "platform": "telugu"
     },
     {
-      "title": "BIRDS OF A FEATHER",
-      "artist": "Billie Eilish",
+      "title": "Meesaala Pilla",
+      "artist": "Bheems Ceciroleo",
       "position": 6,
       "platform": "telugu"
     },
     {
-      "title": "Making Love to Morgan Wallen",
-      "artist": "Limp Bizkit",
+      "title": "Choodu Choodu (Side B)",
+      "artist": "Naga Vamshi",
       "position": 7,
       "platform": "telugu"
     },
     {
-      "title": "Around the World",
-      "artist": "Da",
+      "title": "Chinni Gundelo",
+      "artist": "Vivek - Mervin",
       "position": 8,
       "platform": "telugu"
     },
     {
-      "title": "Feel the Way I Do",
-      "artist": "Primer",
+      "title": "I Am A Champion",
+      "artist": "Mickey J. Meyer",
       "position": 9,
       "platform": "telugu"
     },
     {
-      "title": "Sacrifice",
-      "artist": "League of Legends",
+      "title": "Addham Mundhu",
+      "artist": "Bheems Ceciroleo",
       "position": 10,
       "platform": "telugu"
     },
     {
-      "title": "Devil in Disguise",
-      "artist": "Marino",
+      "title": "Rambai Neemeeda Naku",
+      "artist": "Suresh Bobbili",
       "position": 11,
       "platform": "telugu"
     },
     {
-      "title": "M.I.A - VALORANT Game Changers Version",
-      "artist": "KATSEYE",
+      "title": "Janjara Janjaraja (Telugu)",
+      "artist": "G. V. Prakash",
       "position": 12,
       "platform": "telugu"
     },
     {
-      "title": "Die With A Smile",
-      "artist": "Lady Gaga",
+      "title": "Bhimavaram Balma",
+      "artist": "Mickey J. Meyer",
       "position": 13,
       "platform": "telugu"
     },
     {
-      "title": "Timeless (feat Playboi Carti)",
-      "artist": "The Weeknd",
+      "title": "Hudiyo Hudiyo",
+      "artist": "Bheems Ceciroleo",
       "position": 14,
       "platform": "telugu"
     },
     {
-      "title": "YOSHO HAI MONTAGEM",
-      "artist": "Torbahed",
+      "title": "Nuvvunte Chaley",
+      "artist": "Vivek - Mervin",
       "position": 15,
       "platform": "telugu"
     },
     {
-      "title": "Your Idol",
-      "artist": "Saja Boys",
+      "title": "Pretty Baby",
+      "artist": "Ghibran",
       "position": 16,
       "platform": "telugu"
     },
     {
-      "title": "Good Luck, Babe!",
-      "artist": "Chappell Roan",
+      "title": "Odiyamma",
+      "artist": "Leon James",
       "position": 17,
       "platform": "telugu"
     },
     {
-      "title": "JUMP",
-      "artist": "BLACKPINK",
+      "title": "Hungry Cheetah",
+      "artist": "Thaman S",
       "position": 18,
       "platform": "telugu"
     },
     {
-      "title": "Lose Control",
-      "artist": "Teddy Swims",
+      "title": "Sogasu Chudatharama",
+      "artist": "Thaman S",
       "position": 19,
       "platform": "telugu"
     },
     {
-      "title": "poster boy",
-      "artist": "2hollis",
+      "title": "Jajikaya Jajikaya",
+      "artist": "Thaman S",
       "position": 20,
       "platform": "telugu"
     },
     {
-      "title": "Not Like Us",
-      "artist": "Kendrick Lamar",
+      "title": "Dekhlenge Saala",
+      "artist": "Devi Sri Prasad",
       "position": 21,
       "platform": "telugu"
     },
     {
-      "title": "The Days - NOTION Remix",
-      "artist": "Chrystal",
+      "title": "Dacoit Kannepettaro Mix",
+      "artist": "Raj-Koti",
       "position": 22,
       "platform": "telugu"
     },
     {
-      "title": "Romantic Homicide",
-      "artist": "d4vd",
+      "title": "Haddhe Leni",
+      "artist": "Nivas K Prasanna",
       "position": 23,
       "platform": "telugu"
     },
     {
-      "title": "Sports car",
-      "artist": "Tate McRae",
+      "title": "Kiss Kiss Bang Bang",
+      "artist": "Thaman S",
       "position": 24,
       "platform": "telugu"
     },
     {
-      "title": "Bodies (feat. JID)",
-      "artist": "Offset",
+      "title": "Raave Ika Priya Bhamini",
+      "artist": "B. Ajaneesh Loknath",
       "position": 25,
       "platform": "telugu"
     },
     {
-      "title": "tv off (feat. lefty gunplay)",
-      "artist": "Kendrick Lamar",
+      "title": "Let’s Go Johnny",
+      "artist": "Thaman S",
       "position": 26,
       "platform": "telugu"
     },
     {
-      "title": "NOKIA",
-      "artist": "Drake",
+      "title": "GlobeTrotter",
+      "artist": "M. M. Keeravaani",
       "position": 27,
       "platform": "telugu"
     },
     {
-      "title": "Stargazing",
-      "artist": "Myles Smith",
+      "title": "Singari",
+      "artist": "Sai Abhyankkar",
       "position": 28,
+      "platform": "telugu"
+    },
+    {
+      "title": "Dhochaave Nanne",
+      "artist": "Leon James",
+      "position": 29,
+      "platform": "telugu"
+    },
+    {
+      "title": "Vayyari Vayyari",
+      "artist": "Suresh Bobbili",
+      "position": 30,
       "platform": "telugu"
     }
   ],
   "punjabi": [
     {
-      "title": "STFU",
+      "title": "Thodi Si Daaru",
       "artist": "AP Dhillon",
       "position": 1,
       "platform": "punjabi"
     },
     {
-      "title": "Barota",
-      "artist": "Sidhu Moose Wala",
+      "title": "I Really Do...",
+      "artist": "Karan Aujla",
       "position": 2,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Jattan Nu",
-      "artist": "HUSTINDER",
-      "position": 3,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Together",
-      "artist": "Nirvair Pannu",
-      "position": 4,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Kaatilana",
-      "artist": "Talwiinder",
-      "position": 5,
       "platform": "punjabi"
     },
     {
       "title": "Supreme",
       "artist": "Shubh",
-      "position": 6,
+      "position": 3,
       "platform": "punjabi"
     },
     {
-      "title": "Sirra",
-      "artist": "Guru Randhawa",
-      "position": 7,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Can't Be Us",
-      "artist": "Prem Dhillon",
-      "position": 8,
-      "platform": "punjabi"
-    },
-    {
-      "title": "By My Side",
-      "artist": "AP Dhillon",
-      "position": 9,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Kufar",
-      "artist": "Diljit Dosanjh",
-      "position": 10,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Midnight Call",
-      "artist": "Harkirat Sangha",
-      "position": 11,
-      "platform": "punjabi"
-    },
-    {
-      "title": "One In A Million",
-      "artist": "Jordan Sandhu",
-      "position": 12,
+      "title": "Barota",
+      "artist": "Sidhu Moose Wala",
+      "position": 4,
       "platform": "punjabi"
     },
     {
       "title": "Police",
       "artist": "Cheema Y",
-      "position": 13,
-      "platform": "punjabi"
-    },
-    {
-      "title": "10-12",
-      "artist": "Watan Sahi",
-      "position": 14,
-      "platform": "punjabi"
-    },
-    {
-      "title": "High On You",
-      "artist": "Jind Universe",
-      "position": 15,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Wavy",
-      "artist": "Karan Aujla",
-      "position": 16,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Haseen",
-      "artist": "Talwiinder",
-      "position": 17,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Phurr - From the Movie “Kis Kisko Pyaar Karoon 2”",
-      "artist": "Yo Yo Honey Singh",
-      "position": 18,
-      "platform": "punjabi"
-    },
-    {
-      "title": "FIRST LOVE",
-      "artist": "Garry Sandhu",
-      "position": 19,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Desi Hood",
-      "artist": "Saabi Bhinder",
-      "position": 20,
-      "platform": "punjabi"
-    },
-    {
-      "title": "DXB",
-      "artist": "Cheema Y",
-      "position": 21,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Together",
-      "artist": "Shubh",
-      "position": 22,
-      "platform": "punjabi"
-    },
-    {
-      "title": "LAAVAN",
-      "artist": "Jasmine Sandlas",
-      "position": 23,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Mera Mann",
-      "artist": "Juss",
-      "position": 24,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Tere Bina Na Guzara E",
-      "artist": "Josh Brar",
-      "position": 25,
-      "platform": "punjabi"
-    },
-    {
-      "title": "For A Reason",
-      "artist": "Karan Aujla",
-      "position": 26,
-      "platform": "punjabi"
-    },
-    {
-      "title": "Charmer",
-      "artist": "Diljit Dosanjh",
-      "position": 27,
+      "position": 5,
       "platform": "punjabi"
     },
     {
       "title": "AZUL",
       "artist": "Guru Randhawa",
-      "position": 28,
+      "position": 6,
       "platform": "punjabi"
     },
     {
-      "title": "Bulle",
+      "title": "Water",
+      "artist": "Diljit Dosanjh",
+      "position": 7,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Deewana",
+      "artist": "BAGI MUNDA",
+      "position": 8,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Greatest",
       "artist": "Arjan Dhillon",
-      "position": 29,
+      "position": 9,
+      "platform": "punjabi"
+    },
+    {
+      "title": "STFU",
+      "artist": "AP Dhillon",
+      "position": 10,
+      "platform": "punjabi"
+    },
+    {
+      "title": "High On You",
+      "artist": "Jind Universe",
+      "position": 11,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Midnight Call",
+      "artist": "Harkirat Sangha",
+      "position": 12,
+      "platform": "punjabi"
+    },
+    {
+      "title": "10-12",
+      "artist": "Watan Sahi",
+      "position": 13,
+      "platform": "punjabi"
+    },
+    {
+      "title": "SHKINI",
+      "artist": "Guru Randhawa",
+      "position": 14,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Together",
+      "artist": "Shubh",
+      "position": 15,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Superstar",
+      "artist": "dox",
+      "position": 16,
+      "platform": "punjabi"
+    },
+    {
+      "title": "At Peace",
+      "artist": "Karan Aujla",
+      "position": 17,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Convo",
+      "artist": "Chinna",
+      "position": 18,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Lor Lor",
+      "artist": "Jassie Gill",
+      "position": 19,
       "platform": "punjabi"
     },
     {
       "title": "Khayaal",
       "artist": "Talwiinder",
+      "position": 20,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Afsos",
+      "artist": "Anuv Jain",
+      "position": 21,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Kufar",
+      "artist": "Diljit Dosanjh",
+      "position": 22,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Dapper Dan",
+      "artist": "Navaan Sandhu",
+      "position": 23,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Big Things",
+      "artist": "Jordan Sandhu",
+      "position": 24,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Sirra",
+      "artist": "Guru Randhawa",
+      "position": 25,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Jattan Nu",
+      "artist": "HUSTINDER",
+      "position": 26,
+      "platform": "punjabi"
+    },
+    {
+      "title": "MEDAL",
+      "artist": "Chandra Brar",
+      "position": 27,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Desi Hood",
+      "artist": "Saabi Bhinder",
+      "position": 28,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Naal Nachna",
+      "artist": "Shashwat Sachdev",
+      "position": 29,
+      "platform": "punjabi"
+    },
+    {
+      "title": "Can't Be Us",
+      "artist": "Prem Dhillon",
       "position": 30,
       "platform": "punjabi"
     }
   ],
   "hindi": [
     {
-      "title": "Saiyaara",
-      "artist": "Tanishk Bagchi",
+      "title": "Ishq Jalakar - Karvaan",
+      "artist": "Shashwat Sachdev",
       "position": 1,
       "platform": "hindi"
     },
     {
-      "title": "Aawaara Angaara",
-      "artist": "A.R. Rahman",
+      "title": "Raanjhan",
+      "artist": "Sachet-Parampara",
       "position": 2,
       "platform": "hindi"
     },
     {
-      "title": "Deewaniyat (From &quot;Ek Deewane Ki Deewaniyat&quot;) (Original Motion Picture Soundtrack)",
-      "artist": "Vishal Mishra",
+      "title": "Saiyaara",
+      "artist": "Tanishk Bagchi",
       "position": 3,
-      "platform": "hindi"
-    },
-    {
-      "title": "Barbaad",
-      "artist": "The Rish",
-      "position": 4,
-      "platform": "hindi"
-    },
-    {
-      "title": "Sahiba",
-      "artist": "Aditya Rikhari",
-      "position": 5,
       "platform": "hindi"
     },
     {
       "title": "Tere Ishk Mein",
       "artist": "A.R. Rahman",
+      "position": 4,
+      "platform": "hindi"
+    },
+    {
+      "title": "Deewaniyat (Original Motion Picture Soundtrack)",
+      "artist": "Vishal Mishra",
+      "position": 5,
+      "platform": "hindi"
+    },
+    {
+      "title": "Jo Tum Mere Ho",
+      "artist": "Anuv Jain",
       "position": 6,
       "platform": "hindi"
     },
     {
-      "title": "Tum Ho Toh",
-      "artist": "Vishal Mishra",
+      "title": "Gehra Hua",
+      "artist": "Shashwat Sachdev",
       "position": 7,
-      "platform": "hindi"
-    },
-    {
-      "title": "Dhun",
-      "artist": "Mithoon",
-      "position": 8,
-      "platform": "hindi"
-    },
-    {
-      "title": "Tum Hi Ho",
-      "artist": "Mithoon",
-      "position": 9,
-      "platform": "hindi"
-    },
-    {
-      "title": "Saiyaara Reprise - Female",
-      "artist": "Tanishk Bagchi",
-      "position": 10,
-      "platform": "hindi"
-    },
-    {
-      "title": "Dil To Pagal Hai",
-      "artist": "Uttam Singh",
-      "position": 11,
-      "platform": "hindi"
-    },
-    {
-      "title": "Mera Hua (From &quot;Ek Deewane Ki Deewaniyat&quot;) (Original Motion Picture Soundtrack)",
-      "artist": "Sachin Urmtosh",
-      "position": 12,
-      "platform": "hindi"
-    },
-    {
-      "title": "Dhurandhar - Title Track (From &quot;Dhurandhar&quot;)",
-      "artist": "Hanumankind",
-      "position": 13,
-      "platform": "hindi"
-    },
-    {
-      "title": "Tujhe Dekha To",
-      "artist": "Lata Mangeshkar",
-      "position": 14,
-      "platform": "hindi"
-    },
-    {
-      "title": "Tumse Milne Ko Dil",
-      "artist": "Alka Yagnik",
-      "position": 15,
-      "platform": "hindi"
-    },
-    {
-      "title": "Ishq Jalakar - Karvaan (From &quot;Dhurandhar&quot;)",
-      "artist": "Irshad Kamil",
-      "position": 16,
-      "platform": "hindi"
-    },
-    {
-      "title": "Ul Jalool Ishq (From &quot;Gustaakh Ishq&quot;)",
-      "artist": "Gulzar",
-      "position": 17,
-      "platform": "hindi"
-    },
-    {
-      "title": "Chura Ke Dil Mera",
-      "artist": "Kumar Sanu",
-      "position": 18,
-      "platform": "hindi"
-    },
-    {
-      "title": "Apna Bana Le",
-      "artist": "Sachin-Jigar",
-      "position": 19,
-      "platform": "hindi"
-    },
-    {
-      "title": "Humsafar",
-      "artist": "Sachet-Parampara",
-      "position": 20,
-      "platform": "hindi"
-    },
-    {
-      "title": "Gehra Hua (From &quot;Dhurandhar&quot;)",
-      "artist": "Irshad Kamil",
-      "position": 21,
-      "platform": "hindi"
-    },
-    {
-      "title": "Zara Sa",
-      "artist": "Pritam",
-      "position": 22,
-      "platform": "hindi"
-    },
-    {
-      "title": "Arz Kiya Hai",
-      "artist": "Anuv Jain",
-      "position": 23,
-      "platform": "hindi"
-    },
-    {
-      "title": "Raataan Lambiyan",
-      "artist": "Tanishk Bagchi",
-      "position": 24,
-      "platform": "hindi"
-    },
-    {
-      "title": "Mera Dil Bhi Kitna Pagal Hai",
-      "artist": "Kumar Sanu",
-      "position": 25,
       "platform": "hindi"
     },
     {
       "title": "Finding Her",
       "artist": "Kushagra",
-      "position": 26,
+      "position": 8,
       "platform": "hindi"
     },
     {
-      "title": "Dheere Dheere Se Meri Zindagi Mein Aana",
-      "artist": "Anuradha Paudwal",
-      "position": 27,
+      "title": "Ishq",
+      "artist": "Faheem Abdullah",
+      "position": 9,
       "platform": "hindi"
     },
     {
-      "title": "Pardesiya (From &quot;Param Sundari&quot;)",
-      "artist": "Sonu Nigam",
-      "position": 28,
+      "title": "Kashish",
+      "artist": "Ashish Bhatia",
+      "position": 10,
       "platform": "hindi"
     },
     {
-      "title": "Bol Kaffara Kya Hoga (From &quot;Ek Deewane Ki Deewaniyat&quot;) (Original Motion Picture Soundtrack)",
-      "artist": "Dj Chetas",
-      "position": 29,
+      "title": "Tu Meri Main Tera Main Tera Tu Meri - Title Track",
+      "artist": "Vishal-Shekhar",
+      "position": 11,
       "platform": "hindi"
     },
     {
-      "title": "Agar Tum Saath Ho",
-      "artist": "Alka Yagnik",
-      "position": 30,
+      "title": "Sitaare",
+      "artist": "Arijit Singh",
+      "position": 12,
       "platform": "hindi"
     },
     {
-      "title": "Tu Hain Toh Main Hoon (From &quot;Sky Force&quot;)",
-      "artist": "Irshad Kamil",
-      "position": 31,
+      "title": "Pardesiya",
+      "artist": "Sachin-Jigar",
+      "position": 13,
       "platform": "hindi"
     },
     {
-      "title": "I’m Done. (I-Popstar: Vol. 1)",
+      "title": "I’m Done. - I-Popstar: Vol. 1",
       "artist": "Maan Panu",
-      "position": 32,
+      "position": 14,
       "platform": "hindi"
     },
     {
-      "title": "Pal Pal Dil Ke Paas (From &quot;Blackmail&quot;)",
-      "artist": "Kishore Kumar",
-      "position": 33,
+      "title": "Dhurandhar - Title Track",
+      "artist": "Shashwat Sachdev",
+      "position": 15,
       "platform": "hindi"
     },
     {
-      "title": "Meri Mehbooba",
-      "artist": "Kumar Sanu",
-      "position": 34,
-      "platform": "hindi"
-    },
-    {
-      "title": "Mann Mera",
-      "artist": "Gajendra Verma",
-      "position": 35,
-      "platform": "hindi"
-    },
-    {
-      "title": "Chaleya",
-      "artist": "Anirudh Ravichander",
-      "position": 36,
-      "platform": "hindi"
-    },
-    {
-      "title": "O Maahi",
+      "title": "Aavan Jaavan",
       "artist": "Pritam",
-      "position": 37,
+      "position": 16,
       "platform": "hindi"
     },
     {
-      "title": "Ae Dil Hai Mushkil Title Track",
-      "artist": "Pritam",
-      "position": 38,
+      "title": "Andaaz e Karam",
+      "artist": "Madhur Sharma",
+      "position": 17,
       "platform": "hindi"
     },
     {
-      "title": "Dil Ibaadat",
-      "artist": "Pritam",
-      "position": 39,
+      "title": "You & I",
+      "artist": "DIVINE",
+      "position": 18,
       "platform": "hindi"
     },
     {
-      "title": "Kaho Na Kaho (From &quot;Murder&quot;)",
-      "artist": "Amir Jamal",
-      "position": 40,
+      "title": "Kamaal Hai",
+      "artist": "King",
+      "position": 19,
+      "platform": "hindi"
+    },
+    {
+      "title": "Arz Kiya Hai",
+      "artist": "Anuv Jain",
+      "position": 20,
+      "platform": "hindi"
+    },
+    {
+      "title": "bargad",
+      "artist": "sufr",
+      "position": 21,
+      "platform": "hindi"
+    },
+    {
+      "title": "Aawaara Angaara",
+      "artist": "A.R. Rahman",
+      "position": 22,
+      "platform": "hindi"
+    },
+    {
+      "title": "Jaane Na Tu",
+      "artist": "Bhoomi",
+      "position": 23,
+      "platform": "hindi"
+    },
+    {
+      "title": "Tumse Behtar",
+      "artist": "Arijit Singh",
+      "position": 24,
+      "platform": "hindi"
+    },
+    {
+      "title": "Raat Bhar",
+      "artist": "Aditya Rikhari",
+      "position": 25,
+      "platform": "hindi"
+    },
+    {
+      "title": "Ghafoor",
+      "artist": "Shashwat Sachdev",
+      "position": 26,
+      "platform": "hindi"
+    },
+    {
+      "title": "Thodi Si Daaru",
+      "artist": "AP Dhillon",
+      "position": 27,
+      "platform": "hindi"
+    },
+    {
+      "title": "Phurr - From the Movie “Kis Kisko Pyaar Karoon 2”",
+      "artist": "Yo Yo Honey Singh",
+      "position": 28,
+      "platform": "hindi"
+    },
+    {
+      "title": "Aayi Nai",
+      "artist": "Sachin-Jigar",
+      "position": 29,
+      "platform": "hindi"
+    },
+    {
+      "title": "Tum Mere Na Huye - From “Thamma”",
+      "artist": "Sachin-Jigar",
+      "position": 30,
       "platform": "hindi"
     }
   ],
-  "spotify_global": [
+  "bhojpuri": [
     {
-      "title": "The Fate of Ophelia",
-      "artist": "Taylor Swi",
+      "title": "RANGBAAZ",
+      "artist": "Khesari Lal Yadav",
       "position": 1,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Last Christmas",
-      "artist": "Wham!",
+      "title": "सईयाँ सेवा करे",
+      "artist": "Power Star Pawan Singh",
       "position": 2,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "All I Want for Christmas Is You",
-      "artist": "Mariah Carey",
+      "title": "राजा रंगबाज़",
+      "artist": "Pawan Singh",
       "position": 3,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Golden",
-      "artist": "HUNTR/X",
+      "title": "Raja Ji Ke Dilwa",
+      "artist": "Pawan Singh",
       "position": 4,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Rockin' Around The Christmas Tree",
-      "artist": "Brenda Lee",
+      "title": "मटन खाके बटन खोले",
+      "artist": "Chandan Chanchal",
       "position": 5,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "back to friends",
-      "artist": "sombr",
+      "title": "Babuaan",
+      "artist": "Pawan Singh",
       "position": 6,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Man I Need",
-      "artist": "Olivia Dean",
+      "title": "Dhamaka",
+      "artist": "Pawan Singh",
       "position": 7,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Jingle Bell Rock",
-      "artist": "Bobby Helms",
+      "title": "Dhara Kamar Raja Ji",
+      "artist": "Neelkamal Singh",
       "position": 8,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Santa Tell Me",
-      "artist": "Ariana Grande",
+      "title": "Sadiya Kariya",
+      "artist": "Ankush Raja",
       "position": 9,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "End of Beginning",
-      "artist": "Djo",
+      "title": "Kamariya Mein Peer",
+      "artist": "Khesari Lal Yadav",
       "position": 10,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Ordinary",
-      "artist": "Alex Warren",
+      "title": "Raifal Se Khuta Thokala",
+      "artist": "TUNTUN YADAV OFFICIAL",
       "position": 11,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
+      "title": "Sham Hai Dhuaa Dhuaa",
+      "artist": "Sanjay Pandey",
       "position": 12,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "WHERE IS MY HUSBAND!",
-      "artist": "RAYE",
+      "title": "Sadiya Sarkawa Raja Ji",
+      "artist": "Neelkamal Singh",
       "position": 13,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Underneath the Tree",
-      "artist": "Kelly Clarkson",
+      "title": "Bhugol Devra",
+      "artist": "Pramod Premi Yadav",
       "position": 14,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Snowman",
-      "artist": "Sia",
+      "title": "Haranwe Dhai Dhai Dabata",
+      "artist": "Samar Singh",
       "position": 15,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "BIRDS OF A FEATHER",
-      "artist": "Billie Eilish",
+      "title": "Dilwa Le Ja Rumaal Me",
+      "artist": "Pawan Singh",
       "position": 16,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Die With A Smile",
-      "artist": "Lady Gaga",
+      "title": "Photo Zoom Zoom",
+      "artist": "Neelkamal Singh",
       "position": 17,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Let It Snow! Let It Snow! Let It Snow!",
-      "artist": "Dean Martin",
+      "title": "साउंड पर सुताके चार राउंड मारले",
+      "artist": "Awadhesh Premi Yadav",
       "position": 18,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "It's the Most Wonderful Time of the Year",
-      "artist": "Andy Williams",
+      "title": "Rahi Baithal Kera Ke Tham Pa",
+      "artist": "Awadhesh Premi Yadav",
       "position": 19,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Every Breath You Take",
-      "artist": "The Police",
+      "title": "#Video",
+      "artist": "Golu Raja",
       "position": 20,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "It's Beginning to Look a Lot like Christmas",
-      "artist": "Michael Bublé",
+      "title": "Mehari Ke Nakhra",
+      "artist": "Goldi Yadav",
       "position": 21,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Opalite",
-      "artist": "Taylor Swi",
+      "title": "Payal",
+      "artist": "Khesari Lal Yadav",
       "position": 22,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Iris",
-      "artist": "The Goo Goo Dolls",
+      "title": "Kamar Dabaiyo Dehab",
+      "artist": "Shilpi Raj",
       "position": 23,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "CHANEL",
-      "artist": "Tyla",
+      "title": "Mehari Ke Pyaar",
+      "artist": "Shilpi Raj",
       "position": 24,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "KUSURA BAKMA",
-      "artist": "BLOK3",
+      "title": "Dance Video",
+      "artist": "Shivani Singh",
       "position": 25,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Cuando No Era Cantante",
-      "artist": "El Bogueto",
+      "title": "Kamariya Dole",
+      "artist": "Neelkamal Singh",
       "position": 26,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Mistletoe",
-      "artist": "Justin Bieber",
+      "title": "Kekra Ke Dele Bada Dil",
+      "artist": "Goldi Yadav",
       "position": 27,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Sailor Song",
-      "artist": "Gigi Perez",
+      "title": "Odhani Ke Kor",
+      "artist": "Aashish Yadav",
       "position": 28,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "WILDFLOWER",
-      "artist": "Billie Eilish",
+      "title": "Tor Silky Silky Saree",
+      "artist": "Khushboo Linda",
       "position": 29,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     },
     {
-      "title": "Feliz Navidad",
-      "artist": "José Feliciano",
+      "title": "King VS Queen Kanwariya",
+      "artist": "Tuntun Yadav",
       "position": 30,
-      "platform": "spotify_global"
+      "platform": "bhojpuri"
     }
   ],
-  "billboard_hot100": [
+  "haryanvi": [
     {
-      "title": "All I Want For Christmas Is You",
-      "artist": "Mariah Carey",
+      "title": "Fortuner",
+      "artist": "Raj Mawar",
       "position": 1,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Last Christmas",
-      "artist": "Wham!",
+      "title": "Financer",
+      "artist": "Bintu Pabra",
       "position": 2,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Rockin' Around The Christmas Tree",
-      "artist": "Brenda Lee",
+      "title": "Aakh Ye Taalibaani",
+      "artist": "Manish Sonipat Aala",
       "position": 3,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Jingle Bell Rock",
-      "artist": "Bobby Helms",
+      "title": "Teri Ramjhol Bole Gi",
+      "artist": "Sheenam Katholic",
       "position": 4,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Golden",
-      "artist": "HUNTR/X: EJAE",
+      "title": "Yaari",
+      "artist": "Masoom Sharma",
       "position": 5,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "The Fate Of Ophelia",
-      "artist": "Taylor Swi",
+      "title": "Naam Chale",
+      "artist": "Vikram Sarkar",
       "position": 6,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Ordinary",
-      "artist": "Alex Warren",
+      "title": "LANGUAGE PYAR KI [Tu Machli Me Pani Barga] Sandeep Surila",
+      "artist": "Sandeep Surila",
       "position": 7,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Santa Tell Me",
-      "artist": "Ariana Grande",
+      "title": "4 G Ka Jamana",
+      "artist": "Tarun Panchal",
       "position": 8,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "The Christmas Song (Merry Christmas To You)",
-      "artist": "Nat \"King\" Cole",
+      "title": "Circle (Lofi Mix)",
+      "artist": "Manisha Sharma",
       "position": 9,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "It's The Most Wonderful Time Of The Year",
-      "artist": "Andy Williams",
+      "title": "Chambal K Dakku",
+      "artist": "Masoom Sharma",
       "position": 10,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Underneath The Tree",
-      "artist": "Kelly Clarkson",
+      "title": "Uncha Nicha Rasta - New Haryanvi DJ Viral Song 2025",
+      "artist": "Komal Chaudhary",
       "position": 11,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Man I Need",
-      "artist": "Olivia Dean",
+      "title": "Hero Handa",
+      "artist": "Khushi Baliyan",
       "position": 12,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Let It Snow! Let It Snow! Let It Snow!",
-      "artist": "Dean Martin",
+      "title": "COMPETITION Masoom Sharma",
+      "artist": "Masoom Sharma",
       "position": 13,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "It's Beginning To Look A Lot Like Christmas",
-      "artist": "Michael Buble",
+      "title": "Lugai Chhoti",
+      "artist": "Harjeet Deewana",
       "position": 14,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Sleigh Ride",
-      "artist": "The Ronettes",
+      "title": "BEER KI BOTTLE",
+      "artist": "Ajay Hooda",
       "position": 15,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "A Holly Jolly Christmas",
-      "artist": "Burl Ives",
+      "title": "Warning",
+      "artist": "Swara Verma",
       "position": 16,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Feliz Navidad",
-      "artist": "Jose Feliciano",
+      "title": "Jaat Gelya Yaari : Viral Song",
+      "artist": "Jugni Series",
       "position": 17,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Christmas (Baby Please Come Home)",
-      "artist": "Darlene Love",
+      "title": "Hopeless",
+      "artist": "Amanraj Gill",
       "position": 18,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "White Christmas (1947)",
-      "artist": "Bing Crosby With Ken Darby Singers",
+      "title": "Ji Laage Se Babya Mai",
+      "artist": "Raj Mawar",
       "position": 19,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Mutt",
-      "artist": "Leon Thomas",
+      "title": "Kale Kagaz Amanraj Gill",
+      "artist": "Nav Haryanvi",
       "position": 20,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Jingle Bells",
-      "artist": "Frank Sinatra With The Orchestra",
+      "title": "Tag Awara Ke (Lofi Mix)",
+      "artist": "Amanraj Gill",
       "position": 21,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Run Rudolph Run",
-      "artist": "Chuck Berry",
+      "title": "BLACK RIDE",
+      "artist": "Dhanda Nyoliwala",
       "position": 22,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Back To Friends",
-      "artist": "sombr",
+      "title": "Gundey Dore Pe",
+      "artist": "Masoom Sharma",
       "position": 23,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "It's Beginning To Look A Lot Like Christmas",
-      "artist": "Perry Como And The Fontane Sisters With Mitchell Ayres And His Orchestra",
+      "title": "Jaat Intro",
+      "artist": "Ajay Bhagta",
       "position": 24,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Opalite",
-      "artist": "Taylor Swi",
+      "title": "Madam Ji",
+      "artist": "Amar Karnawal",
       "position": 25,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Folded",
-      "artist": "Kehlani",
+      "title": "Gaadi 150 Vikram Sarkar",
+      "artist": "Vikram Sarkar",
       "position": 26,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Choosin' Texas",
-      "artist": "Ella Langley",
+      "title": "Raat Ke Shikari",
+      "artist": "Masoom Sharma",
       "position": 27,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Daisies",
-      "artist": "Justin Bieber",
+      "title": "4 Aadmi",
+      "artist": "Sumit Parta",
       "position": 28,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Deck The Halls",
-      "artist": "Nat King Cole",
+      "title": "Falani",
+      "artist": "Guri Nimana",
       "position": 29,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     },
     {
-      "title": "Santa Baby",
-      "artist": "Eartha Kitt With Henri Rene And His Orchestra",
+      "title": "Beretta (Lofi Mix)",
+      "artist": "Amanraj Gill",
       "position": 30,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Blue Christmas",
-      "artist": "Elvis Presley",
-      "position": 31,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Here Comes Santa Claus (Right Down Santa Claus Lane)",
-      "artist": "Gene Autry",
-      "position": 32,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Wonderful Christmastime",
-      "artist": "Paul McCartney",
-      "position": 33,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Please Come Home For Christmas",
-      "artist": "Eagles",
-      "position": 34,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Like It's Christmas",
-      "artist": "Jonas Brothers",
-      "position": 35,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Holly Jolly Christmas",
-      "artist": "Michael Buble",
-      "position": 36,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Rudolph The Red-Nosed Reindeer",
-      "artist": "Gene Autry",
-      "position": 37,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Christmastime Is Here",
-      "artist": "Vince Guaraldi Trio",
-      "position": 38,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Little Saint Nick",
-      "artist": "The Beach Boys",
-      "position": 39,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Santa, Can't You Hear Me",
-      "artist": "Kelly Clarkson",
-      "position": 40,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "You're A Mean One, Mr. Grinch",
-      "artist": "Thurl Ravenscro",
-      "position": 41,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "It Depends",
-      "artist": "Chris Brown",
-      "position": 42,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Merry Christmas",
-      "artist": "Ed Sheeran",
-      "position": 43,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Mistletoe",
-      "artist": "Justin Bieber",
-      "position": 44,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Tit For Tat",
-      "artist": "Tate McRae",
-      "position": 45,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Santa Claus Is Comin' To Town",
-      "artist": "Jackson 5",
-      "position": 46,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
-      "position": 47,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Baby It's Cold Outside",
-      "artist": "Dean Martin",
-      "position": 48,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Winter Wonderland",
-      "artist": "Darlene Love",
-      "position": 49,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "This Christmas",
-      "artist": "Donny Hathaway",
-      "position": 50,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Tears",
-      "artist": "Sabrina Carpenter",
-      "position": 51,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Don't Mind If I Do",
-      "artist": "Riley Green",
-      "position": 52,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Where Is My Husband!",
-      "artist": "RAYE",
-      "position": 53,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "wgft",
-      "artist": "Gunna",
-      "position": 54,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Gabriela",
-      "artist": "KATSEYE",
-      "position": 55,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Happen To Me",
-      "artist": "Russell Dickerson",
-      "position": 56,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "20 Cigarettes",
-      "artist": "Morgan Wallen",
-      "position": 57,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Nice To Meet You",
-      "artist": "Myles Smith",
-      "position": 58,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "6 Months Later",
-      "artist": "Megan Moroney",
-      "position": 59,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Is It A Crime",
-      "artist": "Mariah The Scientist",
-      "position": 60,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Yukon",
-      "artist": "Justin Bieber",
-      "position": 61,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Hell At Night",
-      "artist": "BigXthaPlug",
-      "position": 62,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "House Again",
-      "artist": "Hudson Westbrook",
-      "position": 63,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Better Me For You (Brown Eyes)",
-      "artist": "Max McNown",
-      "position": 64,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "A Couple Minutes",
-      "artist": "Olivia Dean",
-      "position": 65,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Nobody's Girl",
-      "artist": "Tate McRae",
-      "position": 66,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Shot Callin",
-      "artist": "YoungBoy Never Broke Again",
-      "position": 67,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Elizabeth Taylor",
-      "artist": "Taylor Swi",
-      "position": 68,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "3,2,1",
-      "artist": "Tucker Wetmore",
-      "position": 69,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Dracula",
-      "artist": "Tame Impala",
-      "position": 70,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Take Me Thru Dere",
-      "artist": "Metro Boomin",
-      "position": 71,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "The Fall",
-      "artist": "Cody Johnson",
-      "position": 72,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Travelin' Soldier",
-      "artist": "Cody Johnson",
-      "position": 73,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Sugar On My Tongue",
-      "artist": "Tyler",
-      "position": 74,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "12 To 12",
-      "artist": "sombr",
-      "position": 75,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Darlin'",
-      "artist": "Chase Matthew",
-      "position": 76,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Amen",
-      "artist": "Shaboozey",
-      "position": 77,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Last One To Know",
-      "artist": "Gavin Adcock",
-      "position": 78,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Favorite Country Song",
-      "artist": "HARDY",
-      "position": 79,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Father Figure",
-      "artist": "Taylor Swi",
-      "position": 80,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Camera",
-      "artist": "Ed Sheeran",
-      "position": 81,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "ErrTime",
-      "artist": "Cardi B",
-      "position": 82,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Back In The Saddle",
-      "artist": "Luke Combs",
-      "position": 83,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Wi$h Li$t",
-      "artist": "Taylor Swi",
-      "position": 84,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Cowgirl",
-      "artist": "Parmalee",
-      "position": 85,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Shake The Snow Globe",
-      "artist": "Gwen Stefani",
-      "position": 86,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Days Like These",
-      "artist": "Luke Combs",
-      "position": 87,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Anything But Love",
-      "artist": "Tate McRae",
-      "position": 88,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "What Kinda Man",
-      "artist": "Parker McCollum",
-      "position": 89,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "How Far Does A Goodbye Go",
-      "artist": "Jason Aldean",
-      "position": 90,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Nice To Each Other",
-      "artist": "Olivia Dean",
-      "position": 91,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Gone Gone Gone",
-      "artist": "David Guetta",
-      "position": 92,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "The Dead Dance",
-      "artist": "Lady Gaga",
-      "position": 93,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Went Legit",
-      "artist": "G Herbo",
-      "position": 94,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Sienna",
-      "artist": "The Marias",
-      "position": 95,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "For Good",
-      "artist": "Cynthia Erivo",
-      "position": 96,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "No Good Deed",
-      "artist": "Cynthia Erivo",
-      "position": 97,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "Let Alone The One You Love",
-      "artist": "Olivia Dean",
-      "position": 98,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "The Life Of A Showgirl",
-      "artist": "Taylor Swi",
-      "position": 99,
-      "platform": "billboard_hot100"
-    },
-    {
-      "title": "When Did You Get Hot?",
-      "artist": "Sabrina Carpenter",
-      "position": 100,
-      "platform": "billboard_hot100"
+      "platform": "haryanvi"
     }
   ],
-  "apple_global": [
-    {
-      "title": "All I Want for Christmas Is You",
-      "artist": "Mariah Carey",
-      "position": 1,
-      "platform": "apple_global"
-    },
-    {
-      "title": "The Fate of Ophelia",
-      "artist": "Taylor Swi",
-      "position": 2,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Golden",
-      "artist": "HUNTR/X",
-      "position": 3,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Man I Need",
-      "artist": "Olivia Dean",
-      "position": 4,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Underneath the Tree",
-      "artist": "Kelly Clarkson",
-      "position": 5,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Jingle Bell Rock",
-      "artist": "Bobby Helms",
-      "position": 6,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Last Christmas (Single Version)",
-      "artist": "Wham!",
-      "position": 7,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Opalite",
-      "artist": "Taylor Swi",
-      "position": 8,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Ordinary",
-      "artist": "Alex Warren",
-      "position": 9,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Santa Tell Me",
-      "artist": "Ariana Grande",
-      "position": 10,
-      "platform": "apple_global"
-    },
-    {
-      "title": "It's Beginning To Look a Lot Like Christmas",
-      "artist": "Michael Bublé",
-      "position": 11,
-      "platform": "apple_global"
-    },
-    {
-      "title": "It's the Most Wonderful Time of the Year",
-      "artist": "Andy Williams",
-      "position": 12,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Sleigh Ride",
-      "artist": "The Ronettes",
-      "position": 13,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Let It Snow! Let It Snow! Let It Snow!",
-      "artist": "Dean Martin",
-      "position": 14,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Folded",
-      "artist": "Kehlani",
-      "position": 15,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Choosin' Texas",
-      "artist": "Ella Langley",
-      "position": 16,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Rockin' Around the Christmas Tree (Single)",
-      "artist": "Brenda Lee",
-      "position": 17,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Manchild",
-      "artist": "Sabrina Carpenter",
-      "position": 18,
-      "platform": "apple_global"
-    },
-    {
-      "title": "IRIS OUT",
-      "artist": "Kenshi Yonezu",
-      "position": 19,
-      "platform": "apple_global"
-    },
-    {
-      "title": "The Christmas Song (Merry Christmas to You)",
-      "artist": "Nat \"King\" Cole",
-      "position": 20,
-      "platform": "apple_global"
-    },
-    {
-      "title": "back to friends",
-      "artist": "sombr",
-      "position": 21,
-      "platform": "apple_global"
-    },
-    {
-      "title": "So Easy (To Fall In Love)",
-      "artist": "Olivia Dean",
-      "position": 22,
-      "platform": "apple_global"
-    },
-    {
-      "title": "30 For 30 (with Kendrick Lamar)",
-      "artist": "SZA",
-      "position": 23,
-      "platform": "apple_global"
-    },
-    {
-      "title": "luther",
-      "artist": "Kendrick Lamar",
-      "position": 24,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Mistletoe",
-      "artist": "Justin Bieber",
-      "position": 25,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Not Like Us",
-      "artist": "Kendrick Lamar",
-      "position": 26,
-      "platform": "apple_global"
-    },
-    {
-      "title": "What I Want",
-      "artist": "Morgan Wallen",
-      "position": 27,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Die With A Smile",
-      "artist": "Lady Gaga",
-      "position": 28,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Feliz Navidad",
-      "artist": "José Feliciano",
-      "position": 29,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Like It's Christmas",
-      "artist": "Jonas Brothers",
-      "position": 30,
-      "platform": "apple_global"
-    },
-    {
-      "title": "DtMF",
-      "artist": "Bad Bunny",
-      "position": 31,
-      "platform": "apple_global"
-    },
-    {
-      "title": "That’s So True",
-      "artist": "Gracie Abrams",
-      "position": 32,
-      "platform": "apple_global"
-    },
-    {
-      "title": "I'm The Problem",
-      "artist": "Morgan Wallen",
-      "position": 33,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Christmas (Baby Please Come Home)",
-      "artist": "Darlene Love",
-      "position": 34,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Timeless",
-      "artist": "The Weeknd",
-      "position": 35,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Snowman",
-      "artist": "Sia",
-      "position": 36,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Snooze",
-      "artist": "SZA",
-      "position": 37,
-      "platform": "apple_global"
-    },
-    {
-      "title": "NON STOP",
-      "artist": "HANA",
-      "position": 38,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Burning Blue",
-      "artist": "Mariah the Scientist",
-      "position": 39,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Soda Pop",
-      "artist": "Saja Boys",
-      "position": 40,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Merry Christmas",
-      "artist": "Ed Sheeran",
-      "position": 41,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Last Christmas",
-      "artist": "Wham!",
-      "position": 42,
-      "platform": "apple_global"
-    },
-    {
-      "title": "WILDFLOWER",
-      "artist": "Billie Eilish",
-      "position": 43,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Let’s Do It",
-      "artist": "Lil Baby",
-      "position": 44,
-      "platform": "apple_global"
-    },
-    {
-      "title": "BIRDS OF A FEATHER",
-      "artist": "Billie Eilish",
-      "position": 45,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Freestyle",
-      "artist": "Lil Baby",
-      "position": 46,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Just In Case",
-      "artist": "Morgan Wallen",
-      "position": 47,
-      "platform": "apple_global"
-    },
-    {
-      "title": "BAILE INoLVIDABLE",
-      "artist": "Bad Bunny",
-      "position": 48,
-      "platform": "apple_global"
-    },
-    {
-      "title": "CHANEL",
-      "artist": "Tyla",
-      "position": 49,
-      "platform": "apple_global"
-    },
-    {
-      "title": "APT.",
-      "artist": "ROSÉ",
-      "position": 50,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Tears",
-      "artist": "Sabrina Carpenter",
-      "position": 51,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Beautiful Things",
-      "artist": "Benson Boone",
-      "position": 52,
-      "platform": "apple_global"
-    },
-    {
-      "title": "DAISIES",
-      "artist": "Justin Bieber",
-      "position": 53,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Run Rudolph Run",
-      "artist": "Chuck Berry",
-      "position": 54,
-      "platform": "apple_global"
-    },
-    {
-      "title": "I Had Some Help (feat. Morgan Wallen)",
-      "artist": "Post Malone",
-      "position": 55,
-      "platform": "apple_global"
-    },
-    {
-      "title": "SOMEBODY LOVES ME",
-      "artist": "PARTYNEXTDOOR",
-      "position": 56,
-      "platform": "apple_global"
-    },
-    {
-      "title": "WAIT FOR U (feat. Drake & Tems)",
-      "artist": "Future",
-      "position": 57,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Tití Me Preguntó",
-      "artist": "Bad Bunny",
-      "position": 58,
-      "platform": "apple_global"
-    },
-    {
-      "title": "A Holly Jolly Christmas (Single Version)",
-      "artist": "Burl Ives",
-      "position": 59,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Step into Christmas",
-      "artist": "Elton John",
-      "position": 60,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Lose Control",
-      "artist": "Teddy Swims",
-      "position": 61,
-      "platform": "apple_global"
-    },
-    {
-      "title": "wgft (feat. Burna Boy)",
-      "artist": "Gunna",
-      "position": 62,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Lilac",
-      "artist": "Mrs. GREEN APPLE",
-      "position": 63,
-      "platform": "apple_global"
-    },
-    {
-      "title": "WHERE IS MY HUSBAND!",
-      "artist": "RAYE",
-      "position": 64,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Officially Christmas",
-      "artist": "Dan + Shay",
-      "position": 65,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Zoo",
-      "artist": "Shakira",
-      "position": 66,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Espresso",
-      "artist": "Sabrina Carpenter",
-      "position": 67,
-      "platform": "apple_global"
-    },
-    {
-      "title": "In A Minute",
-      "artist": "Lil Baby",
-      "position": 68,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Blue Jeans",
-      "artist": "HANA",
-      "position": 69,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Elizabeth Taylor",
-      "artist": "Taylor Swi",
-      "position": 70,
-      "platform": "apple_global"
-    },
-    {
-      "title": "A Couple Minutes",
-      "artist": "Olivia Dean",
-      "position": 71,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Marlboro Rojo",
-      "artist": "Fuerza Regida",
-      "position": 72,
-      "platform": "apple_global"
-    },
-    {
-      "title": "ocean eyes",
-      "artist": "Billie Eilish",
-      "position": 73,
-      "platform": "apple_global"
-    },
-    {
-      "title": "NOKIA",
-      "artist": "Drake",
-      "position": 74,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Christmas Tree Farm",
-      "artist": "Taylor Swi",
-      "position": 75,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Love Me Not",
-      "artist": "Ravyn Lenae",
-      "position": 76,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Father Figure",
-      "artist": "Taylor Swi",
-      "position": 77,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Santa Claus Is Coming To Town",
-      "artist": "Jackson 5",
-      "position": 78,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Last Night",
-      "artist": "Morgan Wallen",
-      "position": 79,
-      "platform": "apple_global"
-    },
-    {
-      "title": "7 rings",
-      "artist": "Ariana Grande",
-      "position": 80,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Perfect",
-      "artist": "Ed Sheeran",
-      "position": 81,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Cozy Little Christmas",
-      "artist": "Katy Perry",
-      "position": 82,
-      "platform": "apple_global"
-    },
-    {
-      "title": "I Got Better",
-      "artist": "Morgan Wallen",
-      "position": 83,
-      "platform": "apple_global"
-    },
-    {
-      "title": "End of Beginning",
-      "artist": "Djo",
-      "position": 84,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Broken Clocks",
-      "artist": "SZA",
-      "position": 85,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Shape of You",
-      "artist": "Ed Sheeran",
-      "position": 86,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Sports car",
-      "artist": "Tate McRae",
-      "position": 87,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Cry For Me",
-      "artist": "The Weeknd",
-      "position": 88,
-      "platform": "apple_global"
-    },
-    {
-      "title": "YUKON",
-      "artist": "Justin Bieber",
-      "position": 89,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Is It a Crime",
-      "artist": "Mariah the Scientist",
-      "position": 90,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Just Keep Watching",
-      "artist": "Tate McRae",
-      "position": 91,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Shot Callin",
-      "artist": "YoungBoy Never Broke Again",
-      "position": 92,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Money Trees (feat. Jay Rock)",
-      "artist": "Kendrick Lamar",
-      "position": 93,
-      "platform": "apple_global"
-    },
-    {
-      "title": "goosebumps",
-      "artist": "Travis Scott",
-      "position": 94,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Creep",
-      "artist": "Radiohead",
-      "position": 95,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Spin You Around (1/24)",
-      "artist": "Morgan Wallen",
-      "position": 96,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Here Comes Santa Claus (Down Santa Claus Lane)",
-      "artist": "Doris Day",
-      "position": 97,
-      "platform": "apple_global"
-    },
-    {
-      "title": "White Christmas",
-      "artist": "Bing Crosby",
-      "position": 98,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Call Out My Name",
-      "artist": "The Weeknd",
-      "position": 99,
-      "platform": "apple_global"
-    },
-    {
-      "title": "Revolving door",
-      "artist": "Tate McRae",
-      "position": 100,
-      "platform": "apple_global"
-    }
-  ]
+  "bengali": [],
+  "marathi": [],
+  "kannada": [],
+  "malayalam": [],
+  "gujarati": []
 }
