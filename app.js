@@ -6813,8 +6813,6 @@ function initSearch() {
     });
 
     // Filter change handlers - re-trigger search when filters change
-    const searchYearFrom = document.getElementById('searchYearFrom');
-    const searchYearTo = document.getElementById('searchYearTo');
     const searchLanguage = document.getElementById('searchLanguage');
 
     const handleFilterChange = () => {
@@ -6824,8 +6822,6 @@ function initSearch() {
         }
     };
 
-    searchYearFrom?.addEventListener('change', handleFilterChange);
-    searchYearTo?.addEventListener('change', handleFilterChange);
     searchLanguage?.addEventListener('change', handleFilterChange);
 }
 
@@ -7107,14 +7103,10 @@ async function performFullSearch(query) {
 
     try {
         // Get filter values
-        const yearFrom = document.getElementById('searchYearFrom')?.value || '';
-        const yearTo = document.getElementById('searchYearTo')?.value || '';
         const language = document.getElementById('searchLanguage')?.value || '';
 
         // Build search URL with filters
         let searchUrl = `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&per_page=50`;
-        if (yearFrom) searchUrl += `&year_from=${yearFrom}`;
-        if (yearTo) searchUrl += `&year_to=${yearTo}`;
         if (language) searchUrl += `&language=${language}`;
 
         // Use Music Conductor search API
