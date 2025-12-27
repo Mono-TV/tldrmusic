@@ -512,12 +512,14 @@ body::before {
 
 .hero-bg {
     position: absolute;
-    inset: 0;
+    inset: -60px;
     background-size: cover;
     background-position: center;
     filter: blur(60px) saturate(1.5);
     opacity: 0.6;
     transition: opacity 0.5s ease, background-image 0.5s ease;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .hero::after {
