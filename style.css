@@ -551,8 +551,8 @@ body::before {
 }
 
 .hero-artwork {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -1099,8 +1099,8 @@ body::before {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     transform: translate(-50%, -50%);
     object-fit: cover;
 }
@@ -2644,8 +2644,8 @@ body::before {
 }
 
 .player-bar-artwork {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -3538,8 +3538,8 @@ body::before {
 }
 
 .queue-item-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -3707,8 +3707,8 @@ body::before {
 }
 
 .favorite-card-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -3854,8 +3854,8 @@ body::before {
 }
 
 .history-card-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -4513,8 +4513,8 @@ body::before {
 }
 
 .profile-card-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -4900,8 +4900,8 @@ body::before {
 }
 
 .profile-song-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -5882,8 +5882,8 @@ body::before {
 }
 
 .recently-played-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -6142,8 +6142,8 @@ body::before {
 }
 
 .playlist-grid-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -6288,8 +6288,8 @@ body::before {
 }
 
 .detail-cover img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -6364,8 +6364,8 @@ body::before {
 }
 
 .artist-cover img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -6435,8 +6435,8 @@ body::before {
 }
 
 .artist-album-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -6682,8 +6682,8 @@ body::before {
 }
 
 .detail-song-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -7337,8 +7337,8 @@ body::before {
 }
 
 .playlist-detail-artwork.single img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -7488,8 +7488,8 @@ body::before {
 }
 
 .playlist-song-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -7738,8 +7738,8 @@ body::before {
 }
 
 .playlist-select-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -8289,8 +8289,8 @@ body::before {
 }
 
 .public-profile-playlist-cover img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -8599,8 +8599,8 @@ body::before {
 }
 
 .artwork-preview img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -8682,8 +8682,8 @@ body::before {
 }
 
 .artwork-song-option img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -9229,8 +9229,8 @@ body::before {
 }
 
 .chart-song-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
@@ -9562,8 +9562,8 @@ body::before {
 }
 
 .search-dropdown-item-artwork img {
-    width: 135%;
-    height: 135%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: absolute;
     top: 50%;
