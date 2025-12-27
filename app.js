@@ -3,7 +3,7 @@
 // API Configuration (Dual-API Architecture)
 // - Music Conductor: Charts, Search, Discover, Playlists catalog
 // - TLDR Music API: User auth, Library (favorites, history, queue, user playlists)
-const MUSIC_CONDUCTOR_API = 'http://34.14.162.121:8000';
+const MUSIC_CONDUCTOR_API = 'https://tldr-music-401132033262.asia-south1.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
