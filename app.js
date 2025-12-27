@@ -2961,21 +2961,24 @@ function updateHeroButtonState(playing) {
 // Update playing state on song cards
 function updateCardPlayingState(playing) {
     document.querySelectorAll('.song-card').forEach(el => el.classList.remove('playing'));
-    if (playing) {
-        if (currentSongIndex >= 0) {
-            // India chart - use index
-            const activeEl = document.querySelector(`.song-card[data-index="${currentSongIndex}"]:not([data-chart-mode="global"])`);
+    if (playing && !isRegionalSongPlaying && currentSongIndex >= 0) {
+        // Only show playing state on home page cards when playing from main charts (not from playlists/search/regional)
+        if (currentChartMode === 'india') {
+            // Playing from India chart - use index for India cards only
+            const activeEl = document.querySelector(`.song-card[data-index="${currentSongIndex}"][data-chart-mode="india"]`);
             if (activeEl) {
                 activeEl.classList.add('playing');
             }
-        } else if (currentPlayingVideoId) {
-            // Global/Regional - use video ID
-            const activeEl = document.querySelector(`.song-card[data-video-id="${currentPlayingVideoId}"]`);
+        } else if (currentChartMode === 'global') {
+            // Playing from Global chart - use index for Global cards only
+            const activeEl = document.querySelector(`.song-card[data-index="${currentSongIndex}"][data-chart-mode="global"]`);
             if (activeEl) {
                 activeEl.classList.add('playing');
             }
         }
     }
+    // When isRegionalSongPlaying is true, don't mark any home page cards as playing
+    // The song is playing from a different context (playlist/search/regional)
 }
 
 // Progress tracking
