@@ -74,14 +74,14 @@ function mapHarvesterSong(song, index) {
         artwork_url: getHarvesterArtwork(song.artwork_url, youtubeId),
         rank: song.rank || index + 1,
         rank_change: song.rank_change || 0,
-        is_new: song.is_new || false,
-        score: song.score,
+        is_new: song.is_new || song.trend === 'new' || false,
+        score: song.score || song.cra_score || 0,
         platforms_count: song.platforms_count,
-        platform_positions: song.platform_positions,
+        platform_positions: song.platform_positions || song.platform_ranks,
         duration_ms: song.duration_ms,
         genre: song.genre,
         isrc: song.isrc,
-        song_id: song.song_id
+        song_id: song.song_id || song.apple_music_id
     };
 }
 
@@ -1112,7 +1112,7 @@ function renderHero() {
 
     document.getElementById('heroTitle').textContent = song.title;
     document.getElementById('heroArtist').textContent = song.artist;
-    document.getElementById('heroScore').textContent = song.score.toFixed(2);
+    document.getElementById('heroScore').textContent = (song.score || 0).toFixed(2);
     const heroRatingIcon1 = document.getElementById('heroRatingIcon');
     if (heroRatingIcon1) heroRatingIcon1.style.display = 'inline';
 
@@ -2429,7 +2429,7 @@ function createSongElement(song, index, chartMode = 'india') {
             <div class="song-card-title">${escapeHtml(song.title)}</div>
             <div class="song-card-artist">${escapeHtml(song.artist)}</div>
             <div class="song-card-meta">
-                <span class="score"><img src="✦.png" alt="" class="rating-icon">${song.score.toFixed(2)}</span>
+                <span class="score"><img src="✦.png" alt="" class="rating-icon">${(song.score || 0).toFixed(2)}</span>
                 ${rankMovement}
                 ${viewsText ? `<span>${viewsText} views</span>` : ''}
             </div>
@@ -2595,7 +2595,7 @@ function renderGlobalHero() {
 
     document.getElementById('heroTitle').textContent = song.title;
     document.getElementById('heroArtist').textContent = song.artist;
-    document.getElementById('heroScore').textContent = song.score.toFixed(2);
+    document.getElementById('heroScore').textContent = (song.score || 0).toFixed(2);
     const heroRatingIcon3 = document.getElementById('heroRatingIcon');
     if (heroRatingIcon3) heroRatingIcon3.style.display = 'inline';
 
@@ -2726,7 +2726,7 @@ function updateHeroWithSong(song, index) {
     // Update song info
     if (heroTitle) heroTitle.textContent = song.title;
     if (heroArtist) heroArtist.textContent = song.artist;
-    if (heroScore) heroScore.textContent = song.score.toFixed(2);
+    if (heroScore) heroScore.textContent = (song.score || 0).toFixed(2);
     const heroRatingIcon4 = document.getElementById('heroRatingIcon');
     if (heroRatingIcon4) heroRatingIcon4.style.display = 'inline';
 
