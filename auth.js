@@ -321,6 +321,55 @@ function logout() {
     // Stop real-time sync
     stopRealtimeSync();
 
+    // Stop playback and clear player
+    if (typeof player !== 'undefined' && player && typeof player.stopVideo === 'function') {
+        player.stopVideo();
+    }
+    if (typeof theaterPlayer !== 'undefined' && theaterPlayer && typeof theaterPlayer.stopVideo === 'function') {
+        theaterPlayer.stopVideo();
+    }
+
+    // Reset playback state
+    if (typeof isPlaying !== 'undefined') {
+        isPlaying = false;
+    }
+    if (typeof currentSongIndex !== 'undefined') {
+        currentSongIndex = -1;
+    }
+    if (typeof currentPlayingVideoId !== 'undefined') {
+        currentPlayingVideoId = null;
+    }
+    if (typeof isRegionalSongPlaying !== 'undefined') {
+        isRegionalSongPlaying = false;
+    }
+
+    // Hide player bar
+    const playerBar = document.getElementById('playerBar');
+    if (playerBar) {
+        playerBar.classList.remove('visible');
+    }
+
+    // Stop progress tracking
+    if (typeof stopProgressTracking === 'function') {
+        stopProgressTracking();
+    }
+
+    // Clear now-playing indicators from all song cards
+    if (typeof updateNowPlayingIndicators === 'function') {
+        updateNowPlayingIndicators();
+    }
+
+    // Remove playing state from all cards
+    document.querySelectorAll('.song-card.playing, .detail-song.now-playing').forEach(el => {
+        el.classList.remove('playing', 'now-playing');
+    });
+
+    // Update play/pause button state
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    if (playPauseBtn) {
+        playPauseBtn.classList.remove('playing');
+    }
+
     localStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
