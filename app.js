@@ -7845,7 +7845,14 @@ const PLAYLIST_SLUG_MAP = {
     'Rock': 'rock-classics',
     'Punjabi': 'punjabi-hits',
     'Tamil': 'tamil-hits',
-    'Telugu': 'telugu-hits'
+    'Telugu': 'telugu-hits',
+    'R&B/Soul': 'rnb-soul',
+    'Indie': 'alternative-indie',
+    'K-Pop': 'korean-hits',
+    'J-Pop': 'japanese-hits',
+    'Latin': 'latin-vibes',
+    'English': 'english-hits',
+    'Discover': 'chill-vibes'
 };
 
 // Shared playlist data cache (used by both colors and AI generated view)
@@ -8382,6 +8389,12 @@ const FEATURED_PLAYLISTS = [
     { id: 'featured-punjabi', name: 'Punjabi', genre: 'Punjabi', songCount: 5200, icon: '💫' },
     { id: 'featured-tamil', name: 'Tamil', genre: 'Tamil', songCount: 4800, icon: '🎶' },
     { id: 'featured-telugu', name: 'Telugu', genre: 'Telugu', songCount: 3900, icon: '🎼' },
+    { id: 'featured-rnb', name: 'R&B/Soul', genre: 'R&B/Soul', songCount: 3000, icon: '🎷' },
+    { id: 'featured-indie', name: 'Indie', genre: 'Indie', songCount: 2500, icon: '🎻' },
+    { id: 'featured-kpop', name: 'K-Pop', genre: 'K-Pop', songCount: 3200, icon: '🇰🇷' },
+    { id: 'featured-jpop', name: 'J-Pop', genre: 'J-Pop', songCount: 2800, icon: '🇯🇵' },
+    { id: 'featured-latin', name: 'Latin', genre: 'Latin', songCount: 4200, icon: '💃' },
+    { id: 'featured-english', name: 'English Hits', genre: 'English', songCount: 5000, icon: '🌍' },
     { id: 'featured-discover', name: 'Discover', genre: 'Discover', songCount: 76000, icon: '✨' }
 ];
 
@@ -8420,6 +8433,12 @@ async function openFeaturedPlaylist(genreKey) {
             'Punjabi': 'punjabi-hits',
             'Tamil': 'tamil-hits',
             'Telugu': 'telugu-hits',
+            'R&B/Soul': 'rnb-soul',
+            'Indie': 'alternative-indie',
+            'K-Pop': 'korean-hits',
+            'J-Pop': 'japanese-hits',
+            'Latin': 'latin-vibes',
+            'English': 'english-hits',
             'Discover': 'chill-vibes'
         };
 
