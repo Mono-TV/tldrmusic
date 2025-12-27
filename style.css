@@ -10589,15 +10589,9 @@ body::before {
         margin-left: auto;  /* Push to right */
     }
 
-    /* Make chart toggle more compact */
+    /* Hide chart toggle on small screens - saves space for auth/search buttons */
     .chart-toggle {
-        padding: 2px;
-        gap: 2px;
-    }
-
-    .toggle-btn {
-        padding: 5px 8px;
-        font-size: 0.7rem;
+        display: none !important;
     }
 
     .logo {
@@ -10658,11 +10652,6 @@ body::before {
     .logo-icon {
         width: 24px;
         height: 24px;
-    }
-
-    .toggle-btn {
-        padding: 4px 7px;
-        font-size: 0.65rem;
     }
 
     .hero-artwork-wrapper {
