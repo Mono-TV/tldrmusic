@@ -7100,35 +7100,47 @@ async function performFullSearch(query) {
     const resultsSection = document.getElementById('searchResults');
     const emptyState = document.getElementById('searchEmptyState');
     const loading = document.getElementById('searchLoading');
-    const resultsList = document.getElementById('searchResultsList');
     const noResults = document.getElementById('searchNoResults');
+
+    // Hide all sections initially
+    const songsSection = document.getElementById('searchSongsSection');
+    const albumsSection = document.getElementById('searchAlbumsSection');
+    const artistsSection = document.getElementById('searchArtistsSection');
+
+    if (songsSection) songsSection.style.display = 'none';
+    if (albumsSection) albumsSection.style.display = 'none';
+    if (artistsSection) artistsSection.style.display = 'none';
 
     if (emptyState) emptyState.style.display = 'none';
     if (resultsSection) resultsSection.style.display = 'block';
     if (loading) loading.style.display = 'flex';
-    if (resultsList) resultsList.innerHTML = '';
     if (noResults) noResults.style.display = 'none';
 
     try {
         // Get filter values
         const language = document.getElementById('searchLanguage')?.value || '';
 
-        // Build search URL with filters
-        let searchUrl = `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&per_page=50`;
+        // Build unified search URL
+        let searchUrl = `${MUSIC_CONDUCTOR_API}/api/search?q=${encodeURIComponent(query)}&songs_limit=20&albums_limit=10&artists_limit=10`;
         if (language) searchUrl += `&language=${language}`;
 
-        // Use Music Conductor search API
+        // Fetch unified search results
         const response = await fetch(searchUrl);
 
         if (!response.ok) throw new Error('Search failed');
 
         const data = await response.json();
-        const mappedSongs = (data.songs || data.results || []).map(mapHarvesterSearchResult);
+
+        // Map songs data
+        const mappedSongs = (data.songs || []).map(mapHarvesterSearchResult);
+        const albums = data.albums || [];
+        const artists = data.artists || [];
 
         // Save to recent searches
         addToRecentSearches(query);
 
-        renderSearchResults(mappedSongs, data.found || data.total || mappedSongs.length);
+        // Render all three types
+        renderCategorizedSearchResults(mappedSongs, albums, artists);
 
     } catch (error) {
         console.error('Full search error:', error);
@@ -7232,6 +7244,193 @@ function renderSearchError() {
             </div>
         `;
     }
+}
+
+// Render categorized search results (Songs, Albums, Artists)
+function renderCategorizedSearchResults(songs, albums, artists) {
+    const songsSection = document.getElementById('searchSongsSection');
+    const albumsSection = document.getElementById('searchAlbumsSection');
+    const artistsSection = document.getElementById('searchArtistsSection');
+    const noResults = document.getElementById('searchNoResults');
+
+    const hasSongs = songs && songs.length > 0;
+    const hasAlbums = albums && albums.length > 0;
+    const hasArtists = artists && artists.length > 0;
+
+    // Show no results if nothing found
+    if (!hasSongs && !hasAlbums && !hasArtists) {
+        if (noResults) noResults.style.display = 'flex';
+        return;
+    }
+
+    if (noResults) noResults.style.display = 'none';
+
+    // Render Songs
+    if (hasSongs) {
+        renderSongsResults(songs);
+        if (songsSection) songsSection.style.display = 'block';
+    } else {
+        if (songsSection) songsSection.style.display = 'none';
+    }
+
+    // Render Albums
+    if (hasAlbums) {
+        renderAlbumsResults(albums);
+        if (albumsSection) albumsSection.style.display = 'block';
+    } else {
+        if (albumsSection) albumsSection.style.display = 'none';
+    }
+
+    // Render Artists
+    if (hasArtists) {
+        renderArtistsResults(artists);
+        if (artistsSection) artistsSection.style.display = 'block';
+    } else {
+        if (artistsSection) artistsSection.style.display = 'none';
+    }
+}
+
+// Render songs results
+function renderSongsResults(songs) {
+    const countEl = document.getElementById('searchSongsCount');
+    const listEl = document.getElementById('searchSongsList');
+
+    if (countEl) {
+        countEl.textContent = `${songs.length} song${songs.length !== 1 ? 's' : ''}`;
+    }
+
+    if (!listEl) return;
+
+    listEl.innerHTML = songs.map((song, index) => {
+        const artworkUrl = song.artwork_url ||
+                          (song.youtube_video_id ? `https://i.ytimg.com/vi/${song.youtube_video_id}/maxresdefault.jpg` : '');
+        const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+
+        return `
+            <div class="detail-song search-result-item${isPlaying ? ' now-playing' : ''}"
+                 data-video-id="${song.youtube_video_id || ''}"
+                 onclick="playSearchResultFromList(${index})">
+                <span class="detail-song-num">${index + 1}</span>
+                <div class="detail-song-artwork">
+                    ${artworkUrl
+                        ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" loading="lazy">`
+                        : '<div class="placeholder"></div>'
+                    }
+                    ${getNowPlayingEqHtml()}
+                    <div class="detail-song-play-overlay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div class="detail-song-info">
+                    <div class="detail-song-title">${escapeHtml(song.title)}</div>
+                    <div class="detail-song-artist-row">
+                        <span class="detail-song-artist">${escapeHtml(song.artist)}${song.album ? ` · ${escapeHtml(song.album)}` : ''}</span>
+                        <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id || ''}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Store results for playback
+    window.currentSearchResults = songs;
+}
+
+// Render albums results
+function renderAlbumsResults(albums) {
+    const countEl = document.getElementById('searchAlbumsCount');
+    const listEl = document.getElementById('searchAlbumsList');
+
+    if (countEl) {
+        countEl.textContent = `${albums.length} album${albums.length !== 1 ? 's' : ''}`;
+    }
+
+    if (!listEl) return;
+
+    listEl.innerHTML = albums.map((album) => {
+        const albumName = escapeHtml(album.album || album.name || 'Unknown Album');
+        const artistName = escapeHtml(album.artist || album.artists?.[0] || 'Unknown Artist');
+        const songCount = album.song_count || album.songs?.length || 0;
+        const artworkUrl = album.artwork_url || album.artwork || '';
+
+        return `
+            <div class="search-album-card" onclick="searchAlbumSongs('${albumName.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}')">
+                <div class="search-album-artwork">
+                    ${artworkUrl
+                        ? `<img src="${artworkUrl}" alt="${albumName}" loading="lazy">`
+                        : `<div class="placeholder"></div>`
+                    }
+                    <div class="search-album-play-overlay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div class="search-album-info">
+                    <div class="search-album-name">${albumName}</div>
+                    <div class="search-album-artist">${artistName}</div>
+                    ${songCount > 0 ? `<div class="search-album-meta">${songCount} song${songCount !== 1 ? 's' : ''}</div>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Render artists results
+function renderArtistsResults(artists) {
+    const countEl = document.getElementById('searchArtistsCount');
+    const listEl = document.getElementById('searchArtistsList');
+
+    if (countEl) {
+        countEl.textContent = `${artists.length} artist${artists.length !== 1 ? 's' : ''}`;
+    }
+
+    if (!listEl) return;
+
+    listEl.innerHTML = artists.map((artist) => {
+        const artistName = escapeHtml(artist.artist || artist.name || 'Unknown Artist');
+        const songCount = artist.song_count || artist.songs?.length || 0;
+
+        return `
+            <div class="search-artist-card" onclick="searchArtistSongs('${artistName.replace(/'/g, "\\'")}')">
+                <div class="search-artist-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="search-artist-info">
+                    <div class="search-artist-name">${artistName}</div>
+                    ${songCount > 0 ? `<div class="search-artist-meta">${songCount} song${songCount !== 1 ? 's' : ''}</div>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Search album songs
+function searchAlbumSongs(albumName, artistName) {
+    const query = `${albumName} ${artistName}`;
+    const input = document.getElementById('searchViewInput');
+    if (input) input.value = query;
+    performFullSearch(query);
+}
+
+// Search artist songs
+function searchArtistSongs(artistName) {
+    const input = document.getElementById('searchViewInput');
+    if (input) input.value = artistName;
+    performFullSearch(artistName);
 }
 
 // ============================================================

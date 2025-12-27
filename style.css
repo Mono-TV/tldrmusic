@@ -9978,6 +9978,164 @@ body::before {
     gap: 0.25rem;
 }
 
+/* Search Results Sections */
+.search-results-section {
+    margin-bottom: 3rem;
+}
+
+.search-results-section h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.search-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Search Album Card */
+.search-album-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.search-album-card:hover {
+    background: var(--bg-elevated);
+    transform: translateY(-4px);
+}
+
+.search-album-artwork {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    background: var(--bg-elevated);
+}
+
+.search-album-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.search-album-artwork .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+}
+
+.search-album-play-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.search-album-card:hover .search-album-play-overlay {
+    opacity: 1;
+}
+
+.search-album-play-overlay svg {
+    width: 36px;
+    height: 36px;
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.search-album-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.search-album-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-album-artist {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-album-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Search Artist Card */
+.search-artist-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-artist-card:hover {
+    background: var(--bg-elevated);
+    transform: translateY(-4px);
+}
+
+.search-artist-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.search-artist-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-artist-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-artist-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
 /* Search Loading */
 .search-loading {
     display: flex;
