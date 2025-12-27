@@ -2818,9 +2818,9 @@ function playSong(index) {
         return;
     }
 
-    // Reset regional song flag and video ID when playing main chart song
+    // Reset regional song flag and set current video ID for tracking
     isRegionalSongPlaying = false;
-    currentPlayingVideoId = null;
+    currentPlayingVideoId = song.youtube_video_id;
 
     // Track in history
     addToHistory(song);
@@ -2831,6 +2831,9 @@ function playSong(index) {
     }
 
     updateNowPlaying(index);
+
+    // Update now-playing indicators in song lists
+    updateNowPlayingIndicators();
 
     // Update favorite button state (after updateNowPlaying so currentSongIndex is correct)
     updateFavoriteButtons();
