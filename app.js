@@ -6854,7 +6854,7 @@ async function performQuickSearch(query) {
     try {
         // Use Music Conductor search API
         const response = await fetch(
-            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=5`
+            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&per_page=5`
         );
 
         if (!response.ok) throw new Error('Search failed');
