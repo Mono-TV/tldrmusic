@@ -10497,6 +10497,38 @@ body::before {
     /* Header Mobile */
     .header-inner {
         padding: 0.6rem 0.75rem;
+        justify-content: space-between;  /* Better spacing for all elements */
+    }
+
+    .brand {
+        gap: 0.5rem;  /* Tighter spacing on small screens */
+        flex: 1;  /* Allow brand to take available space */
+        min-width: 0;  /* Enable text truncation */
+    }
+
+    /* Hide chart badge on very small screens - it's redundant */
+    .chart-badge {
+        display: none !important;
+    }
+
+    /* Remove absolute positioning - let header-meta flow naturally */
+    .header-meta {
+        position: static !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;  /* Push to right */
+    }
+
+    /* Make chart toggle more compact */
+    .chart-toggle {
+        padding: 2px;
+        gap: 2px;
+    }
+
+    .toggle-btn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
     }
 
     .logo {
@@ -10541,6 +10573,29 @@ body::before {
 
 /* ===== SMALL MOBILE (320px) ===== */
 @media (max-width: 360px) {
+    /* Header - Extra compact on smallest screens */
+    .header-inner {
+        padding: 0.5rem 0.6rem;
+    }
+
+    .brand {
+        gap: 0.4rem;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+
+    .logo-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .toggle-btn {
+        padding: 4px 7px;
+        font-size: 0.65rem;
+    }
+
     .hero-artwork-wrapper {
         width: 150px;
         height: 150px;
