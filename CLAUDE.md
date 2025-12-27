@@ -192,6 +192,29 @@ tldrmusic/
 - **Platform Charts** (Global): Platform selector (Spotify, Billboard, Apple Music) with grid of top 10 songs
 - **Logo Navigation**: Clicking TLDRMusic logo returns to home
 
+### Search Page
+
+The Search page (`/search/`) provides categorized search results across three sections:
+
+- **Songs Section**: List view of up to 20 matching songs with play controls
+- **Albums Section**: Grid view of up to 10 matching albums with artwork and metadata
+  - Click album to search for all songs in that album
+  - Responsive grid layout with hover effects and play overlays
+- **Artists Section**: Grid view of up to 10 matching artists with avatars
+  - Click artist to search for all songs by that artist
+  - Shows song count for each artist
+
+**Unified Search API**: Single endpoint returns all three result types in one request
+- Endpoint: `GET /api/search?q={query}&songs_limit=20&albums_limit=10&artists_limit=10`
+- Returns: `{ query, songs[], albums[], artists[], songs_total, albums_total, artists_total }`
+
+**Key Features**:
+- Real-time search with debouncing
+- Autocomplete suggestions
+- Language filter support
+- Empty states and loading indicators
+- Click-through interactions for albums and artists
+
 ### Discover Page
 
 The Discover page (`/discover/`) provides curated playlists from India's 68,000+ track catalog:
@@ -223,9 +246,8 @@ The Discover page (`/discover/`) provides curated playlists from India's 68,000+
 | `/api/charts/aggregated?region=global&limit=25` | GET | Global Top 25 chart |
 | `/api/charts/multi-platform?region=india` | GET | Songs on 2+ platforms |
 | `/api/charts/source/{platform}?region=india` | GET | Single platform chart |
-| `/api/search/songs?q={query}&has_youtube=true&per_page=50` | GET | Full search |
+| `/api/search?q={query}&songs_limit=20&albums_limit=10&artists_limit=10` | GET | Unified search (songs, albums, artists) |
 | `/api/search/suggest?q={query}&limit=10` | GET | Autocomplete suggestions |
-| `/api/search/facets` | GET | Available filter values |
 | `/api/playlists` | GET | All curated playlists (22 total) |
 | `/api/playlists/{slug}` | GET | Get specific playlist by slug |
 
@@ -492,6 +514,31 @@ playFromChart(chartData, startIndex);
 playFromPlaylist(playlistId, startIndex);
 ```
 
+### Performing Searches
+
+```javascript
+// Unified search (returns songs, albums, artists)
+async function performFullSearch(query) {
+    const searchUrl = `${MUSIC_CONDUCTOR_API}/api/search?q=${encodeURIComponent(query)}&songs_limit=20&albums_limit=10&artists_limit=10`;
+    const response = await fetch(searchUrl);
+    const data = await response.json();
+
+    // data contains: { query, songs[], albums[], artists[], songs_total, albums_total, artists_total }
+    renderCategorizedSearchResults(data.songs, data.albums, data.artists);
+}
+
+// Search songs by album
+async function searchAlbumSongs(albumName, artistName) {
+    const query = `${albumName} ${artistName}`;
+    await performFullSearch(query);
+}
+
+// Search songs by artist
+async function searchArtistSongs(artistName) {
+    await performFullSearch(artistName);
+}
+```
+
 ## API Migration Reference
 
 The frontend was migrated to use Music Harvester API for charts, search, and discover functionality while keeping TLDR Music API for authentication and user library.
@@ -502,7 +549,13 @@ The frontend was migrated to use Music Harvester API for charts, search, and dis
 - Migration phases and status
 
 **Key Changes**:
-- Charts: `/api/chart/current` and `/api/chart/global/current`
-- Search: `/api/tldr/search` and `/api/tldr/suggest`
-- Discover: `/api/playlists/*` and `/api/india/playlist/*`
+- Charts: `/api/charts/aggregated?region=india` and `/api/charts/aggregated?region=global`
+- Search: `/api/search?q={query}&songs_limit=20&albums_limit=10&artists_limit=10` (unified search)
+- Autocomplete: `/api/search/suggest?q={query}&limit=10`
+- Discover: `/api/playlists` and `/api/playlists/{slug}`
 - "AI Playlists" renamed to "Discover" throughout the UI
+
+**Search Evolution**:
+- **Old**: Separate endpoints for songs only (`/api/search/songs`)
+- **New**: Unified endpoint returning songs, albums, and artists in a single request
+- **Benefits**: Reduced API calls, categorized results, better UX with album/artist click-through
