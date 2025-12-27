@@ -8209,8 +8209,8 @@ async function openFeaturedPlaylist(genreKey) {
     try {
         // Map featured playlist genres to Music Conductor playlist slugs
         const FEATURED_SLUG_MAP = {
-            'Indian Pop': 'pop-hits',
-            'Bollywood': 'hindi-hits',
+            'Indian Pop': 'indian-pop',
+            'Bollywood': 'bollywood',
             'Pop': 'pop-hits',
             'Hip-Hop/Rap': 'hip-hop-rap',
             'Electronic': 'electronic-dance',
