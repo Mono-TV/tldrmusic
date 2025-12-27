@@ -2900,7 +2900,11 @@ function onPlayerStateChange(event) {
             if (videoId) {
                 const songIndex = chartData.chart.findIndex(s => s.youtube_video_id === videoId);
                 if (songIndex !== -1 && songIndex !== currentSongIndex) {
+                    // Update current playing video ID for now-playing indicators
+                    currentPlayingVideoId = videoId;
                     updateNowPlaying(songIndex);
+                    // Update now-playing indicators in song lists
+                    updateNowPlayingIndicators();
                 }
             }
         }
