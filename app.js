@@ -7193,17 +7193,19 @@ function renderSearchResults(songs, total) {
                 </div>
                 <div class="detail-song-info">
                     <div class="detail-song-title">${escapeHtml(song.title)}</div>
-                    <div class="detail-song-artist">${escapeHtml(song.artist)}${song.album ? ` · ${escapeHtml(song.album)}` : ''}</div>
+                    <div class="detail-song-artist-row">
+                        <span class="detail-song-artist">${escapeHtml(song.artist)}${song.album ? ` · ${escapeHtml(song.album)}` : ''}</span>
+                        <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id || ''}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to playlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 12H3"></path>
+                                <path d="M16 6H3"></path>
+                                <path d="M16 18H3"></path>
+                                <path d="M18 9v6"></path>
+                                <path d="M21 12h-6"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <button class="detail-song-add" onclick="event.stopPropagation(); showAddToPlaylistModal({videoId: '${song.youtube_video_id || ''}', title: '${escapeHtml(song.title).replace(/'/g, "\\'")}', artist: '${escapeHtml(song.artist).replace(/'/g, "\\'")}', artwork: '${artworkUrl.replace(/'/g, "\\'")}'})" title="Add to playlist">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M11 12H3"></path>
-                        <path d="M16 6H3"></path>
-                        <path d="M16 18H3"></path>
-                        <path d="M18 9v6"></path>
-                        <path d="M21 12h-6"></path>
-                    </svg>
-                </button>
             </div>
         `;
     }).join('');

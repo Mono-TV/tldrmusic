@@ -6789,12 +6789,21 @@ body::before {
     text-overflow: ellipsis;
 }
 
+.detail-song-artist-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
 .detail-song-artist {
     font-size: 0.85rem;
     color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
 }
 
 .detail-song-remove {
@@ -10073,8 +10082,14 @@ body::before {
     opacity: 1;
 }
 
-.search-result-item .detail-song-add {
-    margin-left: auto;
+.detail-song-artist-row .detail-song-add {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.detail-song:hover .detail-song-artist-row .detail-song-add,
+.detail-song-artist-row .detail-song-add:hover {
+    opacity: 1;
 }
 
 /* ============================================================
