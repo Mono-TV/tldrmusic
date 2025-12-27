@@ -1395,8 +1395,8 @@ async function loadDiscoverIndiaSongs(genreKey) {
     try {
         // Map Discover India genres to Music Conductor playlist slugs
         const DISCOVER_SLUG_MAP = {
-            'Indian Pop': 'pop-hits',
-            'Bollywood': 'hindi-hits',
+            'Indian Pop': 'indian-pop',
+            'Bollywood': 'bollywood',
             'Pop': 'pop-hits',
             'Hip-Hop/Rap': 'hip-hop-rap',
             'Electronic': 'electronic-dance',
@@ -7635,8 +7635,8 @@ const PLAYLIST_SLUG_MAP = {
     'classical': 'classical-music',
     'alternative': 'alternative-indie',
     // Featured playlists (title case)
-    'Indian Pop': 'pop-hits',
-    'Bollywood': 'hindi-hits',
+    'Indian Pop': 'indian-pop',
+    'Bollywood': 'bollywood',
     'Pop': 'pop-hits',
     'Hip-Hop/Rap': 'hip-hop-rap',
     'Electronic': 'electronic-dance',
