@@ -6811,6 +6811,22 @@ function initSearch() {
     clearSearchHistory?.addEventListener('click', () => {
         clearAllRecentSearches();
     });
+
+    // Filter change handlers - re-trigger search when filters change
+    const searchYearFrom = document.getElementById('searchYearFrom');
+    const searchYearTo = document.getElementById('searchYearTo');
+    const searchLanguage = document.getElementById('searchLanguage');
+
+    const handleFilterChange = () => {
+        const query = searchViewInput?.value.trim();
+        if (query) {
+            performFullSearch(query);
+        }
+    };
+
+    searchYearFrom?.addEventListener('change', handleFilterChange);
+    searchYearTo?.addEventListener('change', handleFilterChange);
+    searchLanguage?.addEventListener('change', handleFilterChange);
 }
 
 function handleSearchInput(query) {
@@ -7090,10 +7106,19 @@ async function performFullSearch(query) {
     if (noResults) noResults.style.display = 'none';
 
     try {
+        // Get filter values
+        const yearFrom = document.getElementById('searchYearFrom')?.value || '';
+        const yearTo = document.getElementById('searchYearTo')?.value || '';
+        const language = document.getElementById('searchLanguage')?.value || '';
+
+        // Build search URL with filters
+        let searchUrl = `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&per_page=50`;
+        if (yearFrom) searchUrl += `&year_from=${yearFrom}`;
+        if (yearTo) searchUrl += `&year_to=${yearTo}`;
+        if (language) searchUrl += `&language=${language}`;
+
         // Use Music Conductor search API
-        const response = await fetch(
-            `${MUSIC_CONDUCTOR_API}/api/search/songs?q=${encodeURIComponent(query)}&has_youtube=true&per_page=50`
-        );
+        const response = await fetch(searchUrl);
 
         if (!response.ok) throw new Error('Search failed');
 
@@ -7119,7 +7144,27 @@ function renderSearchResults(songs, total) {
     const noResults = document.getElementById('searchNoResults');
 
     if (countEl) {
-        countEl.textContent = `${total} result${total !== 1 ? 's' : ''}`;
+        // Build results text with active filters
+        const yearFrom = document.getElementById('searchYearFrom')?.value;
+        const yearTo = document.getElementById('searchYearTo')?.value;
+        const language = document.getElementById('searchLanguage')?.value;
+
+        let filterText = '';
+        if (yearFrom || yearTo) {
+            if (yearFrom && yearTo) {
+                filterText += ` (${yearFrom}–${yearTo})`;
+            } else if (yearFrom) {
+                filterText += ` (from ${yearFrom})`;
+            } else {
+                filterText += ` (until ${yearTo})`;
+            }
+        }
+        if (language) {
+            const langNames = { hi: 'Hindi', en: 'English', pa: 'Punjabi', ta: 'Tamil', te: 'Telugu', bn: 'Bengali', ml: 'Malayalam', kn: 'Kannada', gu: 'Gujarati' };
+            filterText += ` · ${langNames[language] || language}`;
+        }
+
+        countEl.textContent = `${total.toLocaleString()} result${total !== 1 ? 's' : ''}${filterText}`;
     }
 
     if (!listEl) return;
