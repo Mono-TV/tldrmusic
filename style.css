@@ -657,8 +657,10 @@ body::before {
 .btn-play-hero {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.75rem;
     padding: 0.85rem 1.75rem;
+    min-width: 180px;
     background: var(--accent);
     border: none;
     border-radius: 50px;
@@ -667,7 +669,8 @@ body::before {
     font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s, color 0.2s, opacity 0.2s;
+    white-space: nowrap;
 }
 
 .hero-actions {
@@ -10464,6 +10467,7 @@ body::before {
     .btn-play-hero {
         padding: 0.65rem 1.5rem;
         font-size: 0.85rem;
+        min-width: 160px;
     }
 
     .hero-action-btn {
