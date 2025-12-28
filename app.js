@@ -7877,37 +7877,37 @@ async function renderHomepageContent() {
             activity: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.activity.includes(p.slug))
         };
 
-        // Build homepage content HTML
+        // Build homepage content HTML (Engagement Funnel Strategy)
         let html = '';
 
-        // Row 1: Mood Playlists (11 playlists)
-        if (playlistsByType.mood.length > 0) {
-            html += renderPlaylistRow('Playlists For Every Mood', playlistsByType.mood, 'mood');
-        }
-
-        // Row 2: Language Playlists (8 playlists)
+        // Row 1: Language Playlists (8 playlists) - Cultural hook
         if (playlistsByType.language.length > 0) {
             html += renderPlaylistRow('Music In Your Language', playlistsByType.language, 'language');
         }
 
-        // Row 3: Artist Playlists (7 playlists)
+        // Row 2: Artist Playlists (7 playlists) - Fan engagement
         if (playlistsByType.artist.length > 0) {
             html += renderPlaylistRow('Top Artist Collections', playlistsByType.artist, 'artist');
         }
 
-        // Row 4: Era Playlists (6 playlists)
+        // Row 3: Mood Playlists (11 playlists) - Universal appeal
+        if (playlistsByType.mood.length > 0) {
+            html += renderPlaylistRow('Playlists For Every Mood', playlistsByType.mood, 'mood');
+        }
+
+        // Row 4: Activity Playlists (5 playlists) - Intent-driven
+        if (playlistsByType.activity.length > 0) {
+            html += renderPlaylistRow('Music For Every Activity', playlistsByType.activity, 'activity');
+        }
+
+        // Row 5: Era Playlists (6 playlists) - Discovery
         if (playlistsByType.era.length > 0) {
             html += renderPlaylistRow('Music Through The Decades', playlistsByType.era, 'era');
         }
 
-        // Row 5: Genre Playlists (5 playlists)
+        // Row 6: Genre Playlists (5 playlists) - Exploration
         if (playlistsByType.genre.length > 0) {
             html += renderPlaylistRow('Explore By Genre', playlistsByType.genre, 'genre');
-        }
-
-        // Row 6: Activity Playlists (5 playlists)
-        if (playlistsByType.activity.length > 0) {
-            html += renderPlaylistRow('Music For Every Activity', playlistsByType.activity, 'activity');
         }
 
         container.innerHTML = html;
