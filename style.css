@@ -11011,7 +11011,7 @@ body::before {
 /* Generic Content Row */
 .content-row {
     margin: 3rem 0;
-    padding: 0 2rem;
+    padding: 0;
 }
 
 .content-row:first-child {
@@ -11744,7 +11744,7 @@ body::before {
 /* Tablet (1024px) */
 @media (max-width: 1024px) {
     .content-row {
-        padding: 0 1.5rem;
+        padding: 0;
         margin: 2.5rem 0;
     }
 
@@ -11786,7 +11786,7 @@ body::before {
 /* Mobile (768px) */
 @media (max-width: 768px) {
     .content-row {
-        padding: 0 1rem;
+        padding: 0;
         margin: 2rem 0;
     }
 
