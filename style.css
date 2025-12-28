@@ -3236,7 +3236,7 @@ body::before {
     font-weight: 600;
     opacity: 0;
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 10000; /* Above onboarding modal (9999) */
 }
 
 .toast.show {

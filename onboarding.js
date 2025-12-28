@@ -328,6 +328,8 @@ async function nextStep() {
     // Save current step to backend
     try {
         const accessToken = localStorage.getItem('tldr-access-token');
+        console.log('Access token from localStorage:', accessToken ? `${accessToken.substring(0, 20)}...` : 'NULL');
+
         if (!accessToken) {
             showToast('Please log in first');
             return;
