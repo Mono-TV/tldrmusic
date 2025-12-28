@@ -237,7 +237,8 @@ async function handleGoogleCallback(response) {
 
         // Update UI
         updateAuthUI();
-        showToast(`Welcome, ${data.user.name}!`);
+        const displayName = data.user.profile?.display_name || data.user.name || data.user.email?.split('@')[0] || 'there';
+        showToast(`Welcome, ${displayName}!`);
 
         // Check if user needs onboarding
         if (shouldShowOnboarding && shouldShowOnboarding()) {
@@ -1359,13 +1360,14 @@ function updateAuthUI() {
         authBtn.className = 'auth-btn logged-in';
 
         // Get user initials for fallback
-        const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const userName = currentUser.profile?.display_name || currentUser.name || currentUser.email || 'User';
+        const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
         // Create inline SVG fallback (no network required)
         const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56"><rect fill="#D4AF37" width="56" height="56" rx="28"/><text x="28" y="35" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="20" font-weight="600">${initials}</text></svg>`)}`;
 
         // Process Google profile photo URL to ensure it loads
-        let avatarUrl = currentUser.picture || '';
+        let avatarUrl = currentUser.profile?.avatar_url || currentUser.picture || '';
         if (avatarUrl) {
             // Google profile photos: ensure proper size parameter
             if (avatarUrl.includes('googleusercontent.com')) {
@@ -1376,11 +1378,11 @@ function updateAuthUI() {
         }
 
         // Create the auth button with avatar and dropdown
-        const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'User';
+        const firstName = userName.split(' ')[0];
 
         authBtn.innerHTML = `
             <img src="${avatarUrl || fallbackSvg}"
-                 alt="${currentUser.name}"
+                 alt="${userName}"
                  class="user-avatar"
                  referrerpolicy="no-referrer"
                  onerror="this.onerror=null; this.src='${fallbackSvg}';">
@@ -1473,7 +1475,8 @@ function showProfilePanel() {
 
     if (avatar) {
         // Get user initials for fallback
-        const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const userName = currentUser.profile?.display_name || currentUser.name || currentUser.email || 'User';
+        const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
         const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect fill="#D4AF37" width="96" height="96" rx="48"/><text x="48" y="58" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="36" font-weight="600">${initials}</text></svg>`)}`;
         avatar.src = currentUser.picture || fallbackSvg;
         avatar.onerror = function() { this.onerror=null; this.src=fallbackSvg; };
@@ -1956,7 +1959,8 @@ function populateShareCard() {
     // Avatar
     const avatar = document.getElementById('shareCardAvatar');
     if (avatar && currentUser) {
-        const initials = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const userName = currentUser.profile?.display_name || currentUser.name || currentUser.email || 'User';
+        const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
         const fallbackSvg = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect fill="#D4AF37" width="96" height="96" rx="48"/><text x="48" y="58" text-anchor="middle" fill="#1a1a2e" font-family="system-ui,sans-serif" font-size="36" font-weight="600">${initials}</text></svg>`)}`;
         avatar.src = currentUser.picture || fallbackSvg;
         avatar.onerror = () => { avatar.src = fallbackSvg; };
