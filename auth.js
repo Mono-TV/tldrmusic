@@ -1,16 +1,17 @@
 /**
  * TLDR Music - Authentication Module
- * Handles Google Sign-In and cloud sync
+ * Handles Google Sign-In, Guest Mode, and cloud sync
  *
  * API Architecture:
- * - Auth & Library endpoints use TLDR Music API (this file)
- * - Charts, Search, Discover use Music Harvester API (see app.js)
+ * - Auth endpoints use Music Conductor API (Phase 1: Authentication)
+ * - Library sync endpoints coming in Phase 2 (Personalization)
+ * - Charts, Search, Discover use Music Conductor API (see app.js)
  */
 
 // Configuration
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
-    API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'  // User auth & library
+    API_BASE: 'https://tldr-music-401132033262.asia-south1.run.app'  // Music Conductor API (auth & personalization)
 };
 
 // Storage keys for auth
@@ -44,6 +45,51 @@ function getSessionId() {
         sessionStorage.setItem('tldr-session-id', sessionId);
     }
     return sessionId;
+}
+
+// ============================================================
+// DEVICE FINGERPRINTING (for guest mode)
+// ============================================================
+
+/**
+ * Generate or retrieve device fingerprint for guest mode
+ */
+function getOrCreateDeviceFingerprint() {
+    // Check if we already have a device ID stored
+    let deviceId = localStorage.getItem('tldr-device-id');
+
+    if (!deviceId) {
+        // Generate a unique device fingerprint
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillText('browser fingerprint', 2, 2);
+        const canvasFingerprint = canvas.toDataURL();
+
+        // Combine various browser properties
+        const fingerprint = [
+            navigator.userAgent,
+            navigator.language,
+            screen.colorDepth,
+            screen.width + 'x' + screen.height,
+            new Date().getTimezoneOffset(),
+            canvasFingerprint.substring(0, 100)
+        ].join('|');
+
+        // Simple hash function
+        let hash = 0;
+        for (let i = 0; i < fingerprint.length; i++) {
+            const char = fingerprint.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+
+        deviceId = 'device_' + Math.abs(hash).toString(36) + '_' + Date.now().toString(36);
+        localStorage.setItem('tldr-device-id', deviceId);
+    }
+
+    return deviceId;
 }
 
 // ============================================================
@@ -198,6 +244,58 @@ async function handleGoogleCallback(response) {
     }
 }
 
+/**
+ * Create guest user session
+ */
+async function createGuestUser() {
+    try {
+        showToast('Creating guest session...');
+
+        const deviceId = getOrCreateDeviceFingerprint();
+
+        const res = await fetch(`${AUTH_CONFIG.API_BASE}/api/auth/guest`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_id: deviceId })
+        });
+
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.detail || 'Failed to create guest session');
+        }
+
+        const data = await res.json();
+
+        // Store tokens
+        localStorage.setItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
+        localStorage.setItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN, data.refresh_token);
+        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(data.user));
+
+        // Update state
+        currentUser = data.user;
+        isAuthenticated = true;
+
+        // Save pending action before closing modal
+        const actionToExecute = pendingPlayAction;
+
+        // Close login modal
+        closeLoginModal();
+
+        // Update UI
+        updateAuthUI();
+        showToast('Guest mode enabled!');
+
+        // Execute pending play action if any (after UI is ready)
+        if (actionToExecute) {
+            setTimeout(() => actionToExecute(), 100);
+        }
+
+    } catch (error) {
+        console.error('Guest mode error:', error);
+        showToast('Failed to create guest session: ' + error.message);
+    }
+}
+
 // ============================================================
 // AUTH STATE MANAGEMENT
 // ============================================================
@@ -260,7 +358,7 @@ async function refreshAccessToken() {
         throw new Error('No refresh token');
     }
 
-    const res = await fetch(`${AUTH_CONFIG.API_BASE}/api/auth/refresh`, {
+    const res = await fetch(`${AUTH_CONFIG.API_BASE}/api/auth/token/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh_token: refreshToken })
@@ -1196,6 +1294,16 @@ function createLoginModal() {
             <h2>Sign in to Play</h2>
             <p>Create a free account to start streaming and save your favorites across devices.</p>
             <div id="googleSignInBtn"></div>
+            <div class="login-modal-divider">
+                <span>or</span>
+            </div>
+            <button class="guest-signin-btn" onclick="createGuestUser()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Continue as Guest
+            </button>
             <p class="login-modal-terms">By continuing, you agree to our Terms of Service.</p>
         </div>
     `;

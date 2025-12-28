@@ -4390,6 +4390,63 @@ body::before {
     height: 20px;
 }
 
+/* Login modal divider */
+.login-modal-divider {
+    position: relative;
+    text-align: center;
+    margin: 24px 0;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.login-modal-divider span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(18, 18, 28, 0.97);
+    padding: 0 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Guest sign-in button */
+.guest-signin-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    margin-bottom: 24px;
+}
+
+.guest-signin-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.guest-signin-btn:active {
+    transform: translateY(0);
+}
+
+.guest-signin-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
 .login-modal-terms {
     font-size: 0.75rem;
     color: var(--text-muted);
