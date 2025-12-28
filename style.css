@@ -1601,7 +1601,22 @@ body::before {
 }
 
 .discover-section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.discover-section:last-child {
+    margin-bottom: 1rem;
+}
+
+.discover-section .section-title {
+    margin-bottom: 1.25rem;
+}
+
+.discover-section .section-title h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
 }
 
 .discover-section-header {
@@ -1642,19 +1657,27 @@ body::before {
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     aspect-ratio: 1.2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .discover-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .discover-card-bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--card-color) 0%, color-mix(in srgb, var(--card-color) 60%, #000) 100%);
+    background: linear-gradient(135deg, var(--card-color) 0%, color-mix(in srgb, var(--card-color) 50%, #000) 100%);
+    transition: opacity 0.3s ease;
+}
+
+.discover-card:hover .discover-card-bg {
+    opacity: 0.95;
 }
 
 .discover-card-content {
@@ -1664,34 +1687,44 @@ body::before {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 1rem;
+    padding: 1.25rem;
 }
 
 .discover-card-icon {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 32px;
-    height: 32px;
-    opacity: 0.6;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.discover-card:hover .discover-card-icon {
+    opacity: 0.8;
+    transform: scale(1.1);
 }
 
 .discover-card-icon svg {
     width: 100%;
     height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .discover-card-title {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #fff;
     margin: 0 0 0.25rem 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    line-height: 1.3;
 }
 
 .discover-card-meta {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Mood Cards - specific colors */
@@ -1775,27 +1808,38 @@ body::before {
 /* Artist Card - circular style */
 .artist-card {
     flex: 0 0 auto;
-    width: 140px;
+    width: 150px;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.5rem;
+    border-radius: 12px;
 }
 
 .artist-card:hover {
-    transform: scale(1.05);
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .artist-card-image {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
-    margin: 0 auto 0.75rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    margin: 0 auto 0.875rem;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.artist-card:hover .artist-card-image {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: scale(1.05);
 }
 
 .artist-card-image img {
@@ -1805,24 +1849,31 @@ body::before {
 }
 
 .artist-card-image svg {
-    width: 48px;
-    height: 48px;
-    color: var(--text-muted);
+    width: 56px;
+    height: 56px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.3s ease;
+}
+
+.artist-card:hover .artist-card-image svg {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .artist-card-name {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.25rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0 0.25rem;
 }
 
 .artist-card-count {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
+    font-weight: 500;
 }
 
 /* Curated Detail View */
@@ -1919,12 +1970,32 @@ body::before {
 
 /* Discover responsive */
 @media (max-width: 768px) {
+    .ai-generated-view {
+        padding: 1rem;
+        margin: 0.5rem;
+        border-radius: 12px;
+    }
+
+    .ai-generated-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+
+    .ai-generated-header h2 {
+        font-size: 2rem;
+    }
+
     .discover-header h2 {
         font-size: 1.5rem;
     }
 
+    .discover-section .section-title h3 {
+        font-size: 1.25rem;
+    }
+
     .discover-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.875rem;
     }
 
     .discover-grid.mood-grid {
@@ -1932,12 +2003,12 @@ body::before {
     }
 
     .artist-card {
-        width: 120px;
+        width: 130px;
     }
 
     .artist-card-image {
-        width: 100px;
-        height: 100px;
+        width: 110px;
+        height: 110px;
     }
 
     .curated-detail-hero {
@@ -1961,6 +2032,24 @@ body::before {
 }
 
 @media (max-width: 500px) {
+    .ai-generated-view {
+        margin: 0;
+        border-radius: 0;
+        padding: 0.875rem;
+    }
+
+    .ai-generated-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .discover-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .discover-section .section-title h3 {
+        font-size: 1.1rem;
+    }
+
     .discover-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
@@ -1970,30 +2059,82 @@ body::before {
         aspect-ratio: 1;
     }
 
+    .discover-card-content {
+        padding: 1rem;
+    }
+
     .discover-card-title {
         font-size: 0.95rem;
     }
+
+    .discover-card-meta {
+        font-size: 0.75rem;
+    }
+
+    .discover-card-icon {
+        width: 32px;
+        height: 32px;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .artist-card {
+        width: 110px;
+    }
+
+    .artist-card-image {
+        width: 95px;
+        height: 95px;
+    }
+
+    .artist-card-image svg {
+        width: 44px;
+        height: 44px;
+    }
+
+    .artist-card-name {
+        font-size: 0.85rem;
+    }
+
+    .artist-card-count {
+        font-size: 0.7rem;
+    }
 }
 
-/* ===== AI GENERATED PAGE ===== */
+/* ===== AI GENERATED PAGE / DISCOVER VIEW ===== */
 .ai-generated-view {
-    padding: 0 0 2rem 0;
+    padding: 1.5rem 2rem 2rem;
+    background:
+        radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(30, 30, 35, 0.95) 0%, rgba(18, 18, 22, 0.98) 100%);
+    border-radius: 16px;
+    margin: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    min-height: calc(100vh - 200px);
 }
 
 .ai-generated-header {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ai-generated-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    font-weight: 800;
     margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .ai-generated-subtitle {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin: 0;
+    letter-spacing: 0.01em;
 }
 
 .ai-loading {

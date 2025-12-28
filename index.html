@@ -713,36 +713,53 @@
             <section class="ai-generated-view" id="discoverView" style="display: none;">
                 <div class="ai-generated-header">
                     <h2>Discover</h2>
-                    <p class="ai-generated-subtitle">Explore 68,000+ tracks by mood, genre, language, and artist</p>
+                    <p class="ai-generated-subtitle">Explore curated playlists by mood, genre, language, and artist</p>
                 </div>
                 <div class="ai-generated-content" id="discoverContent">
                     <!-- Featured Playlists -->
                     <section class="discover-section">
-                        <h3 class="discover-section-title">Featured Playlists</h3>
+                        <div class="section-title">
+                            <h3>Featured Playlists</h3>
+                            <span class="section-count-badge" id="featuredCount">16</span>
+                        </div>
                         <div class="discover-grid" id="featuredPlaylistsGrid"></div>
                     </section>
 
                     <!-- Mood Playlists -->
                     <section class="discover-section">
-                        <h3 class="discover-section-title">Moods</h3>
-                        <div class="discover-grid" id="moodPlaylistsGrid"></div>
+                        <div class="section-title">
+                            <h3>Moods</h3>
+                            <span class="section-count-badge" id="moodCount">11</span>
+                        </div>
+                        <div class="discover-grid mood-grid" id="moodPlaylistsGrid"></div>
                     </section>
 
                     <!-- Language Playlists -->
                     <section class="discover-section">
-                        <h3 class="discover-section-title">Languages</h3>
+                        <div class="section-title">
+                            <h3>Languages</h3>
+                            <span class="section-count-badge" id="languageCount">12</span>
+                        </div>
                         <div class="discover-grid" id="languagePlaylistsGrid"></div>
                     </section>
 
                     <!-- Artist Playlists -->
                     <section class="discover-section">
-                        <h3 class="discover-section-title">Artists</h3>
-                        <div class="artist-playlists-scroll" id="artistPlaylistsScroll"></div>
+                        <div class="section-title">
+                            <h3>Popular Artists</h3>
+                            <span class="section-count-badge" id="artistCount">20</span>
+                        </div>
+                        <div class="discover-scroll-container">
+                            <div class="discover-scroll artist-playlists-scroll" id="artistPlaylistsScroll"></div>
+                        </div>
                     </section>
 
                     <!-- Era Playlists -->
                     <section class="discover-section">
-                        <h3 class="discover-section-title">Eras</h3>
+                        <div class="section-title">
+                            <h3>Eras</h3>
+                            <span class="section-count-badge" id="eraCount">6</span>
+                        </div>
                         <div class="discover-grid" id="eraPlaylistsGrid"></div>
                     </section>
                 </div>
