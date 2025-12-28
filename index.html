@@ -432,27 +432,10 @@
         <main class="main">
             <!-- Home View (shown by default) -->
             <section class="home-view" id="homeView">
-                <!-- Chart selector cards -->
-                <div class="home-chart-selector">
-                    <div class="home-chart-card india active" id="homeIndiaCard" onclick="selectHomeChart('india')">
-                        <div class="home-chart-icon">
-                            <span class="home-chart-flag">🇮🇳</span>
-                        </div>
-                        <div class="home-chart-info">
-                            <h3>India Top 25</h3>
-                            <p class="home-chart-subtitle">Trending across India</p>
-                        </div>
-                    </div>
-
-                    <div class="home-chart-card global" id="homeGlobalCard" onclick="selectHomeChart('global')">
-                        <div class="home-chart-icon">
-                            <span class="home-chart-flag">🌍</span>
-                        </div>
-                        <div class="home-chart-info">
-                            <h3>Global Top 25</h3>
-                            <p class="home-chart-subtitle">Worldwide hits</p>
-                        </div>
-                    </div>
+                <!-- Homepage Content Rows (dynamically rendered) -->
+                <div id="homepageContent">
+                    <!-- Content rows will be rendered here by JavaScript -->
+                    <div class="loading-spinner">Loading amazing content...</div>
                 </div>
             </section>
 
