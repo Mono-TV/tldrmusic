@@ -11134,7 +11134,7 @@ body::before {
 .hero-content {
     position: relative;
     z-index: 1;
-    padding: 3rem;
+    padding: 2rem;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -11150,7 +11150,7 @@ body::before {
     font-size: 0.875rem;
     font-weight: 600;
     align-self: flex-start;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -11159,7 +11159,7 @@ body::before {
     font-size: 3.5rem;
     font-weight: 900;
     color: var(--text-primary);
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.5rem 0;
     text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     line-height: 1.1;
     max-width: 800px;
@@ -11168,14 +11168,14 @@ body::before {
 .hero-artist {
     font-size: 1.75rem;
     color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 2rem 0;
+    margin: 0 0 1.5rem 0;
     font-weight: 500;
 }
 
 .hero-actions {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
 }
 
