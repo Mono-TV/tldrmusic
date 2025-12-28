@@ -1,12 +1,12 @@
 // TLDR Music - Frontend Application
 
 // API Configuration (Dual-API Architecture)
-// - Music Conductor: Charts, Search, Discover, Playlists catalog
-// - TLDR Music API: User auth, Library (favorites, history, queue, user playlists)
-// - Curated API: Dynamic playlists (moods, languages, artists, eras)
+// - Music Conductor: Charts, Search, Discover (deprecated - migrating to TLDR Music API)
+// - TLDR Music API: User auth, Library, Curated playlists (NEW)
+// - Auth API: User authentication and library management
 const MUSIC_CONDUCTOR_API = 'https://tldr-music-401132033262.asia-south1.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
-const CURATED_API = 'https://tldrmusic-api-401132033262.asia-south1.run.app/api/curated';
+const CURATED_API = 'https://tldr-music-ncrhtdqoiq-el.a.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // YouTube thumbnail sizes (width x height)
@@ -306,6 +306,9 @@ async function init() {
     loadChartData().then(() => {
         initDiscoverIndia(); // Initialize Discover India section after charts load
     });
+
+    // Load homepage content (playlists)
+    renderHomepageContent();
 
     // Handle URL parameters for shared content
     handleUrlParameters();
@@ -7741,6 +7744,328 @@ function selectHomeChart(mode) {
 function selectChart(mode) {
     showHomeView();
     selectHomeChart(mode);
+}
+
+// ============================================================
+// HOMEPAGE CONTENT RENDERING
+// ============================================================
+
+// Static playlist slug configuration for homepage (42 curated playlists)
+const HOMEPAGE_PLAYLISTS = {
+    mood: [
+        'ai-027b4c11',  // Chill Vibes
+        'ai-a6370dba',  // Workout Beats
+        'ai-c2954887',  // Party Anthems
+        'ai-be8cba7a',  // Love Songs
+        'ai-d3393ba0',  // Sad Songs
+        'ai-c0d193fd',  // Deep Focus
+        'ai-5c79fbae',  // Gaming Mode
+        'ai-cedd2c31',  // Feel Good Hits
+        'ai-1f09db14',  // Sleep Sounds
+        'ai-69e79fc0',  // Road Trip Mix
+        'ai-7cbd48ad'   // Energy Boost
+    ],
+    language: [
+        'ai-f7a34e6a',  // Hindi Superhits
+        'ai-3db2b429',  // Tamil Chartbusters
+        'ai-ae871b29',  // Telugu Top Songs
+        'ai-1965bb4b',  // Punjabi Beats
+        'ai-5fa7612f',  // English Favorites
+        'ai-8b5570f0',  // Bengali Melodies
+        'ai-64f94e11',  // Kannada Hits
+        'ai-4a59edc3'   // Malayalam Classics
+    ],
+    artist: [
+        'ai-e1f6afae',  // Arijit Singh
+        'ai-ea81a856',  // Anirudh
+        'ai-8ac4090a',  // Shreya Ghoshal
+        'ai-9cfdf4c0',  // Kishore Kumar
+        'ai-42e1e1c5',  // Lata Mangeshkar
+        'ai-e6d1dc83',  // Badshah
+        'ai-1aa84e72'   // Diljit Dosanjh
+    ],
+    era: [
+        'ai-c4201980',  // 2025 Fresh Releases
+        'ai-1b7aaed6',  // 2024 Top Picks
+        'ai-6bbfcbce',  // 2023 Best Of
+        'ai-6986900a',  // 2020s Hits
+        'ai-cbc2c6da',  // 2010s Throwback
+        'ai-49ee7b7b'   // Retro Classics
+    ],
+    genre: [
+        'ai-99ecd85a',  // Bollywood Blockbusters
+        'ai-ea07bbad',  // Hip-Hop India
+        'ai-537a062d',  // Devotional & Bhakti
+        'ai-0deec3df',  // Folk Fusion
+        'ai-9c02ae5c'   // Dance/Electronic
+    ],
+    activity: [
+        'ai-5fc16ae0',  // Morning Motivation
+        'ai-c28f90fd',  // Coffee Break
+        'ai-fdd54ea4',  // Late Night Drives
+        'ai-d4a0dd15',  // Study Session
+        'ai-5ef04e0f'   // House Party
+    ]
+};
+
+// Cache for fetched playlist metadata (1 hour TTL)
+const playlistCache = {
+    data: {},
+    timestamp: {},
+    TTL: 3600000 // 1 hour
+};
+
+// Get cached playlist or fetch from API
+async function getPlaylist(slug) {
+    const now = Date.now();
+
+    // Check cache first
+    if (playlistCache.data[slug] && (now - playlistCache.timestamp[slug]) < playlistCache.TTL) {
+        return playlistCache.data[slug];
+    }
+
+    // Fetch from API
+    try {
+        const response = await fetch(`${CURATED_API}/api/playlists/${slug}`);
+        if (!response.ok) throw new Error(`Failed to fetch playlist: ${slug}`);
+
+        const playlist = await response.json();
+
+        // Cache the result
+        playlistCache.data[slug] = playlist;
+        playlistCache.timestamp[slug] = now;
+
+        return playlist;
+    } catch (error) {
+        console.error(`Error fetching playlist ${slug}:`, error);
+        return null;
+    }
+}
+
+// Render homepage content rows with playlists (hybrid approach)
+async function renderHomepageContent() {
+    const container = document.getElementById('homepageContent');
+    if (!container) return;
+
+    try {
+        // Show loading state
+        container.innerHTML = '<div class="loading-spinner">Loading playlists...</div>';
+
+        // Fetch all homepage playlists in parallel
+        const allSlugs = [
+            ...HOMEPAGE_PLAYLISTS.mood,
+            ...HOMEPAGE_PLAYLISTS.language,
+            ...HOMEPAGE_PLAYLISTS.artist,
+            ...HOMEPAGE_PLAYLISTS.era,
+            ...HOMEPAGE_PLAYLISTS.genre,
+            ...HOMEPAGE_PLAYLISTS.activity
+        ];
+
+        const playlistPromises = allSlugs.map(slug => getPlaylist(slug));
+        const playlists = await Promise.all(playlistPromises);
+
+        // Filter out failed fetches
+        const validPlaylists = playlists.filter(p => p !== null);
+
+        // Group playlists by slug lists
+        const playlistsByType = {
+            mood: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.mood.includes(p.slug)),
+            language: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.language.includes(p.slug)),
+            artist: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.artist.includes(p.slug)),
+            era: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.era.includes(p.slug)),
+            genre: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.genre.includes(p.slug)),
+            activity: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.activity.includes(p.slug))
+        };
+
+        // Build homepage content HTML
+        let html = '';
+
+        // Row 1: Mood Playlists (11 playlists)
+        if (playlistsByType.mood.length > 0) {
+            html += renderPlaylistRow('Playlists For Every Mood', playlistsByType.mood, 'mood');
+        }
+
+        // Row 2: Language Playlists (8 playlists)
+        if (playlistsByType.language.length > 0) {
+            html += renderPlaylistRow('Music In Your Language', playlistsByType.language, 'language');
+        }
+
+        // Row 3: Artist Playlists (7 playlists)
+        if (playlistsByType.artist.length > 0) {
+            html += renderPlaylistRow('Top Artist Collections', playlistsByType.artist, 'artist');
+        }
+
+        // Row 4: Era Playlists (6 playlists)
+        if (playlistsByType.era.length > 0) {
+            html += renderPlaylistRow('Music Through The Decades', playlistsByType.era, 'era');
+        }
+
+        // Row 5: Genre Playlists (5 playlists)
+        if (playlistsByType.genre.length > 0) {
+            html += renderPlaylistRow('Explore By Genre', playlistsByType.genre, 'genre');
+        }
+
+        // Row 6: Activity Playlists (5 playlists)
+        if (playlistsByType.activity.length > 0) {
+            html += renderPlaylistRow('Music For Every Activity', playlistsByType.activity, 'activity');
+        }
+
+        container.innerHTML = html;
+
+    } catch (error) {
+        console.error('Error rendering homepage:', error);
+        container.innerHTML = `
+            <div class="error-message">
+                <p>Unable to load content. Please try again later.</p>
+            </div>
+        `;
+    }
+}
+
+// Render a single playlist row
+function renderPlaylistRow(title, playlists, type) {
+    if (!playlists || playlists.length === 0) return '';
+
+    const playlistCards = playlists.map(playlist => `
+        <div class="playlist-card" onclick="openPlaylistDetail('${playlist.slug}')">
+            <div class="playlist-card-artwork">
+                <img src="${playlist.artwork?.primary || ''}"
+                     alt="${playlist.name}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'220\\' height=\\'220\\'%3E%3Crect fill=\\'%231a1a1f\\' width=\\'220\\' height=\\'220\\'/%3E%3C/svg%3E'">
+                <div class="playlist-card-play-overlay">
+                    <div class="playlist-card-play-btn">▶</div>
+                </div>
+            </div>
+            <div class="playlist-card-info">
+                <div class="playlist-card-name">${playlist.name}</div>
+                <div class="playlist-card-meta">${playlist.total_tracks || 0} songs</div>
+            </div>
+        </div>
+    `).join('');
+
+    return `
+        <div class="content-row">
+            <div class="row-header">
+                <h2 class="row-title">${title}</h2>
+            </div>
+            <div class="row-content">
+                <div class="playlist-grid">
+                    ${playlistCards}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Open playlist detail view
+async function openPlaylistDetail(slug) {
+    try {
+        const response = await fetch(`${CURATED_API}/api/playlists/${slug}`);
+        if (!response.ok) throw new Error('Failed to fetch playlist');
+
+        const playlist = await response.json();
+
+        // Show curated detail view with playlist data
+        showCuratedDetailView(playlist);
+
+    } catch (error) {
+        console.error('Error loading playlist:', error);
+        alert('Failed to load playlist. Please try again.');
+    }
+}
+
+// Show curated playlist detail view
+function showCuratedDetailView(playlist) {
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    if (!curatedDetailView) return;
+
+    // Hide other views
+    const homeView = document.getElementById('homeView');
+    const playlistsView = document.getElementById('playlistsView');
+    const playlistDetailView = document.getElementById('playlistDetailView');
+    const favoritesDetailView = document.getElementById('favoritesDetailView');
+    const historyDetailView = document.getElementById('historyDetailView');
+    const chartDetailView = document.getElementById('chartDetailView');
+    const discoverView = document.getElementById('discoverView');
+    const searchView = document.getElementById('searchView');
+    const chartsView = document.getElementById('chartsView');
+    const chartsDetailView = document.getElementById('chartsDetailView');
+    const aiGeneratedView = document.getElementById('aiGeneratedView');
+    const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+
+    if (homeView) homeView.style.display = 'none';
+    if (playlistsView) playlistsView.style.display = 'none';
+    if (playlistDetailView) playlistDetailView.style.display = 'none';
+    if (favoritesDetailView) favoritesDetailView.style.display = 'none';
+    if (historyDetailView) historyDetailView.style.display = 'none';
+    if (chartDetailView) chartDetailView.style.display = 'none';
+    if (discoverView) discoverView.style.display = 'none';
+    if (searchView) searchView.style.display = 'none';
+    if (chartsView) chartsView.style.display = 'none';
+    if (chartsDetailView) chartsDetailView.style.display = 'none';
+    if (aiGeneratedView) aiGeneratedView.style.display = 'none';
+    if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
+
+    // Update view content
+    const headerEl = curatedDetailView.querySelector('.curated-detail-header h1');
+    const descEl = curatedDetailView.querySelector('.curated-detail-description');
+    const countEl = curatedDetailView.querySelector('.curated-detail-count');
+    const artworkEl = curatedDetailView.querySelector('.curated-detail-artwork img');
+    const tracklistEl = curatedDetailView.querySelector('.curated-detail-tracklist');
+
+    if (headerEl) headerEl.textContent = playlist.name;
+    if (descEl) descEl.textContent = playlist.description || '';
+    if (countEl) countEl.textContent = `${playlist.tracks?.length || playlist.total_tracks || 0} songs`;
+    if (artworkEl && playlist.artwork?.primary) {
+        artworkEl.src = playlist.artwork.primary;
+    }
+
+    // Render tracklist
+    if (tracklistEl && playlist.tracks) {
+        const tracks = playlist.tracks.map((track, index) => {
+            const song = mapHarvesterPlaylistTrack(track);
+            return `
+                <div class="song-card" onclick="playFromCuratedPlaylist(${index}, '${playlist.slug}')">
+                    <div class="song-card-artwork">
+                        <img src="${song.artwork_url}"
+                             alt="${song.title}"
+                             onerror="handleImageError(this, '${song.youtube_video_id}')">
+                        <div class="song-card-play-overlay">
+                            <div class="song-card-play-btn">▶</div>
+                        </div>
+                    </div>
+                    <div class="song-card-info">
+                        <div class="song-card-title">${song.title}</div>
+                        <div class="song-card-artist">${song.artist}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        tracklistEl.innerHTML = tracks;
+    }
+
+    // Store current playlist for playback
+    window.currentCuratedPlaylist = playlist;
+
+    // Show view
+    curatedDetailView.style.display = 'block';
+}
+
+// Play from curated playlist
+function playFromCuratedPlaylist(index, playlistSlug) {
+    const playlist = window.currentCuratedPlaylist;
+    if (!playlist || !playlist.tracks) return;
+
+    const track = playlist.tracks[index];
+    if (!track) return;
+
+    const song = mapHarvesterPlaylistTrack(track);
+
+    // Create queue from playlist tracks
+    window.currentQueue = playlist.tracks.map(t => mapHarvesterPlaylistTrack(t));
+    window.currentQueueIndex = index;
+
+    playSong(song, 'curated');
 }
 
 // ============================================================
