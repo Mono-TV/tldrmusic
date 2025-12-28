@@ -8765,7 +8765,7 @@ function renderCuratedDetailView(playlist) {
             <div class="curated-detail-info">
                 <span class="curated-detail-type">${typeLabel} Playlist</span>
                 <h1 class="curated-detail-name">${escapeHtml(playlist.name)}</h1>
-                <p class="curated-detail-meta">${playlist.total.toLocaleString()} songs</p>
+                <p class="curated-detail-meta">${(playlist.total_tracks || playlist.songs?.length || 0).toLocaleString()} songs</p>
                 <div class="curated-detail-buttons">
                     <button class="btn-primary" onclick="playCuratedPlaylist()" ${playlist.songs.length === 0 ? 'disabled' : ''}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -9305,6 +9305,10 @@ async function openMusicConductorPlaylist(slug) {
                 thumbnail_url: getHarvesterArtwork(track.artwork_url, track.youtube_id || track.youtube_video_id),
                 duration_seconds: track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0
             }));
+            // Preserve total_tracks if not already set
+            if (!playlist.total_tracks) {
+                playlist.total_tracks = playlist.tracks.length;
+            }
         }
 
         currentAIPlaylist = playlist;
