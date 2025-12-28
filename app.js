@@ -7750,99 +7750,57 @@ function selectChart(mode) {
 // HOMEPAGE CONTENT RENDERING
 // ============================================================
 
-// Static playlist slug configuration for homepage (42 curated playlists)
-const HOMEPAGE_PLAYLISTS = {
-    mood: [
-        'ai-027b4c11',  // Chill Vibes
-        'ai-a6370dba',  // Workout Beats
-        'ai-c2954887',  // Party Anthems
-        'ai-f4b61701',  // Love Songs
-        'ai-7de22a3d',  // Sad Songs
-        'ai-c0d193fd',  // Deep Focus
-        'ai-6a71532d',  // Gaming Mode
-        'ai-fbe1624d',  // Feel Good Hits
-        'ai-680dcd6f',  // Sleep Sounds
-        'ai-8dff323f',  // Road Trip Mix
-        'ai-b5d831ca'   // Energy Boost
-    ],
-    language: [
-        'ai-f7a34e6a',  // Hindi Superhits
-        'ai-3db2b429',  // Tamil Trending
-        'ai-ae871b29',  // Telugu Top Hits
-        'ai-0122535b',  // Punjabi Beats
-        'ai-581ca626',  // English Hits
-        'ai-15324c98',  // Bengali Vibes
-        'ai-af7c510e',  // Kannada Hits
-        'ai-574f4494'   // Malayalam Melodies
-    ],
-    artist: [
-        'ai-e1f6afae',  // Arijit Singh Essentials
-        'ai-ea81a856',  // Anirudh Hits
-        'ai-8ac4090a',  // Shreya Ghoshal Collection
-        'ai-1b216ba6',  // Kishore Kumar Classics
-        'ai-847d211a',  // Lata Mangeshkar Legends
-        'ai-f538111e',  // Badshah Party Mix
-        'ai-a44f2dce'   // Diljit Dosanjh Favorites
-    ],
-    era: [
-        'ai-c4201980',  // 2025 Fresh Releases
-        'ai-1b7aaed6',  // 2024 Top Picks
-        'ai-6bbfcbce',  // 2023 Best Of
-        'ai-6986900a',  // 2020s Hits
-        'ai-cbc2c6da',  // 2010s Throwback
-        'ai-8a01c4ce'   // Retro Classics
-    ],
-    genre: [
-        'ai-99ecd85a',  // Bollywood Blockbusters
-        'ai-ea07bbad',  // Hip-Hop India
-        'ai-537a062d',  // Devotional & Spiritual
-        'ai-268697b7',  // Indian Folk
-        'ai-09d10304'   // Dance & Electronic
-    ],
-    activity: [
-        'ai-5fc16ae0',  // Morning Motivation
-        'ai-c28f90fd',  // Coffee Break
-        'ai-fdd54ea4',  // Late Night Drives
-        'ai-52e09c58',  // Study Session
-        'ai-db8331c6'   // House Party
-    ]
-};
+// Cache for homepage playlists (1 hour TTL)
+let homepagePlaylistsCache = null;
+let homepagePlaylistsCacheTime = null;
+const HOMEPAGE_CACHE_TTL = 3600000; // 1 hour
 
-// Cache for fetched playlist metadata (1 hour TTL)
-const playlistCache = {
-    data: {},
-    timestamp: {},
-    TTL: 3600000 // 1 hour
-};
-
-// Get cached playlist or fetch from API
-async function getPlaylist(slug) {
+// Fetch homepage playlists from API (recommended approach)
+async function fetchHomepagePlaylists() {
     const now = Date.now();
 
     // Check cache first
-    if (playlistCache.data[slug] && (now - playlistCache.timestamp[slug]) < playlistCache.TTL) {
-        return playlistCache.data[slug];
+    if (homepagePlaylistsCache && homepagePlaylistsCacheTime && (now - homepagePlaylistsCacheTime) < HOMEPAGE_CACHE_TTL) {
+        console.log('Using cached homepage playlists');
+        return homepagePlaylistsCache;
     }
 
-    // Fetch from API
-    try {
-        const response = await fetch(`${CURATED_API}/api/playlists/${slug}`);
-        if (!response.ok) throw new Error(`Failed to fetch playlist: ${slug}`);
+    // Fetch from API with homepage_featured filter
+    console.log('Fetching homepage playlists from API');
+    const response = await fetch(`${CURATED_API}/api/playlists?homepage_featured=true`);
+    if (!response.ok) throw new Error('Failed to fetch homepage playlists');
 
-        const playlist = await response.json();
+    const data = await response.json();
+    const playlists = data.playlists || [];
 
-        // Cache the result
-        playlistCache.data[slug] = playlist;
-        playlistCache.timestamp[slug] = now;
+    // Group by type client-side
+    const grouped = {
+        mood: playlists.filter(p => p.type === 'mood'),
+        language: playlists.filter(p => p.type === 'language'),
+        artist: playlists.filter(p => p.type === 'artist'),
+        era: playlists.filter(p => p.type === 'era'),
+        genre: playlists.filter(p => p.type === 'genre'),
+        activity: playlists.filter(p => p.type === 'activity')
+    };
 
-        return playlist;
-    } catch (error) {
-        console.error(`Error fetching playlist ${slug}:`, error);
-        return null;
-    }
+    // Cache the results
+    homepagePlaylistsCache = grouped;
+    homepagePlaylistsCacheTime = now;
+
+    console.log('Fetched homepage playlists:', {
+        total: playlists.length,
+        mood: grouped.mood.length,
+        language: grouped.language.length,
+        artist: grouped.artist.length,
+        era: grouped.era.length,
+        genre: grouped.genre.length,
+        activity: grouped.activity.length
+    });
+
+    return grouped;
 }
 
-// Render homepage content rows with playlists (hybrid approach)
+// Render homepage content rows with playlists (single API call approach)
 async function renderHomepageContent() {
     const container = document.getElementById('homepageContent');
     if (!container) return;
@@ -7851,31 +7809,8 @@ async function renderHomepageContent() {
         // Show loading state
         container.innerHTML = '<div class="loading-spinner">Loading playlists...</div>';
 
-        // Fetch all homepage playlists in parallel
-        const allSlugs = [
-            ...HOMEPAGE_PLAYLISTS.mood,
-            ...HOMEPAGE_PLAYLISTS.language,
-            ...HOMEPAGE_PLAYLISTS.artist,
-            ...HOMEPAGE_PLAYLISTS.era,
-            ...HOMEPAGE_PLAYLISTS.genre,
-            ...HOMEPAGE_PLAYLISTS.activity
-        ];
-
-        const playlistPromises = allSlugs.map(slug => getPlaylist(slug));
-        const playlists = await Promise.all(playlistPromises);
-
-        // Filter out failed fetches
-        const validPlaylists = playlists.filter(p => p !== null);
-
-        // Group playlists by slug lists
-        const playlistsByType = {
-            mood: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.mood.includes(p.slug)),
-            language: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.language.includes(p.slug)),
-            artist: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.artist.includes(p.slug)),
-            era: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.era.includes(p.slug)),
-            genre: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.genre.includes(p.slug)),
-            activity: validPlaylists.filter(p => HOMEPAGE_PLAYLISTS.activity.includes(p.slug))
-        };
+        // Fetch all homepage playlists with single API call
+        const playlistsByType = await fetchHomepagePlaylists();
 
         // Build homepage content HTML (Engagement Funnel Strategy)
         let html = '';
