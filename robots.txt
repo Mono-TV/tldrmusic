@@ -1,4 +1,21 @@
+# TLDR Music - Robots.txt
+# Free music streaming platform for India's Top 25 charts
+
 User-agent: *
 Allow: /
+Allow: /#/charts
+Allow: /#/discover
+Allow: /#/search
+Allow: /about.html
 
+# Disallow private/authenticated pages
+Disallow: /#/library/playlist/
+Disallow: /data/
+Disallow: /backend/
+Disallow: /scraper/
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1
+
+# Sitemap
 Sitemap: https://music.lumiolabs.in/sitemap.xml
