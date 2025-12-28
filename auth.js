@@ -212,6 +212,17 @@ async function handleGoogleCallback(response) {
         currentUser = data.user;
         isAuthenticated = true;
 
+        // Clear old guest data when logging in with Google for the first time
+        // This prevents old localStorage data from being synced to new account
+        if (data.user.auth_method === 'google' && !data.user.onboarding_completed) {
+            console.log('New Google account - clearing old guest data');
+            localStorage.removeItem(STORAGE_KEYS.FAVORITES);
+            localStorage.removeItem(STORAGE_KEYS.HISTORY);
+            localStorage.removeItem(STORAGE_KEYS.QUEUE);
+            localStorage.removeItem(STORAGE_KEYS.PLAYLISTS);
+            localStorage.removeItem('tldr-total-songs-played');
+        }
+
         // Sync data from cloud
         await syncFromCloud();
 
