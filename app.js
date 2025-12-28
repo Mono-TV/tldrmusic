@@ -9157,8 +9157,8 @@ async function openCuratedPlaylist(type, id) {
             songs: playlistData.songs.map(song => ({
                 title: song.title,
                 artist: song.artist,
-                video_id: song.youtube_video_id,
-                thumbnail_url: song.artwork_url || getYouTubeThumbnail(song.youtube_video_id, 'medium'),
+                video_id: song.youtube_id || song.youtube_video_id,
+                thumbnail_url: song.artwork_url || getYouTubeThumbnail(song.youtube_id || song.youtube_video_id, 'medium'),
                 duration_seconds: song.duration_seconds || 0,
                 album: song.album
             })).filter(song => song.video_id) // Filter out songs without video IDs
@@ -9183,14 +9183,14 @@ async function openCuratedPlaylist(type, id) {
 function playCuratedPlaylist(startIndex = 0) {
     if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
 
-    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
+    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.video_id);
     if (playableSongs.length === 0) return;
 
     // Set up queue with curated songs
     queue = playableSongs.map(song => ({
         title: song.title,
         artist: song.artist,
-        videoId: song.youtube_video_id,
+        videoId: song.video_id,
         artwork: getArtworkUrl(song),
     }));
 
