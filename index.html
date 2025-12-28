@@ -498,7 +498,84 @@
                     </div>
                 </div>
 
-<!-- Recently Played Playlists -->
+                <!-- AI Playlist Generator -->
+                <div class="ai-playlist-section" id="aiPlaylistSection">
+                    <div class="ai-playlist-header">
+                        <div class="ai-playlist-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                            <h3>Create with AI</h3>
+                        </div>
+                        <p class="ai-playlist-subtitle">Describe your perfect playlist and let AI create it for you</p>
+                    </div>
+                    <div class="ai-playlist-input-container">
+                        <textarea
+                            id="aiPlaylistPrompt"
+                            class="ai-playlist-input"
+                            placeholder="e.g., Upbeat Hindi songs for a road trip, or Relaxing instrumental music for studying..."
+                            rows="2"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="ai-playlist-actions">
+                            <select id="aiPlaylistLanguage" class="ai-playlist-language">
+                                <option value="">Any Language</option>
+                                <option value="hi">Hindi</option>
+                                <option value="en">English</option>
+                                <option value="pa">Punjabi</option>
+                                <option value="ta">Tamil</option>
+                                <option value="te">Telugu</option>
+                                <option value="bn">Bengali</option>
+                                <option value="mr">Marathi</option>
+                                <option value="gu">Gujarati</option>
+                            </select>
+                            <button class="ai-playlist-generate-btn" id="aiPlaylistGenerateBtn" onclick="generateAIPlaylist()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Generated playlist preview -->
+                    <div class="ai-playlist-preview" id="aiPlaylistPreview" style="display: none;">
+                        <div class="ai-playlist-preview-header">
+                            <div class="ai-preview-info">
+                                <h4 id="aiPreviewName">Generated Playlist</h4>
+                                <span id="aiPreviewCount">0 songs</span>
+                            </div>
+                            <div class="ai-preview-actions">
+                                <button class="ai-preview-play-btn" onclick="playGeneratedPlaylist()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                    Play
+                                </button>
+                                <button class="ai-preview-save-btn" onclick="saveGeneratedPlaylist()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    Save to Library
+                                </button>
+                                <button class="ai-preview-close-btn" onclick="closeGeneratedPreview()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ai-playlist-preview-songs" id="aiPreviewSongs">
+                            <!-- Generated songs will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recently Played Playlists -->
                 <div class="recently-played-section" id="recentlyPlayedSection" style="display: none;">
                     <div class="recently-played-header">
                         <h3>
