@@ -230,7 +230,6 @@ window.currentSearchResults = [];
 
 // DOM Elements
 const chartList = document.getElementById('chartList');
-const chartDate = document.getElementById('chartDate');
 const weekLabel = document.getElementById('weekLabel');
 const badgeLabel = document.getElementById('badgeLabel');
 const chartToggle = document.getElementById('chartToggle');
@@ -2514,9 +2513,6 @@ function getRankMovementHtml(song) {
 // Update metadata
 function updateMetadata() {
     if (!chartData) return;
-
-    const date = new Date(chartData.generated_at);
-    chartDate.textContent = `Updated: ${formatDate(date)}`;
 
     if (chartData.week) {
         weekLabel.textContent = `Week ${chartData.week}`;
