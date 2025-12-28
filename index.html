@@ -710,14 +710,48 @@
             </section>
 
             <!-- Discover View -->
-            <section class="ai-generated-view" id="aiGeneratedView" style="display: none;">
+            <section class="ai-generated-view" id="discoverView" style="display: none;">
                 <div class="ai-generated-header">
                     <h2>Discover</h2>
                     <p class="ai-generated-subtitle">Explore 68,000+ tracks by mood, genre, language, and artist</p>
                 </div>
-                <div class="ai-generated-content" id="aiGeneratedContent">
-                    <!-- Content will be rendered by JS -->
+                <div class="ai-generated-content" id="discoverContent">
+                    <!-- Featured Playlists -->
+                    <section class="discover-section">
+                        <h3 class="discover-section-title">Featured Playlists</h3>
+                        <div class="discover-grid" id="featuredPlaylistsGrid"></div>
+                    </section>
+
+                    <!-- Mood Playlists -->
+                    <section class="discover-section">
+                        <h3 class="discover-section-title">Moods</h3>
+                        <div class="discover-grid" id="moodPlaylistsGrid"></div>
+                    </section>
+
+                    <!-- Language Playlists -->
+                    <section class="discover-section">
+                        <h3 class="discover-section-title">Languages</h3>
+                        <div class="discover-grid" id="languagePlaylistsGrid"></div>
+                    </section>
+
+                    <!-- Artist Playlists -->
+                    <section class="discover-section">
+                        <h3 class="discover-section-title">Artists</h3>
+                        <div class="discover-grid" id="artistPlaylistsGrid"></div>
+                    </section>
+
+                    <!-- Era Playlists -->
+                    <section class="discover-section">
+                        <h3 class="discover-section-title">Eras</h3>
+                        <div class="discover-grid" id="eraPlaylistsGrid"></div>
+                    </section>
                 </div>
+            </section>
+
+            <!-- Curated Playlist Detail View -->
+            <section class="ai-playlist-detail-view" id="curatedDetailView" style="display: none;">
+                <div class="ai-playlist-detail-header" id="curatedDetailHeader"></div>
+                <div class="ai-playlist-detail-songs" id="curatedDetailSongs"></div>
             </section>
 
             <!-- AI Playlist Detail View -->
