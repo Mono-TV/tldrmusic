@@ -11470,19 +11470,28 @@ body::before {
     gap: 1.5rem;
 }
 
-.playlist-card {
+.playlist-grid .playlist-card {
     cursor: pointer;
-    transition: transform 0.2s ease;
-    background: var(--bg-card);
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg,
+        rgba(var(--playlist-color-rgb, 26, 26, 31), 0.15) 0%,
+        rgba(var(--playlist-color-rgb, 26, 26, 31), 0.05) 50%,
+        var(--bg-card) 100%);
     border-radius: 12px;
     padding: 1rem;
-    border: 1px solid transparent;
+    border: 1px solid rgba(var(--playlist-color-rgb, 255, 255, 255), 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.playlist-card:hover {
+.playlist-grid .playlist-card:hover {
     transform: translateY(-4px);
-    background: var(--bg-card-hover);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg,
+        rgba(var(--playlist-color-rgb, 26, 26, 31), 0.25) 0%,
+        rgba(var(--playlist-color-rgb, 26, 26, 31), 0.15) 50%,
+        var(--bg-card-hover) 100%);
+    border-color: rgba(var(--playlist-color-rgb, 255, 255, 255), 0.3);
+    box-shadow: 0 8px 24px rgba(var(--playlist-color-rgb, 0, 0, 0), 0.3),
+                0 0 0 1px rgba(var(--playlist-color-rgb, 255, 255, 255), 0.2);
 }
 
 .playlist-thumbnail {
@@ -11544,6 +11553,88 @@ body::before {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* Homepage Playlist Card Specific Styles */
+.playlist-grid .playlist-card .playlist-card-artwork {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background: var(--bg-elevated);
+    box-shadow: 0 4px 12px rgba(var(--playlist-color-rgb, 0, 0, 0), 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+.playlist-grid .playlist-card:hover .playlist-card-artwork {
+    box-shadow: 0 8px 24px rgba(var(--playlist-color-rgb, 0, 0, 0), 0.5),
+                0 0 32px rgba(var(--playlist-color-rgb, 255, 255, 255), 0.2);
+}
+
+.playlist-grid .playlist-card-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.playlist-grid .playlist-card-play-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.playlist-grid .playlist-card:hover .playlist-card-play-overlay {
+    opacity: 1;
+}
+
+.playlist-grid .playlist-card-play-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(var(--playlist-color-rgb, 245, 158, 11), 0.9);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+.playlist-grid .playlist-card:hover .playlist-card-play-btn {
+    transform: scale(1.1);
+    background: var(--playlist-color, var(--accent));
+    box-shadow: 0 6px 24px rgba(var(--playlist-color-rgb, 245, 158, 11), 0.6);
+}
+
+.playlist-grid .playlist-card-info {
+    padding: 0 0.25rem;
+}
+
+.playlist-grid .playlist-card-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.playlist-grid .playlist-card-meta {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
 .playlist-meta {

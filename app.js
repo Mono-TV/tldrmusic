@@ -7750,6 +7750,19 @@ function selectChart(mode) {
 // HOMEPAGE CONTENT RENDERING
 // ============================================================
 
+// Helper function to convert hex color to RGB string for CSS
+function hexToRgb(hex) {
+    // Remove # if present
+    hex = hex.replace('#', '');
+
+    // Parse hex to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `${r}, ${g}, ${b}`;
+}
+
 // Cache for homepage playlists (1 hour TTL)
 let homepagePlaylistsCache = null;
 let homepagePlaylistsCacheTime = null;
@@ -7861,22 +7874,27 @@ async function renderHomepageContent() {
 function renderPlaylistRow(title, playlists, type) {
     if (!playlists || playlists.length === 0) return '';
 
-    const playlistCards = playlists.map(playlist => `
-        <div class="playlist-card" onclick="openPlaylistDetail('${playlist.slug}')">
-            <div class="playlist-card-artwork">
-                <img src="${playlist.artwork?.primary || ''}"
-                     alt="${playlist.name}"
-                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'220\\' height=\\'220\\'%3E%3Crect fill=\\'%231a1a1f\\' width=\\'220\\' height=\\'220\\'/%3E%3C/svg%3E'">
-                <div class="playlist-card-play-overlay">
-                    <div class="playlist-card-play-btn">▶</div>
+    const playlistCards = playlists.map(playlist => {
+        const artworkColor = playlist.artwork?.color || '#1a1a1f';
+        return `
+            <div class="playlist-card"
+                 onclick="openPlaylistDetail('${playlist.slug}')"
+                 style="--playlist-color: ${artworkColor}; --playlist-color-rgb: ${hexToRgb(artworkColor)};">
+                <div class="playlist-card-artwork">
+                    <img src="${playlist.artwork?.primary || ''}"
+                         alt="${playlist.name}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'220\\' height=\\'220\\'%3E%3Crect fill=\\'%231a1a1f\\' width=\\'220\\' height=\\'220\\'/%3E%3C/svg%3E'">
+                    <div class="playlist-card-play-overlay">
+                        <div class="playlist-card-play-btn">▶</div>
+                    </div>
+                </div>
+                <div class="playlist-card-info">
+                    <div class="playlist-card-name">${playlist.name}</div>
+                    <div class="playlist-card-meta">${playlist.total_tracks || 0} songs</div>
                 </div>
             </div>
-            <div class="playlist-card-info">
-                <div class="playlist-card-name">${playlist.name}</div>
-                <div class="playlist-card-meta">${playlist.total_tracks || 0} songs</div>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     return `
         <div class="content-row">
