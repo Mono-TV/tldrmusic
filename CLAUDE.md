@@ -478,6 +478,76 @@ gcloud run jobs execute tldrmusic-scraper --region asia-south1
 gcloud logging read "resource.type=cloud_run_job AND resource.labels.job_name=tldrmusic-scraper" --limit 100
 ```
 
+## SEO & Social Media
+
+**Complete Documentation**: See `docs/SEO.md` for full SEO reference
+
+### Social Media Assets
+
+**OG Image** (`og-image.png` - 1200x630px):
+- Minimalist black background with golden accents
+- Generated with Gemini Imagen 4.0
+- Features: "TLDR Music", "India's Top 25 Charts", "Weekly Updated Charts"
+- Style: Apple-inspired minimalism with 80% white space
+- 233KB optimized PNG
+
+**Apple Touch Icon** (`apple-touch-icon.png` - 180x180px):
+- Black background with golden music note
+- "TLDR" text in white
+- iOS app icon aesthetic
+- 629KB (can be further optimized)
+
+**Favicons**:
+- `favicon.ico` (16x16, 32x32 multi-size)
+- `favicon-16.png`, `favicon-32.png` (browser tabs)
+- `favicon-192.png`, `favicon-512.png` (PWA)
+
+### Meta Tags
+
+- **Title**: "TLDR Music - India's Top 25 Music Charts | Stream Free on YouTube"
+- **Description**: Focuses on India charts, regional languages, free streaming, YouTube playback
+- **Keywords**: india top 25, hindi songs, punjabi music, tamil hits, free music streaming
+- **Regional**: Targets India (`geo.region: IN`, `content-language: en-IN`)
+
+### Structured Data (Schema.org)
+
+Three JSON-LD schemas in `index.html`:
+1. **WebApplication**: Features, pricing (free), rating (4.8/5)
+2. **BreadcrumbList**: Navigation hierarchy
+3. **MusicPlaylist**: Chart metadata (25 tracks, genres)
+
+### Sitemap & Robots
+
+- **sitemap.xml**: 22 URLs (home, charts, regional, discover)
+- **robots.txt**: Allows public pages, blocks user library/backend
+- **Update Frequency**: Daily (home), Weekly (charts), Monthly (static)
+
+### Image Generation
+
+Gemini Imagen 4.0 integration via `generate_images_gemini.py`:
+
+```bash
+# Regenerate images
+GEMINI_API_KEY='your-key' python3 generate_images_gemini.py
+```
+
+**Prompts**: Stored in `gemini-image-prompts.md`
+**Current Status**: Functional placeholders; user will manually refine later
+
+### Content Guidelines
+
+✅ **Emphasize**:
+- India's Top 25 focus
+- 11 regional languages
+- Free streaming via YouTube
+- Weekly chart updates
+- Curated playlists
+
+❌ **Avoid Mentioning**:
+- Platform scraping methodology
+- Source platform names (Spotify, Apple Music, etc.)
+- Technical implementation details
+
 ## Key Code Patterns
 
 ### Authenticated API Calls (Frontend)
