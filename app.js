@@ -7756,33 +7756,33 @@ const HOMEPAGE_PLAYLISTS = {
         'ai-027b4c11',  // Chill Vibes
         'ai-a6370dba',  // Workout Beats
         'ai-c2954887',  // Party Anthems
-        'ai-be8cba7a',  // Love Songs
-        'ai-d3393ba0',  // Sad Songs
+        'ai-f4b61701',  // Love Songs
+        'ai-7de22a3d',  // Sad Songs
         'ai-c0d193fd',  // Deep Focus
-        'ai-5c79fbae',  // Gaming Mode
-        'ai-cedd2c31',  // Feel Good Hits
-        'ai-1f09db14',  // Sleep Sounds
-        'ai-69e79fc0',  // Road Trip Mix
-        'ai-7cbd48ad'   // Energy Boost
+        'ai-6a71532d',  // Gaming Mode
+        'ai-fbe1624d',  // Feel Good Hits
+        'ai-680dcd6f',  // Sleep Sounds
+        'ai-8dff323f',  // Road Trip Mix
+        'ai-b5d831ca'   // Energy Boost
     ],
     language: [
         'ai-f7a34e6a',  // Hindi Superhits
-        'ai-3db2b429',  // Tamil Chartbusters
-        'ai-ae871b29',  // Telugu Top Songs
-        'ai-1965bb4b',  // Punjabi Beats
-        'ai-5fa7612f',  // English Favorites
-        'ai-8b5570f0',  // Bengali Melodies
-        'ai-64f94e11',  // Kannada Hits
-        'ai-4a59edc3'   // Malayalam Classics
+        'ai-3db2b429',  // Tamil Trending
+        'ai-ae871b29',  // Telugu Top Hits
+        'ai-0122535b',  // Punjabi Beats
+        'ai-581ca626',  // English Hits
+        'ai-15324c98',  // Bengali Vibes
+        'ai-af7c510e',  // Kannada Hits
+        'ai-574f4494'   // Malayalam Melodies
     ],
     artist: [
-        'ai-e1f6afae',  // Arijit Singh
-        'ai-ea81a856',  // Anirudh
-        'ai-8ac4090a',  // Shreya Ghoshal
-        'ai-9cfdf4c0',  // Kishore Kumar
-        'ai-42e1e1c5',  // Lata Mangeshkar
-        'ai-e6d1dc83',  // Badshah
-        'ai-1aa84e72'   // Diljit Dosanjh
+        'ai-e1f6afae',  // Arijit Singh Essentials
+        'ai-ea81a856',  // Anirudh Hits
+        'ai-8ac4090a',  // Shreya Ghoshal Collection
+        'ai-1b216ba6',  // Kishore Kumar Classics
+        'ai-847d211a',  // Lata Mangeshkar Legends
+        'ai-f538111e',  // Badshah Party Mix
+        'ai-a44f2dce'   // Diljit Dosanjh Favorites
     ],
     era: [
         'ai-c4201980',  // 2025 Fresh Releases
@@ -7790,21 +7790,21 @@ const HOMEPAGE_PLAYLISTS = {
         'ai-6bbfcbce',  // 2023 Best Of
         'ai-6986900a',  // 2020s Hits
         'ai-cbc2c6da',  // 2010s Throwback
-        'ai-49ee7b7b'   // Retro Classics
+        'ai-8a01c4ce'   // Retro Classics
     ],
     genre: [
         'ai-99ecd85a',  // Bollywood Blockbusters
         'ai-ea07bbad',  // Hip-Hop India
-        'ai-537a062d',  // Devotional & Bhakti
-        'ai-0deec3df',  // Folk Fusion
-        'ai-9c02ae5c'   // Dance/Electronic
+        'ai-537a062d',  // Devotional & Spiritual
+        'ai-268697b7',  // Indian Folk
+        'ai-09d10304'   // Dance & Electronic
     ],
     activity: [
         'ai-5fc16ae0',  // Morning Motivation
         'ai-c28f90fd',  // Coffee Break
         'ai-fdd54ea4',  // Late Night Drives
-        'ai-d4a0dd15',  // Study Session
-        'ai-5ef04e0f'   // House Party
+        'ai-52e09c58',  // Study Session
+        'ai-db8331c6'   // House Party
     ]
 };
 
