@@ -8228,13 +8228,21 @@ function playFromCuratedPlaylist(index, playlistSlug) {
     const track = playlist.tracks[index];
     if (!track) return;
 
-    const song = mapHarvesterPlaylistTrack(track);
+    // Create queue from playlist tracks - map to queue format
+    queue = playlist.tracks.map(t => {
+        const mapped = mapHarvesterPlaylistTrack(t);
+        return {
+            title: mapped.title,
+            artist: mapped.artist,
+            videoId: mapped.youtube_video_id,  // playSongFromQueue expects videoId
+            artwork: mapped.artwork_url,  // playSongFromQueue expects artwork
+        };
+    });
 
-    // Create queue from playlist tracks
-    window.currentQueue = playlist.tracks.map(t => mapHarvesterPlaylistTrack(t));
-    window.currentQueueIndex = index;
+    currentSongIndex = index;
 
-    playSong(song, 'curated');
+    // Use playSongFromQueue instead of playSong
+    playSongFromQueue(index);
 }
 // ============================================================
 // DISCOVER VIEW FUNCTIONS
@@ -9177,55 +9185,6 @@ async function openCuratedPlaylist(type, id) {
         console.error('Error loading curated playlist:', error);
         showToast(error.message || 'Failed to load playlist. Please try again.');
     }
-}
-
-
-function playCuratedPlaylist(startIndex = 0) {
-    if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
-
-    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.video_id);
-    if (playableSongs.length === 0) return;
-
-    // Set up queue with curated songs
-    queue = playableSongs.map(song => ({
-        title: song.title,
-        artist: song.artist,
-        videoId: song.video_id,
-        artwork: getArtworkUrl(song),
-    }));
-
-    // Play starting from specified index
-    currentSongIndex = startIndex;
-    const song = queue[currentSongIndex];
-
-    if (song) {
-        playSongFromQueue(currentSongIndex);
-    }
-}
-
-function shuffleCuratedPlaylist() {
-    if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
-    const playableSongs = currentCuratedPlaylist.songs.filter(s => s.youtube_video_id);
-    if (playableSongs.length === 0) return;
-    shuffleAndPlay(playableSongs, 'playlist');
-}
-
-function playCuratedSong(index) {
-    if (!currentCuratedPlaylist || !currentCuratedPlaylist.songs) return;
-
-    const playableSongs = currentCuratedPlaylist.songs.filter(s => getSongVideoId(s));
-    if (index >= playableSongs.length) return;
-
-    // Set up queue and play
-    queue = playableSongs.map(song => ({
-        title: song.title,
-        artist: song.artist,
-        videoId: getSongVideoId(song),
-        artwork: getSongArtwork(song),
-    }));
-
-    currentSongIndex = index;
-    playSongFromQueue(index);
 }
 
 // ===========================================
