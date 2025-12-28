@@ -11471,6 +11471,10 @@ body::before {
 }
 
 .playlist-grid .playlist-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
     cursor: pointer;
     transition: all 0.3s ease;
     background: linear-gradient(135deg,
@@ -11558,14 +11562,19 @@ body::before {
 /* Homepage Playlist Card Specific Styles */
 .playlist-grid .playlist-card .playlist-card-artwork {
     position: relative;
-    width: 100%;
-    aspect-ratio: 1;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 !important;
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 1rem;
     background: var(--bg-elevated);
     box-shadow: 0 4px 12px rgba(var(--playlist-color-rgb, 0, 0, 0), 0.3);
     transition: box-shadow 0.3s ease;
+    display: block !important;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    gap: 0 !important;
 }
 
 .playlist-grid .playlist-card:hover .playlist-card-artwork {
@@ -11618,6 +11627,8 @@ body::before {
 
 .playlist-grid .playlist-card-info {
     padding: 0 0.25rem;
+    flex: unset !important;
+    min-width: unset !important;
 }
 
 .playlist-grid .playlist-card-name {
@@ -11630,6 +11641,8 @@ body::before {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    white-space: normal !important;
+    text-overflow: clip !important;
 }
 
 .playlist-grid .playlist-card-meta {
