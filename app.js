@@ -9153,7 +9153,7 @@ async function openCuratedPlaylist(type, id) {
 
         const playlistData = await response.json();
 
-        // Convert to our playlist format
+        // Convert to our playlist format - use "tracks" to match API and other code paths
         const playlist = {
             id: playlistData.id,
             name: playlistData.name,
@@ -9162,14 +9162,14 @@ async function openCuratedPlaylist(type, id) {
             display_name: playlistData.name,
             description: `${playlistData.total || playlistData.songs.length} songs`,
             total_tracks: playlistData.total || playlistData.songs.length,
-            songs: playlistData.songs.map(song => ({
+            artwork: playlistData.artwork || { primary: '', color: '#1a1a2e' },
+            tracks: playlistData.songs.map(song => ({
                 title: song.title,
                 artist: song.artist,
-                video_id: song.youtube_id || song.youtube_video_id,
-                thumbnail_url: song.artwork_url || getYouTubeThumbnail(song.youtube_id || song.youtube_video_id, 'medium'),
-                duration_seconds: song.duration_seconds || 0,
-                album: song.album
-            })).filter(song => song.video_id) // Filter out songs without video IDs
+                youtube_id: song.youtube_id || song.youtube_video_id,  // Use youtube_id to match API
+                artwork_url: song.artwork_url || '',
+                duration_ms: (song.duration_seconds || 0) * 1000
+            })).filter(track => track.youtube_id) // Filter out tracks without YouTube IDs
         };
 
         currentCuratedPlaylist = playlist;
@@ -9179,7 +9179,7 @@ async function openCuratedPlaylist(type, id) {
         showCuratedDetailView(playlist);
 
         // Log success
-        console.log(`Loaded ${type} playlist:`, playlist.name, `(${playlist.songs.length} songs)`);
+        console.log(`Loaded ${type} playlist:`, playlist.name, `(${playlist.tracks.length} songs)`);
 
     } catch (error) {
         console.error('Error loading curated playlist:', error);
