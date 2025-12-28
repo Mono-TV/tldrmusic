@@ -7934,6 +7934,7 @@ function showCuratedDetailView(playlist) {
 
     // Hide other views
     const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
     const playlistsView = document.getElementById('playlistsView');
     const playlistDetailView = document.getElementById('playlistDetailView');
     const favoritesDetailView = document.getElementById('favoritesDetailView');
@@ -7942,11 +7943,13 @@ function showCuratedDetailView(playlist) {
     const discoverView = document.getElementById('discoverView');
     const searchView = document.getElementById('searchView');
     const chartsView = document.getElementById('chartsView');
-    const chartsDetailView = document.getElementById('chartsDetailView');
     const aiGeneratedView = document.getElementById('aiGeneratedView');
     const aiPlaylistDetailView = document.getElementById('aiPlaylistDetailView');
+    const mainContent = document.getElementById('mainContent');
 
     if (homeView) homeView.style.display = 'none';
+    if (heroSection) heroSection.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
     if (playlistsView) playlistsView.style.display = 'none';
     if (playlistDetailView) playlistDetailView.style.display = 'none';
     if (favoritesDetailView) favoritesDetailView.style.display = 'none';
@@ -7955,53 +7958,222 @@ function showCuratedDetailView(playlist) {
     if (discoverView) discoverView.style.display = 'none';
     if (searchView) searchView.style.display = 'none';
     if (chartsView) chartsView.style.display = 'none';
-    if (chartsDetailView) chartsDetailView.style.display = 'none';
     if (aiGeneratedView) aiGeneratedView.style.display = 'none';
     if (aiPlaylistDetailView) aiPlaylistDetailView.style.display = 'none';
-
-    // Update view content
-    const headerEl = curatedDetailView.querySelector('.curated-detail-header h1');
-    const descEl = curatedDetailView.querySelector('.curated-detail-description');
-    const countEl = curatedDetailView.querySelector('.curated-detail-count');
-    const artworkEl = curatedDetailView.querySelector('.curated-detail-artwork img');
-    const tracklistEl = curatedDetailView.querySelector('.curated-detail-tracklist');
-
-    if (headerEl) headerEl.textContent = playlist.name;
-    if (descEl) descEl.textContent = playlist.description || '';
-    if (countEl) countEl.textContent = `${playlist.tracks?.length || playlist.total_tracks || 0} songs`;
-    if (artworkEl && playlist.artwork?.primary) {
-        artworkEl.src = playlist.artwork.primary;
-    }
-
-    // Render tracklist
-    if (tracklistEl && playlist.tracks) {
-        const tracks = playlist.tracks.map((track, index) => {
-            const song = mapHarvesterPlaylistTrack(track);
-            return `
-                <div class="song-card" onclick="playFromCuratedPlaylist(${index}, '${playlist.slug}')">
-                    <div class="song-card-artwork">
-                        <img src="${song.artwork_url}"
-                             alt="${song.title}"
-                             onerror="handleImageError(this, '${song.youtube_video_id}')">
-                        <div class="song-card-play-overlay">
-                            <div class="song-card-play-btn">▶</div>
-                        </div>
-                    </div>
-                    <div class="song-card-info">
-                        <div class="song-card-title">${song.title}</div>
-                        <div class="song-card-artist">${song.artist}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        tracklistEl.innerHTML = tracks;
-    }
 
     // Store current playlist for playback
     window.currentCuratedPlaylist = playlist;
 
+    // Render playlist detail
+    renderCuratedPlaylistDetail(playlist);
+
     // Show view
     curatedDetailView.style.display = 'block';
+    curatedDetailView.scrollTop = 0;
+}
+
+function renderCuratedPlaylistDetail(playlist) {
+    const header = document.getElementById('curatedDetailHeader');
+    const songsContainer = document.getElementById('curatedDetailSongs');
+
+    if (!header || !songsContainer) return;
+
+    const tracks = playlist.tracks || [];
+    const playlistIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 18V5l12-2v13"></path>
+        <circle cx="6" cy="18" r="3"></circle>
+        <circle cx="18" cy="16" r="3"></circle>
+    </svg>`;
+
+    // Render header
+    header.innerHTML = `
+        <button class="chart-detail-back" onclick="hideCuratedDetailView()" title="Back to Home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="chart-detail-hero">
+            <div class="chart-detail-cover playlist">
+                <img src="${playlist.artwork?.primary || ''}" alt="${escapeHtml(playlist.name)}">
+            </div>
+            <div class="chart-detail-info">
+                <span class="chart-detail-type">Playlist</span>
+                <h1 class="chart-detail-name">${escapeHtml(playlist.name)}</h1>
+                <div class="chart-detail-meta">
+                    <span class="chart-detail-meta-item">
+                        ${playlistIcon}
+                        ${tracks.length} songs
+                    </span>
+                </div>
+                <div class="chart-detail-buttons">
+                    <button class="chart-detail-btn primary" onclick="playAllCuratedPlaylist()" ${tracks.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play All
+                    </button>
+                    <button class="chart-detail-btn secondary" onclick="shuffleCuratedPlaylist()" ${tracks.length === 0 ? 'disabled' : ''}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="20" x2="21" y2="3"></line>
+                            <polyline points="21 16 21 21 16 21"></polyline>
+                            <line x1="15" y1="15" x2="21" y2="21"></line>
+                            <line x1="4" y1="4" x2="9" y2="9"></line>
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Render songs
+    if (!tracks || tracks.length === 0) {
+        songsContainer.innerHTML = `
+            <div class="detail-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <p>No songs in this playlist</p>
+            </div>
+        `;
+        return;
+    }
+
+    const songsHtml = tracks.map((track, index) => {
+        const song = mapHarvesterPlaylistTrack(track);
+        const isPlaying = isCurrentlyPlaying(song.youtube_video_id);
+        const artworkUrl = song.artwork_url || '';
+        const isFavorite = favorites.some(f => f.videoId === song.youtube_video_id);
+
+        return `
+            <div class="chart-song-item ${isPlaying ? 'now-playing' : ''}" data-index="${index}" data-video-id="${song.youtube_video_id || ''}" onclick="playFromCuratedPlaylist(${index}, '${playlist.slug}')">
+                <div class="chart-song-rank">
+                    <span class="chart-song-rank-number">${index + 1}</span>
+                </div>
+                <div class="chart-song-info">
+                    <div class="chart-song-artwork">
+                        ${artworkUrl
+                            ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}">`
+                            : `<div class="chart-song-placeholder"></div>`}
+                        ${getNowPlayingEqHtml()}
+                    </div>
+                    <div class="chart-song-details">
+                        <span class="chart-song-title">${escapeHtml(song.title)}</span>
+                        <span class="chart-song-artist">${escapeHtml(song.artist)}</span>
+                    </div>
+                </div>
+                <div class="chart-song-actions">
+                    <button class="chart-song-action-btn ${isFavorite ? 'liked' : ''}" onclick="event.stopPropagation(); toggleCuratedSongFavorite(${index})" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="chart-song-action-btn" onclick="event.stopPropagation(); addCuratedSongToQueue(${index})" title="Add to queue">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                    <button class="chart-song-action-btn" onclick="event.stopPropagation(); showAddCuratedSongToPlaylistModal(${index})" title="Add to playlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 12H3"></path>
+                            <path d="M16 6H3"></path>
+                            <path d="M16 18H3"></path>
+                            <path d="M18 9v6"></path>
+                            <path d="M21 12h-6"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    songsContainer.innerHTML = `
+        <div class="chart-detail-songs-header">
+            <span>#</span>
+            <span>Title</span>
+            <span></span>
+        </div>
+        ${songsHtml}
+    `;
+}
+
+function hideCuratedDetailView() {
+    const curatedDetailView = document.getElementById('curatedDetailView');
+    const homeView = document.getElementById('homeView');
+    const heroSection = document.getElementById('heroSection');
+    const mainContent = document.getElementById('mainContent');
+
+    if (curatedDetailView) curatedDetailView.style.display = 'none';
+    if (homeView) homeView.style.display = 'block';
+    if (heroSection) heroSection.style.display = 'block';
+    if (mainContent) mainContent.style.display = 'block';
+
+    window.currentCuratedPlaylist = null;
+}
+
+function playAllCuratedPlaylist() {
+    if (!window.currentCuratedPlaylist || !window.currentCuratedPlaylist.tracks) return;
+    playFromCuratedPlaylist(0, window.currentCuratedPlaylist.slug);
+}
+
+function shuffleCuratedPlaylist() {
+    if (!window.currentCuratedPlaylist || !window.currentCuratedPlaylist.tracks) return;
+    const tracks = [...window.currentCuratedPlaylist.tracks];
+    // Fisher-Yates shuffle
+    for (let i = tracks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
+    }
+    window.currentCuratedPlaylist.tracks = tracks;
+    renderCuratedPlaylistDetail(window.currentCuratedPlaylist);
+    playAllCuratedPlaylist();
+}
+
+function toggleCuratedSongFavorite(index) {
+    const playlist = window.currentCuratedPlaylist;
+    if (!playlist || !playlist.tracks) return;
+
+    const track = playlist.tracks[index];
+    const song = mapHarvesterPlaylistTrack(track);
+
+    toggleFavorite(song.youtube_video_id, song.title, song.artist, song.artwork_url);
+
+    // Re-render to update heart icon
+    setTimeout(() => renderCuratedPlaylistDetail(playlist), 100);
+}
+
+function addCuratedSongToQueue(index) {
+    const playlist = window.currentCuratedPlaylist;
+    if (!playlist || !playlist.tracks) return;
+
+    const track = playlist.tracks[index];
+    const song = mapHarvesterPlaylistTrack(track);
+
+    addToQueue({
+        title: song.title,
+        artist: song.artist,
+        videoId: song.youtube_video_id,
+        artwork: song.artwork_url
+    });
+}
+
+function showAddCuratedSongToPlaylistModal(index) {
+    const playlist = window.currentCuratedPlaylist;
+    if (!playlist || !playlist.tracks) return;
+
+    const track = playlist.tracks[index];
+    const song = mapHarvesterPlaylistTrack(track);
+
+    showAddToPlaylistModal({
+        videoId: song.youtube_video_id,
+        title: song.title,
+        artist: song.artist,
+        artwork: song.artwork_url
+    });
 }
 
 // Play from curated playlist
@@ -8020,7 +8192,6 @@ function playFromCuratedPlaylist(index, playlistSlug) {
 
     playSong(song, 'curated');
 }
-
 // ============================================================
 // DISCOVER VIEW FUNCTIONS
 // ============================================================
