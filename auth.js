@@ -11,7 +11,7 @@
 // Configuration
 const AUTH_CONFIG = {
     GOOGLE_CLIENT_ID: '401132033262-h6r5vjqgbfq9f67v8edjvhne7u06htad.apps.googleusercontent.com',
-    API_BASE: 'https://tldr-music-401132033262.asia-south1.run.app'  // Music Conductor API (auth & personalization)
+    API_BASE: 'https://tldrmusic-api-401132033262.asia-south1.run.app'  // TLDR Music API (auth, library, AI playlists)
 };
 
 // Storage keys for auth
