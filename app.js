@@ -3,8 +3,10 @@
 // API Configuration (Dual-API Architecture)
 // - Music Conductor: Charts, Search, Discover, Playlists catalog
 // - TLDR Music API: User auth, Library (favorites, history, queue, user playlists)
+// - Curated API: Dynamic playlists (moods, languages, artists, eras)
 const MUSIC_CONDUCTOR_API = 'https://tldr-music-401132033262.asia-south1.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
+const CURATED_API = 'https://tldrmusic-api-401132033262.asia-south1.run.app/api/curated';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // YouTube thumbnail sizes (width x height)
@@ -7745,8 +7747,8 @@ function selectChart(mode) {
 // DISCOVER VIEW FUNCTIONS
 // ============================================================
 
-// Curated playlist data (will be fetched from API later)
-const CURATED_PLAYLISTS = {
+// Curated playlist data (fallback - will be fetched from API)
+const CURATED_PLAYLISTS_FALLBACK = {
     moods: [
         { id: 'mood-chill', name: 'Chill Vibes', mood: 'chill', songCount: 3215, icon: 'chill' },
         { id: 'mood-workout', name: 'Workout Beats', mood: 'workout', songCount: 1597, icon: 'workout' },
@@ -7805,6 +7807,66 @@ const CURATED_PLAYLISTS = {
         { id: 'era-retro', name: 'Retro Classics', era: 'retro', songCount: 3000 }
     ]
 };
+
+// Active curated playlists (dynamic from API)
+let CURATED_PLAYLISTS = { ...CURATED_PLAYLISTS_FALLBACK };
+let curatedCategoriesLoaded = false;
+
+// Fetch curated categories from API
+async function fetchCuratedCategories() {
+    if (curatedCategoriesLoaded) {
+        return CURATED_PLAYLISTS;
+    }
+
+    try {
+        const response = await fetch(`${CURATED_API}/categories`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch categories: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Transform API data to match our format
+        CURATED_PLAYLISTS = {
+            moods: data.moods.map(mood => ({
+                id: mood.id,
+                name: mood.name === 'Chill' ? 'Chill Vibes' : mood.name,
+                mood: mood.key,
+                songCount: mood.songCount,
+                icon: mood.key // Use key as icon identifier
+            })),
+            languages: data.languages.map(lang => ({
+                id: lang.id,
+                name: `${lang.name} ${lang.name.includes('Hits') ? '' : 'Hits'}`.trim(),
+                lang: lang.key,
+                songCount: lang.songCount
+            })),
+            artists: data.artists.map(artist => ({
+                id: artist.id,
+                name: artist.name,
+                artist: artist.key,
+                songCount: 0 // Will be fetched when playlist is opened
+            })),
+            eras: data.eras.map(era => ({
+                id: era.id,
+                name: era.name,
+                era: era.key,
+                songCount: 0 // Will be fetched when playlist is opened
+            }))
+        };
+
+        curatedCategoriesLoaded = true;
+        console.log('Loaded curated categories from API:', CURATED_PLAYLISTS);
+
+        return CURATED_PLAYLISTS;
+
+    } catch (error) {
+        console.error('Error fetching curated categories:', error);
+        console.log('Using fallback curated playlists');
+        return CURATED_PLAYLISTS_FALLBACK;
+    }
+}
 
 // Cached playlist colors from API
 let cachedPlaylistColors = {};
@@ -8370,7 +8432,11 @@ async function showDiscoverView() {
     renderDiscoverPlaylists();
 }
 
-function renderDiscoverPlaylists() {
+async function renderDiscoverPlaylists() {
+    // Fetch curated categories from API
+    await fetchCuratedCategories();
+
+    // Render all playlist sections
     renderFeaturedPlaylists();
     renderMoodPlaylists();
     renderLanguagePlaylists();
@@ -8573,60 +8639,46 @@ async function openCuratedPlaylist(type, id) {
     // Show loading state
     showToast('Loading playlist...');
 
-    // Map old curated types to Music Conductor playlist slugs
-    const slugMap = {
-        mood: {
-            'chill': 'chill-vibes',
-            'workout': 'workout-energy',
-            'party': 'party-mode',
-            'focus': 'focus-study'
-        },
-        language: {
-            'hindi': 'hindi-hits',
-            'english': 'english-hits',
-            'tamil': 'tamil-hits',
-            'telugu': 'telugu-hits',
-            'punjabi': 'punjabi-hits',
-            'spanish': 'spanish-hits',
-            'korean': 'korean-hits',
-            'japanese': 'japanese-hits'
-        }
-    };
-
     try {
-        // Check if we can map to Music Conductor playlist
-        const slug = slugMap[type]?.[key];
+        // Build API endpoint based on type
+        const endpoint = `${CURATED_API}/${type}/${key}?limit=50`;
 
-        if (!slug) {
-            // Artist and era playlists not available in new API
-            throw new Error(`${type} playlists are not available yet`);
-        }
-
-        // Fetch from Music Conductor API
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/${slug}`);
+        // Fetch from Curated API
+        const response = await fetch(endpoint);
 
         if (!response.ok) {
             throw new Error(`Failed to load playlist: ${response.status}`);
         }
 
-        const playlist = await response.json();
+        const playlistData = await response.json();
 
-        // Convert tracks to songs format for compatibility
-        if (playlist.tracks) {
-            playlist.songs = playlist.tracks.map(track => ({
-                title: track.title,
-                artist: track.artist,
-                video_id: track.youtube_id || track.youtube_video_id,
-                thumbnail_url: getHarvesterArtwork(track.artwork_url, track.youtube_id || track.youtube_video_id),
-                duration_seconds: track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0
-            }));
-        }
+        // Convert to our playlist format
+        const playlist = {
+            id: playlistData.id,
+            name: playlistData.name,
+            slug: `${type}-${key}`,
+            type: playlistData.type || type,
+            display_name: playlistData.name,
+            description: `${playlistData.total || playlistData.songs.length} songs`,
+            total_tracks: playlistData.total || playlistData.songs.length,
+            songs: playlistData.songs.map(song => ({
+                title: song.title,
+                artist: song.artist,
+                video_id: song.youtube_video_id,
+                thumbnail_url: song.artwork_url || getYouTubeThumbnail(song.youtube_video_id, 'medium'),
+                duration_seconds: song.duration_seconds || 0,
+                album: song.album
+            })).filter(song => song.video_id) // Filter out songs without video IDs
+        };
 
         currentCuratedPlaylist = playlist;
         currentCuratedType = type;
 
         // Show the curated detail view
         showCuratedDetailView(playlist);
+
+        // Log success
+        console.log(`Loaded ${type} playlist:`, playlist.name, `(${playlist.songs.length} songs)`);
 
     } catch (error) {
         console.error('Error loading curated playlist:', error);
