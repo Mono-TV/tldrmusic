@@ -447,7 +447,15 @@ async function saveLanguages(accessToken, languages) {
     });
 
     if (!res.ok) {
-        throw new Error('Failed to save languages');
+        // Log detailed error information
+        const errorText = await res.text();
+        console.error('Save languages failed:', {
+            status: res.status,
+            statusText: res.statusText,
+            headers: Object.fromEntries(res.headers.entries()),
+            body: errorText
+        });
+        throw new Error(`Failed to save languages: ${res.status} ${errorText}`);
     }
 
     return await res.json();
