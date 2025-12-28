@@ -434,6 +434,38 @@
             <section class="home-view" id="homeView">
                 <!-- Main Content (charts, etc.) -->
                 <div id="mainContent">
+                    <!-- India Top 25 Charts Section -->
+                    <section class="chart-section">
+                        <div class="chart-header">
+                            <div class="section-title">
+                                <h3>India Top 25</h3>
+                                <span class="section-count-badge" id="quickPicksCount">10</span>
+                            </div>
+                        </div>
+                        <div class="chart-list" id="chartList">
+                            <!-- Chart songs will be rendered here by JavaScript -->
+                        </div>
+                    </section>
+
+                    <!-- Regional Spotlights Section -->
+                    <section class="regional-section" id="regionalSection" style="display: none;">
+                        <div class="regional-header">
+                            <h3>Regional Spotlights</h3>
+                            <p class="regional-subtitle">Trending across India's diverse music scenes</p>
+                            <span class="section-count-badge" id="regionalCount">0</span>
+                        </div>
+                        <div class="regional-language-selector" id="regionalLanguageSelector">
+                            <!-- Language buttons rendered by JavaScript -->
+                        </div>
+                        <div class="regional-grid" id="regionalChartGrid">
+                            <!-- Regional songs rendered by JavaScript -->
+                        </div>
+                    </section>
+
+                    <!-- Global Spotlights Section (for Global mode) -->
+                    <section id="globalSpotlightsSection" style="display: none;">
+                        <!-- Global spotlights content -->
+                    </section>
                 </div><!-- End mainContent -->
 
                 <!-- Homepage Content Rows (dynamically rendered) -->

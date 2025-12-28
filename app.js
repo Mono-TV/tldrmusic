@@ -2545,7 +2545,7 @@ function switchChartMode(mode) {
     // Update chart section header
     const chartHeader = document.querySelector('.chart-section .chart-header h3');
     if (chartHeader) {
-        chartHeader.textContent = mode === 'india' ? 'Quick Picks' : 'Global Charts';
+        chartHeader.textContent = mode === 'india' ? 'India Top 25' : 'Global Top 25';
     }
 
     // Re-render chart list with appropriate data
