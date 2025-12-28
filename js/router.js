@@ -182,7 +182,11 @@
                 break;
 
             case 'discover':
-                showAIGeneratedView();
+                if (typeof showDiscoverView === 'function') {
+                    showDiscoverView();
+                } else {
+                    showAIGeneratedView();
+                }
                 break;
 
             case 'discover-playlist':
@@ -194,6 +198,8 @@
                     } else if (typeof showAIPlaylistDetailView === 'function') {
                         showAIPlaylistDetailView(id);
                     }
+                } else if (typeof showDiscoverView === 'function') {
+                    showDiscoverView();
                 } else {
                     showAIGeneratedView();
                 }
