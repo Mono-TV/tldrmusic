@@ -9141,8 +9141,11 @@ async function openCuratedPlaylist(type, id) {
     showToast('Loading playlist...');
 
     try {
-        // Build API endpoint based on type
-        const endpoint = `${CURATED_API}/${type}/${key}?limit=50`;
+        // Build slug for API (e.g., "mood-chill", "language-hindi")
+        const slug = `${type}-${key}`;
+
+        // Build API endpoint - use /api/playlists/{slug} endpoint
+        const endpoint = `${CURATED_API}/api/playlists/${slug}`;
 
         // Fetch from Curated API
         const response = await fetch(endpoint);
@@ -9160,15 +9163,15 @@ async function openCuratedPlaylist(type, id) {
             slug: `${type}-${key}`,
             type: playlistData.type || type,
             display_name: playlistData.name,
-            description: `${playlistData.total || playlistData.songs.length} songs`,
-            total_tracks: playlistData.total || playlistData.songs.length,
+            description: `${playlistData.total_tracks || playlistData.tracks.length} songs`,
+            total_tracks: playlistData.total_tracks || playlistData.tracks.length,
             artwork: playlistData.artwork || { primary: '', color: '#1a1a2e' },
-            tracks: playlistData.songs.map(song => ({
-                title: song.title,
-                artist: song.artist,
-                youtube_id: song.youtube_id || song.youtube_video_id,  // Use youtube_id to match API
-                artwork_url: song.artwork_url || '',
-                duration_ms: (song.duration_seconds || 0) * 1000
+            tracks: playlistData.tracks.map(track => ({
+                title: track.title,
+                artist: track.artist,
+                youtube_id: track.youtube_id,
+                artwork_url: track.artwork_url || '',
+                duration_ms: track.duration_ms || 0
             })).filter(track => track.youtube_id) // Filter out tracks without YouTube IDs
         };
 
