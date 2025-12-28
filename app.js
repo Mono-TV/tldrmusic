@@ -2242,7 +2242,7 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
     currentSongIndex = -1; // Reset main chart index
 
     // Track in history
-    addToHistory({ title, artist, youtube_video_id: videoId, artwork_url: artworkUrl });
+    addToHistory({ title, artist, youtube_video_id: videoId, artwork_url: artworkUrl }, 'regional_chart');
 
     // Update player bar UI first (so updateFavoriteButtons can read correct title/artist)
     if (playerBarTitle) playerBarTitle.textContent = title;
@@ -2821,8 +2821,8 @@ function playSong(index) {
     isRegionalSongPlaying = false;
     currentPlayingVideoId = song.youtube_video_id;
 
-    // Track in history
-    addToHistory(song);
+    // Track in history with source
+    addToHistory(song, 'chart');
 
     // Close theater mode if active (stops theater player, skip resume since new song will play)
     if (isTheaterMode) {
@@ -2921,6 +2921,9 @@ function onPlayerStateChange(event) {
         updateCardPlayingState(false);
         updateHeroButtonState(false);
         stopProgressTracking();
+
+        // Update completion rate (song finished = 100%)
+        updateCurrentSongCompletionRate();
 
         // Handle repeat one - replay current song
         if (repeatMode === 'one' && currentSongIndex >= 0) {
@@ -4188,16 +4191,61 @@ function playFromIndex(songs, startIndex, sourceName = '') {
 // History Functions
 // ============================================================
 
-function addToHistory(song) {
+/**
+ * Update completion rate for currently playing song
+ * Called when song ends or when switching to a new song
+ */
+function updateCurrentSongCompletionRate() {
+    if (!window._currentPlayingHistoryItem || !player) return;
+
+    try {
+        const currentTime = player.getCurrentTime();
+        const duration = player.getDuration();
+
+        if (duration && duration > 0) {
+            const completionRate = Math.min(currentTime / duration, 1.0);
+            window._currentPlayingHistoryItem.completionRate = completionRate;
+
+            // Update in playHistory array
+            const index = playHistory.findIndex(h =>
+                h.videoId === window._currentPlayingHistoryItem.videoId &&
+                h.playedAt === window._currentPlayingHistoryItem.playedAt
+            );
+
+            if (index !== -1) {
+                playHistory[index].completionRate = completionRate;
+                saveHistory();
+            }
+
+            console.log(`Updated completion rate: ${(completionRate * 100).toFixed(1)}% for "${window._currentPlayingHistoryItem.title}"`);
+        }
+    } catch (e) {
+        console.warn('Error updating completion rate:', e);
+    }
+}
+
+function addToHistory(song, source = 'unknown') {
     if (!song || !song.title) return;
+
+    // Update completion rate for previous song before adding new one
+    updateCurrentSongCompletionRate();
 
     const historyItem = {
         title: song.title,
         artist: song.artist,
         videoId: song.youtube_video_id || song.videoId,
         artwork: getArtworkUrl(song) || song.artwork,
-        playedAt: Date.now()
+        playedAt: Date.now(),
+        completionRate: 0,  // Will be updated when song ends/changes
+        source: source,  // Track where song was played from
+        // Include metadata for preference learning
+        language: song.language || song.metadata?.language || null,
+        genres: song.genres || song.metadata?.genres || [],
+        moods: song.moods || song.metadata?.moods || []
     };
+
+    // Store reference to current playing item for completion tracking
+    window._currentPlayingHistoryItem = historyItem;
 
     // Remove duplicate if exists
     const songId = `${song.title}-${song.artist}`.toLowerCase();
@@ -9757,7 +9805,7 @@ function playSongFromQueue(index) {
     currentPlayingVideoId = song.videoId;
 
     // Track in history
-    addToHistory({ title: song.title, artist: song.artist, youtube_video_id: song.videoId, artwork_url: song.artwork });
+    addToHistory({ title: song.title, artist: song.artist, youtube_video_id: song.videoId, artwork_url: song.artwork }, 'playlist');
 
     // Update player bar UI
     if (playerBarTitle) playerBarTitle.textContent = song.title;
