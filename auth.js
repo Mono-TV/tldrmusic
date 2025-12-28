@@ -228,6 +228,11 @@ async function handleGoogleCallback(response) {
         updateAuthUI();
         showToast(`Welcome, ${data.user.name}!`);
 
+        // Check if user needs onboarding
+        if (shouldShowOnboarding && shouldShowOnboarding()) {
+            setTimeout(() => showOnboardingWizard(), 500);
+        }
+
         // Execute pending play action if any (after UI is ready)
         if (actionToExecute) {
             setTimeout(() => actionToExecute(), 100);
@@ -284,6 +289,11 @@ async function createGuestUser() {
         // Update UI
         updateAuthUI();
         showToast('Guest mode enabled!');
+
+        // Check if user needs onboarding
+        if (shouldShowOnboarding && shouldShowOnboarding()) {
+            setTimeout(() => showOnboardingWizard(), 500);
+        }
 
         // Execute pending play action if any (after UI is ready)
         if (actionToExecute) {
