@@ -1540,6 +1540,11 @@ function showProfilePanel() {
     const userHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY)) || [];
     renderProfileTopSongs(userHistory);
 
+    // Load taste profile (async, non-blocking)
+    if (typeof loadTasteProfile === 'function') {
+        loadTasteProfile();
+    }
+
     // Show page
     panel.classList.add('visible');
     document.body.style.overflow = 'hidden';

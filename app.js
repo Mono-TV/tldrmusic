@@ -4206,6 +4206,17 @@ function updateCurrentSongCompletionRate() {
             }
 
             console.log(`Updated completion rate: ${(completionRate * 100).toFixed(1)}% for "${window._currentPlayingHistoryItem.title}"`);
+
+            // Track play event to API (only if completion rate > 30% or played > 30s)
+            const playedSeconds = currentTime;
+            if (playedSeconds >= 30 || completionRate >= 0.3) {
+                trackPlayEventToAPI(
+                    window._currentPlayingHistoryItem,
+                    playedSeconds,
+                    duration,
+                    window._currentPlayingHistoryItem.source || getCurrentPlaybackSource()
+                );
+            }
         }
     } catch (e) {
         console.warn('Error updating completion rate:', e);
@@ -5176,6 +5187,9 @@ function renderPlaylistsView() {
     // Update all counts using unified functions
     updateAllCounts();
 
+    // Load personalized For You playlists (async, non-blocking)
+    loadForYouPlaylists();
+
     if (!grid) return;
 
     // Hide recently played and divider if no playlists
@@ -5583,6 +5597,93 @@ function renderPlaylistPanel() {
 
 let generatedPlaylistData = null; // Stores the generated playlist for preview
 
+/**
+ * Set AI prompt from example chip
+ */
+function setAIPrompt(prompt) {
+    const promptInput = document.getElementById('aiPlaylistPrompt');
+    if (promptInput) {
+        promptInput.value = prompt;
+        promptInput.focus();
+    }
+}
+
+/**
+ * Update AI personalized section visibility and quota
+ */
+async function updateAIPersonalizedSection() {
+    const personalizedSection = document.getElementById('aiPersonalizedSection');
+    const quotaDisplay = document.getElementById('aiQuotaDisplay');
+    const quotaText = document.getElementById('aiQuotaText');
+
+    // Only show for authenticated non-guest users
+    if (!currentUser || currentUser.is_guest) {
+        if (personalizedSection) personalizedSection.style.display = 'none';
+        return;
+    }
+
+    if (personalizedSection) personalizedSection.style.display = 'block';
+
+    // Fetch quota
+    try {
+        const response = await fetchWithAuth('/api/me/playlists/quota');
+        if (response.ok) {
+            const data = await response.json();
+            const remaining = data.personalized_remaining || 0;
+            const total = data.personalized_limit || 3;
+
+            if (quotaDisplay) quotaDisplay.style.display = 'flex';
+            if (quotaText) quotaText.textContent = `${remaining}/${total} remaining today`;
+
+            // Disable button if quota exhausted
+            const personalizedBtn = document.getElementById('aiPersonalizedBtn');
+            if (personalizedBtn) {
+                if (remaining <= 0) {
+                    personalizedBtn.disabled = true;
+                    personalizedBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                        Daily Limit Reached
+                    `;
+                } else {
+                    personalizedBtn.disabled = false;
+                    personalizedBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Create Playlist for Me
+                    `;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Failed to fetch quota:', error);
+    }
+}
+
+/**
+ * Show AI loading status with message
+ */
+function showAILoadingStatus(message) {
+    const loadingStatus = document.getElementById('aiLoadingStatus');
+    const loadingMessage = document.getElementById('aiLoadingMessage');
+
+    if (loadingStatus) loadingStatus.style.display = 'flex';
+    if (loadingMessage) loadingMessage.textContent = message;
+}
+
+/**
+ * Hide AI loading status
+ */
+function hideAILoadingStatus() {
+    const loadingStatus = document.getElementById('aiLoadingStatus');
+    if (loadingStatus) loadingStatus.style.display = 'none';
+}
+
 async function generateAIPlaylist() {
     const promptInput = document.getElementById('aiPlaylistPrompt');
     const languageSelect = document.getElementById('aiPlaylistLanguage');
@@ -5599,6 +5700,9 @@ async function generateAIPlaylist() {
     // Check authentication
     if (!requireAuth(() => generateAIPlaylist())) return;
 
+    // Hide preview
+    if (previewSection) previewSection.style.display = 'none';
+
     // Show loading state
     generateBtn.disabled = true;
     generateBtn.classList.add('loading');
@@ -5609,7 +5713,12 @@ async function generateAIPlaylist() {
         Generating...
     `;
 
+    // Show loading steps
+    showAILoadingStatus('Analyzing your request...');
+
     try {
+        showAILoadingStatus('Finding songs that match...');
+
         const response = await fetchWithAuth('/api/me/playlists/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -5620,6 +5729,8 @@ async function generateAIPlaylist() {
             })
         });
 
+        showAILoadingStatus('Matching to catalog...');
+
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.detail || 'Failed to generate playlist');
@@ -5627,6 +5738,8 @@ async function generateAIPlaylist() {
 
         const data = await response.json();
         generatedPlaylistData = data;
+
+        showAILoadingStatus('Building your playlist...');
 
         // Render preview
         renderGeneratedPlaylistPreview(data);
@@ -5639,6 +5752,9 @@ async function generateAIPlaylist() {
         console.error('AI playlist generation error:', error);
         showToast(error.message || 'Failed to generate playlist. Please try again.');
     } finally {
+        // Hide loading status
+        hideAILoadingStatus();
+
         // Reset button
         generateBtn.disabled = false;
         generateBtn.classList.remove('loading');
@@ -5648,6 +5764,88 @@ async function generateAIPlaylist() {
             </svg>
             Generate
         `;
+    }
+}
+
+/**
+ * Create personalized AI playlist (uses user preferences and listening history)
+ * Rate limited to 3 per day
+ */
+async function createPersonalizedAIPlaylist() {
+    const personalizedBtn = document.getElementById('aiPersonalizedBtn');
+    const previewSection = document.getElementById('aiPlaylistPreview');
+
+    // Check authentication
+    if (!requireAuth(() => createPersonalizedAIPlaylist())) return;
+
+    // Hide preview
+    if (previewSection) previewSection.style.display = 'none';
+
+    // Show loading state
+    if (personalizedBtn) {
+        personalizedBtn.disabled = true;
+        personalizedBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            Creating...
+        `;
+    }
+
+    // Show loading steps
+    showAILoadingStatus('Analyzing your taste profile...');
+
+    try {
+        showAILoadingStatus('Finding songs you\'ll love...');
+
+        const response = await fetchWithAuth('/api/me/playlists/create-for-me', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                count: 25
+            })
+        });
+
+        showAILoadingStatus('Building your personalized playlist...');
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to create personalized playlist');
+        }
+
+        const data = await response.json();
+        generatedPlaylistData = data;
+
+        // Render preview
+        renderGeneratedPlaylistPreview(data);
+        if (previewSection) {
+            previewSection.style.display = 'block';
+            previewSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        showToast(`Created "${data.name}" just for you!`);
+
+        // Refresh quota
+        updateAIPersonalizedSection();
+
+    } catch (error) {
+        console.error('Personalized AI playlist error:', error);
+        showToast(error.message || 'Failed to create personalized playlist');
+    } finally {
+        // Hide loading status
+        hideAILoadingStatus();
+
+        // Reset button
+        if (personalizedBtn) {
+            personalizedBtn.disabled = false;
+            personalizedBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Create Playlist for Me
+            `;
+        }
     }
 }
 
@@ -7176,6 +7374,9 @@ async function performFullSearch(query) {
         // Save to recent searches
         addToRecentSearches(query);
 
+        // Track search event to API
+        trackSearchEventToAPI(query, mappedSongs.length + albums.length + artists.length);
+
         // Render all three types
         renderCategorizedSearchResults(mappedSongs, albums, artists);
 
@@ -7670,6 +7871,16 @@ function playSearchResultFromList(index) {
     if (!songs || !songs[index]) return;
 
     const song = songs[index];
+
+    // Track search result click
+    const query = document.getElementById('searchViewInput')?.value.trim();
+    if (query) {
+        trackSearchEventToAPI(query, songs.length, {
+            position: index,
+            videoId: song.youtube_video_id,
+            song_id: song.song_id
+        });
+    }
 
     // Build queue from search results
     const queueData = songs.map(s => ({
@@ -8909,6 +9120,9 @@ async function showDiscoverView() {
     const sidebar = document.getElementById('sidebar');
     sidebar?.classList.remove('open');
 
+    // Update AI personalized section (async, non-blocking)
+    updateAIPersonalizedSection();
+
     // Fetch playlist colors from API (non-blocking)
     fetchPlaylistColors().then(() => {
         // Re-render with colors once loaded
@@ -9952,5 +10166,463 @@ function searchAndPlayOnYouTube(title, artist) {
     // Open YouTube Music search in new tab
     window.open(`https://music.youtube.com/search?q=${searchQuery}`, '_blank');
     showToast(`Opening YouTube Music to play "${title}"`);
+}
+
+// ============================================================================
+// BEHAVIOR TRACKING - Track user actions for personalization
+// ============================================================================
+
+/**
+ * Track a play event to the backend API
+ * Called when song ends or user skips (completion rate > 30% or played > 30s)
+ */
+async function trackPlayEventToAPI(song, playedSeconds, totalDuration, source = 'unknown') {
+    // Only track for authenticated users (not guests)
+    if (!currentUser || currentUser.is_guest) {
+        return;
+    }
+
+    // Don't track if song data is incomplete
+    if (!song || !song.videoId) {
+        return;
+    }
+
+    const completionRate = totalDuration > 0 ? playedSeconds / totalDuration : 0;
+
+    // Only track if played > 30 seconds OR completion rate > 50%
+    if (playedSeconds < 30 && completionRate < 0.5) {
+        console.log('Skipping track event (too short):', playedSeconds, 'seconds');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/users/me/history`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify({
+                play: {
+                    youtube_video_id: song.videoId,
+                    song_id: song.song_id || null,
+                    title: song.title,
+                    artist_name: song.artist,
+                    language: song.language || null,
+                    genres: song.genres || [],
+                    moods: song.moods || [],
+                    completion_rate: completionRate,
+                    duration_seconds: Math.round(totalDuration),
+                    played_seconds: Math.round(playedSeconds),
+                    source: source
+                }
+            })
+        });
+
+        if (response.ok) {
+            console.log('✓ Tracked play event:', song.title, `(${(completionRate * 100).toFixed(1)}%)`);
+        } else {
+            console.warn('Failed to track play event:', response.status);
+        }
+    } catch (error) {
+        console.error('Error tracking play event:', error);
+        // Don't show error to user - tracking is best-effort
+    }
+}
+
+/**
+ * Track a search event to the backend API
+ * Called when user performs a search
+ */
+async function trackSearchEventToAPI(query, resultsCount, clickedSong = null) {
+    // Only track for authenticated users
+    if (!currentUser || currentUser.is_guest) {
+        return;
+    }
+
+    if (!query) return;
+
+    try {
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/users/me/history`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify({
+                search: {
+                    query: query,
+                    results_count: resultsCount || 0,
+                    clicked_position: clickedSong?.position || null,
+                    clicked_youtube_video_id: clickedSong?.videoId || null,
+                    clicked_song_id: clickedSong?.song_id || null
+                }
+            })
+        });
+
+        if (response.ok) {
+            console.log('✓ Tracked search event:', query);
+        }
+    } catch (error) {
+        console.error('Error tracking search event:', error);
+    }
+}
+
+/**
+ * Get current playback source for tracking
+ * Determines where the song is being played from
+ */
+function getCurrentPlaybackSource() {
+    // Check which view is active
+    if (document.getElementById('playlistDetailView')?.style.display === 'block') {
+        return 'playlist';
+    } else if (document.getElementById('chartDetailView')?.style.display === 'block') {
+        return 'chart';
+    } else if (document.getElementById('searchView')?.style.display === 'block') {
+        return 'search';
+    } else if (document.getElementById('favoritesDetailView')?.style.display === 'block') {
+        return 'favorites';
+    } else if (document.getElementById('artistDetailView')?.style.display === 'block') {
+        return 'artist';
+    } else if (document.getElementById('homeView')?.style.display === 'block') {
+        return currentChartMode === 'global' ? 'global_chart' : 'india_chart';
+    }
+    return 'unknown';
+}
+
+// ============================================================================
+// TASTE PROFILE / PREFERENCE DASHBOARD
+// ============================================================================
+
+/**
+ * Load and display user's taste profile (affinities)
+ */
+async function loadTasteProfile() {
+    const tasteSection = document.getElementById('tasteProfileSection');
+
+    // Only show for authenticated non-guest users
+    if (!currentUser || currentUser.is_guest) {
+        if (tasteSection) tasteSection.style.display = 'none';
+        return;
+    }
+
+    try {
+        const response = await fetchWithAuth('/api/preferences/affinities');
+        if (!response.ok) {
+            console.warn('Failed to load affinities:', response.status);
+            if (tasteSection) tasteSection.style.display = 'none';
+            return;
+        }
+
+        const data = await response.json();
+
+        // Show section if we have affinities
+        if (data.implicit_affinities || data.explicit_preferences) {
+            renderTasteProfile(data);
+            if (tasteSection) tasteSection.style.display = 'block';
+        } else {
+            if (tasteSection) tasteSection.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error loading taste profile:', error);
+        if (tasteSection) tasteSection.style.display = 'none';
+    }
+}
+
+/**
+ * Render taste profile with bar charts
+ */
+function renderTasteProfile(data) {
+    const implicit = data.implicit_affinities || {};
+    const explicit = data.explicit_preferences || {};
+
+    // Update last updated time
+    const lastUpdatedEl = document.getElementById('affinityLastUpdated');
+    if (lastUpdatedEl && data.last_computed) {
+        const lastComputed = new Date(data.last_computed);
+        const now = new Date();
+        const diffMs = now - lastComputed;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffHours / 24);
+
+        if (diffDays > 0) {
+            lastUpdatedEl.textContent = `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+        } else if (diffHours > 0) {
+            lastUpdatedEl.textContent = `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+        } else {
+            lastUpdatedEl.textContent = 'recently';
+        }
+    }
+
+    // Render languages
+    renderTasteCategory('tasteLanguages', implicit.languages || {}, explicit.languages || [], 'language');
+
+    // Render genres
+    renderTasteCategory('tasteGenres', implicit.genres || {}, explicit.genres || [], 'genre');
+
+    // Render moods
+    renderTasteCategory('tasteMoods', implicit.moods || {}, explicit.moods || [], 'mood');
+}
+
+/**
+ * Render a taste category with bars
+ */
+function renderTasteCategory(containerId, implicitScores, explicitList, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // Combine implicit and explicit
+    const combined = new Map();
+
+    // Add explicit preferences (score 1.0)
+    explicitList.forEach(item => {
+        combined.set(item, { score: 1.0, source: 'explicit' });
+    });
+
+    // Add implicit preferences (learned from behavior)
+    Object.entries(implicitScores).forEach(([item, score]) => {
+        if (combined.has(item)) {
+            // If already in explicit, mark as both
+            combined.get(item).source = 'both';
+        } else {
+            combined.set(item, { score, source: 'implicit' });
+        }
+    });
+
+    if (combined.size === 0) {
+        container.innerHTML = `<div class="taste-empty">No ${type} preferences yet</div>`;
+        return;
+    }
+
+    // Sort by score (descending), take top 10
+    const sorted = Array.from(combined.entries())
+        .sort((a, b) => b[1].score - a[1].score)
+        .slice(0, 10);
+
+    // Render bars
+    const bars = sorted.map(([name, data]) => {
+        const scorePercent = Math.round(data.score * 100);
+        const source = data.source;
+
+        // Badge for source
+        let badge = '';
+        if (source === 'explicit') {
+            badge = '<span class="taste-badge explicit">Your choice</span>';
+        } else if (source === 'implicit') {
+            badge = '<span class="taste-badge implicit">Learned</span>';
+        } else {
+            badge = '<span class="taste-badge both">Choice + Learned</span>';
+        }
+
+        return `
+            <div class="taste-item">
+                <div class="taste-item-header">
+                    <span class="taste-item-name">${formatTasteName(name, type)}</span>
+                    ${badge}
+                </div>
+                <div class="taste-bar-container">
+                    <div class="taste-bar" style="width: ${scorePercent}%">
+                        <div class="taste-bar-fill ${source}"></div>
+                    </div>
+                    <span class="taste-score">${scorePercent}%</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = bars;
+}
+
+/**
+ * Format taste item name
+ */
+function formatTasteName(name, type) {
+    if (type === 'language') {
+        const langNames = {
+            'hi': 'Hindi',
+            'en': 'English',
+            'pa': 'Punjabi',
+            'ta': 'Tamil',
+            'te': 'Telugu',
+            'ml': 'Malayalam',
+            'kn': 'Kannada',
+            'mr': 'Marathi',
+            'bn': 'Bengali',
+            'gu': 'Gujarati'
+        };
+        return langNames[name] || name.toUpperCase();
+    }
+    return name;
+}
+
+/**
+ * Refresh user affinities (recompute from listening history)
+ */
+async function refreshUserAffinities() {
+    const refreshBtn = document.getElementById('refreshAffinitiesBtn');
+
+    if (!currentUser || currentUser.is_guest) {
+        showToast('Please sign in to refresh preferences');
+        return;
+    }
+
+    // Show loading state
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            Refreshing...
+        `;
+        refreshBtn.classList.add('loading');
+    }
+
+    try {
+        const response = await fetchWithAuth('/api/preferences/compute-affinities', {
+            method: 'POST'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to refresh preferences');
+        }
+
+        // Reload taste profile
+        await loadTasteProfile();
+
+        showToast('Preferences updated based on your listening history');
+
+    } catch (error) {
+        console.error('Error refreshing affinities:', error);
+        showToast('Failed to refresh preferences');
+    } finally {
+        // Reset button
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.classList.remove('loading');
+            refreshBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                Refresh
+            `;
+        }
+    }
+}
+
+// ============================================================================
+// FOR YOU PERSONALIZED PLAYLISTS
+// ============================================================================
+
+/**
+ * Load personalized "For You" playlists from API
+ * Shows playlists matched to user's listening history and preferences
+ */
+async function loadForYouPlaylists() {
+    const forYouSection = document.getElementById('forYouSection');
+
+    // Only show For You for authenticated non-guest users
+    if (!currentUser || currentUser.is_guest) {
+        if (forYouSection) forYouSection.style.display = 'none';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/for-you?limit=10`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            }
+        });
+
+        if (!response.ok) {
+            console.warn('Failed to load For You playlists:', response.status);
+            if (forYouSection) forYouSection.style.display = 'none';
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.playlists && data.playlists.length > 0) {
+            renderForYouSection(data.playlists);
+            if (forYouSection) forYouSection.style.display = 'block';
+        } else {
+            // No personalized playlists yet (user hasn't listened to enough songs)
+            if (forYouSection) forYouSection.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error loading For You playlists:', error);
+        if (forYouSection) forYouSection.style.display = 'none';
+    }
+}
+
+/**
+ * Render For You personalized playlists section
+ * Shows personalization score and reason for each playlist
+ */
+function renderForYouSection(playlists) {
+    const grid = document.getElementById('forYouGrid');
+    if (!grid) return;
+
+    const cards = playlists.map(playlist => {
+        // Get personalization data
+        const personalization = playlist.personalization || {};
+        const score = personalization.score || 0;
+        const reason = personalization.reason || 'Based on your listening history';
+
+        // Format score as percentage
+        const scorePercent = Math.round(score * 100);
+
+        // Get artwork
+        const artworkUrl = playlist.artwork_url || playlist.artwork ||
+                          (playlist.cover_urls && playlist.cover_urls[0]) ||
+                          'https://via.placeholder.com/300x300?text=Playlist';
+
+        // Get track count
+        const trackCount = playlist.total_tracks || playlist.song_count ||
+                          (playlist.tracks ? playlist.tracks.length : 0);
+
+        return `
+            <div class="for-you-card" onclick="openCuratedPlaylist('${playlist.slug}', '${escapeHtml(playlist.name)}')">
+                <div class="for-you-artwork">
+                    <img src="${artworkUrl}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous">
+                    <div class="personalization-badge">${scorePercent}% match</div>
+                </div>
+                <div class="for-you-info">
+                    <div class="for-you-name">${escapeHtml(playlist.name)}</div>
+                    <div class="for-you-tracks">${trackCount} song${trackCount !== 1 ? 's' : ''}</div>
+                    <div class="for-you-reason">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        ${escapeHtml(reason)}
+                    </div>
+                </div>
+                <button class="for-you-play" onclick="event.stopPropagation(); openAndPlayCuratedPlaylist('${playlist.slug}')" title="Play">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
+            </div>
+        `;
+    }).join('');
+
+    grid.innerHTML = cards;
+}
+
+/**
+ * Open and immediately play a curated playlist
+ * Used by For You play button
+ */
+async function openAndPlayCuratedPlaylist(slug) {
+    // First open the playlist
+    await openCuratedPlaylist(slug, 'Playlist');
+
+    // Then play the first track if available
+    const currentPlaylist = window.currentOpenedPlaylist;
+    if (currentPlaylist && currentPlaylist.tracks && currentPlaylist.tracks.length > 0) {
+        const firstTrack = currentPlaylist.tracks[0];
+        playFromCuratedPlaylist(0);
+    }
 }
 
