@@ -357,7 +357,7 @@ function checkAuthState() {
  */
 async function verifyToken() {
     try {
-        const res = await fetchWithAuth('/api/me/library');
+        const res = await fetchWithAuth('/api/auth/me');
         if (!res.ok) {
             // Token expired, try refresh
             await refreshAccessToken();
