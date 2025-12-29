@@ -10510,11 +10510,7 @@ async function loadForYouPlaylists() {
     }
 
     try {
-        const response = await fetch(`${MUSIC_CONDUCTOR_API}/api/playlists/for-you?limit=10`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            }
-        });
+        const response = await fetchWithAuth('/api/playlists/for-you?limit=10');
 
         if (!response.ok) {
             console.warn('Failed to load For You playlists:', response.status);
