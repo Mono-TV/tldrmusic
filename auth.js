@@ -777,8 +777,8 @@ async function syncToCloud(type) {
         pendingLocalChanges.delete(type);
         console.log(`Synced ${type} to cloud`);
     } catch (error) {
-        // Clear pending flag even on error to prevent permanent blocking
-        pendingLocalChanges.delete(type);
+        // Don't clear pending flag on error to prevent pullFromCloud from overwriting local changes
+        // The flag will be cleared on next successful sync
         console.error(`Sync ${type} error:`, error);
     }
 }
