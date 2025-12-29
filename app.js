@@ -924,7 +924,6 @@ async function loadChartData() {
                 consolidateGlobalChart();
                 renderHero();
                 renderChart();
-                renderRegionalCharts();
                 updateMetadata();
 
                 // Refresh cache in background (don't await)
@@ -974,7 +973,6 @@ async function loadChartData() {
 
         renderHero();
         renderChart();
-        renderRegionalCharts();
         updateMetadata();
     } catch (apiError) {
         console.warn('Conductor API unavailable, trying local fallback:', apiError.message);
@@ -987,7 +985,6 @@ async function loadChartData() {
             consolidateGlobalChart();
             renderHero();
             renderChart();
-            renderRegionalCharts();
             updateMetadata();
         } catch (localError) {
             console.error('Error loading chart:', localError);
@@ -1026,14 +1023,8 @@ async function refreshChartCache() {
         localStorage.setItem(STORAGE_KEYS.CHART_CACHE_TIME, Date.now().toString());
         console.log('Cache refreshed in background from Music Conductor API');
 
-        // Update in-memory data and re-render regional if new data available
-        const hadRegional = chartData?.regional && Object.keys(chartData.regional).length > 0;
-        const hasRegional = freshData.regional && Object.keys(freshData.regional).length > 0;
-        if (!hadRegional && hasRegional) {
-            chartData = freshData;
-            renderRegionalCharts();
-            console.log('Regional charts updated with fresh data');
-        }
+        // Update in-memory data if needed
+        // (Regional charts feature removed)
     } catch (e) {
         // Silent fail for background refresh
     }
@@ -2554,14 +2545,10 @@ function switchChartMode(mode) {
 
     if (mode === 'india') {
         renderChart();
-        // Show regional section, hide global spotlights for India mode
-        if (regSection) regSection.style.display = 'block';
         if (globalSection) globalSection.style.display = 'none';
     } else {
         renderGlobalMainChart();
         renderGlobalSpotlights();
-        // Hide regional section, show global spotlights for Global mode
-        if (regSection) regSection.style.display = 'none';
         if (globalSection) globalSection.style.display = 'block';
     }
 
