@@ -11243,12 +11243,7 @@ body::before {
     font-weight: 500;
 }
 
-.hero-actions {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
+/* Removed duplicate .hero-actions definition - see line 676 for correct definition */
 
 .hero-play-btn {
     background: var(--accent);
