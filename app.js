@@ -5624,44 +5624,25 @@ async function updateAIPersonalizedSection() {
 
     if (personalizedSection) personalizedSection.style.display = 'block';
 
-    // Fetch quota
-    try {
-        const response = await fetchWithAuth('/api/me/playlists/quota');
-        if (response.ok) {
-            const data = await response.json();
-            const remaining = data.personalized_remaining || 0;
-            const total = data.personalized_limit || 3;
+    // Show quota display (quota endpoint not implemented yet, using default)
+    // TODO: Implement /api/playlists/quota endpoint in backend
+    const remaining = 3;
+    const total = 3;
 
-            if (quotaDisplay) quotaDisplay.style.display = 'flex';
-            if (quotaText) quotaText.textContent = `${remaining}/${total} remaining today`;
+    if (quotaDisplay) quotaDisplay.style.display = 'flex';
+    if (quotaText) quotaText.textContent = `${remaining}/${total} remaining today`;
 
-            // Disable button if quota exhausted
-            const personalizedBtn = document.getElementById('aiPersonalizedBtn');
-            if (personalizedBtn) {
-                if (remaining <= 0) {
-                    personalizedBtn.disabled = true;
-                    personalizedBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                        </svg>
-                        Daily Limit Reached
-                    `;
-                } else {
-                    personalizedBtn.disabled = false;
-                    personalizedBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        Create Playlist for Me
-                    `;
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Failed to fetch quota:', error);
+    // Ensure button is enabled
+    const personalizedBtn = document.getElementById('aiPersonalizedBtn');
+    if (personalizedBtn) {
+        personalizedBtn.disabled = false;
+        personalizedBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Create Playlist for Me
+        `;
     }
 }
 
@@ -5719,7 +5700,7 @@ async function generateAIPlaylist() {
     try {
         showAILoadingStatus('Finding songs that match...');
 
-        const response = await fetchWithAuth('/api/me/playlists/generate', {
+        const response = await fetchWithAuth('/api/playlists/create-with-ai', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -5798,7 +5779,7 @@ async function createPersonalizedAIPlaylist() {
     try {
         showAILoadingStatus('Finding songs you\'ll love...');
 
-        const response = await fetchWithAuth('/api/me/playlists/create-for-me', {
+        const response = await fetchWithAuth('/api/playlists/create-for-me', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
