@@ -1049,20 +1049,24 @@ body::before {
     z-index: 2;
 }
 
-.hero-artwork {
+.hero-artwork-container .hero-artwork {
     width: 200px;
     height: 200px;
     border-radius: 0.75rem;
     object-fit: cover;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
 }
 
 .hero-artwork-container:hover .hero-artwork {
-    transform: scale(1.05);
+    transform: scale(1.05) !important;
 }
 
-.hero-artwork-placeholder {
+.hero-artwork-container .hero-artwork-placeholder {
     width: 200px;
     height: 200px;
     border-radius: 0.75rem;
@@ -1071,6 +1075,7 @@ body::before {
     align-items: center;
     justify-content: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    position: relative;
 }
 
 .hero-artwork-placeholder svg {
