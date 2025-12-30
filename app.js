@@ -10542,16 +10542,17 @@ function renderForYouSection(playlists) {
     if (!grid) return;
 
     const cards = playlists.map(playlist => {
-        // Get personalization data
-        const personalization = playlist.personalization || {};
-        const score = personalization.score || 0;
-        const reason = personalization.reason || 'Based on your listening history';
+        // Get personalization data (API returns personalization_score and reason at top level)
+        const score = playlist.personalization_score || 0;
+        const reason = playlist.reason || 'Based on your listening history';
 
         // Format score as percentage
         const scorePercent = Math.round(score * 100);
 
-        // Get artwork
-        const artworkUrl = playlist.artwork_url || playlist.artwork ||
+        // Get artwork (API returns artwork object with primary/fallback)
+        const artworkUrl = playlist.artwork_url ||
+                          (playlist.artwork?.primary) ||
+                          (playlist.artwork?.fallback) ||
                           (playlist.cover_urls && playlist.cover_urls[0]) ||
                           'https://via.placeholder.com/300x300?text=Playlist';
 
