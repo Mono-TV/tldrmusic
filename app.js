@@ -1171,11 +1171,9 @@ function createHeroElement(song) {
     const rankMovement = song.rank_change || 0;
     const isNew = song.is_new;
 
-    // Determine movement badge
+    // Determine movement badge (only show rank changes, not "NEW")
     let movementBadge = '';
-    if (isNew) {
-        movementBadge = '<span class="hero-badge hero-badge-new">🆕 NEW</span>';
-    } else if (rankMovement > 0) {
+    if (rankMovement > 0) {
         movementBadge = `<span class="hero-badge hero-badge-up">⬆️ +${rankMovement}</span>`;
     } else if (rankMovement < 0) {
         movementBadge = `<span class="hero-badge hero-badge-down">⬇️ ${rankMovement}</span>`;

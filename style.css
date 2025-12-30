@@ -1150,11 +1150,6 @@ body::before {
     backdrop-filter: blur(10px);
 }
 
-.hero-badge-new {
-    background: #10b981;
-    color: #ffffff;
-}
-
 .hero-badge-up {
     background: #10b981;
     color: #ffffff;
