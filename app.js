@@ -160,6 +160,7 @@ let isHeroVisible = true;
 let heroObserver = null;
 let currentChartMode = 'india';  // 'india' or 'global'
 let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
+let featuredPlaylistSlug = null;  // Track featured playlist in hero spotlight
 
 // India Catalog (Discover India) state
 let currentDiscoverGenre = 'Indian Pop';
@@ -1129,6 +1130,9 @@ async function renderHero() {
         const dayOfWeek = new Date().getDay();
         const featuredPlaylist = allPlaylists[dayOfWeek % allPlaylists.length];
 
+        // Store the featured playlist slug for the play button
+        featuredPlaylistSlug = featuredPlaylist.slug;
+
         // Update hero content
         const heroLabel = document.querySelector('.hero-label');
         const heroTitle = document.getElementById('heroTitle');
@@ -1156,10 +1160,21 @@ async function renderHero() {
 
         // Update artwork
         const artworkUrl = featuredPlaylist.artwork_url || '';
-        if (heroArtwork && artworkUrl) {
-            heroArtwork.src = artworkUrl;
-            heroArtwork.alt = `${featuredPlaylist.name} artwork`;
-            heroArtwork.style.display = 'block';
+        console.log('Featured playlist artwork URL:', artworkUrl);
+
+        if (heroArtwork) {
+            if (artworkUrl) {
+                heroArtwork.src = artworkUrl;
+                heroArtwork.alt = `${featuredPlaylist.name} artwork`;
+                heroArtwork.style.display = 'block';
+                heroArtwork.onerror = () => {
+                    console.error('Failed to load playlist artwork:', artworkUrl);
+                    heroArtwork.style.display = 'none';
+                };
+            } else {
+                console.warn('No artwork URL for featured playlist');
+                heroArtwork.style.display = 'none';
+            }
         }
 
         // Hero background from playlist artwork
@@ -1171,10 +1186,9 @@ async function renderHero() {
         const viewsStat = document.getElementById('heroViewsStat');
         if (viewsStat) viewsStat.style.display = 'none';
 
-        // Update play button to open playlist instead
+        // Update play button text (event listener will handle the click)
         const playHeroBtn = document.getElementById('playHeroBtn');
         if (playHeroBtn) {
-            playHeroBtn.onclick = () => openPlaylistDetail(featuredPlaylist.slug);
             playHeroBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -3264,6 +3278,13 @@ function setupEventListeners() {
 
     const playHeroBtn = document.getElementById('playHeroBtn');
     playHeroBtn?.addEventListener('click', () => {
+        // Check if hero is showing a featured playlist
+        if (featuredPlaylistSlug) {
+            openPlaylistDetail(featuredPlaylistSlug);
+            return;
+        }
+
+        // Otherwise, handle chart playback
         // If already playing, toggle pause
         if (player && isPlaying) {
             togglePlayPause();
