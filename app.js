@@ -2987,7 +2987,7 @@ function onPlayerStateChange(event) {
         playPauseBtn?.classList.add('playing');
         updateCardPlayingState(true);
         updateHeroButtonState(true);
-        heroProgress?.classList.add('visible');
+        // heroProgress?.classList.add('visible'); // Hero progress removed
         startProgressTracking();
 
         const playlistIndex = player.getPlaylistIndex();
@@ -3118,10 +3118,10 @@ function updateProgress() {
             if (timeCurrentEl) timeCurrentEl.textContent = currentTimeStr;
             if (timeDurationEl) timeDurationEl.textContent = durationStr;
 
-            // Update hero progress bar
-            if (heroProgressFill) heroProgressFill.style.width = `${percent}%`;
-            if (heroTimeCurrent) heroTimeCurrent.textContent = currentTimeStr;
-            if (heroTimeDuration) heroTimeDuration.textContent = durationStr;
+            // Hero progress bar removed - using bottom player only
+            // if (heroProgressFill) heroProgressFill.style.width = `${percent}%`;
+            // if (heroTimeCurrent) heroTimeCurrent.textContent = currentTimeStr;
+            // if (heroTimeDuration) heroTimeDuration.textContent = durationStr;
         }
     } catch (e) {
         // Player not ready
@@ -3325,15 +3325,14 @@ function setupEventListeners() {
         seekTo(Math.max(0, Math.min(100, percent)));
     });
 
-    // Hero progress bar seek
-    heroProgressBar?.addEventListener('click', (e) => {
-        const rect = heroProgressBar.getBoundingClientRect();
-        const percent = ((e.clientX - rect.left) / rect.width) * 100;
-        seekTo(Math.max(0, Math.min(100, percent)));
-    });
+    // Hero progress bar and video button removed - using bottom player only
+    // heroProgressBar?.addEventListener('click', (e) => {
+    //     const rect = heroProgressBar.getBoundingClientRect();
+    //     const percent = ((e.clientX - rect.left) / rect.width) * 100;
+    //     seekTo(Math.max(0, Math.min(100, percent)));
+    // });
 
-    // Hero action buttons
-    heroVideoBtn?.addEventListener('click', toggleVideo);
+    // heroVideoBtn?.addEventListener('click', toggleVideo);
 
     // New feature buttons
     document.getElementById('favoriteBtn')?.addEventListener('click', () => toggleFavorite());
@@ -3447,7 +3446,7 @@ function toggleVideo() {
         // Enter theater mode
         heroSection?.classList.add('theater-mode');
         videoToggleBtn?.classList.add('active');
-        heroVideoBtn?.classList.add('active');
+        // heroVideoBtn?.classList.add('active'); // Hero video button removed
 
         // Update theater info with current song
         if (currentSongIndex >= 0 && chartData?.chart[currentSongIndex]) {
@@ -3617,7 +3616,7 @@ function closeTheaterMode(skipResume = false) {
     heroSection?.classList.remove('theater-mode');
     videoContainer?.classList.remove('visible');
     videoToggleBtn?.classList.remove('active');
-    heroVideoBtn?.classList.remove('active');
+    // heroVideoBtn?.classList.remove('active'); // Hero video button removed
 
     // Clear theater video container
     if (theaterVideo) {
