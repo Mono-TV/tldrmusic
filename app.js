@@ -9234,15 +9234,20 @@ async function showDiscoverView() {
 }
 
 async function renderDiscoverPlaylists() {
-    // Fetch curated categories from API
-    await fetchCuratedCategories();
+    try {
+        // Fetch real playlists from API (same as homepage)
+        const playlistsByType = await fetchHomepagePlaylists();
 
-    // Render all playlist sections
-    renderFeaturedPlaylists();
-    renderMoodPlaylists();
-    renderLanguagePlaylists();
-    renderArtistPlaylists();
-    renderEraPlaylists();
+        // Render all playlist sections with real data
+        renderFeaturedPlaylists();
+        renderMoodPlaylists(playlistsByType.mood || []);
+        renderLanguagePlaylists(playlistsByType.language || []);
+        renderArtistPlaylists(playlistsByType.artist || []);
+        renderEraPlaylists(playlistsByType.era || []);
+    } catch (error) {
+        console.error('Error loading Discover playlists:', error);
+        showToast('Failed to load playlists');
+    }
 }
 
 // Featured Collection - India Catalog Genres
@@ -9356,74 +9361,91 @@ async function openFeaturedPlaylist(genreKey) {
     }
 }
 
-function renderMoodPlaylists() {
+function renderMoodPlaylists(playlists = []) {
     const grid = document.getElementById('moodPlaylistsGrid');
     if (!grid) return;
 
-    grid.innerHTML = CURATED_PLAYLISTS.moods.map(mood => {
-        const color = getPlaylistColor(mood.mood);
+    // Update section count badge
+    const countBadge = document.getElementById('moodCount');
+    if (countBadge) countBadge.textContent = playlists.length;
+
+    grid.innerHTML = playlists.map(playlist => {
+        const color = playlist.artwork?.color || getPlaylistColor(playlist.name);
+        const icon = MOOD_ICONS[playlist.slug] || MOOD_ICONS[playlist.name?.toLowerCase()] || '🎵';
         return `
-            <div class="discover-card" data-mood="${mood.mood}" style="--card-color: ${color}" onclick="openCuratedPlaylist('mood', '${mood.id}')">
+            <div class="discover-card" data-slug="${playlist.slug}" style="--card-color: ${color}" onclick="openPlaylistDetail('${playlist.slug}')">
                 <div class="discover-card-bg"></div>
                 <div class="discover-card-content">
-                    <div class="discover-card-icon">${MOOD_ICONS[mood.mood] || ''}</div>
-                    <h4 class="discover-card-title">${mood.name}</h4>
-                    <span class="discover-card-meta">${mood.songCount.toLocaleString()} songs</span>
+                    <div class="discover-card-icon">${icon}</div>
+                    <h4 class="discover-card-title">${escapeHtml(playlist.name)}</h4>
+                    <span class="discover-card-meta">${(playlist.total_tracks || 0).toLocaleString()} songs</span>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-function renderLanguagePlaylists() {
+function renderLanguagePlaylists(playlists = []) {
     const grid = document.getElementById('languagePlaylistsGrid');
     if (!grid) return;
 
+    // Update section count badge
+    const countBadge = document.getElementById('languageCount');
+    if (countBadge) countBadge.textContent = playlists.length;
+
     const musicIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
 
-    grid.innerHTML = CURATED_PLAYLISTS.languages.map(lang => {
-        const color = getPlaylistColor(lang.lang);
+    grid.innerHTML = playlists.map(playlist => {
+        const color = playlist.artwork?.color || getPlaylistColor(playlist.name);
         return `
-            <div class="discover-card" data-lang="${lang.lang}" style="--card-color: ${color}" onclick="openCuratedPlaylist('language', '${lang.id}')">
+            <div class="discover-card" data-slug="${playlist.slug}" style="--card-color: ${color}" onclick="openPlaylistDetail('${playlist.slug}')">
                 <div class="discover-card-bg"></div>
                 <div class="discover-card-content">
                     <div class="discover-card-icon">${musicIcon}</div>
-                    <h4 class="discover-card-title">${lang.name}</h4>
-                    <span class="discover-card-meta">${lang.songCount.toLocaleString()} songs</span>
+                    <h4 class="discover-card-title">${escapeHtml(playlist.name)}</h4>
+                    <span class="discover-card-meta">${(playlist.total_tracks || 0).toLocaleString()} songs</span>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-function renderArtistPlaylists() {
+function renderArtistPlaylists(playlists = []) {
     const scroll = document.getElementById('artistPlaylistsScroll');
     if (!scroll) return;
 
+    // Update section count badge
+    const countBadge = document.getElementById('artistCount');
+    if (countBadge) countBadge.textContent = playlists.length;
+
     const personIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
 
-    scroll.innerHTML = CURATED_PLAYLISTS.artists.map(artist => `
-        <div class="artist-card" onclick="openCuratedPlaylist('artist', '${artist.id}')">
+    scroll.innerHTML = playlists.map(playlist => `
+        <div class="artist-card" onclick="openPlaylistDetail('${playlist.slug}')">
             <div class="artist-card-image">${personIcon}</div>
-            <div class="artist-card-name">${artist.name}</div>
-            <div class="artist-card-count">${artist.songCount} songs</div>
+            <div class="artist-card-name">${escapeHtml(playlist.name)}</div>
+            <div class="artist-card-count">${(playlist.total_tracks || 0).toLocaleString()} songs</div>
         </div>
     `).join('');
 }
 
-function renderEraPlaylists() {
+function renderEraPlaylists(playlists = []) {
     const grid = document.getElementById('eraPlaylistsGrid');
     if (!grid) return;
 
+    // Update section count badge
+    const countBadge = document.getElementById('eraCount');
+    if (countBadge) countBadge.textContent = playlists.length;
+
     const calendarIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 
-    grid.innerHTML = CURATED_PLAYLISTS.eras.map(era => `
-        <div class="discover-card" data-era="${era.era}" onclick="openCuratedPlaylist('era', '${era.id}')">
+    grid.innerHTML = playlists.map(playlist => `
+        <div class="discover-card" data-slug="${playlist.slug}" onclick="openPlaylistDetail('${playlist.slug}')">
             <div class="discover-card-bg"></div>
             <div class="discover-card-content">
                 <div class="discover-card-icon">${calendarIcon}</div>
-                <h4 class="discover-card-title">${era.name}</h4>
-                <span class="discover-card-meta">${era.songCount.toLocaleString()} songs</span>
+                <h4 class="discover-card-title">${escapeHtml(playlist.name)}</h4>
+                <span class="discover-card-meta">${(playlist.total_tracks || 0).toLocaleString()} songs</span>
             </div>
         </div>
     `).join('');
