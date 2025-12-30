@@ -544,8 +544,8 @@ body::before {
 
 .hero-artwork-wrapper {
     position: relative;
-    width: 280px;
-    height: 280px;
+    width: 240px;
+    height: 240px;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
@@ -555,10 +555,7 @@ body::before {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: block;
 }
 
 .hero-artwork-wrapper .hero-rank {
