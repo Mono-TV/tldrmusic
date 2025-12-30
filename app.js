@@ -933,7 +933,7 @@ async function loadChartData() {
                 chartData = JSON.parse(cached);
                 console.log('Loaded chart data from cache');
                 consolidateGlobalChart();
-                renderHero();
+                await renderHero();
                 renderChart();
                 updateMetadata();
 
@@ -982,7 +982,7 @@ async function loadChartData() {
             console.warn('Cache write failed:', e);
         }
 
-        renderHero();
+        await renderHero();
         renderChart();
         updateMetadata();
     } catch (apiError) {
@@ -994,7 +994,7 @@ async function loadChartData() {
             chartData = await response.json();
             console.log('Loaded chart data from local JSON');
             consolidateGlobalChart();
-            renderHero();
+            await renderHero();
             renderChart();
             updateMetadata();
         } catch (localError) {
@@ -1108,56 +1108,82 @@ function hideSkeletons() {
 }
 
 // Render hero section with #1 song
-function renderHero() {
-    if (!chartData || !chartData.chart || !chartData.chart[0]) return;
-
+async function renderHero() {
     // Hide skeletons when rendering actual content
     hideSkeletons();
 
-    const song = chartData.chart[0];
+    try {
+        // Fetch homepage playlists to get featured content
+        const playlistsByType = await fetchHomepagePlaylists();
 
-    document.getElementById('heroTitle').textContent = song.title;
-    document.getElementById('heroArtist').textContent = song.artist;
-    document.getElementById('heroScore').textContent = (song.score || 0).toFixed(2);
-    const heroRatingIcon1 = document.getElementById('heroRatingIcon');
-    if (heroRatingIcon1) heroRatingIcon1.style.display = 'inline';
+        // Pick a featured playlist (rotate through moods for variety)
+        const allPlaylists = [
+            ...playlistsByType.mood,
+            ...playlistsByType.language,
+            ...playlistsByType.artist
+        ];
 
-    // Show rank badge for chart songs
-    const heroRank = document.querySelector('.hero-rank');
-    if (heroRank) heroRank.style.display = '';
+        if (allPlaylists.length === 0) return;
 
-    // Show rating stat for chart songs
-    const heroScore = document.getElementById('heroScore');
-    const heroRatingStat = heroScore?.closest('.stat');
-    if (heroRatingStat) heroRatingStat.style.display = '';
+        // Pick featured playlist (could be random or based on day of week)
+        const dayOfWeek = new Date().getDay();
+        const featuredPlaylist = allPlaylists[dayOfWeek % allPlaylists.length];
 
-    // Hero artwork - use large size for better quality
-    const heroArtwork = document.getElementById('heroArtwork');
-    const artworkUrl = getArtworkUrl(song, 'large');
-    if (heroArtwork && artworkUrl) {
-        heroArtwork.src = artworkUrl;
-        heroArtwork.alt = `${song.title} album art`;
-        heroArtwork.style.display = 'block';
-        // Add error handler for YouTube thumbnail fallback
-        if (song.youtube_video_id) {
-            heroArtwork.onerror = function() { handleImageError(this, song.youtube_video_id); };
+        // Update hero content
+        const heroLabel = document.querySelector('.hero-label');
+        const heroTitle = document.getElementById('heroTitle');
+        const heroArtist = document.getElementById('heroArtist');
+        const heroScore = document.getElementById('heroScore');
+        const heroArtwork = document.getElementById('heroArtwork');
+        const heroBg = document.getElementById('heroBg');
+        const heroRank = document.querySelector('.hero-rank');
+
+        if (heroLabel) heroLabel.textContent = 'Featured This Week';
+        if (heroTitle) heroTitle.textContent = featuredPlaylist.name;
+        if (heroArtist) heroArtist.textContent = featuredPlaylist.description || 'Curated playlist for you';
+
+        // Hide rank badge for playlists
+        if (heroRank) heroRank.style.display = 'none';
+
+        // Update score to show track count instead
+        const heroRatingStat = heroScore?.closest('.stat');
+        const statLabel = heroRatingStat?.querySelector('.stat-label');
+        if (heroScore) heroScore.textContent = featuredPlaylist.total_tracks || 0;
+        if (statLabel) statLabel.textContent = 'Tracks';
+        if (heroRatingStat) heroRatingStat.style.display = 'flex';
+        const heroRatingIcon1 = document.getElementById('heroRatingIcon');
+        if (heroRatingIcon1) heroRatingIcon1.style.display = 'none';
+
+        // Update artwork
+        const artworkUrl = featuredPlaylist.artwork_url || '';
+        if (heroArtwork && artworkUrl) {
+            heroArtwork.src = artworkUrl;
+            heroArtwork.alt = `${featuredPlaylist.name} artwork`;
+            heroArtwork.style.display = 'block';
         }
-    }
 
-    // Hero background from album artwork
-    const heroBg = document.getElementById('heroBg');
-    if (heroBg && artworkUrl) {
-        heroBg.style.backgroundImage = `url(${artworkUrl})`;
-    }
+        // Hero background from playlist artwork
+        if (heroBg && artworkUrl) {
+            heroBg.style.backgroundImage = `url(${artworkUrl})`;
+        }
 
-    // YouTube views
-    const viewsStat = document.getElementById('heroViewsStat');
-    const viewsEl = document.getElementById('heroViews');
-    if (song.youtube_views && song.youtube_views > 0) {
-        viewsEl.textContent = formatViews(song.youtube_views);
-        viewsStat.style.display = 'flex';
-    } else {
-        viewsStat.style.display = 'none';
+        // Hide YouTube views for playlists
+        const viewsStat = document.getElementById('heroViewsStat');
+        if (viewsStat) viewsStat.style.display = 'none';
+
+        // Update play button to open playlist instead
+        const playHeroBtn = document.getElementById('playHeroBtn');
+        if (playHeroBtn) {
+            playHeroBtn.onclick = () => openPlaylistDetail(featuredPlaylist.slug);
+            playHeroBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Play Playlist
+            `;
+        }
+    } catch (error) {
+        console.error('Error rendering hero:', error);
     }
 
 }
@@ -2628,18 +2654,8 @@ function switchChartMode(mode) {
         if (globalSection) globalSection.style.display = 'block';
     }
 
-    // Only update hero if nothing is playing, otherwise keep showing current song
-    if (!isPlaying && !player) {
-        const heroLabel = document.querySelector('.hero-label');
-        if (heroLabel) {
-            heroLabel.textContent = mode === 'india' ? "This Week's #1" : "Global #1";
-        }
-        if (mode === 'india') {
-            renderHero();
-        } else {
-            renderGlobalHero();
-        }
-    }
+    // Hero now shows featured playlist, independent of chart mode
+    // No need to update hero when switching charts
 
     // Update card playing states for the new view
     updateCardPlayingState(isPlaying);
