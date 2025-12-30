@@ -1164,6 +1164,67 @@ function getPlatformClass(platform) {
     return map[platform] || platform;
 }
 
+// Create hero banner element for #1 song
+function createHeroElement(song) {
+    const artworkUrl = getArtworkUrl(song);
+    const viewsText = song.youtube_views ? formatViews(song.youtube_views) : '';
+    const rankMovement = song.rank_change || 0;
+    const isNew = song.is_new;
+
+    // Determine movement badge
+    let movementBadge = '';
+    if (isNew) {
+        movementBadge = '<span class="hero-badge hero-badge-new">🆕 NEW</span>';
+    } else if (rankMovement > 0) {
+        movementBadge = `<span class="hero-badge hero-badge-up">⬆️ +${rankMovement}</span>`;
+    } else if (rankMovement < 0) {
+        movementBadge = `<span class="hero-badge hero-badge-down">⬇️ ${rankMovement}</span>`;
+    }
+
+    return `
+        <div class="hero-container">
+            <div class="hero-number">#1</div>
+            <div class="hero-artwork-container">
+                ${artworkUrl
+                    ? `<img src="${artworkUrl}" alt="${escapeHtml(song.title)}" class="hero-artwork" loading="eager">`
+                    : `<div class="hero-artwork-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                        </svg>
+                    </div>`
+                }
+                <div class="hero-play-button" onclick="playFromChart(0)" title="Play #1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                    </svg>
+                </div>
+            </div>
+            <div class="hero-info">
+                <div class="hero-badges">
+                    <span class="hero-badge hero-badge-trending">🔥 TRENDING</span>
+                    ${movementBadge}
+                </div>
+                <h2 class="hero-title">${escapeHtml(song.title)}</h2>
+                <p class="hero-artist">${escapeHtml(song.artist)}</p>
+                <div class="hero-stats">
+                    ${viewsText ? `<span class="hero-stat">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        ${viewsText} plays
+                    </span>` : ''}
+                    <span class="hero-stat hero-live">
+                        <span class="live-dot"></span>
+                        LIVE
+                    </span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Render chart list
 function renderChart() {
     if (!chartData || !chartData.chart) {
@@ -1171,12 +1232,21 @@ function renderChart() {
         return;
     }
 
+    const chartHero = document.getElementById('chartHero');
     chartList.innerHTML = '';
 
-    // Show only first 10 songs on home page
+    // Show first 10 songs on home page
     const displayCount = 10;
-    chartData.chart.slice(0, displayCount).forEach((song, index) => {
-        const songEl = createSongElement(song, index);
+    const songs = chartData.chart.slice(0, displayCount);
+
+    // Render #1 song in hero banner
+    if (songs.length > 0 && chartHero) {
+        chartHero.innerHTML = createHeroElement(songs[0]);
+    }
+
+    // Render #2-10 songs in grid
+    songs.slice(1).forEach((song, index) => {
+        const songEl = createSongElement(song, index + 1); // index + 1 because we skipped #1
         chartList.appendChild(songEl);
     });
 
