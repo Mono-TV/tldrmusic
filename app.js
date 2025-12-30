@@ -2396,6 +2396,9 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
 
 // Update hero section for direct play (regional/global songs)
 function updateHeroForDirectPlay(title, artist, artworkUrl, score) {
+    // Clear featured playlist slug when a song is playing
+    featuredPlaylistSlug = null;
+
     const heroTitle = document.getElementById('heroTitle');
     const heroArtist = document.getElementById('heroArtist');
     const heroScore = document.getElementById('heroScore');
@@ -2799,6 +2802,9 @@ function updateNowPlaying(index) {
 // Update hero section with a specific song
 function updateHeroWithSong(song, index) {
     heroSongIndex = index;  // Track which song is in hero
+
+    // Clear featured playlist slug when a song is playing
+    featuredPlaylistSlug = null;
 
     const heroLabel = document.querySelector('.hero-label');
     const heroTitle = document.getElementById('heroTitle');
