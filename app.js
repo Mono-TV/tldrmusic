@@ -1215,10 +1215,6 @@ function createHeroElement(song) {
                         </svg>
                         ${viewsText} plays
                     </span>` : ''}
-                    <span class="hero-stat hero-live">
-                        <span class="live-dot"></span>
-                        LIVE
-                    </span>
                 </div>
             </div>
         </div>

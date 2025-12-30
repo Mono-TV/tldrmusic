@@ -1202,34 +1202,6 @@ body::before {
     opacity: 0.8;
 }
 
-.hero-live {
-    background: rgba(239, 68, 68, 0.2);
-    padding: 0.35rem 0.75rem;
-    border-radius: 2rem;
-    backdrop-filter: blur(10px);
-    color: #ffffff;
-}
-
-.live-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: #ef4444;
-    border-radius: 50%;
-    animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.5;
-        transform: scale(1.2);
-    }
-}
-
 /* Mobile responsive */
 @media (max-width: 768px) {
     .hero-container {
