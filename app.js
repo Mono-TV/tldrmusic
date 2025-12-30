@@ -2372,8 +2372,8 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
         mainGradient.classList.add('active');
     }
 
-    // Update hero/spotlight section
-    updateHeroForDirectPlay(title, artist, artworkUrl, score);
+    // Spotlight now stays static showing featured playlist
+    // updateHeroForDirectPlay(title, artist, artworkUrl, score);
 
     // Update card playing state (will use currentPlayingVideoId)
     updateCardPlayingState(true);
@@ -2396,8 +2396,8 @@ function playRegionalSongDirect(title, artist, videoId, artworkUrl, score = null
 
 // Update hero section for direct play (regional/global songs)
 function updateHeroForDirectPlay(title, artist, artworkUrl, score) {
-    // Clear featured playlist slug when a song is playing
-    featuredPlaylistSlug = null;
+    // Note: Spotlight now stays static showing featured playlist
+    // featuredPlaylistSlug is NOT cleared anymore
 
     const heroTitle = document.getElementById('heroTitle');
     const heroArtist = document.getElementById('heroArtist');
@@ -2789,8 +2789,8 @@ function updateNowPlaying(index) {
         mainGradient.classList.add('active');
     }
 
-    // Update hero section with currently playing song
-    updateHeroWithSong(song, index);
+    // Spotlight now stays static showing featured playlist
+    // updateHeroWithSong(song, index);
 
     // Update theater info if in theater mode
     if (isTheaterMode) {
@@ -2803,8 +2803,8 @@ function updateNowPlaying(index) {
 function updateHeroWithSong(song, index) {
     heroSongIndex = index;  // Track which song is in hero
 
-    // Clear featured playlist slug when a song is playing
-    featuredPlaylistSlug = null;
+    // Note: Spotlight now stays static showing featured playlist
+    // featuredPlaylistSlug is NOT cleared anymore
 
     const heroLabel = document.querySelector('.hero-label');
     const heroTitle = document.getElementById('heroTitle');
@@ -10084,8 +10084,8 @@ function playSongFromQueue(index) {
         mainGradient.classList.add('active');
     }
 
-    // Update hero/spotlight section
-    updateHeroForDirectPlay(song.title, song.artist, song.artwork, song.score);
+    // Spotlight now stays static showing featured playlist
+    // updateHeroForDirectPlay(song.title, song.artist, song.artwork, song.score);
 
     // Update player bar visibility
     updatePlayerBarVisibility();
