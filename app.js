@@ -10561,7 +10561,7 @@ function renderForYouSection(playlists) {
                           (playlist.tracks ? playlist.tracks.length : 0);
 
         return `
-            <div class="for-you-card" onclick="openCuratedPlaylist('${playlist.slug}', '${escapeHtml(playlist.name)}')">
+            <div class="for-you-card" onclick="openPlaylistDetail('${playlist.slug}')">
                 <div class="for-you-artwork">
                     <img src="${artworkUrl}" alt="${escapeHtml(playlist.name)}" crossorigin="anonymous">
                     <div class="personalization-badge">${scorePercent}% match</div>
