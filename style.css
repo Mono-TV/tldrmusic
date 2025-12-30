@@ -537,7 +537,7 @@ body::before {
     max-width: 1400px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 2.5rem;
     align-items: center;
 }
@@ -549,6 +549,7 @@ body::before {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    flex-shrink: 0;
 }
 
 .hero-artwork {
@@ -3554,7 +3555,7 @@ body::before {
 
 @media (max-width: 900px) {
     .hero-inner {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 240px 1fr;
     }
 
     .hero-platforms {
