@@ -1158,8 +1158,8 @@ async function renderHero() {
         const heroRatingIcon1 = document.getElementById('heroRatingIcon');
         if (heroRatingIcon1) heroRatingIcon1.style.display = 'none';
 
-        // Update artwork
-        const artworkUrl = featuredPlaylist.artwork_url || '';
+        // Update artwork (use artwork.primary from API response)
+        const artworkUrl = featuredPlaylist.artwork?.primary || featuredPlaylist.artwork?.fallback || '';
         console.log('Featured playlist artwork URL:', artworkUrl);
 
         if (heroArtwork) {
