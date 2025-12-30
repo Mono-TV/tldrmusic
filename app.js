@@ -281,10 +281,21 @@ window.onYouTubeIframeAPIReady = function() {
     videoWrapper.innerHTML = '<div id="ytplayer"></div>';
 };
 
+// Disable browser scroll restoration and force page to top on load
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+window.addEventListener('beforeunload', () => {
+    window.scrollTo(0, 0);
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+    // Ensure page starts at top
+    window.scrollTo(0, 0);
+
     // Initialize UI and event listeners first (non-blocking)
     initSidebar();      // Initialize sidebar
     initSearch();       // Initialize search functionality
