@@ -10335,14 +10335,14 @@ function renderTasteProfile(data) {
         }
     }
 
-    // Render languages
-    renderTasteCategory('tasteLanguages', implicit.languages || {}, explicit.languages || [], 'language');
+    // Render languages (API uses language_affinity, not languages)
+    renderTasteCategory('tasteLanguages', implicit.language_affinity || {}, explicit.languages || [], 'language');
 
-    // Render genres
-    renderTasteCategory('tasteGenres', implicit.genres || {}, explicit.genres || [], 'genre');
+    // Render genres (API uses genre_affinity, not genres)
+    renderTasteCategory('tasteGenres', implicit.genre_affinity || {}, explicit.genres || [], 'genre');
 
-    // Render moods
-    renderTasteCategory('tasteMoods', implicit.moods || {}, explicit.moods || [], 'mood');
+    // Render moods (API uses mood_affinity, not moods)
+    renderTasteCategory('tasteMoods', implicit.mood_affinity || {}, explicit.moods || [], 'mood');
 }
 
 /**
