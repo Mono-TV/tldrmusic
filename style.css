@@ -12631,11 +12631,11 @@ body::after {
     }
 
     .hero-title {
-        font-size: 2.75rem;
+        font-size: 1.35rem;
     }
 
     .hero-artist {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     .playlist-grid {
@@ -12685,11 +12685,11 @@ body::after {
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.25rem;
     }
 
     .hero-artist {
-        font-size: 1.125rem;
+        font-size: 0.95rem;
         margin-bottom: 1.5rem;
     }
 
@@ -12766,11 +12766,11 @@ body::after {
     }
 
     .hero-title {
-        font-size: 1.5rem;
+        font-size: 1.15rem;
     }
 
     .hero-artist {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .hero-badge {
