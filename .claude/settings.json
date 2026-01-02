@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if echo \"$TOOL_INPUT\" | grep -qE \"git commit|git push\"; then bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/post_feature.sh\"; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
