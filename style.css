@@ -1,21 +1,33 @@
-/* TLDR Music - Billboard Style Design */
+/* TLDR Music - Enhanced Glassmorphic Design */
 
 :root {
-    --bg-dark: #0a0a0b;
-    --bg-card: #131316;
-    --bg-card-hover: #1a1a1f;
-    --bg-elevated: #1e1e24;
-    --border-color: #2a2a32;
-    --border-light: #3a3a44;
+    /* Background layers */
+    --bg-dark: #050506;
+    --bg-base: #0a0a0c;
+    --bg-card: rgba(18, 18, 22, 0.7);
+    --bg-card-solid: #121216;
+    --bg-card-hover: rgba(26, 26, 32, 0.8);
+    --bg-elevated: rgba(30, 30, 38, 0.6);
+    --bg-surface: rgba(255, 255, 255, 0.03);
 
+    /* Borders */
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(255, 255, 255, 0.12);
+    --border-glow: rgba(251, 191, 36, 0.2);
+
+    /* Text */
     --text-primary: #ffffff;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.45);
 
+    /* Gold/Amber Accent - Refined */
     --accent: #f59e0b;
-    --accent-dim: rgba(245, 158, 11, 0.15);
-    --accent-glow: rgba(245, 158, 11, 0.3);
+    --accent-bright: #fbbf24;
+    --accent-dim: rgba(251, 191, 36, 0.12);
+    --accent-glow: rgba(251, 191, 36, 0.25);
+    --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
 
+    /* Rank colors */
     --gold: #fbbf24;
     --silver: #94a3b8;
     --bronze: #cd7f32;
@@ -27,6 +39,20 @@
     --billboard: #d4af37;
     --jiosaavn: #2bc5b4;
     --gaana: #e72c30;
+
+    /* Glassmorphism tokens */
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-bg-hover: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: blur(20px);
+    --glass-blur-heavy: blur(40px);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --glass-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.5);
+    --glass-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    /* Ambient glow */
+    --ambient-gold: radial-gradient(ellipse at 20% 0%, rgba(251, 191, 36, 0.08) 0%, transparent 50%);
+    --ambient-purple: radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
 
     --font: 'Red Hat Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -58,8 +84,24 @@ body {
     overflow-x: hidden;
 }
 
-/* Main page background - liquid glass effect */
+/* Ambient glow layer - gold accent at top */
 body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        var(--ambient-gold),
+        var(--ambient-purple),
+        radial-gradient(ellipse at 50% 50%, rgba(10, 10, 12, 0) 0%, var(--bg-dark) 70%);
+    pointer-events: none;
+    z-index: -2;
+}
+
+/* Subtle noise texture for depth */
+body::after {
     content: '';
     position: fixed;
     top: 0;
@@ -70,9 +112,10 @@ body::before {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.08;
+    opacity: 0.04;
     pointer-events: none;
     z-index: -1;
+    mix-blend-mode: overlay;
 }
 
 /* ===== SIDEBAR (Overlay Style) ===== */
@@ -99,17 +142,21 @@ body::before {
     height: 100%;
     margin: 1rem;
     margin-top: 0;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(24px) saturate(1.3);
-    -webkit-backdrop-filter: blur(24px) saturate(1.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.06) 0%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    backdrop-filter: blur(32px) saturate(1.4);
+    -webkit-backdrop-filter: blur(32px) saturate(1.4);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        var(--glass-shadow),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        var(--glass-inner-glow);
     overflow: hidden;
 }
 
@@ -288,7 +335,14 @@ body::before {
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(
+        180deg,
+        rgba(10, 10, 12, 0.85) 0%,
+        rgba(10, 10, 12, 0.7) 100%
+    );
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    border-bottom: 1px solid var(--glass-border);
     overflow: visible;
 }
 
@@ -1326,16 +1380,21 @@ body::before {
     position: relative;
     width: 100%;
     padding-bottom: 100%; /* Force square aspect ratio */
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     margin-bottom: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--bg-elevated);
 }
 
 .song-card:hover .song-card-artwork {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 0 24px rgba(251, 191, 36, 0.1);
 }
 
 .song-card-artwork img {
@@ -2749,16 +2808,22 @@ body::before {
     transform: translateX(-50%) translateY(calc(100% + 2rem));
     width: calc(100% - 2rem);
     max-width: 868px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(24px) saturate(1.2);
-    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    backdrop-filter: blur(32px) saturate(1.4);
+    -webkit-backdrop-filter: blur(32px) saturate(1.4);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
+    border-radius: 24px;
     z-index: 1000;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        0 12px 48px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        var(--glass-inner-glow),
+        0 0 60px rgba(251, 191, 36, 0.05);
 }
 
 .player-bar.visible {
@@ -7537,35 +7602,45 @@ body::before {
     font-weight: 600;
     font-family: var(--font);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
 }
 
 .btn-primary {
-    background: var(--accent);
+    background: var(--accent-gradient);
     color: var(--bg-dark);
+    box-shadow:
+        0 4px 16px rgba(251, 191, 36, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 .btn-primary:hover {
     filter: brightness(1.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 24px rgba(251, 191, 36, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
 }
 
 .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--glass-border);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--glass-bg-hover);
     border-color: var(--border-light);
+    box-shadow: var(--glass-shadow);
 }
 
 .btn-secondary:disabled {
@@ -8086,18 +8161,22 @@ body::before {
     align-items: center;
     gap: 1rem;
     padding: 0.875rem;
-    background: rgba(30, 30, 36, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .playlist-card:hover {
-    background: rgba(40, 40, 48, 0.8);
-    border-color: rgba(245, 158, 11, 0.3);
+    background: var(--glass-bg-hover);
+    border-color: var(--border-glow);
     transform: translateX(4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow:
+        var(--glass-shadow),
+        0 0 20px rgba(251, 191, 36, 0.08);
 }
 
 .playlist-card-artwork {
