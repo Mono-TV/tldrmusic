@@ -31,7 +31,7 @@ API_URL = os.environ.get('API_URL', 'https://tldrmusic-api-401132033262.asia-sou
 API_KEY = os.environ.get('ADMIN_API_KEY', '')
 
 
-def generate_output(top_songs, regional_songs=None):
+def generate_output(top_songs, regional_songs=None, rank_changes=None):
     """Generate the output JSON structure."""
     now = datetime.utcnow()
     week_number = now.isocalendar()[1]
@@ -68,6 +68,19 @@ def generate_output(top_songs, regional_songs=None):
             "youtube_views": song.youtube_views or 0,
             "artwork_url": song.artwork_url or ""
         }
+
+        # Add rank change data if available
+        if rank_changes and i <= len(rank_changes):
+            change_data = rank_changes[i - 1]
+            if change_data["is_new"]:
+                song_data["is_new"] = True
+                song_data["rank_change"] = None  # New entries don't have rank change
+            else:
+                song_data["is_new"] = False
+                song_data["rank_change"] = change_data["rank_change"]  # Include even if 0
+                if change_data.get("previous_rank"):
+                    song_data["previous_rank"] = change_data["previous_rank"]
+
         if song.lyrics_plain:
             song_data["lyrics_plain"] = song.lyrics_plain
         if song.lyrics_synced:
@@ -171,6 +184,96 @@ def calculate_global_rank_changes(global_top_songs, previous_ranks: dict) -> lis
     """Calculate rank changes for global chart songs."""
     changes = []
     for i, song in enumerate(global_top_songs, 1):
+        title = song.canonical_title.lower().strip()
+        artist = song.canonical_artist.lower().strip()
+        key = f"{title}|{artist}"
+
+        if key in previous_ranks:
+            previous_rank = previous_ranks[key]
+            rank_change = previous_rank - i  # Positive = moved up
+            is_new = False
+        else:
+            rank_change = 0
+            is_new = True
+
+        changes.append({
+            "rank_change": rank_change,
+            "is_new": is_new,
+            "previous_rank": previous_ranks.get(key)
+        })
+    return changes
+
+
+# ============== INDIA CHART RANK CHANGES ==============
+
+async def get_previous_india_chart(mongo_cache) -> dict:
+    """Get previous India chart from MongoDB cache for rank change calculation."""
+    previous_ranks = {}
+
+    # Try MongoDB first
+    try:
+        cached = await mongo_cache.db.chart_history.find_one(
+            sort=[("generated_at", -1)]
+        )
+        if cached and "chart" in cached:
+            for song in cached["chart"]:
+                title = song.get("title", "").lower().strip()
+                artist = song.get("artist", "").lower().strip()
+                key = f"{title}|{artist}"
+                previous_ranks[key] = song.get("rank", 0)
+            print(f"[India Rank] Loaded from MongoDB: {len(previous_ranks)} songs")
+            return previous_ranks
+    except Exception as e:
+        print(f"[India Rank] MongoDB error: {e}")
+
+    # Fallback to local archive files
+    try:
+        import glob
+        archive_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'archive', 'india')
+        if os.path.exists(archive_path):
+            # Find all archive files and get the most recent one
+            all_files = []
+            for year_dir in glob.glob(os.path.join(archive_path, '*')):
+                all_files.extend(glob.glob(os.path.join(year_dir, '*.json')))
+
+            if all_files:
+                all_files.sort(reverse=True)
+                latest_file = all_files[0]
+
+                with open(latest_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+
+                for song in data.get('chart', []):
+                    title = song.get('title', '').lower().strip()
+                    artist = song.get('artist', '').lower().strip()
+                    key = f"{title}|{artist}"
+                    previous_ranks[key] = song.get('rank', 0)
+
+                print(f"[India Rank] Loaded from archive {os.path.basename(latest_file)}: {len(previous_ranks)} songs")
+                return previous_ranks
+    except Exception as e:
+        print(f"[India Rank] Archive fallback error: {e}")
+
+    return previous_ranks
+
+
+async def save_india_chart_history(mongo_cache, chart_data: list):
+    """Save current India chart to MongoDB for future rank change calculations."""
+    try:
+        from datetime import datetime
+        await mongo_cache.db.chart_history.insert_one({
+            "generated_at": datetime.utcnow(),
+            "chart": chart_data
+        })
+        print(f"[India Rank] Saved chart history with {len(chart_data)} songs")
+    except Exception as e:
+        print(f"[India Rank] Error saving chart history: {e}")
+
+
+def calculate_india_rank_changes(top_songs, previous_ranks: dict) -> list:
+    """Calculate rank changes for India chart songs."""
+    changes = []
+    for i, song in enumerate(top_songs, 1):
         title = song.canonical_title.lower().strip()
         artist = song.canonical_artist.lower().strip()
         key = f"{title}|{artist}"
@@ -499,7 +602,22 @@ async def run_job():
     # Step 8: Generate output and upload
     print("\n[Step 8/8] Uploading to API...")
 
-    chart_data = generate_output(top_songs, regional_songs)
+    # Calculate India chart rank changes
+    india_rank_changes = None
+    print("[India Rank] Calculating rank changes...")
+    previous_india_ranks = await get_previous_india_chart(mongo_cache)
+    if previous_india_ranks:
+        india_rank_changes = calculate_india_rank_changes(top_songs, previous_india_ranks)
+        movers_up = sum(1 for c in india_rank_changes if c['rank_change'] > 0)
+        movers_down = sum(1 for c in india_rank_changes if c['rank_change'] < 0)
+        new_entries = sum(1 for c in india_rank_changes if c['is_new'])
+        print(f"[India Rank] Changes: {movers_up} up, {movers_down} down, {new_entries} new")
+    else:
+        print("[India Rank] No previous chart found - all songs will be marked as NEW")
+        # Mark all songs as NEW when no previous data exists
+        india_rank_changes = [{"rank_change": 0, "is_new": True, "previous_rank": None} for _ in top_songs]
+
+    chart_data = generate_output(top_songs, regional_songs, india_rank_changes)
 
     # Calculate global chart rank changes
     global_rank_changes = None
@@ -516,6 +634,10 @@ async def run_job():
             print("[Global Rank] No previous chart found - all songs will be marked as NEW")
 
     chart_data = add_global_chart(chart_data, global_top_songs, global_rank_changes)
+
+    # Save current India chart to MongoDB for future rank change calculations
+    if chart_data.get("chart"):
+        await save_india_chart_history(mongo_cache, chart_data["chart"])
 
     # Save current global chart to MongoDB for future rank change calculations
     if global_top_songs and chart_data.get("global_chart"):
