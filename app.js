@@ -314,8 +314,12 @@ async function init() {
     window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
         if (!localStorage.getItem('theme')) {
             document.documentElement.dataset.theme = e.matches ? 'light' : 'dark';
+            updateThemeToggleUI();
         }
     });
+
+    // Initialize theme toggle
+    initThemeToggle();
 
     // Initialize UI and event listeners first (non-blocking)
     initSidebar();      // Initialize sidebar
@@ -6745,6 +6749,72 @@ function initializePlaybackUI() {
     updateQueueBadge();
     renderFavoritesSection();
     renderHistorySection();
+}
+
+// ============================================================
+// Theme Toggle Functions
+// ============================================================
+
+function initThemeToggle() {
+    const themeToggleGroup = document.getElementById('themeToggleGroup');
+    if (!themeToggleGroup) return;
+
+    // Set initial state
+    updateThemeToggleUI();
+
+    // Add click listeners to toggle buttons
+    themeToggleGroup.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const theme = btn.dataset.theme;
+            setTheme(theme);
+        });
+    });
+}
+
+function setTheme(theme) {
+    const html = document.documentElement;
+
+    if (theme === 'system') {
+        // Remove saved preference, use system
+        localStorage.removeItem('theme');
+        delete html.dataset.theme;
+        // Apply system preference
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            html.dataset.theme = 'light';
+        } else {
+            html.dataset.theme = 'dark';
+        }
+    } else {
+        // Save explicit preference
+        localStorage.setItem('theme', theme);
+        html.dataset.theme = theme;
+    }
+
+    updateThemeToggleUI();
+}
+
+function updateThemeToggleUI() {
+    const themeToggleGroup = document.getElementById('themeToggleGroup');
+    const themeDescription = document.getElementById('themeDescription');
+    if (!themeToggleGroup) return;
+
+    const savedTheme = localStorage.getItem('theme');
+    const currentTheme = savedTheme || 'system';
+
+    // Update active button
+    themeToggleGroup.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === currentTheme);
+    });
+
+    // Update description text
+    if (themeDescription) {
+        const descriptions = {
+            'system': 'System preference',
+            'light': 'Light mode',
+            'dark': 'Dark mode'
+        };
+        themeDescription.textContent = descriptions[currentTheme] || 'System preference';
+    }
 }
 
 // ============================================================

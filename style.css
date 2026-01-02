@@ -14125,4 +14125,177 @@ body::after {
             radial-gradient(ellipse at 20% 0%, rgba(212, 165, 116, 0.05) 0%, transparent 50%),
             radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.02) 0%, transparent 50%);
     }
+
+    /* Settings section light mode */
+    .settings-list {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .settings-item {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .settings-item-icon {
+        background: rgba(0, 0, 0, 0.04);
+        color: #8E8E8E;
+    }
+
+    .settings-item-label {
+        color: #262626;
+    }
+
+    .settings-item-description {
+        color: #8E8E8E;
+    }
+
+    .theme-toggle-group {
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    .theme-toggle-btn {
+        color: #8E8E8E;
+    }
+
+    .theme-toggle-btn:hover {
+        background: rgba(0, 0, 0, 0.06);
+        color: #262626;
+    }
+
+    .theme-toggle-btn.active {
+        background: var(--accent);
+        color: #FFFFFF;
+    }
+}
+
+/* ============================================
+   SETTINGS SECTION STYLES
+   ============================================ */
+
+.settings-section {
+    margin-top: 1.5rem;
+}
+
+.settings-section .profile-section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.settings-section .profile-section-header h2 svg {
+    opacity: 0.7;
+}
+
+.settings-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.settings-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+.settings-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.settings-item-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.settings-item-description {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Theme Toggle Group */
+.theme-toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg-surface);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.theme-toggle-btn {
+    width: 36px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--glass-bg-hover);
+    color: var(--text-primary);
+}
+
+.theme-toggle-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Responsive settings */
+@media (max-width: 480px) {
+    .settings-item {
+        padding: 0.875rem 1rem;
+    }
+
+    .settings-item-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .settings-item-label {
+        font-size: 0.9rem;
+    }
+
+    .theme-toggle-btn {
+        width: 32px;
+        height: 28px;
+    }
 }
