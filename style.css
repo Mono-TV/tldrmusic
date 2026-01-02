@@ -663,7 +663,7 @@ body::after {
 
 .hero-title {
     font-size: 1.75rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
     color: var(--text-primary);
 }
@@ -1032,8 +1032,8 @@ body::after {
 }
 
 .chart-header h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.1rem;
+    font-weight: 600;
     margin: 0;
 }
 
@@ -1216,7 +1216,7 @@ body::after {
 
 .hero-title {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0 0 0.5rem 0;
     line-height: 1.2;
     color: #ffffff;
@@ -1927,8 +1927,8 @@ body::after {
 }
 
 .discover-section .section-title h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     margin: 0;
     color: var(--text-primary);
 }
