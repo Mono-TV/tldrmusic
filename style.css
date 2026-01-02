@@ -55,21 +55,13 @@
     --ambient-purple: radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
     --ambient-blue: radial-gradient(ellipse at 90% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
 
-    --font: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: 'Red Hat Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-h1, h2, h3, h4, h5, h6,
-.logo, .song-title, .hero-title,
-.section-title, .playlist-title,
-.modal-title, .detail-title {
-    font-family: var(--font-heading);
 }
 
 html {
