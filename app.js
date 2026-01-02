@@ -56,10 +56,20 @@ window.handleImageError = function(img, youtubeId) {
 };
 
 // Get valid artwork URL from Music Harvester data
-// Handles placeholder URLs by falling back to YouTube thumbnail
+// Handles placeholder URLs and unreliable Google Photos URLs
 function getHarvesterArtwork(artworkUrl, youtubeId, size = 'medium') {
     // Check if artwork URL is valid (not a placeholder)
     if (artworkUrl && !artworkUrl.includes('{country-code}') && artworkUrl.startsWith('http')) {
+        // Google Photos URLs from YouTube Music are often truncated/corrupted
+        // Prefer YouTube thumbnail which is more reliable
+        if (artworkUrl.includes('lh3.googleusercontent.com')) {
+            // Only use Google Photos URL if it has the size suffix (properly formed)
+            if (artworkUrl.includes('=w') || artworkUrl.includes('=s')) {
+                return artworkUrl;
+            }
+            // Otherwise fall back to YouTube thumbnail
+            return getYouTubeThumbnail(youtubeId, size);
+        }
         return artworkUrl;
     }
     // Fall back to YouTube thumbnail with appropriate size
