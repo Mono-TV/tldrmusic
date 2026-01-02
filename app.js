@@ -173,7 +173,6 @@ let player = null;
 let playerReady = false;
 let isPlaying = false;
 let isVideoVisible = false;
-let isTheaterMode = false;
 let isQueueVisible = false;
 let progressInterval = null;
 let isHeroVisible = true;
@@ -277,17 +276,11 @@ const timeDuration = document.getElementById('timeDuration');
 const regionalSection = document.getElementById('regionalSection');
 const globalSpotlightsSection = document.getElementById('globalSpotlightsSection');
 const heroSection = document.getElementById('heroSection');
-const heroTheater = document.getElementById('heroTheater');
-const theaterVideo = document.getElementById('theaterVideo');
-const theaterClose = document.getElementById('theaterClose');
-const theaterTitle = document.getElementById('theaterTitle');
-const theaterArtist = document.getElementById('theaterArtist');
 const heroProgress = document.getElementById('heroProgress');
 const heroProgressBar = document.getElementById('heroProgressBar');
 const heroProgressFill = document.getElementById('heroProgressFill');
 const heroTimeCurrent = document.getElementById('heroTimeCurrent');
 const heroTimeDuration = document.getElementById('heroTimeDuration');
-const heroVideoBtn = document.getElementById('heroVideoBtn');
 
 // Initialize YouTube API
 function loadYouTubeAPI() {
@@ -2811,12 +2804,6 @@ function updateNowPlaying(index) {
 
     // Spotlight now stays static showing featured playlist
     // updateHeroWithSong(song, index);
-
-    // Update theater info if in theater mode
-    if (isTheaterMode) {
-        if (theaterTitle) theaterTitle.textContent = song.title;
-        if (theaterArtist) theaterArtist.textContent = song.artist;
-    }
 }
 
 // Update hero section with a specific song
@@ -2942,11 +2929,6 @@ function playSong(index) {
 
     // Track in history with source
     addToHistory(song, 'chart');
-
-    // Close theater mode if active (stops theater player, skip resume since new song will play)
-    if (isTheaterMode) {
-        closeTheaterMode(true);
-    }
 
     updateNowPlaying(index);
 
@@ -3155,20 +3137,14 @@ function formatTime(seconds) {
 }
 
 function seekTo(percent) {
-    // Use theater player if in theater mode
-    const activePlayer = isTheaterMode && theaterPlayer ? theaterPlayer : player;
-    if (!activePlayer || typeof activePlayer.getDuration !== 'function') return;
+    if (!player || typeof player.getDuration !== 'function') return;
 
     try {
-        const duration = activePlayer.getDuration();
+        const duration = player.getDuration();
         if (duration > 0) {
             const seekTime = (percent / 100) * duration;
-            activePlayer.seekTo(seekTime, true);
-            if (isTheaterMode) {
-                updateTheaterProgress();
-            } else {
-                updateProgress();
-            }
+            player.seekTo(seekTime, true);
+            updateProgress();
         }
     } catch (e) {
         // Player not ready
@@ -3270,13 +3246,13 @@ function updatePlayerBarVisibility() {
 
     // Only show player bar if:
     // 1. A song is playing or has been selected (currentSongIndex >= 0 OR regional song playing)
-    // 2. Hero is NOT visible OR we're NOT in theater mode
+    // 2. Hero is NOT visible
     const hasSongSelected = currentSongIndex >= 0 || isRegionalSongPlaying;
-    const shouldShowPlayerBar = hasSongSelected && !isHeroVisible && !isTheaterMode;
+    const shouldShowPlayerBar = hasSongSelected && !isHeroVisible;
 
     if (shouldShowPlayerBar) {
         playerBar.classList.add('visible');
-    } else if (hasSongSelected && (isHeroVisible || isTheaterMode)) {
+    } else if (hasSongSelected && isHeroVisible) {
         // Hide player bar when hero is visible (song plays in hero)
         playerBar.classList.remove('visible');
     } else if (isRegionalSongPlaying) {
@@ -3334,9 +3310,6 @@ function setupEventListeners() {
     playPauseBtn?.addEventListener('click', togglePlayPause);
     prevBtn?.addEventListener('click', playPrevious);
     nextBtn?.addEventListener('click', playNext);
-    videoToggleBtn?.addEventListener('click', toggleVideo);
-    videoClose?.addEventListener('click', closeTheaterMode);
-    theaterClose?.addEventListener('click', closeTheaterMode);
 
     // Progress bar seek
     progressBar?.addEventListener('click', (e) => {
@@ -3352,8 +3325,6 @@ function setupEventListeners() {
     //     seekTo(Math.max(0, Math.min(100, percent)));
     // });
 
-    // heroVideoBtn?.addEventListener('click', toggleVideo);
-
     // New feature buttons
     document.getElementById('favoriteBtn')?.addEventListener('click', () => toggleFavorite());
     document.getElementById('shuffleBtn')?.addEventListener('click', toggleShuffle);
@@ -3367,23 +3338,20 @@ function setupEventListeners() {
 
 // Toggle play/pause
 function togglePlayPause() {
-    // Use theater player if in theater mode
-    const activePlayer = isTheaterMode && theaterPlayer ? theaterPlayer : player;
-
-    if (!activePlayer) {
+    if (!player) {
         console.log('No active player');
         return;
     }
 
     try {
         // Check actual player state, not just our tracked state
-        const playerState = activePlayer.getPlayerState?.();
+        const playerState = player.getPlayerState?.();
         const actuallyPlaying = playerState === YT.PlayerState.PLAYING || playerState === YT.PlayerState.BUFFERING;
 
         if (actuallyPlaying) {
-            activePlayer.pauseVideo();
+            player.pauseVideo();
         } else {
-            activePlayer.playVideo();
+            player.playVideo();
         }
     } catch (e) {
         console.error('Error toggling play/pause:', e);
@@ -3452,256 +3420,6 @@ function playNext() {
     }
 }
 
-// Toggle video visibility - switches to theater mode
-function toggleVideo() {
-    if (currentSongIndex < 0 && !player) {
-        showToast('Play a song first to view video');
-        return;
-    }
-
-    isTheaterMode = !isTheaterMode;
-    isVideoVisible = isTheaterMode;
-
-    if (isTheaterMode) {
-        // Enter theater mode
-        heroSection?.classList.add('theater-mode');
-        videoToggleBtn?.classList.add('active');
-        // heroVideoBtn?.classList.add('active'); // Hero video button removed
-
-        // Update theater info with current song
-        if (currentSongIndex >= 0 && chartData?.chart[currentSongIndex]) {
-            const song = chartData.chart[currentSongIndex];
-            if (theaterTitle) theaterTitle.textContent = song.title;
-            if (theaterArtist) theaterArtist.textContent = song.artist;
-        }
-
-        // Move YouTube player to theater container
-        movePlayerToTheater();
-
-        // Scroll hero into view
-        heroSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-        closeTheaterMode();
-    }
-}
-
-// Move YouTube player to theater container
-let theaterPlayer = null;
-
-function movePlayerToTheater() {
-    if (!player || !theaterVideo) return;
-
-    // Get current video ID and time
-    let videoUrl, videoId, currentTime;
-    try {
-        videoUrl = player.getVideoUrl?.();
-        videoId = extractVideoId(videoUrl);
-        currentTime = player.getCurrentTime?.() || 0;
-    } catch (e) {
-        console.error('Error getting player state:', e);
-        return;
-    }
-
-    // Stop the original player (not just pause) to free up resources
-    try {
-        player.stopVideo();
-    } catch (e) {}
-
-    if (videoId) {
-        // Create new player in theater container
-        theaterVideo.innerHTML = '<div id="theaterPlayer"></div>';
-
-        // Create theater player
-        theaterPlayer = new YT.Player('theaterPlayer', {
-            height: '100%',
-            width: '100%',
-            videoId: videoId,
-            playerVars: {
-                autoplay: 1,
-                modestbranding: 1,
-                rel: 0,
-                playsinline: 1,
-                start: Math.floor(currentTime),
-                origin: window.location.origin,
-            },
-            events: {
-                onReady: (event) => {
-                    // Seek to current time for precision
-                    event.target.seekTo(currentTime, true);
-                    event.target.playVideo();
-                },
-                onStateChange: onTheaterPlayerStateChange,
-            }
-        });
-    }
-}
-
-// Handle theater player state changes
-function onTheaterPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-        isPlaying = true;
-        playPauseBtn?.classList.add('playing');
-        updateCardPlayingState(true);
-        startTheaterProgressTracking();
-    } else if (event.data === YT.PlayerState.PAUSED) {
-        isPlaying = false;
-        playPauseBtn?.classList.remove('playing');
-        updateCardPlayingState(false);
-        stopProgressTracking();
-    } else if (event.data === YT.PlayerState.ENDED) {
-        isPlaying = false;
-        playPauseBtn?.classList.remove('playing');
-        updateCardPlayingState(false);
-        stopProgressTracking();
-    }
-}
-
-// Progress tracking for theater player
-function startTheaterProgressTracking() {
-    stopProgressTracking();
-    updateTheaterProgress();
-    progressInterval = setInterval(updateTheaterProgress, 500);
-}
-
-function updateTheaterProgress() {
-    if (!theaterPlayer || typeof theaterPlayer.getCurrentTime !== 'function') return;
-
-    try {
-        const currentTime = theaterPlayer.getCurrentTime() || 0;
-        const duration = theaterPlayer.getDuration() || 0;
-
-        if (duration > 0) {
-            const percent = (currentTime / duration) * 100;
-            const currentTimeStr = formatTime(currentTime);
-            const durationStr = formatTime(duration);
-
-            // Update player bar progress
-            const progressFillEl = document.getElementById('progressFill');
-            const timeCurrentEl = document.getElementById('timeCurrent');
-            const timeDurationEl = document.getElementById('timeDuration');
-            if (progressFillEl) progressFillEl.style.width = `${percent}%`;
-            if (timeCurrentEl) timeCurrentEl.textContent = currentTimeStr;
-            if (timeDurationEl) timeDurationEl.textContent = durationStr;
-
-            // Also update hero progress bar (keep in sync)
-            if (heroProgressFill) heroProgressFill.style.width = `${percent}%`;
-            if (heroTimeCurrent) heroTimeCurrent.textContent = currentTimeStr;
-            if (heroTimeDuration) heroTimeDuration.textContent = durationStr;
-        }
-    } catch (e) {
-        // Player not ready
-    }
-}
-
-// Close theater mode
-// skipResume: if true, don't resume original player (used when switching songs)
-function closeTheaterMode(skipResume = false) {
-    // Handle case where event object is passed from click handler
-    if (typeof skipResume !== 'boolean') {
-        skipResume = false;
-    }
-
-    // Get current position from theater player before destroying
-    let currentTime = 0;
-    let wasPlaying = isPlaying;
-
-    if (theaterPlayer && typeof theaterPlayer.getCurrentTime === 'function') {
-        try {
-            currentTime = theaterPlayer.getCurrentTime() || 0;
-            const state = theaterPlayer.getPlayerState?.();
-            wasPlaying = state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING;
-            console.log('Theater close - time:', currentTime, 'wasPlaying:', wasPlaying, 'skipResume:', skipResume);
-        } catch (e) {
-            console.log('Error getting theater state:', e);
-        }
-    }
-
-    // Stop and destroy theater player
-    if (theaterPlayer) {
-        try {
-            if (typeof theaterPlayer.stopVideo === 'function') {
-                theaterPlayer.stopVideo();
-            }
-            if (typeof theaterPlayer.destroy === 'function') {
-                theaterPlayer.destroy();
-            }
-        } catch (e) {}
-    }
-    theaterPlayer = null;
-
-    // Update state
-    isTheaterMode = false;
-    isVideoVisible = false;
-
-    heroSection?.classList.remove('theater-mode');
-    videoContainer?.classList.remove('visible');
-    videoToggleBtn?.classList.remove('active');
-    // heroVideoBtn?.classList.remove('active'); // Hero video button removed
-
-    // Clear theater video container
-    if (theaterVideo) {
-        theaterVideo.innerHTML = '';
-    }
-
-    stopProgressTracking();
-
-    // Resume playback (unless skipping for new song)
-    if (!skipResume && currentSongIndex >= 0 && chartData?.chart[currentSongIndex]?.youtube_video_id) {
-        const resumeTime = currentTime;
-        const resumeIndex = currentSongIndex;
-        const shouldPlay = wasPlaying;
-        const videoId = chartData.chart[resumeIndex].youtube_video_id;
-
-        console.log('Resuming playback - videoId:', videoId, 'time:', resumeTime, 'shouldPlay:', shouldPlay);
-
-        // Destroy and recreate the main player to ensure clean state
-        if (player) {
-            try {
-                player.destroy();
-            } catch (e) {}
-            player = null;
-        }
-
-        // Recreate the player element
-        videoWrapper.innerHTML = '<div id="ytplayer"></div>';
-
-        // Create new player with the video
-        setTimeout(() => {
-            player = new YT.Player('ytplayer', {
-                height: '100%',
-                width: '100%',
-                videoId: videoId,
-                playerVars: {
-                    autoplay: shouldPlay ? 1 : 0,
-                    modestbranding: 1,
-                    rel: 0,
-                    playsinline: 1,
-                    start: Math.floor(resumeTime),
-                    origin: window.location.origin,
-                },
-                events: {
-                    onReady: (event) => {
-                        console.log('Resume player ready');
-                        // Seek to exact time for precision
-                        event.target.seekTo(resumeTime, true);
-                        if (shouldPlay) {
-                            event.target.playVideo();
-                        }
-                        // Start tracking progress
-                        startProgressTracking();
-                    },
-                    onStateChange: onPlayerStateChange,
-                    onError: (event) => {
-                        console.error('Resume player error:', event.data);
-                    }
-                }
-            });
-        }, 100);
-    }
-
-    // Update player bar visibility (may show now that theater is closed)
-    updatePlayerBarVisibility();
-}
 
 // Share
 async function shareChart() {
@@ -3793,9 +3511,6 @@ function handleKeyboard(e) {
             } else if (isQueueVisible) {
                 e.preventDefault();
                 toggleQueue();
-            } else if (isTheaterMode) {
-                e.preventDefault();
-                closeTheaterMode();
             }
             break;
     }
