@@ -972,7 +972,7 @@ async function loadChartData() {
         // Fetch chart from Music Conductor API aggregated endpoint
         const [indiaResponse, globalResponse] = await Promise.all([
             fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`),
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`) // No global chart yet, use same
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global`)
         ]);
 
         if (!indiaResponse.ok) throw new Error('India chart API request failed');
@@ -1031,7 +1031,7 @@ async function refreshChartCache() {
         // Fetch chart from Music Conductor API aggregated endpoint
         const [indiaResponse, globalResponse] = await Promise.all([
             fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`),
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`) // No global chart yet, use same
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=global`)
         ]);
 
         if (!indiaResponse.ok) return;
@@ -8814,7 +8814,7 @@ const MAIN_CHARTS = [
         id: 'global-top-25',
         name: 'Global Top 25',
         description: 'Trending worldwide this week',
-        endpoint: '/api/charts/aggregated?region=india', // No global chart yet, using India chart
+        endpoint: '/api/charts/aggregated?region=global',
         icon: '🌍',
         gradient: ['#667eea', '#764ba2'],
         region: 'global'
