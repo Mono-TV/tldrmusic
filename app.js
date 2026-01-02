@@ -60,10 +60,20 @@ window.handleImageError = function(img, youtubeId) {
 function getHarvesterArtwork(artworkUrl, youtubeId, size = 'medium') {
     // Check if artwork URL is valid (not a placeholder)
     if (artworkUrl && !artworkUrl.includes('{country-code}') && artworkUrl.startsWith('http')) {
-        // Google Photos URLs from YouTube Music are often truncated/corrupted
-        // Prefer YouTube thumbnail which is more reliable
+        // Google Photos URLs from YouTube Music need special handling
         if (artworkUrl.includes('lh3.googleusercontent.com')) {
-            // Only use Google Photos URL if it has the size suffix (properly formed)
+            // Check for duplicate size suffix pattern (e.g., =w600-h600-l90-rj=w600-h600)
+            // This happens when the scraper appends size params to already-suffixed URLs
+            const equalSignCount = (artworkUrl.match(/=/g) || []).length;
+            if (equalSignCount > 1) {
+                // Fix duplicate suffix by removing everything after the second '='
+                const firstEqIndex = artworkUrl.indexOf('=');
+                const secondEqIndex = artworkUrl.indexOf('=', firstEqIndex + 1);
+                if (secondEqIndex > 0) {
+                    artworkUrl = artworkUrl.substring(0, secondEqIndex);
+                }
+            }
+            // Only use Google Photos URL if it has a size suffix
             if (artworkUrl.includes('=w') || artworkUrl.includes('=s')) {
                 return artworkUrl;
             }
