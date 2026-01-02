@@ -4,7 +4,7 @@
 // - Music Conductor: Charts, Search, Discover (deprecated - migrating to TLDR Music API)
 // - TLDR Music API: User auth, Library, Curated playlists (NEW)
 // - Auth API: User authentication and library management
-const MUSIC_CONDUCTOR_API = 'https://tldr-music-401132033262.asia-south1.run.app';
+const MUSIC_CONDUCTOR_API = 'https://tldr-music-ncrhtdqoiq-el.a.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
 const CURATED_API = 'https://tldr-music-ncrhtdqoiq-el.a.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
@@ -949,10 +949,10 @@ async function loadChartData() {
 
     // No valid cache, fetch from APIs
     try {
-        // Fetch chart from Music Conductor API v2 endpoint
+        // Fetch chart from Music Conductor API aggregated endpoint
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/v2/bollywood_top_25`),
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/v2/bollywood_top_25`) // No global chart yet, use same
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`),
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`) // No global chart yet, use same
         ]);
 
         if (!indiaResponse.ok) throw new Error('India chart API request failed');
@@ -1008,10 +1008,10 @@ async function loadChartData() {
 // Refresh cache in background without blocking UI
 async function refreshChartCache() {
     try {
-        // Fetch chart from Music Conductor API v2 endpoint
+        // Fetch chart from Music Conductor API aggregated endpoint
         const [indiaResponse, globalResponse] = await Promise.all([
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/v2/bollywood_top_25`),
-            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/v2/bollywood_top_25`) // No global chart yet, use same
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`),
+            fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`) // No global chart yet, use same
         ]);
 
         if (!indiaResponse.ok) return;
@@ -8785,7 +8785,7 @@ const MAIN_CHARTS = [
         id: 'india-top-25',
         name: 'India Top 25',
         description: 'Most popular songs in India this week',
-        endpoint: '/api/charts/v2/bollywood_top_25',
+        endpoint: '/api/charts/aggregated?region=india',
         icon: '🇮🇳',
         gradient: ['#FF9933', '#138808'],
         region: 'india'
@@ -8794,7 +8794,7 @@ const MAIN_CHARTS = [
         id: 'global-top-25',
         name: 'Global Top 25',
         description: 'Trending worldwide this week',
-        endpoint: '/api/charts/v2/bollywood_top_25', // No global chart yet, using India chart
+        endpoint: '/api/charts/aggregated?region=india', // No global chart yet, using India chart
         icon: '🌍',
         gradient: ['#667eea', '#764ba2'],
         region: 'global'
@@ -8943,8 +8943,8 @@ async function openChartFromChartsView(chartId) {
 
         let response, rawData, data;
 
-        // Both global and india use bollywood_top_25 chart (v2 API)
-        response = await fetch(`${MUSIC_CONDUCTOR_API}/api/charts/v2/bollywood_top_25`);
+        // Both global and india use bollywood_top_25 chart (aggregated API)
+        response = await fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`);
         if (!response.ok) throw new Error('Failed to load chart');
         rawData = await response.json();
         // Map Music Conductor v2 format
