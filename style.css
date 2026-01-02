@@ -55,21 +55,13 @@
     --ambient-purple: radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
     --ambient-blue: radial-gradient(ellipse at 90% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
 
-    --font: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-heading: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: 'Red Hat Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-h1, h2, h3, h4, h5, h6,
-.logo, .song-title, .hero-title,
-.section-title, .playlist-title,
-.modal-title, .detail-title {
-    font-family: var(--font-heading);
 }
 
 html {
@@ -670,14 +662,14 @@ body::after {
 }
 
 .hero-title {
-    font-size: 2.5rem;
-    font-weight: 800;
+    font-size: 1.75rem;
+    font-weight: 700;
     line-height: 1.2;
     color: var(--text-primary);
 }
 
 .hero-artist {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--text-secondary);
     margin-bottom: 0.5rem;
 }
@@ -1223,8 +1215,8 @@ body::after {
 }
 
 .hero-title {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0 0 0.5rem 0;
     line-height: 1.2;
     color: #ffffff;
@@ -1232,7 +1224,7 @@ body::after {
 }
 
 .hero-artist {
-    font-size: 1.25rem;
+    font-size: 0.95rem;
     font-weight: 500;
     margin: 0 0 1.5rem 0;
     color: rgba(255, 255, 255, 0.9);
@@ -1290,11 +1282,11 @@ body::after {
     }
 
     .hero-title {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
     }
 
     .hero-artist {
-        font-size: 1.1rem;
+        font-size: 0.9rem;
     }
 
     .hero-info {
@@ -3644,7 +3636,7 @@ body::after {
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 }
 
