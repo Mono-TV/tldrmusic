@@ -310,6 +310,13 @@ async function init() {
     // Ensure page starts at top
     window.scrollTo(0, 0);
 
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            document.documentElement.dataset.theme = e.matches ? 'light' : 'dark';
+        }
+    });
+
     // Initialize UI and event listeners first (non-blocking)
     initSidebar();      // Initialize sidebar
     initSearch();       // Initialize search functionality

@@ -142,7 +142,19 @@
     }
     </script>
 
-    <link rel="stylesheet" href="style.css?v=66">
+    <!-- Theme Detection - Prevents flash of wrong theme -->
+    <script>
+    (function() {
+        const saved = localStorage.getItem('theme');
+        if (saved) {
+            document.documentElement.dataset.theme = saved;
+        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.dataset.theme = 'light';
+        }
+    })();
+    </script>
+
+    <link rel="stylesheet" href="style.css?v=67">
     <!-- Preconnect to APIs for faster initial load -->
     <link rel="preconnect" href="https://tldrmusic-api-401132033262.asia-south1.run.app">
     <link rel="preconnect" href="https://harvester.lumiolabs.in">
