@@ -13355,9 +13355,13 @@ body::after {
             backdrop-filter: none;
         }
 
-        /* Logo - white text, keep accent span gold */
+        /* Logo - white text with gold accent */
         .logo {
             color: #FFFFFF;
+        }
+
+        .logo span {
+            color: #D4AF37 !important;
         }
 
         .search-container input {
@@ -13975,9 +13979,13 @@ body::after {
         backdrop-filter: none;
     }
 
-    /* Logo - white text, keep accent span gold */
+    /* Logo - white text with gold accent */
     .logo {
         color: #FFFFFF;
+    }
+
+    .logo span {
+        color: #D4AF37 !important;
     }
 
     .search-container input {
