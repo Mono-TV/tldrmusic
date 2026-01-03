@@ -13347,26 +13347,61 @@ body::after {
             color: var(--accent);
         }
 
-        /* Header - Instagram clean white with shadow for visibility */
+        /* Header - Black bar with white text */
         .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid rgba(219, 219, 219, 1);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            background: #000000;
+            border-bottom: none;
+            box-shadow: none;
             backdrop-filter: none;
         }
 
         .logo {
-            color: #262626;
+            color: #FFFFFF;
+        }
+
+        .search-container input {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .theme-toggle-header {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+        }
+
+        .theme-toggle-header:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .header-menu-btn {
             background: transparent;
             border: none;
-            color: #262626;
+            color: #FFFFFF;
         }
 
         .header-menu-btn:hover {
-            background: rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Header profile area */
+        .header-meta,
+        .header-meta * {
+            color: #FFFFFF;
+        }
+
+        .mobile-search-btn {
+            color: #FFFFFF;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mobile-search-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* Cards - Clean white with Instagram border */
@@ -13931,26 +13966,61 @@ body::after {
         color: #262626;
     }
 
-    /* Header - Instagram clean white with shadow for visibility */
+    /* Header - Black bar with white text */
     .header {
-        background: #FFFFFF;
-        border-bottom: 1px solid rgba(219, 219, 219, 1);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        background: #000000;
+        border-bottom: none;
+        box-shadow: none;
         backdrop-filter: none;
     }
 
     .logo {
-        color: #262626;
+        color: #FFFFFF;
+    }
+
+    .search-container input {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+    }
+
+    .search-container input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .theme-toggle-header {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+    }
+
+    .theme-toggle-header:hover {
+        background: rgba(255, 255, 255, 0.2);
     }
 
     .header-menu-btn {
         background: transparent;
         border: none;
-        color: #262626;
+        color: #FFFFFF;
     }
 
     .header-menu-btn:hover {
-        background: rgba(0, 0, 0, 0.04);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Header profile area */
+    .header-meta,
+    .header-meta * {
+        color: #FFFFFF;
+    }
+
+    .mobile-search-btn {
+        color: #FFFFFF;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-search-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
     }
 
     /* Cards - Clean white with Instagram border */
