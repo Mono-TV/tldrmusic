@@ -13488,8 +13488,8 @@ body::after {
         /* Search */
         .search-container input,
         .search-input {
-            background: rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: #FFFFFF;
+            border: 1px solid #CCCCCC;
             color: #262626;
         }
 
@@ -14111,8 +14111,8 @@ body::after {
     /* Search */
     .search-container input,
     .search-input {
-        background: rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: #FFFFFF;
+        border: 1px solid #CCCCCC;
         color: #262626;
     }
 
