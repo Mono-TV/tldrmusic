@@ -13775,9 +13775,35 @@ body::after {
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
         }
 
-        /* Hero section - muted */
+        /* Hero section - fully desaturated */
         .hero-bg {
-            filter: grayscale(60%) brightness(1.1);
+            filter: grayscale(100%) brightness(1.2) !important;
+            opacity: 0.3 !important;
+        }
+
+        .hero::after {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%) !important;
+        }
+
+        .hero {
+            background: #FFFFFF !important;
+        }
+
+        /* Remove all colored gradients from views */
+        .playlist-detail-view,
+        .chart-detail-view,
+        .search-view,
+        .charts-detail-view,
+        .ai-generated-view,
+        .ai-playlist-detail-view,
+        .playlists-view,
+        .home-view {
+            background: #FFFFFF !important;
+        }
+
+        /* Main gradient - disabled in light mode */
+        .main-gradient {
+            display: none !important;
         }
 
         /* Chart toggle - monochrome */
@@ -14304,9 +14330,35 @@ body::after {
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
     }
 
-    /* Hero section - muted */
+    /* Hero section - fully desaturated */
     .hero-bg {
-        filter: grayscale(60%) brightness(1.1);
+        filter: grayscale(100%) brightness(1.2) !important;
+        opacity: 0.3 !important;
+    }
+
+    .hero::after {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%) !important;
+    }
+
+    .hero {
+        background: #FFFFFF !important;
+    }
+
+    /* Remove all colored gradients from views */
+    .playlist-detail-view,
+    .chart-detail-view,
+    .search-view,
+    .charts-detail-view,
+    .ai-generated-view,
+    .ai-playlist-detail-view,
+    .playlists-view,
+    .home-view {
+        background: #FFFFFF !important;
+    }
+
+    /* Main gradient - disabled in light mode */
+    .main-gradient {
+        display: none !important;
     }
 
     /* Chart toggle - monochrome */
