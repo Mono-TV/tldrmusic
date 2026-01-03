@@ -13721,18 +13721,22 @@ body::after {
             filter: none;
         }
 
-        /* Homepage playlist cards - grayscale all images */
+        /* All images grayscale in light mode */
         .playlist-card .playlist-card-artwork img,
         .playlist-card-artwork img,
         .song-artwork,
+        .song-card-artwork img,
         .chart-artwork img,
-        .hero-artwork {
+        .hero-artwork,
+        .quick-pick-artwork img {
             filter: grayscale(100%);
         }
 
         .playlist-card:hover .playlist-card-artwork img,
         .song-row:hover .song-artwork,
-        .chart-card:hover .chart-artwork img {
+        .song-card:hover .song-card-artwork img,
+        .chart-card:hover .chart-artwork img,
+        .quick-pick-card:hover .quick-pick-artwork img {
             filter: grayscale(0%);
         }
 
@@ -14211,18 +14215,22 @@ body::after {
         filter: none;
     }
 
-    /* Homepage playlist cards - grayscale all images */
+    /* All images grayscale in light mode */
     .playlist-card .playlist-card-artwork img,
     .playlist-card-artwork img,
     .song-artwork,
+    .song-card-artwork img,
     .chart-artwork img,
-    .hero-artwork {
+    .hero-artwork,
+    .quick-pick-artwork img {
         filter: grayscale(100%);
     }
 
     .playlist-card:hover .playlist-card-artwork img,
     .song-row:hover .song-artwork,
-    .chart-card:hover .chart-artwork img {
+    .song-card:hover .song-card-artwork img,
+    .chart-card:hover .chart-artwork img,
+    .quick-pick-card:hover .quick-pick-artwork img {
         filter: grayscale(0%);
     }
 
