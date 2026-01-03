@@ -13721,22 +13721,20 @@ body::after {
             filter: none;
         }
 
-        /* All images grayscale in light mode */
-        .playlist-card .playlist-card-artwork img,
-        .playlist-card-artwork img,
-        .song-artwork,
-        .song-card-artwork img,
-        .chart-artwork img,
-        .hero-artwork,
-        .quick-pick-artwork img {
+        /* All artwork images grayscale in light mode */
+        img:not(.profile-avatar):not(.logo-img):not([src*="flag"]):not([src*="icon"]) {
             filter: grayscale(100%);
+            transition: filter 0.2s ease;
         }
 
-        .playlist-card:hover .playlist-card-artwork img,
-        .song-row:hover .song-artwork,
-        .song-card:hover .song-card-artwork img,
-        .chart-card:hover .chart-artwork img,
-        .quick-pick-card:hover .quick-pick-artwork img {
+        /* Restore color on hover for interactive elements */
+        .playlist-card:hover img,
+        .song-row:hover img,
+        .song-card:hover img,
+        .chart-card:hover img,
+        .quick-pick-card:hover img,
+        a:hover img,
+        button:hover img {
             filter: grayscale(0%);
         }
 
@@ -14215,22 +14213,20 @@ body::after {
         filter: none;
     }
 
-    /* All images grayscale in light mode */
-    .playlist-card .playlist-card-artwork img,
-    .playlist-card-artwork img,
-    .song-artwork,
-    .song-card-artwork img,
-    .chart-artwork img,
-    .hero-artwork,
-    .quick-pick-artwork img {
+    /* All artwork images grayscale in light mode */
+    img:not(.profile-avatar):not(.logo-img):not([src*="flag"]):not([src*="icon"]) {
         filter: grayscale(100%);
+        transition: filter 0.2s ease;
     }
 
-    .playlist-card:hover .playlist-card-artwork img,
-    .song-row:hover .song-artwork,
-    .song-card:hover .song-card-artwork img,
-    .chart-card:hover .chart-artwork img,
-    .quick-pick-card:hover .quick-pick-artwork img {
+    /* Restore color on hover for interactive elements */
+    .playlist-card:hover img,
+    .song-row:hover img,
+    .song-card:hover img,
+    .chart-card:hover img,
+    .quick-pick-card:hover img,
+    a:hover img,
+    button:hover img {
         filter: grayscale(0%);
     }
 
