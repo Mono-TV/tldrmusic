@@ -13681,6 +13681,13 @@ body::after {
             color: #262626;
         }
 
+        /* Song card rank - dark text on light cards */
+        .song-card-rank,
+        .song-card-rank.top-3 {
+            color: #262626 !important;
+            text-shadow: none;
+        }
+
         /* Platform badges */
         .platform-badge {
             background: rgba(0, 0, 0, 0.04);
@@ -14285,6 +14292,13 @@ body::after {
 
     .rank-change.new {
         color: #262626;
+    }
+
+    /* Song card rank - dark text on light cards */
+    .song-card-rank,
+    .song-card-rank.top-3 {
+        color: #262626 !important;
+        text-shadow: none;
     }
 
     /* Platform badges */
