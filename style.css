@@ -13355,6 +13355,7 @@ body::after {
             backdrop-filter: none;
         }
 
+        /* Logo - white text, keep accent span gold */
         .logo {
             color: #FFFFFF;
         }
@@ -13974,6 +13975,7 @@ body::after {
         backdrop-filter: none;
     }
 
+    /* Logo - white text, keep accent span gold */
     .logo {
         color: #FFFFFF;
     }
