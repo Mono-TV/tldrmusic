@@ -13762,23 +13762,6 @@ body::after {
             filter: none;
         }
 
-        /* All artwork images grayscale in light mode */
-        img:not(.profile-avatar):not(.logo-img):not([src*="flag"]):not([src*="icon"]) {
-            filter: grayscale(100%);
-            transition: filter 0.2s ease;
-        }
-
-        /* Restore color on hover for interactive elements */
-        .playlist-card:hover img,
-        .song-row:hover img,
-        .song-card:hover img,
-        .chart-card:hover img,
-        .quick-pick-card:hover img,
-        a:hover img,
-        button:hover img {
-            filter: grayscale(0%);
-        }
-
         /* Play overlays - light mode */
         .playlist-play-overlay,
         .playlist-grid .playlist-card-play-overlay,
@@ -14383,23 +14366,6 @@ body::after {
     .discover-card-icon svg {
         color: #262626;
         filter: none;
-    }
-
-    /* All artwork images grayscale in light mode */
-    img:not(.profile-avatar):not(.logo-img):not([src*="flag"]):not([src*="icon"]) {
-        filter: grayscale(100%);
-        transition: filter 0.2s ease;
-    }
-
-    /* Restore color on hover for interactive elements */
-    .playlist-card:hover img,
-    .song-row:hover img,
-    .song-card:hover img,
-    .chart-card:hover img,
-    .quick-pick-card:hover img,
-    a:hover img,
-    button:hover img {
-        filter: grayscale(0%);
     }
 
     /* Play overlays - light mode */
