@@ -10769,6 +10769,77 @@ body::after {
     border-color: var(--accent);
 }
 
+/* Theme Toggle Button in Header */
+.theme-toggle-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 0.5rem;
+}
+
+.theme-toggle-header:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--accent);
+}
+
+/* Show sun icon in dark mode, moon icon in light mode */
+.theme-icon-dark {
+    display: block;
+}
+
+.theme-icon-light {
+    display: none;
+}
+
+:root[data-theme="light"] .theme-icon-dark {
+    display: none;
+}
+
+:root[data-theme="light"] .theme-icon-light {
+    display: block;
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .theme-icon-dark {
+        display: none;
+    }
+
+    :root:not([data-theme="dark"]) .theme-icon-light {
+        display: block;
+    }
+}
+
+/* Light mode styling for theme toggle */
+:root[data-theme="light"] .theme-toggle-header {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #262626;
+}
+
+:root[data-theme="light"] .theme-toggle-header:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .theme-toggle-header {
+        background: rgba(0, 0, 0, 0.04);
+        border-color: rgba(0, 0, 0, 0.1);
+        color: #262626;
+    }
+
+    :root:not([data-theme="dark"]) .theme-toggle-header:hover {
+        background: rgba(0, 0, 0, 0.08);
+    }
+}
+
 @media (max-width: 900px) {
     .search-container {
         display: none;

@@ -6817,6 +6817,19 @@ function updateThemeToggleUI() {
     }
 }
 
+// Cycle through themes: light -> dark -> light (simple toggle)
+function cycleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.dataset.theme;
+
+    // Simple toggle between light and dark
+    if (currentTheme === 'light') {
+        setTheme('dark');
+    } else {
+        setTheme('light');
+    }
+}
+
 // ============================================================
 // Sidebar Functions
 // ============================================================
