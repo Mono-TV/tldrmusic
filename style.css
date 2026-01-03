@@ -13619,25 +13619,25 @@ body::after {
             color: #8E8E8E;
         }
 
-        /* Charts */
+        /* Charts - monochrome */
         .chart-rank {
             color: #262626;
         }
 
         .rank-num {
-            color: var(--accent);
+            color: #262626;
         }
 
         .rank-change.up {
-            color: #22c55e;
+            color: #262626;
         }
 
         .rank-change.down {
-            color: #ef4444;
+            color: #8E8E8E;
         }
 
         .rank-change.new {
-            color: var(--accent);
+            color: #262626;
         }
 
         /* Platform badges */
@@ -13686,7 +13686,7 @@ body::after {
             color: #8E8E8E;
         }
 
-        /* Discover page cards - Instagram clean style */
+        /* Discover page cards - Instagram clean monochrome */
         .discover-card {
             background: #FFFFFF;
             border: 1px solid rgba(219, 219, 219, 1);
@@ -13699,9 +13699,7 @@ body::after {
         }
 
         .discover-card-bg {
-            background: linear-gradient(135deg,
-                color-mix(in srgb, var(--card-color) 15%, #FFFFFF) 0%,
-                color-mix(in srgb, var(--card-color) 25%, #FFFFFF) 100%) !important;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%) !important;
         }
 
         .discover-card-title {
@@ -13715,15 +13713,31 @@ body::after {
         }
 
         .discover-card-icon {
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
         .discover-card-icon svg {
-            color: var(--card-color);
+            color: #262626;
             filter: none;
         }
 
-        /* Chart toggle */
+        /* Homepage playlist cards - grayscale */
+        .homepage-playlist-card .playlist-artwork-wrapper,
+        .playlist-card .playlist-card-artwork {
+            filter: grayscale(100%);
+        }
+
+        .homepage-playlist-card:hover .playlist-artwork-wrapper,
+        .playlist-card:hover .playlist-card-artwork {
+            filter: grayscale(50%);
+        }
+
+        /* Hero section - muted */
+        .hero-bg {
+            filter: grayscale(60%) brightness(1.1);
+        }
+
+        /* Chart toggle - monochrome */
         .chart-toggle {
             background: rgba(0, 0, 0, 0.04);
             border: 1px solid rgba(0, 0, 0, 0.08);
@@ -13734,7 +13748,7 @@ body::after {
         }
 
         .chart-toggle-btn.active {
-            background: var(--accent);
+            background: #262626;
             color: #FFFFFF;
         }
 
@@ -14091,25 +14105,25 @@ body::after {
         color: #8E8E8E;
     }
 
-    /* Charts */
+    /* Charts - monochrome */
     .chart-rank {
         color: #262626;
     }
 
     .rank-num {
-        color: var(--accent);
+        color: #262626;
     }
 
     .rank-change.up {
-        color: #22c55e;
+        color: #262626;
     }
 
     .rank-change.down {
-        color: #ef4444;
+        color: #8E8E8E;
     }
 
     .rank-change.new {
-        color: var(--accent);
+        color: #262626;
     }
 
     /* Platform badges */
@@ -14158,7 +14172,7 @@ body::after {
         color: #8E8E8E;
     }
 
-    /* Discover page cards - Instagram clean style */
+    /* Discover page cards - Instagram clean monochrome */
     .discover-card {
         background: #FFFFFF;
         border: 1px solid rgba(219, 219, 219, 1);
@@ -14171,9 +14185,7 @@ body::after {
     }
 
     .discover-card-bg {
-        background: linear-gradient(135deg,
-            color-mix(in srgb, var(--card-color) 15%, #FFFFFF) 0%,
-            color-mix(in srgb, var(--card-color) 25%, #FFFFFF) 100%) !important;
+        background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%) !important;
     }
 
     .discover-card-title {
@@ -14187,15 +14199,31 @@ body::after {
     }
 
     .discover-card-icon {
-        opacity: 0.7;
+        opacity: 0.6;
     }
 
     .discover-card-icon svg {
-        color: var(--card-color);
+        color: #262626;
         filter: none;
     }
 
-    /* Chart toggle */
+    /* Homepage playlist cards - grayscale */
+    .homepage-playlist-card .playlist-artwork-wrapper,
+    .playlist-card .playlist-card-artwork {
+        filter: grayscale(100%);
+    }
+
+    .homepage-playlist-card:hover .playlist-artwork-wrapper,
+    .playlist-card:hover .playlist-card-artwork {
+        filter: grayscale(50%);
+    }
+
+    /* Hero section - muted */
+    .hero-bg {
+        filter: grayscale(60%) brightness(1.1);
+    }
+
+    /* Chart toggle - monochrome */
     .chart-toggle {
         background: rgba(0, 0, 0, 0.04);
         border: 1px solid rgba(0, 0, 0, 0.08);
@@ -14206,7 +14234,7 @@ body::after {
     }
 
     .chart-toggle-btn.active {
-        background: var(--accent);
+        background: #262626;
         color: #FFFFFF;
     }
 
