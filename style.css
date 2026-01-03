@@ -13738,6 +13738,43 @@ body::after {
             filter: grayscale(0%);
         }
 
+        /* Play overlays - light mode */
+        .playlist-play-overlay,
+        .playlist-grid .playlist-card-play-overlay,
+        .playlist-card-play-overlay,
+        .song-play-overlay,
+        .artist-play-overlay,
+        .artist-album-play-overlay,
+        .search-album-play-overlay,
+        .detail-song-play-overlay {
+            background: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        /* Play buttons - dark for visibility on light overlay */
+        .playlist-play-overlay .play-icon,
+        .playlist-grid .playlist-card-play-btn,
+        .playlist-card-play-btn,
+        .play-icon,
+        .artist-play-overlay .play-icon,
+        .artist-album-play-overlay svg,
+        .search-album-play-overlay svg,
+        .detail-song-play-overlay svg {
+            color: #262626 !important;
+            background: rgba(0, 0, 0, 0.1) !important;
+            filter: none !important;
+        }
+
+        .playlist-grid .playlist-card-play-btn,
+        .playlist-card-play-btn {
+            background: #262626 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .playlist-grid .playlist-card:hover .playlist-card-play-btn {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+        }
+
         /* Hero section - muted */
         .hero-bg {
             filter: grayscale(60%) brightness(1.1);
@@ -14228,6 +14265,43 @@ body::after {
     a:hover img,
     button:hover img {
         filter: grayscale(0%);
+    }
+
+    /* Play overlays - light mode */
+    .playlist-play-overlay,
+    .playlist-grid .playlist-card-play-overlay,
+    .playlist-card-play-overlay,
+    .song-play-overlay,
+    .artist-play-overlay,
+    .artist-album-play-overlay,
+    .search-album-play-overlay,
+    .detail-song-play-overlay {
+        background: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    /* Play buttons - dark for visibility on light overlay */
+    .playlist-play-overlay .play-icon,
+    .playlist-grid .playlist-card-play-btn,
+    .playlist-card-play-btn,
+    .play-icon,
+    .artist-play-overlay .play-icon,
+    .artist-album-play-overlay svg,
+    .search-album-play-overlay svg,
+    .detail-song-play-overlay svg {
+        color: #262626 !important;
+        background: rgba(0, 0, 0, 0.1) !important;
+        filter: none !important;
+    }
+
+    .playlist-grid .playlist-card-play-btn,
+    .playlist-card-play-btn {
+        background: #262626 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .playlist-grid .playlist-card:hover .playlist-card-play-btn {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
     }
 
     /* Hero section - muted */
