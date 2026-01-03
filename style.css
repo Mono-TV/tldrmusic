@@ -13615,19 +13615,41 @@ body::after {
             color: #8E8E8E;
         }
 
-        /* Discover page */
-        .mood-card,
-        .genre-card,
-        .language-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        /* Discover page cards - Instagram clean style */
+        .discover-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(219, 219, 219, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
         }
 
-        .mood-card:hover,
-        .genre-card:hover,
-        .language-card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        .discover-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: rgba(219, 219, 219, 1);
+        }
+
+        .discover-card-bg {
+            background: linear-gradient(135deg,
+                color-mix(in srgb, var(--card-color) 15%, #FFFFFF) 0%,
+                color-mix(in srgb, var(--card-color) 25%, #FFFFFF) 100%) !important;
+        }
+
+        .discover-card-title {
+            color: #262626;
+            text-shadow: none;
+        }
+
+        .discover-card-meta {
+            color: #8E8E8E;
+            text-shadow: none;
+        }
+
+        .discover-card-icon {
+            opacity: 0.7;
+        }
+
+        .discover-card-icon svg {
+            color: var(--card-color);
+            filter: none;
         }
 
         /* Chart toggle */
@@ -14065,19 +14087,41 @@ body::after {
         color: #8E8E8E;
     }
 
-    /* Discover page */
-    .mood-card,
-    .genre-card,
-    .language-card {
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    /* Discover page cards - Instagram clean style */
+    .discover-card {
+        background: #FFFFFF;
+        border: 1px solid rgba(219, 219, 219, 1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     }
 
-    .mood-card:hover,
-    .genre-card:hover,
-    .language-card:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    .discover-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: rgba(219, 219, 219, 1);
+    }
+
+    .discover-card-bg {
+        background: linear-gradient(135deg,
+            color-mix(in srgb, var(--card-color) 15%, #FFFFFF) 0%,
+            color-mix(in srgb, var(--card-color) 25%, #FFFFFF) 100%) !important;
+    }
+
+    .discover-card-title {
+        color: #262626;
+        text-shadow: none;
+    }
+
+    .discover-card-meta {
+        color: #8E8E8E;
+        text-shadow: none;
+    }
+
+    .discover-card-icon {
+        opacity: 0.7;
+    }
+
+    .discover-card-icon svg {
+        color: var(--card-color);
+        filter: none;
     }
 
     /* Chart toggle */
