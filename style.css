@@ -13412,6 +13412,61 @@ body::after {
             background: #F5F5F5;
         }
 
+        /* Spotify-style grid layouts - more cards per row */
+        .chart-list {
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .discover-grid {
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1rem;
+        }
+
+        .discover-grid.mood-grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        }
+
+        .playlist-grid,
+        .playlists-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .regional-songs-grid,
+        .platform-songs-grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .artist-grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Smaller card sizes for denser layout */
+        .song-card,
+        .playlist-card,
+        .discover-card {
+            padding: 10px;
+        }
+
+        .song-card-artwork,
+        .playlist-card-artwork {
+            margin-bottom: 8px;
+        }
+
+        .song-card-title,
+        .playlist-card-title {
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .song-card-artist,
+        .playlist-card-subtitle {
+            font-size: 11px;
+        }
+
         /* Header - Black bar with white text */
         .header {
             background: #000000;
@@ -14095,6 +14150,61 @@ body::after {
     .homepage-content,
     #homepageContent {
         background: #F5F5F5;
+    }
+
+    /* Spotify-style grid layouts - more cards per row */
+    .chart-list {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .discover-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 1rem;
+    }
+
+    .discover-grid.mood-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .playlist-grid,
+    .playlists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .regional-songs-grid,
+    .platform-songs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .artist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Smaller card sizes for denser layout */
+    .song-card,
+    .playlist-card,
+    .discover-card {
+        padding: 10px;
+    }
+
+    .song-card-artwork,
+    .playlist-card-artwork {
+        margin-bottom: 8px;
+    }
+
+    .song-card-title,
+    .playlist-card-title {
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+
+    .song-card-artist,
+    .playlist-card-subtitle {
+        font-size: 11px;
     }
 
     /* Header - Black bar with white text */
