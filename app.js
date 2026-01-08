@@ -1304,9 +1304,10 @@ function renderChart() {
     const chartHero = document.getElementById('chartHero');
     chartList.innerHTML = '';
 
-    // Show first 10 songs on home page
+    // Show first 10 songs on home page based on current chart mode
     const displayCount = 10;
-    const songs = chartData.chart.slice(0, displayCount);
+    const chartSource = currentChartMode === 'global' ? (chartData.global_chart || chartData.chart) : chartData.chart;
+    const songs = chartSource.slice(0, displayCount);
 
     // Render #1 song in hero banner
     if (songs.length > 0 && chartHero) {
