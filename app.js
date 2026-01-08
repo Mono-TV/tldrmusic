@@ -4,9 +4,9 @@
 // - Music Conductor: Charts, Search, Discover (deprecated - migrating to TLDR Music API)
 // - TLDR Music API: User auth, Library, Curated playlists (NEW)
 // - Auth API: User authentication and library management
-const MUSIC_CONDUCTOR_API = 'https://tldr-music-ncrhtdqoiq-el.a.run.app';
+const MUSIC_CONDUCTOR_API = 'https://tldr-music-401132033262.asia-south1.run.app';
 const API_BASE = 'https://tldrmusic-api-401132033262.asia-south1.run.app';
-const CURATED_API = 'https://tldr-music-ncrhtdqoiq-el.a.run.app';
+const CURATED_API = 'https://tldr-music-401132033262.asia-south1.run.app';
 const DATA_PATH = './current.json'; // Fallback for local development
 
 // YouTube thumbnail sizes (width x height)
@@ -177,7 +177,7 @@ let isQueueVisible = false;
 let progressInterval = null;
 let isHeroVisible = true;
 let heroObserver = null;
-let currentChartMode = 'india';  // 'india' or 'global'
+let currentChartMode = 'global';  // 'global' or 'india'
 let currentPlayingVideoId = null;  // Track currently playing video ID for global/regional
 let featuredPlaylistSlug = null;  // Track featured playlist in hero spotlight
 
@@ -2679,7 +2679,7 @@ function switchChartMode(mode) {
     // Update chart section header
     const chartHeader = document.querySelector('.chart-section .chart-header h3');
     if (chartHeader) {
-        chartHeader.textContent = mode === 'india' ? 'India Top 25' : 'Global Top 25';
+        chartHeader.textContent = mode === 'india' ? '🇮🇳 India Top 25' : '🌍 Global Top 25';
     }
 
     // Re-render chart list with appropriate data
@@ -8607,15 +8607,6 @@ function getPlaylistColor(key, fallbackColor = '#1a1a2e') {
 // Chart definitions
 const MAIN_CHARTS = [
     {
-        id: 'india-top-25',
-        name: 'India Top 25',
-        description: 'Most popular songs in India this week',
-        endpoint: '/api/charts/aggregated?region=india',
-        icon: '🇮🇳',
-        gradient: ['#FF9933', '#138808'],
-        region: 'india'
-    },
-    {
         id: 'global-top-25',
         name: 'Global Top 25',
         description: 'Trending worldwide this week',
@@ -8623,6 +8614,15 @@ const MAIN_CHARTS = [
         icon: '🌍',
         gradient: ['#667eea', '#764ba2'],
         region: 'global'
+    },
+    {
+        id: 'india-top-25',
+        name: 'India Top 25',
+        description: 'Most popular songs in India this week',
+        endpoint: '/api/charts/aggregated?region=india',
+        icon: '🇮🇳',
+        gradient: ['#FF9933', '#138808'],
+        region: 'india'
     }
 ];
 
