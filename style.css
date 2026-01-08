@@ -517,21 +517,14 @@ body::after {
     color: var(--accent);
 }
 
-/* Chart Toggle - hidden on desktop (sidebar provides this) */
+/* Chart Toggle - Global/India switcher in header */
 .chart-toggle {
-    display: none;
+    display: flex;
     background: var(--bg-card);
     border-radius: 8px;
     padding: 4px;
     gap: 4px;
     border: 1px solid var(--border-color);
-}
-
-/* Show chart toggle only on mobile where sidebar is hidden */
-@media (max-width: 900px) {
-    .chart-toggle {
-        display: flex;
-    }
 }
 
 .toggle-btn {
@@ -11955,9 +11948,23 @@ body::after {
         margin-left: auto;  /* Push to right */
     }
 
-    /* Hide chart toggle on small screens - saves space for auth/search buttons */
+    /* Compact chart toggle on small screens */
     .chart-toggle {
-        display: none !important;
+        padding: 2px;
+        gap: 2px;
+    }
+
+    .toggle-btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+    }
+
+    .toggle-icon {
+        font-size: 0.8rem;
+    }
+
+    .toggle-label {
+        display: none;
     }
 
     .logo {
