@@ -8769,8 +8769,8 @@ async function openChartFromChartsView(chartId) {
 
         let response, rawData, data;
 
-        // Both global and india use bollywood_top_25 chart (aggregated API)
-        response = await fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=india`);
+        // Fetch chart data based on the chart's region
+        response = await fetch(`${MUSIC_CONDUCTOR_API}/api/charts/aggregated?region=${chart.region}`);
         if (!response.ok) throw new Error('Failed to load chart');
         rawData = await response.json();
         // Map Music Conductor v2 format
