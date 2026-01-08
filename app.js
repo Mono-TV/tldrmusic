@@ -2683,15 +2683,16 @@ function switchChartMode(mode) {
         chartHeader.textContent = mode === 'india' ? '🇮🇳 India Top 25' : '🌍 Global Top 25';
     }
 
-    // Re-render chart list with appropriate data
+    // Re-render chart list and hero with appropriate data
     const regSection = document.getElementById('regionalSection');
     const globalSection = document.getElementById('globalSpotlightsSection');
 
+    // renderChart() now handles both modes based on currentChartMode
+    renderChart();
+
     if (mode === 'india') {
-        renderChart();
         if (globalSection) globalSection.style.display = 'none';
     } else {
-        renderGlobalMainChart();
         renderGlobalSpotlights();
         if (globalSection) globalSection.style.display = 'block';
     }
