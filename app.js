@@ -4346,7 +4346,7 @@ function showChartDetail(chartType) {
             <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
             <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
         </svg>`;
-        chartMeta = 'Updated weekly • Aggregated from 9 platforms';
+        chartMeta = 'Updated daily • Aggregated from 9 platforms';
     } else if (chartType === 'global') {
         detailData = chartData?.global_chart || [];
         chartName = 'Global Top 25';
@@ -4355,7 +4355,7 @@ function showChartDetail(chartType) {
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
         </svg>`;
-        chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
+        chartMeta = 'Updated daily • Spotify, Billboard, Apple Music';
     } else {
         // Regional chart - get from chartData.regional
         const regionalData = chartData?.regional?.[chartType];
@@ -4367,7 +4367,7 @@ function showChartDetail(chartType) {
             <circle cx="6" cy="18" r="3"></circle>
             <circle cx="18" cy="16" r="3"></circle>
         </svg>`;
-        chartMeta = `Updated weekly • ${chartType.charAt(0).toUpperCase() + chartType.slice(1)} music`;
+        chartMeta = `Updated daily • ${chartType.charAt(0).toUpperCase() + chartType.slice(1)} music`;
     }
 
     currentChartDetailData = detailData;
@@ -4579,7 +4579,7 @@ function rerenderCurrentChartDetail() {
             <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
             <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
         </svg>`;
-        chartMeta = 'Updated weekly • Aggregated from 9 platforms';
+        chartMeta = 'Updated daily • Aggregated from 9 platforms';
     } else if (currentChartDetailType === 'global') {
         chartName = 'Global Top 25';
         chartCoverClass = 'global';
@@ -4587,7 +4587,7 @@ function rerenderCurrentChartDetail() {
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
         </svg>`;
-        chartMeta = 'Updated weekly • Spotify, Billboard, Apple Music';
+        chartMeta = 'Updated daily • Spotify, Billboard, Apple Music';
     } else {
         chartName = currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1) + ' Top 10';
         chartCoverClass = 'regional';
@@ -4596,7 +4596,7 @@ function rerenderCurrentChartDetail() {
             <circle cx="6" cy="18" r="3"></circle>
             <circle cx="18" cy="16" r="3"></circle>
         </svg>`;
-        chartMeta = `Updated weekly • ${currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1)} music`;
+        chartMeta = `Updated daily • ${currentChartDetailType.charAt(0).toUpperCase() + currentChartDetailType.slice(1)} music`;
     }
 
     renderChartDetail(currentChartDetailData, chartName, chartCoverClass, chartIcon, chartMeta);

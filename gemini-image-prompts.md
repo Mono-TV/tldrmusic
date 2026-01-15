@@ -22,7 +22,7 @@ Create a minimalist Open Graph social media image (1200x630px) for TLDR Music wi
 **Typography:**
 - Primary text: "TLDR Music" in Red Hat Display Bold, 72pt, white color
 - Secondary text: "India's Top 25 Charts" in Red Hat Display Medium, 36pt, golden (#fcd34d)
-- Tertiary: "Weekly Updated Charts" in Red Hat Display Regular, 24pt, soft white (#E5E5E5)
+- Tertiary: "Daily Updated Charts" in Red Hat Display Regular, 24pt, soft white (#E5E5E5)
 - Left-aligned with 80px margin
 - Letter-spacing: -0.02em (tight, modern)
 

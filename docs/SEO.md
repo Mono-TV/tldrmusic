@@ -14,7 +14,7 @@ TLDR Music has comprehensive SEO optimization for discoverability in India's mus
 ### Primary Meta Tags
 ```html
 <title>TLDR Music - India's Top 25 Music Charts | Stream Free on YouTube</title>
-<meta name="description" content="Discover India's most popular songs with TLDR Music's Top 25 charts. Stream trending Hindi, Punjabi, Tamil, and regional hits for free via YouTube. Updated weekly with curated playlists by mood, language, and artist.">
+<meta name="description" content="Discover India's most popular songs with TLDR Music's Top 25 charts. Stream trending Hindi, Punjabi, Tamil, and regional hits for free via YouTube. Updated daily with curated playlists by mood, language, and artist.">
 <meta name="keywords" content="india top 25 music, hindi songs, punjabi music, tamil hits, bollywood songs, trending music india, music charts india, free music streaming, youtube music player, indian pop songs, regional music india, mood playlists, curated music">
 ```
 
@@ -53,7 +53,7 @@ TLDR Music has comprehensive SEO optimization for discoverability in India's mus
 - **Content:**
   - "TLDR Music" (large white text, left-aligned)
   - "India's Top 25 Charts" (golden yellow subtitle)
-  - "Weekly Updated Charts" (light gray feature text)
+  - "Daily Updated Charts" (light gray feature text)
   - Golden circle accent (top right)
   - Small music note icon
   - Badge: "music.lumiolabs.in" (bottom left, golden border)
@@ -65,7 +65,7 @@ TLDR Music has comprehensive SEO optimization for discoverability in India's mus
 ```html
 <meta property="og:type" content="website">
 <meta property="og:title" content="TLDR Music - India's Top 25 Music Charts">
-<meta property="og:description" content="Stream India's trending music for free. Discover Top 25 charts, curated playlists, and regional hits via YouTube. Updated weekly with Hindi, Punjabi, Tamil, and more.">
+<meta property="og:description" content="Stream India's trending music for free. Discover Top 25 charts, curated playlists, and regional hits via YouTube. Updated daily with Hindi, Punjabi, Tamil, and more.">
 <meta property="og:image" content="https://music.lumiolabs.in/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -276,7 +276,7 @@ Sitemap: https://music.lumiolabs.in/sitemap.xml
 - India's Top 25 focus
 - Regional language diversity (11 languages)
 - Free streaming
-- Weekly chart updates
+- Daily chart updates
 - YouTube playback integration
 - Curated playlists by mood/genre/artist
 

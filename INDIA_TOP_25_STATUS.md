@@ -72,7 +72,7 @@ Users can play songs via YouTube IDs
 ✅ **Caching** - 5-minute cache to reduce API calls
 ✅ **Rendering** - Songs display with artwork and metadata
 ✅ **Playback** - YouTube IDs work for playing songs
-✅ **Auto-Update** - Chart updates daily at 6:00 AM IST
+✅ **Auto-Update** - Chart updates daily at 6:00 AM UTC (11:30 AM IST)
 
 ---
 

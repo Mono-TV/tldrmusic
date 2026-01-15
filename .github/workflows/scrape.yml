@@ -1,9 +1,9 @@
 name: Update Music Charts
 
 on:
-  # Run every Sunday at 6:00 AM UTC (11:30 AM IST)
+  # Run daily at 6:00 AM UTC (11:30 AM IST)
   schedule:
-    - cron: '0 6 * * 0'
+    - cron: '0 6 * * *'
 
   # Allow manual trigger from GitHub UI
   workflow_dispatch:

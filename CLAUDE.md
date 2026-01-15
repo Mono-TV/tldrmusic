@@ -334,9 +334,9 @@ gcloud run jobs execute tldrmusic-scraper --region asia-south1
 
 ### Production Schedule
 
-- **Cloud Scheduler**: Runs every Monday at 10:00 PM IST
-- **Job Name**: `tldrmusic-scraper`
-- **Region**: `asia-south1`
+- **GitHub Actions**: Runs daily at 6:00 AM UTC (11:30 AM IST)
+- **Workflow**: `.github/workflows/scrape.yml`
+- **Manual Trigger**: Available via GitHub Actions UI
 
 ## MongoDB Collections
 
@@ -487,7 +487,7 @@ gcloud logging read "resource.type=cloud_run_job AND resource.labels.job_name=tl
 **OG Image** (`og-image.png` - 1200x630px):
 - Minimalist black background with golden accents
 - Generated with Gemini Imagen 4.0
-- Features: "TLDR Music", "India's Top 25 Charts", "Weekly Updated Charts"
+- Features: "TLDR Music", "India's Top 25 Charts", "Daily Updated Charts"
 - Style: Apple-inspired minimalism with 80% white space
 - 233KB optimized PNG
 
@@ -520,7 +520,7 @@ Three JSON-LD schemas in `index.html`:
 
 - **sitemap.xml**: 22 URLs (home, charts, regional, discover)
 - **robots.txt**: Allows public pages, blocks user library/backend
-- **Update Frequency**: Daily (home), Weekly (charts), Monthly (static)
+- **Update Frequency**: Daily (home, charts), Monthly (static)
 
 ### Image Generation
 
@@ -540,7 +540,7 @@ GEMINI_API_KEY='your-key' python3 generate_images_gemini.py
 - India's Top 25 focus
 - 11 regional languages
 - Free streaming via YouTube
-- Weekly chart updates
+- Daily chart updates
 - Curated playlists
 
 ❌ **Avoid Mentioning**:

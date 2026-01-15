@@ -39,7 +39,7 @@ Pure black background. Modern sans-serif font.
 
 Large white text "TLDR Music" on the left side.
 Below it, golden yellow text "India's Top 25 Charts".
-Small text "Weekly Updated Charts" underneath in light gray.
+Small text "Daily Updated Charts" underneath in light gray.
 
 Small golden circle accent in the top right corner.
 Tiny golden music note icon near the title.
@@ -140,7 +140,7 @@ def generate_with_gemini_text(prompt_text, output_path, size):
             # Draw subtitle
             draw.text((80, 270), "India's Top 25 Charts", fill='#fcd34d', font=subtitle_font)
             # Draw feature
-            draw.text((80, 340), "Weekly Updated Charts", fill='#E5E5E5', font=feature_font)
+            draw.text((80, 340), "Daily Updated Charts", fill='#E5E5E5', font=feature_font)
 
             # Draw golden circle accent
             draw.ellipse([950, 50, 1100, 200], fill='#f59e0b', outline=None)
