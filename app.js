@@ -1240,7 +1240,7 @@ function getPlatformClass(platform) {
 }
 
 // Create hero banner element for #1 song
-function createHeroElement(song) {
+function createHeroElement(song, chartMode = 'india') {
     const artworkUrl = getArtworkUrl(song);
     const viewsText = song.youtube_views ? formatViews(song.youtube_views) : '';
     const rankMovement = song.rank_change || 0;
@@ -1253,6 +1253,11 @@ function createHeroElement(song) {
     } else if (rankMovement < 0) {
         movementBadge = `<span class="hero-badge hero-badge-down">⬇️ ${rankMovement}</span>`;
     }
+
+    // Play handler based on chart mode
+    const playHandler = chartMode === 'global'
+        ? `playGlobalSong(0)`
+        : `playSong(0)`;
 
     return `
         <div class="hero-container">
@@ -1267,7 +1272,7 @@ function createHeroElement(song) {
                         </svg>
                     </div>`
                 }
-                <div class="hero-play-button" onclick="playSong(0)" title="Play #1">
+                <div class="hero-play-button" onclick="${playHandler}" title="Play #1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <polygon points="6 3 20 12 6 21 6 3"></polygon>
                     </svg>
@@ -1311,12 +1316,12 @@ function renderChart() {
 
     // Render #1 song in hero banner
     if (songs.length > 0 && chartHero) {
-        chartHero.innerHTML = createHeroElement(songs[0]);
+        chartHero.innerHTML = createHeroElement(songs[0], currentChartMode);
     }
 
     // Render #2-10 songs in grid
     songs.slice(1).forEach((song, index) => {
-        const songEl = createSongElement(song, index + 1); // index + 1 because we skipped #1
+        const songEl = createSongElement(song, index + 1, currentChartMode); // index + 1 because we skipped #1
         chartList.appendChild(songEl);
     });
 
@@ -2588,11 +2593,8 @@ function createSongElement(song, index, chartMode = 'india') {
         const mode = el.dataset.chartMode;
 
         if (mode === 'global') {
-            // For global chart, use direct play with video ID
-            const videoId = el.dataset.videoId;
-            if (videoId) {
-                playRegionalSongDirect(el.dataset.title, el.dataset.artist, videoId, el.dataset.artwork, song.score);
-            }
+            // For global chart, use index-based play with global chart queue
+            playGlobalSong(index);
         } else {
             // For India chart, use index-based play
             if (index === currentSongIndex && player) {
@@ -2962,6 +2964,49 @@ function playSong(index) {
         createPlayer(playlist);
     } else {
         setTimeout(() => playSong(index), 100);
+    }
+}
+
+// Play song from Global chart
+function playGlobalSong(index) {
+    // Require authentication to play
+    if (!requireAuth(() => playGlobalSong(index))) return;
+
+    if (!chartData || !chartData.global_chart || !chartData.global_chart[index]) return;
+
+    const song = chartData.global_chart[index];
+
+    if (!song.youtube_video_id) {
+        showPlayerError();
+        return;
+    }
+
+    // Reset regional song flag and set current video ID for tracking
+    isRegionalSongPlaying = false;
+    currentPlayingVideoId = song.youtube_video_id;
+
+    // Track in history with source
+    addToHistory(song, 'global_chart');
+
+    updateNowPlaying(index, 'global');
+
+    // Update now-playing indicators in song lists
+    updateNowPlayingIndicators();
+
+    // Update favorite button state
+    updateFavoriteButtons();
+
+    const playlist = chartData.global_chart
+        .slice(index)
+        .map(s => s.youtube_video_id)
+        .filter(id => id);
+
+    if (player && playerReady) {
+        player.loadPlaylist(playlist);
+    } else if (playerReady) {
+        createPlayer(playlist);
+    } else {
+        setTimeout(() => playGlobalSong(index), 100);
     }
 }
 
