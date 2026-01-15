@@ -2781,14 +2781,15 @@ function renderGlobalMainChart() {
 }
 
 // Update now playing UI
-function updateNowPlaying(index) {
-    if (!chartData || !chartData.chart[index]) return;
+function updateNowPlaying(index, chartMode = 'india') {
+    const chartSource = chartMode === 'global' ? chartData?.global_chart : chartData?.chart;
+    if (!chartSource || !chartSource[index]) return;
 
-    const song = chartData.chart[index];
+    const song = chartSource[index];
 
     // Update active state
     document.querySelectorAll('.song-card').forEach(el => el.classList.remove('active'));
-    const activeEl = document.querySelector(`.song-card[data-index="${index}"]`);
+    const activeEl = document.querySelector(`.song-card[data-index="${index}"][data-chart-mode="${chartMode}"]`);
     if (activeEl) {
         activeEl.classList.add('active');
         activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
